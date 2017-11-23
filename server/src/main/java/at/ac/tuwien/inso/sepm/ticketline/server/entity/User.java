@@ -9,7 +9,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq_user_id")
     @SequenceGenerator(name = "seq_user_id", sequenceName = "seq_user_id")
-    private Long userId;
+    private Long id;
     @Column(nullable = false, name = "user_name")
     private String userName;
     @Column(nullable = false, length = 60)       //encoded; length = 60
@@ -25,12 +25,12 @@ public class User {
     private String emailAdress;
 
 
-    public Long getUserId() {
-        return userId;
+    public Long getId() {
+        return id;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getUserName() {

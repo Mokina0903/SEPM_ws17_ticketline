@@ -30,14 +30,13 @@ public interface UserService {
     User createUser(User user);
 
 
-    // oder einfach nur update?
+    // TODO: oder einfach nur update?
     /**
      * Block a single user entry
      *
      * @param user to block
      * @return blocked user entry
      */
-
     boolean blockUser(User user);
 
     //boolean changeRole(User user, Integer role);
