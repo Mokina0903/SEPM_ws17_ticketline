@@ -6,10 +6,15 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 
+@Component
+@Scope(BeanDefinition.SCOPE_PROTOTYPE)
 public class DetailedNewsController {
 
     private static final DateTimeFormatter NEWS_DTF =

@@ -72,6 +72,8 @@ public class NewsElementController {
                     SpringFxmlLoader.Wrapper<DetailedNewsController> wrapper =
                         springFxmlLoader.loadAndWrap("/fxml/news/detailedNewsElement.fxml");
                     wrapper.getController().initializeData(detailedNewsDTO);
+                vbNewsElement.getChildren().add(wrapper.getLoadedObject());
+
 
             }
 
