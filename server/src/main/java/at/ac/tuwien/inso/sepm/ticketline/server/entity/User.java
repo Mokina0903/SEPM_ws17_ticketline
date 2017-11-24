@@ -1,9 +1,9 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.entity;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 
-@Entity (name = "Users")
+@Entity
+@Table (name = "users")
 public class User {
 
     @Id
@@ -12,17 +12,17 @@ public class User {
     private Long id;
     @Column(nullable = false, name = "user_name")
     private String userName;
-    @Column(nullable = false, length = 60)       //encoded; length = 60
+    @Column(nullable = false, length = 60, name = "passwrd")       //encoded; length = 60
     private String password;
     @Column(nullable = false)
     private Integer role;
     @Column(nullable = false)
     private boolean blocked;
 
-    private String firstName;
+    /*private String firstName;
     private String lastName;
     private LocalDate birthdate;
-    private String emailAdress;
+    private String emailAdress;*/
 
 
     public Long getId() {
@@ -64,4 +64,56 @@ public class User {
     public void setBlocked(boolean blocked) {
         this.blocked = blocked;
     }
+
+    public static UserBuilder builder() {
+        return new UserBuilder();
+    }
+
+
+    public static final class UserBuilder {
+        private Long id;
+        private String userName;
+        private String password;
+        private Integer role;
+        private boolean blocked;
+
+        private UserBuilder() {
+        }
+
+        public UserBuilder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public UserBuilder userName(String userName) {
+            this.userName = userName;
+            return this;
+        }
+
+        public UserBuilder password(String password) {
+            this.password = password;
+            return this;
+        }
+
+        public UserBuilder role(Integer role) {
+            this.role = role;
+            return this;
+        }
+
+        public UserBuilder blocked(boolean blocked) {
+            this.blocked = blocked;
+            return this;
+        }
+
+        public User build() {
+            User user = new User();
+            user.setId(id);
+            user.setUserName(userName);
+            user.setPassword(password);
+            user.setRole(role);
+            user.setBlocked(blocked);
+            return user;
+        }
+    }
+
 }
