@@ -5,10 +5,19 @@
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import java.net.URL?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.news.DetailedNewsController"
-            prefHeight="400.0" prefWidth="600.0">
+<?import javafx.scene.image.ImageView?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.news.DetailedNewsController"
+      prefHeight="400.0" prefWidth="600.0">
+    <stylesheets>
+        <URL value="@/css/newsElement.css"/>
+    </stylesheets>
+    <Label fx:id="lblDate" styleClass="newsPublishDate" text="&lt;DD.MM.YYYY | hh:mm&gt;"/>
+    <Label fx:id="lblTitle" styleClass="newsTitle" text="&lt;NewsTitle&gt;"/>
+    <Label fx:id="lblText" styleClass="newsText" wrapText="true" text="&lt;NewsText&gt;"/>
+    <ImageView fx:id="newsImageViews"/>
 
-</AnchorPane>
+</VBox>
