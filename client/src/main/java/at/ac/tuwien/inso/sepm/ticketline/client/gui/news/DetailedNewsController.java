@@ -1,7 +1,9 @@
 package at.ac.tuwien.inso.sepm.ticketline.client.gui.news;
 
 import at.ac.tuwien.inso.sepm.ticketline.rest.news.DetailedNewsDTO;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 
@@ -21,11 +23,16 @@ public class DetailedNewsController {
     public Label lblText;
     @FXML
     public ImageView newsImageViews;
+    @FXML
+    public Button backButton;
 
     public void initializeData( DetailedNewsDTO detailedNewsDTO){
         lblDate.setText(NEWS_DTF.format(detailedNewsDTO.getPublishedAt()));
         lblTitle.setText(detailedNewsDTO.getTitle());
         lblText.setText(detailedNewsDTO.getText());
 
+    }
+
+    public void backToSimpleNewsView(ActionEvent actionEvent) {
     }
 }

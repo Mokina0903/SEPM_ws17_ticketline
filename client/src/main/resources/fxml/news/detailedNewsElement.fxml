@@ -14,8 +14,6 @@
       fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.news.DetailedNewsController"
       prefHeight="400.0" prefWidth="600.0">
     <children>
-        <fx:include source="/fxml/tabHeader.fxml" fx:id="tabHeader"/>
-        <Separator/>
         <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" VBox.vgrow="ALWAYS"
                     style="-fx-background-color: transparent;">
             <VBox>
