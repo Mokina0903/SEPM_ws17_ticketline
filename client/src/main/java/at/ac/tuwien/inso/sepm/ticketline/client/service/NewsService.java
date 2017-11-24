@@ -1,6 +1,7 @@
 package at.ac.tuwien.inso.sepm.ticketline.client.service;
 
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
+import at.ac.tuwien.inso.sepm.ticketline.rest.news.DetailedNewsDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.news.SimpleNewsDTO;
 
 import java.util.List;
@@ -15,4 +16,12 @@ public interface NewsService {
      */
     List<SimpleNewsDTO> findAll() throws DataAccessException;
 
+    /**
+     * Find specific news entry by id
+     *
+     * @param id of news entry
+     * @return detailed news
+     * @throws DataAccessException in case something went wrong
+     */
+    DetailedNewsDTO findById(long id) throws DataAccessException;
 }

@@ -2,6 +2,7 @@ package at.ac.tuwien.inso.sepm.ticketline.client.rest.implementation;
 
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.rest.NewsRestClient;
+import at.ac.tuwien.inso.sepm.ticketline.rest.news.DetailedNewsDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.news.SimpleNewsDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,5 +46,25 @@ public class SimpleNewsRestClient implements NewsRestClient {
             throw new DataAccessException(e.getMessage(), e);
         }
     }
+
+    @Override
+    public DetailedNewsDTO findById( long id ) throws DataAccessException {
+        try {
+            LOGGER.debug("Retrieving news by id from {}", restClient.getServiceURI(NEWS_URL));
+            ResponseEntity<DetailedNewsDTO> news =
+                restClient.exchange(
+                    restClient.getServiceURI(NEWS_URL),
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<DetailedNewsDTO>() {
+                    });
+            LOGGER.debug("Result status was {} with content {}", news.getStatusCode(), news.getBody());
+            return news.getBody();
+        } catch (HttpStatusCodeException e) {
+            throw new DataAccessException("Failed retrieve news with status code " + e.getStatusCode().toString());
+        } catch (RestClientException e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }    }
+
 
 }
