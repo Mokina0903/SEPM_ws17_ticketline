@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -30,14 +31,20 @@ public class DetailedNewsController {
     public ImageView newsImageViews;
     @FXML
     public Button backButton;
+    @FXML
+    public VBox vbDetailedNewsBox;
 
-    public void initializeData( DetailedNewsDTO detailedNewsDTO){
+    private NewsController newsController;
+
+    public void initializeData( DetailedNewsDTO detailedNewsDTO, NewsController newsController){
         lblDate.setText(NEWS_DTF.format(detailedNewsDTO.getPublishedAt()));
         lblTitle.setText(detailedNewsDTO.getTitle());
         lblText.setText(detailedNewsDTO.getText());
 
+        this.newsController=newsController;
     }
 
     public void backToSimpleNewsView(ActionEvent actionEvent) {
+        newsController.loadNews();
     }
 }

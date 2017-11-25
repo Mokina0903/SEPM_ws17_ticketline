@@ -45,9 +45,11 @@ public class NewsElementController {
     private SpringFxmlLoader springFxmlLoader;
     private NewsService newsService;
     private MainController mainController;
+    private NewsController newsController;
 
 
-    public void initializeData(SimpleNewsDTO simpleNewsDTO, SpringFxmlLoader springFxmlLoader, NewsService newsService,MainController mainController) {
+    public void initializeData(SimpleNewsDTO simpleNewsDTO, SpringFxmlLoader springFxmlLoader, NewsService newsService,
+                               MainController mainController,NewsController newsController) {
         lblDate.setText(NEWS_DTF.format(simpleNewsDTO.getPublishedAt()));
         lblTitle.setText(simpleNewsDTO.getTitle());
         lblText.setText(simpleNewsDTO.getSummary());
@@ -55,6 +57,7 @@ public class NewsElementController {
         this.newsService=newsService;
         this.springFxmlLoader=springFxmlLoader;
         this.mainController=mainController;
+        this.newsController=newsController;
     }
 
     public void detailedNews(MouseEvent mouseEvent) {
@@ -71,7 +74,7 @@ public class NewsElementController {
                 DetailedNewsDTO detailedNewsDTO= getValue();
                     SpringFxmlLoader.Wrapper<DetailedNewsController> wrapper =
                         springFxmlLoader.loadAndWrap("/fxml/news/detailedNewsElement.fxml");
-                    wrapper.getController().initializeData(detailedNewsDTO);
+                    wrapper.getController().initializeData(detailedNewsDTO,newsController);
                 vbNewsElement.getChildren().add(wrapper.getLoadedObject());
 
 

@@ -65,7 +65,7 @@ public class NewsController {
                     SimpleNewsDTO news = iterator.next();
                     SpringFxmlLoader.Wrapper<NewsElementController> wrapper =
                         springFxmlLoader.loadAndWrap("/fxml/news/newsElement.fxml");
-                    wrapper.getController().initializeData(news,springFxmlLoader,newsService,mainController);
+                    wrapper.getController().initializeData(news,springFxmlLoader,newsService,mainController,NewsController.this);
                     vbNewsBoxChildren.add(wrapper.getLoadedObject());
                     if (iterator.hasNext()) {
                         Separator separator = new Separator();
