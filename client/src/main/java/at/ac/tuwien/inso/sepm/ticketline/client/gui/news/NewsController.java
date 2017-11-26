@@ -11,6 +11,7 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Separator;
 import javafx.scene.layout.VBox;
@@ -28,7 +29,7 @@ public class NewsController {
     private static final Logger LOGGER = LoggerFactory.getLogger(NewsController.class);
 
     @FXML
-    private VBox vbNewsElements;
+    private ListView<VBox> vbNewsElements;
 
     @FXML
     private TabHeaderController tabHeaderController;
@@ -50,7 +51,7 @@ public class NewsController {
     }
 
     public void loadNews() {
-        ObservableList<Node> vbNewsBoxChildren = vbNewsElements.getChildren();
+        ObservableList<VBox> vbNewsBoxChildren = vbNewsElements.getItems();
         vbNewsBoxChildren.clear();
         Task<List<SimpleNewsDTO>> task = new Task<>() {
             @Override
@@ -66,11 +67,11 @@ public class NewsController {
                     SpringFxmlLoader.Wrapper<NewsElementController> wrapper =
                         springFxmlLoader.loadAndWrap("/fxml/news/newsElement.fxml");
                     wrapper.getController().initializeData(news,springFxmlLoader,newsService,mainController,NewsController.this);
-                    vbNewsBoxChildren.add(wrapper.getLoadedObject());
-                    if (iterator.hasNext()) {
+                    vbNewsBoxChildren.add(wrapper.getController().vbNewsElement);
+                    /*if (iterator.hasNext()) {
                         Separator separator = new Separator();
                         vbNewsBoxChildren.add(separator);
-                    }
+                    }*/
                 }
             }
 
