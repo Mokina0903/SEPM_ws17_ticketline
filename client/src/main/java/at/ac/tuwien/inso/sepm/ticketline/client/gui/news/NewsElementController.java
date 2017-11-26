@@ -56,6 +56,7 @@ public class NewsElementController {
         lblDate.setText(NEWS_DTF.format(simpleNewsDTO.getPublishedAt()));
         lblTitle.setText(simpleNewsDTO.getTitle());
         lblText.setText(simpleNewsDTO.getSummary());
+        lblText.setMaxWidth(500);
         this.simpleNewsDTO=simpleNewsDTO;
         this.newsService=newsService;
         this.mainController=mainController;
@@ -65,6 +66,7 @@ public class NewsElementController {
 
     public void backToSimpleNewsView(ActionEvent actionEvent) {
         lblText.setText(simpleNewsDTO.getSummary());
+        backButton.setVisible(false);
     }
 
     public void detailedNews(MouseEvent mouseEvent) {
