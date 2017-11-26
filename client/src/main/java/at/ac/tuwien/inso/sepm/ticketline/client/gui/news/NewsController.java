@@ -5,14 +5,16 @@ import at.ac.tuwien.inso.sepm.ticketline.client.gui.MainController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.TabHeaderController;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.NewsService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.JavaFXUtils;
+import at.ac.tuwien.inso.sepm.ticketline.rest.news.DetailedNewsDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.news.SimpleNewsDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.Separator;
+import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.slf4j.Logger;
@@ -28,7 +30,7 @@ public class NewsController {
     private static final Logger LOGGER = LoggerFactory.getLogger(NewsController.class);
 
     @FXML
-    private VBox vbNewsElements;
+    private ListView<VBox> vbNewsElements;
 
     @FXML
     private TabHeaderController tabHeaderController;
@@ -47,10 +49,19 @@ public class NewsController {
     private void initialize() {
         tabHeaderController.setIcon(FontAwesome.Glyph.NEWSPAPER_ALT);
         tabHeaderController.setTitle("News");
+        vbNewsElements.getSelectionModel()
+            .selectedIndexProperty()
+            .addListener((observable, oldvalue, newValue) -> {
+
+                Platform.runLater(() -> {
+                    vbNewsElements.getSelectionModel().clearSelection();
+                });
+
+            });
     }
 
     public void loadNews() {
-        ObservableList<Node> vbNewsBoxChildren = vbNewsElements.getChildren();
+        ObservableList<VBox> vbNewsBoxChildren = vbNewsElements.getItems();
         vbNewsBoxChildren.clear();
         Task<List<SimpleNewsDTO>> task = new Task<>() {
             @Override
@@ -65,12 +76,9 @@ public class NewsController {
                     SimpleNewsDTO news = iterator.next();
                     SpringFxmlLoader.Wrapper<NewsElementController> wrapper =
                         springFxmlLoader.loadAndWrap("/fxml/news/newsElement.fxml");
-                    wrapper.getController().initializeData(news);
-                    vbNewsBoxChildren.add(wrapper.getLoadedObject());
-                    if (iterator.hasNext()) {
-                        Separator separator = new Separator();
-                        vbNewsBoxChildren.add(separator);
-                    }
+                    wrapper.getController().initializeData(news,newsService,mainController,NewsController.this);
+                    vbNewsBoxChildren.add(wrapper.getController().vbNewsElement);
+
                 }
             }
 
@@ -87,5 +95,6 @@ public class NewsController {
         );
         new Thread(task).start();
     }
+
 
 }

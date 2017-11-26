@@ -4,10 +4,13 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.VBox?>
 <?import java.net.URL?>
-<VBox xmlns="http://javafx.com/javafx/8.0.92"
+<?import javafx.scene.control.Button?>
+<VBox fx:id="vbNewsElement"
+      xmlns="http://javafx.com/javafx/8.0.92"
       xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.news.NewsElementController"
-      spacing="5.0">
+      spacing="5.0"
+      onMouseClicked="#detailedNews">
     <stylesheets>
         <URL value="@/css/newsElement.css"/>
     </stylesheets>
@@ -17,4 +20,5 @@
     <Label fx:id="lblDate" styleClass="newsPublishDate" text="&lt;DD.MM.YYYY | hh:mm&gt;"/>
     <Label fx:id="lblTitle" styleClass="newsTitle" text="&lt;NewsTitle&gt;"/>
     <Label fx:id="lblText" styleClass="newsText" wrapText="true" text="&lt;NewsText&gt;"/>
+    <Button fx:id="backButton" onAction="#backToSimpleNewsView" text="%detailedNews.backButton"/>
 </VBox>
