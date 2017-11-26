@@ -46,27 +46,25 @@ public class NewsElementController {
     private Label lblText;
 
     private SimpleNewsDTO simpleNewsDTO;
-    private SpringFxmlLoader springFxmlLoader;
     private NewsService newsService;
     private MainController mainController;
     private NewsController newsController;
 
 
-    public void initializeData(SimpleNewsDTO simpleNewsDTO, SpringFxmlLoader springFxmlLoader, NewsService newsService,
+    public void initializeData(SimpleNewsDTO simpleNewsDTO, NewsService newsService,
                                MainController mainController,NewsController newsController) {
         lblDate.setText(NEWS_DTF.format(simpleNewsDTO.getPublishedAt()));
         lblTitle.setText(simpleNewsDTO.getTitle());
         lblText.setText(simpleNewsDTO.getSummary());
         this.simpleNewsDTO=simpleNewsDTO;
         this.newsService=newsService;
-        this.springFxmlLoader=springFxmlLoader;
         this.mainController=mainController;
         this.newsController=newsController;
         backButton.setVisible(false);
     }
 
     public void backToSimpleNewsView(ActionEvent actionEvent) {
-        newsController.loadNews();
+        lblText.setText(simpleNewsDTO.getSummary());
     }
 
     public void detailedNews(MouseEvent mouseEvent) {
@@ -83,6 +81,7 @@ public class NewsElementController {
                 super.succeeded();
                 DetailedNewsDTO detailedNewsDTO= getValue();
                 lblText.setText(detailedNewsDTO.getText());
+
 
                 backButton.setVisible(true);
 

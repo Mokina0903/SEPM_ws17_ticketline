@@ -8,6 +8,7 @@ import at.ac.tuwien.inso.sepm.ticketline.client.util.JavaFXUtils;
 import at.ac.tuwien.inso.sepm.ticketline.rest.news.DetailedNewsDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.news.SimpleNewsDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -48,8 +49,15 @@ public class NewsController {
     private void initialize() {
         tabHeaderController.setIcon(FontAwesome.Glyph.NEWSPAPER_ALT);
         tabHeaderController.setTitle("News");
-        vbNewsElements.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        vbNewsElements.setStyle("-fx-background-color: transparent");
+        vbNewsElements.getSelectionModel()
+            .selectedIndexProperty()
+            .addListener((observable, oldvalue, newValue) -> {
+
+                Platform.runLater(() -> {
+                    vbNewsElements.getSelectionModel().clearSelection();
+                });
+
+            });
     }
 
     public void loadNews() {
@@ -68,12 +76,9 @@ public class NewsController {
                     SimpleNewsDTO news = iterator.next();
                     SpringFxmlLoader.Wrapper<NewsElementController> wrapper =
                         springFxmlLoader.loadAndWrap("/fxml/news/newsElement.fxml");
-                    wrapper.getController().initializeData(news,springFxmlLoader,newsService,mainController,NewsController.this);
+                    wrapper.getController().initializeData(news,newsService,mainController,NewsController.this);
                     vbNewsBoxChildren.add(wrapper.getController().vbNewsElement);
-                    /*if (iterator.hasNext()) {
-                        Separator separator = new Separator();
-                        vbNewsBoxChildren.add(separator);
-                    }*/
+
                 }
             }
 
