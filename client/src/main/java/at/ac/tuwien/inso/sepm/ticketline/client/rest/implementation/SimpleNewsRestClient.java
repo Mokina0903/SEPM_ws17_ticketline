@@ -57,15 +57,15 @@ public class SimpleNewsRestClient implements NewsRestClient {
     public DetailedNewsDTO findById( @PathVariable Long id ) throws DataAccessException {
         try {
             LOGGER.debug("Retrieving news by id from {}", restClient.getServiceURI(NEWS_URL));
-            ResponseEntity<List<DetailedNewsDTO>> news =
+            ResponseEntity<DetailedNewsDTO> news =
                 restClient.exchange(
-                    restClient.getServiceURI(NEWS_URL),
+                    restClient.getServiceURI(NEWS_URL+"/"+id),
                     HttpMethod.GET,
                     null,
-                    new ParameterizedTypeReference<List<DetailedNewsDTO>>() {}
+                    new ParameterizedTypeReference<DetailedNewsDTO>() {}
                 );
             LOGGER.debug("Result status was {} with content {}", news.getStatusCode(), news.getBody());
-            return news.getBody().remove(0);
+            return news.getBody();
         } catch (HttpStatusCodeException e) {
             throw new DataAccessException("Failed retrieve news with status code " + e.getStatusCode().toString());
         } catch (RestClientException e) {
