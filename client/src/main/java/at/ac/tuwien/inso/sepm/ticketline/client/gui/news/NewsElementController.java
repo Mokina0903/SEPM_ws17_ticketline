@@ -62,7 +62,6 @@ public class NewsElementController {
 
     public void detailedNews(MouseEvent mouseEvent) {
 
-
         Task<DetailedNewsDTO> task = new Task<>() {
             @Override
             protected DetailedNewsDTO call() throws DataAccessException {
