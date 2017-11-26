@@ -30,20 +30,55 @@ public class UserDataGenerator {
 
     @PostConstruct
     private void generateUser() {
-        if (userRepository.count() > 0) {
+        if (userRepository.count() > 3) {
             LOGGER.info("user already generated");
         } else {
             LOGGER.info("generating {} user entries", NUMBER_OF_USER_TO_GENERATE);
-            for (int i = 0; i < NUMBER_OF_USER_TO_GENERATE; i++) {
-                User user = User.builder()
-                    .userName(faker.lorem().characters(25, 60))
-                    .password(faker.lorem().characters(25, 60))
-                    .role(4)
-                    .blocked(false)
-                    .build();
-                LOGGER.debug("saving user {}", user);
-                userRepository.save(user);
-            }
+
+            User user = User.builder()
+                .userName("user")
+                .password("password")
+                .role(2)
+                .blocked(false)
+                .build();
+            LOGGER.debug("saving user {}", user);
+            userRepository.save(user);
+
+            User florian = User.builder()
+                .userName("Florian")
+                .password("Florian")
+                .role(2)
+                .blocked(false)
+                .build();
+            LOGGER.debug("saving user {}", florian);
+            userRepository.save(florian);
+        }
+    }
+    @PostConstruct
+    private void generateAdmin() {
+        if (userRepository.count() > 3) {
+            LOGGER.info("admin already generated");
+        } else {
+            LOGGER.info("generating {} admin entries");
+
+            User user = User.builder()
+                .userName("admin")
+                .password("password")
+                .role(1)
+                .blocked(false)
+                .build();
+            LOGGER.debug("saving user {}", user);
+            userRepository.save(user);
+
+            User david = User.builder()
+                .userName("David")
+                .password("David")
+                .role(1)
+                .blocked(false)
+                .build();
+            LOGGER.debug("saving admin {}", david);
+            userRepository.save(david);
+
         }
     }
 }
