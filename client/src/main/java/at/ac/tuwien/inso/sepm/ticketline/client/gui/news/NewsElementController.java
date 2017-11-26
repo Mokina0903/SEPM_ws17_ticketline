@@ -31,6 +31,8 @@ public class NewsElementController {
         DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG, FormatStyle.SHORT);
     @FXML
     public VBox vbNewsElement;
+    @FXML
+    public Label lblId;
 
     @FXML
     private Label lblDate;
@@ -53,6 +55,7 @@ public class NewsElementController {
         lblDate.setText(NEWS_DTF.format(simpleNewsDTO.getPublishedAt()));
         lblTitle.setText(simpleNewsDTO.getTitle());
         lblText.setText(simpleNewsDTO.getSummary());
+        lblId.setText(simpleNewsDTO.getId().toString());
         this.simpleNewsDTO=simpleNewsDTO;
         this.newsService=newsService;
         this.springFxmlLoader=springFxmlLoader;
@@ -60,37 +63,5 @@ public class NewsElementController {
         this.newsController=newsController;
     }
 
-    public void detailedNews(MouseEvent mouseEvent) {
 
-        Task<DetailedNewsDTO> task = new Task<>() {
-            @Override
-            protected DetailedNewsDTO call() throws DataAccessException {
-                return newsService.findById(simpleNewsDTO.getId());
-            }
-
-            @Override
-            protected void succeeded() {
-                super.succeeded();
-                DetailedNewsDTO detailedNewsDTO= getValue();
-                    SpringFxmlLoader.Wrapper<DetailedNewsController> wrapper =
-                        springFxmlLoader.loadAndWrap("/fxml/news/detailedNewsElement.fxml");
-                    wrapper.getController().initializeData(detailedNewsDTO,newsController);
-                vbNewsElement.getChildren().add(wrapper.getLoadedObject());
-
-
-            }
-
-            @Override
-            protected void failed() {
-                super.failed();
-                JavaFXUtils.createExceptionDialog(getException(),
-                    vbNewsElement.getScene().getWindow()).showAndWait();
-            }
-        };
-        task.runningProperty().addListener((observable, oldValue, running) ->
-            mainController.setProgressbarProgress(
-                running ? ProgressBar.INDETERMINATE_PROGRESS : 0)
-        );
-        new Thread(task).start();
-    }
 }

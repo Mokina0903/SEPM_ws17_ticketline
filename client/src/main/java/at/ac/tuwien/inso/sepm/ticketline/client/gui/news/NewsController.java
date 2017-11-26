@@ -5,15 +5,15 @@ import at.ac.tuwien.inso.sepm.ticketline.client.gui.MainController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.TabHeaderController;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.NewsService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.JavaFXUtils;
+import at.ac.tuwien.inso.sepm.ticketline.rest.news.DetailedNewsDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.news.SimpleNewsDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.ListView;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.Separator;
+import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.slf4j.Logger;
@@ -48,6 +48,8 @@ public class NewsController {
     private void initialize() {
         tabHeaderController.setIcon(FontAwesome.Glyph.NEWSPAPER_ALT);
         tabHeaderController.setTitle("News");
+        vbNewsElements.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        vbNewsElements.setStyle("-fx-background-color: transparent");
     }
 
     public void loadNews() {
@@ -73,6 +75,42 @@ public class NewsController {
                         vbNewsBoxChildren.add(separator);
                     }*/
                 }
+            }
+
+            @Override
+            protected void failed() {
+                super.failed();
+                JavaFXUtils.createExceptionDialog(getException(),
+                    vbNewsElements.getScene().getWindow()).showAndWait();
+            }
+        };
+        task.runningProperty().addListener((observable, oldValue, running) ->
+            mainController.setProgressbarProgress(
+                running ? ProgressBar.INDETERMINATE_PROGRESS : 0)
+        );
+        new Thread(task).start();
+    }
+
+    public void detailedNews(MouseEvent mouseEvent) {
+
+        Task<DetailedNewsDTO> task = new Task<>() {
+            @Override
+            protected DetailedNewsDTO call() throws DataAccessException {
+
+                return newsService.findById(Long.parseLong(((Label)(vbNewsElements.getSelectionModel()
+                    .getSelectedItem().getChildren().get(3))).getText()));
+            }
+
+            @Override
+            protected void succeeded() {
+                super.succeeded();
+                DetailedNewsDTO detailedNewsDTO= getValue();
+                SpringFxmlLoader.Wrapper<DetailedNewsController> wrapper =
+                    springFxmlLoader.loadAndWrap("/fxml/news/detailedNewsElement.fxml");
+                wrapper.getController().initializeData(detailedNewsDTO,NewsController.this);
+                vbNewsElements.getSelectionModel().getSelectedItem().getChildren().add(wrapper.getLoadedObject());
+
+
             }
 
             @Override
