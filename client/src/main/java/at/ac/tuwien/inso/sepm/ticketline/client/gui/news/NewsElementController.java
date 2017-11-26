@@ -8,7 +8,9 @@ import at.ac.tuwien.inso.sepm.ticketline.rest.news.DetailedNewsDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.news.SimpleNewsDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Separator;
@@ -32,7 +34,7 @@ public class NewsElementController {
     @FXML
     public VBox vbNewsElement;
     @FXML
-    public Label lblId;
+    public Button backButton;
 
     @FXML
     private Label lblDate;
@@ -55,13 +57,48 @@ public class NewsElementController {
         lblDate.setText(NEWS_DTF.format(simpleNewsDTO.getPublishedAt()));
         lblTitle.setText(simpleNewsDTO.getTitle());
         lblText.setText(simpleNewsDTO.getSummary());
-        lblId.setText(simpleNewsDTO.getId().toString());
         this.simpleNewsDTO=simpleNewsDTO;
         this.newsService=newsService;
         this.springFxmlLoader=springFxmlLoader;
         this.mainController=mainController;
         this.newsController=newsController;
+        backButton.setVisible(false);
     }
 
+    public void backToSimpleNewsView(ActionEvent actionEvent) {
+        newsController.loadNews();
+    }
 
+    public void detailedNews(MouseEvent mouseEvent) {
+
+        Task<DetailedNewsDTO> task = new Task<>() {
+            @Override
+            protected DetailedNewsDTO call() throws DataAccessException {
+
+                return newsService.findById(simpleNewsDTO.getId());
+            }
+
+            @Override
+            protected void succeeded() {
+                super.succeeded();
+                DetailedNewsDTO detailedNewsDTO= getValue();
+                lblText.setText(detailedNewsDTO.getText());
+
+                backButton.setVisible(true);
+
+            }
+
+            @Override
+            protected void failed() {
+                super.failed();
+                JavaFXUtils.createExceptionDialog(getException(),
+                    vbNewsElement.getScene().getWindow()).showAndWait();
+            }
+        };
+        task.runningProperty().addListener((observable, oldValue, running) ->
+            mainController.setProgressbarProgress(
+                running ? ProgressBar.INDETERMINATE_PROGRESS : 0)
+        );
+        new Thread(task).start();
+    }
 }

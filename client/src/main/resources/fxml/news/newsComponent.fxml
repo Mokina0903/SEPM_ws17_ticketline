@@ -11,16 +11,13 @@
       maxHeight="1.7976931348623157E308"
       maxWidth="1.7976931348623157E308"
       spacing="5.0">
-    <stylesheets>
-        <URL value="@/css/newsComponent.css"/>
-    </stylesheets>
     <children>
         <fx:include source="/fxml/tabHeader.fxml" fx:id="tabHeader"/>
 
         <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" VBox.vgrow="ALWAYS"
                     style="-fx-background-color: transparent;">
             <ListView fx:id="vbNewsElements" maxHeight="1.7976931348623157E308"
-                      maxWidth="1.7976931348623157E308"  onMouseClicked="#detailedNews"
+                      maxWidth="1.7976931348623157E308"
                       style="-fx-background-color: transparent;">
                 <padding>
                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>

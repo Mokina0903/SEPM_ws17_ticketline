@@ -91,40 +91,5 @@ public class NewsController {
         new Thread(task).start();
     }
 
-    public void detailedNews(MouseEvent mouseEvent) {
-
-        Task<DetailedNewsDTO> task = new Task<>() {
-            @Override
-            protected DetailedNewsDTO call() throws DataAccessException {
-
-                return newsService.findById(Long.parseLong(((Label)(vbNewsElements.getSelectionModel()
-                    .getSelectedItem().getChildren().get(3))).getText()));
-            }
-
-            @Override
-            protected void succeeded() {
-                super.succeeded();
-                DetailedNewsDTO detailedNewsDTO= getValue();
-                SpringFxmlLoader.Wrapper<DetailedNewsController> wrapper =
-                    springFxmlLoader.loadAndWrap("/fxml/news/detailedNewsElement.fxml");
-                wrapper.getController().initializeData(detailedNewsDTO,NewsController.this);
-                vbNewsElements.getSelectionModel().getSelectedItem().getChildren().add(wrapper.getLoadedObject());
-
-
-            }
-
-            @Override
-            protected void failed() {
-                super.failed();
-                JavaFXUtils.createExceptionDialog(getException(),
-                    vbNewsElements.getScene().getWindow()).showAndWait();
-            }
-        };
-        task.runningProperty().addListener((observable, oldValue, running) ->
-            mainController.setProgressbarProgress(
-                running ? ProgressBar.INDETERMINATE_PROGRESS : 0)
-        );
-        new Thread(task).start();
-    }
 
 }
