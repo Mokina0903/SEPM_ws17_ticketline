@@ -21,10 +21,7 @@ public class DetailedNewsController {
     private static final DateTimeFormatter NEWS_DTF =
         DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG, FormatStyle.SHORT);
 
-    @FXML
-    public Label lblDate;
-    @FXML
-    public Label lblTitle;
+
     @FXML
     public Label lblText;
     @FXML
@@ -37,8 +34,7 @@ public class DetailedNewsController {
     private NewsController newsController;
 
     public void initializeData( DetailedNewsDTO detailedNewsDTO, NewsController newsController){
-        lblDate.setText(NEWS_DTF.format(detailedNewsDTO.getPublishedAt()));
-        lblTitle.setText(detailedNewsDTO.getTitle());
+
         lblText.setText(detailedNewsDTO.getText());
 
         this.newsController=newsController;
