@@ -6,11 +6,15 @@ import javax.persistence.*;
 @Table (name = "users")
 public class User {
 
+
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq_user_id")
     @SequenceGenerator(name = "seq_user_id", sequenceName = "seq_user_id")
     private Long id;
-    @Column(nullable = false, name = "user_name")
+    //@Column(nullable = false, name = "user_name")
+    @Column(nullable = false, unique = true)
     private String userName;
     @Column(nullable = false, length = 60, name = "passwrd")       //encoded; length = 60
     private String password;
@@ -115,5 +119,6 @@ public class User {
             return user;
         }
     }
+
 
 }
