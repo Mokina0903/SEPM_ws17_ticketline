@@ -1,4 +1,4 @@
-package at.ac.tuwien.inso.sepm.ticketline.rest.news;
+package at.ac.tuwien.inso.sepm.ticketline.rest.user;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
