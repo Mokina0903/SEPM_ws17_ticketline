@@ -11,6 +11,7 @@ import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -28,6 +29,7 @@ import java.util.List;
 public class NewsController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NewsController.class);
+    public Button addNewNews;
 
     @FXML
     private ListView<VBox> vbNewsElements;
@@ -97,4 +99,6 @@ public class NewsController {
     }
 
 
+    public void addNewNews(ActionEvent actionEvent) {
+    }
 }
