@@ -24,7 +24,7 @@ public class User {
     @Column(nullable = false)
     private boolean blocked;
 
-    @OneToMany(mappedBy = "users")
+    @OneToMany()
     private List<News> notSeen;
 
     /*private String firstName;
