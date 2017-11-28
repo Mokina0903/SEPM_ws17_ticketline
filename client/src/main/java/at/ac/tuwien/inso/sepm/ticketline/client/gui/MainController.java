@@ -1,8 +1,12 @@
 package at.ac.tuwien.inso.sepm.ticketline.client.gui;
 
+import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.news.NewsController;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.AuthenticationInformationService;
+import at.ac.tuwien.inso.sepm.ticketline.client.service.UserService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
+import at.ac.tuwien.inso.sepm.ticketline.client.util.JavaFXUtils;
+import at.ac.tuwien.inso.sepm.ticketline.rest.user.DetailedUserDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.user.SimpleUserDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
 import javafx.application.Platform;
@@ -45,17 +49,20 @@ public class MainController {
     private final SpringFxmlLoader springFxmlLoader;
     private final FontAwesome fontAwesome;
     private NewsController newsController;
-    private SimpleUserDTO simpleUserDTO;
+    private UserService userService;
+    private DetailedUserDTO detailedUserDTO;
 
     public MainController(
         SpringFxmlLoader springFxmlLoader,
         FontAwesome fontAwesome,
-        AuthenticationInformationService authenticationInformationService
+        AuthenticationInformationService authenticationInformationService,
+        UserService userService
     ) {
         this.springFxmlLoader = springFxmlLoader;
         this.fontAwesome = fontAwesome;
         authenticationInformationService.addAuthenticationChangeListener(
             authenticationTokenInfo -> setAuthenticated(null != authenticationTokenInfo));
+        this.userService=userService;
     }
 
     @FXML
@@ -112,5 +119,14 @@ public class MainController {
 
     public void setProgressbarProgress(double progress) {
         pbLoadingProgress.setProgress(progress);
+    }
+
+    public void loadDetailedUserDTO(String name){
+        try {
+            this.detailedUserDTO=userService.findByName(name);
+        } catch (DataAccessException e) {
+            JavaFXUtils.createExceptionDialog(e,spMainContent.getScene().getWindow()).showAndWait();
+           // e.printStackTrace();
+        }
     }
 }

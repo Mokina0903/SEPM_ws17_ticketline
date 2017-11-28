@@ -37,11 +37,19 @@ public class AuthenticationController {
         Task<AuthenticationTokenInfo> task = new Task<>() {
             @Override
             protected AuthenticationTokenInfo call() throws DataAccessException {
-                return authenticationService.authenticate(
+                AuthenticationTokenInfo authenticationTokenInfo= authenticationService.authenticate(
                     AuthenticationRequest.builder()
                         .username(txtUsername.getText())
                         .password(txtPassword.getText())
                         .build());
+
+
+                return authenticationTokenInfo;
+            }
+
+            @Override
+            protected void succeeded() {
+                mainController.loadDetailedUserDTO(getValue().getUsername());
             }
 
             @Override
