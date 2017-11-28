@@ -33,6 +33,11 @@ public class SimpleUserService implements UserService {
     }
 
     @Override
+    public void updateNotSeen( User user ) {
+        userRepository.updateNotSeen(user.getNotSeen(),user.getId());
+    }
+
+    @Override
     public boolean blockUser(User user) {
         user.setBlocked(true);
         return false;

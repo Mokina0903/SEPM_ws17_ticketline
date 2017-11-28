@@ -73,6 +73,14 @@ public class User {
         this.blocked = blocked;
     }
 
+    public List<News> getNotSeen() {
+        return notSeen;
+    }
+
+    public void setNotSeen( List<News> notSeen ) {
+        this.notSeen = notSeen;
+    }
+
     public static UserBuilder builder() {
         return new UserBuilder();
     }

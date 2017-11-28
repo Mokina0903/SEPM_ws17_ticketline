@@ -29,6 +29,13 @@ public interface UserService {
      */
     User createUser(User user);
 
+    /**
+     * update user
+     *
+     * @param user to update
+     * @return updated user
+     */
+    void updateNotSeen(User user);
 
     // TODO: oder einfach nur update?
     /**
