@@ -1,6 +1,7 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.entity;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table (name = "users")
@@ -22,6 +23,9 @@ public class User {
     private Integer role;
     @Column(nullable = false)
     private boolean blocked;
+
+    @OneToMany(mappedBy = "users")
+    private List<News> notSeen;
 
     /*private String firstName;
     private String lastName;
