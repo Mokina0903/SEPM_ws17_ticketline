@@ -13,15 +13,18 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
@@ -29,7 +32,11 @@ import java.util.List;
 public class NewsController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NewsController.class);
+
+    @FXML
     public Button addNewNews;
+    @FXML
+    public VBox vBContainer;
 
     @FXML
     private ListView<VBox> vbNewsElements;
@@ -100,5 +107,18 @@ public class NewsController {
 
 
     public void addNewNews(ActionEvent actionEvent) {
+
+        try {
+           SpringFxmlLoader.Wrapper<NewsAddFormularController> wrapper =
+                springFxmlLoader.loadAndWrap("/fxml/news/addNewsFormular.fxml");
+            NewsAddFormularController c = wrapper.getController();
+            c.setVBox(vBContainer);
+            BorderPane addNewsRoot = FXMLLoader.load(getClass().getResource("/fxml/news/addNewsFormular.fxml"));
+            vBContainer.getChildren().setAll(addNewsRoot);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
     }
 }
