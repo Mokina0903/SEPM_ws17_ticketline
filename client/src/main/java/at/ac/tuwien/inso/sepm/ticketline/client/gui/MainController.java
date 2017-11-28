@@ -3,6 +3,7 @@ package at.ac.tuwien.inso.sepm.ticketline.client.gui;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.news.NewsController;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.AuthenticationInformationService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
+import at.ac.tuwien.inso.sepm.ticketline.rest.user.SimpleUserDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -44,6 +45,7 @@ public class MainController {
     private final SpringFxmlLoader springFxmlLoader;
     private final FontAwesome fontAwesome;
     private NewsController newsController;
+    private SimpleUserDTO simpleUserDTO;
 
     public MainController(
         SpringFxmlLoader springFxmlLoader,
