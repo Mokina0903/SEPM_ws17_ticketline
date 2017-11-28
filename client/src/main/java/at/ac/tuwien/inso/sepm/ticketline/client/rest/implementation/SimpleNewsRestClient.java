@@ -72,5 +72,25 @@ public class SimpleNewsRestClient implements NewsRestClient {
             throw new DataAccessException(e.getMessage(), e);
         }    }
 
+    @Override
+    public DetailedNewsDTO publishNews(DetailedNewsDTO newNews) throws DataAccessException {
+        try {
+            LOGGER.debug("Publish news", restClient.getServiceURI(NEWS_URL));
+            ResponseEntity<DetailedNewsDTO> news =
+                restClient.exchange(
+                    restClient.getServiceURI(NEWS_URL),
+                    HttpMethod.POST,
+                    null,
+                    new ParameterizedTypeReference<DetailedNewsDTO>() {}
+                );
+            LOGGER.debug("Result status was {} with content {}", news.getStatusCode(), news.getBody());
+            return news.getBody();
+        } catch (HttpStatusCodeException e) {
+            throw new DataAccessException("Failed retrieve news with status code " + e.getStatusCode().toString());
+        } catch (RestClientException e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+    }
+
 
 }
