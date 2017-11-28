@@ -129,4 +129,5 @@ public class MainController {
            // e.printStackTrace();
         }
     }
+    public DetailedUserDTO getUser(){return this.detailedUserDTO;}
 }

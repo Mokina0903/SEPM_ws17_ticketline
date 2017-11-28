@@ -1,9 +1,11 @@
 package at.ac.tuwien.inso.sepm.ticketline.rest.user;
 
+import at.ac.tuwien.inso.sepm.ticketline.rest.news.SimpleNewsDTO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 //todo is this needed?
@@ -24,6 +26,9 @@ public class DetailedUserDTO {
 
     @ApiModelProperty(required = true, name = "Is the user blocked?")
     private boolean blocked;
+
+    @ApiModelProperty(required = true, name = "the news the user has not yet seen")
+    private List<SimpleNewsDTO> notSeen;
 
     public Long getId() {
         return id;
@@ -63,6 +68,14 @@ public class DetailedUserDTO {
 
     public void setBlocked(boolean blocked) {
         this.blocked = blocked;
+    }
+
+    public List<SimpleNewsDTO> getNotSeen() {
+        return notSeen;
+    }
+
+    public void setNotSeen( List<SimpleNewsDTO> notSeen ) {
+        this.notSeen = notSeen;
     }
 
     @Override
@@ -113,6 +126,7 @@ public class DetailedUserDTO {
         private String password;
         private Integer role;
         private boolean blocked;
+        private List<SimpleNewsDTO> notSeen;
 
         public UserDTOBuilder id(Long id) {
             this.id = id;
@@ -139,6 +153,11 @@ public class DetailedUserDTO {
             return this;
         }
 
+        public UserDTOBuilder notSeen(List<SimpleNewsDTO> notSeen){
+            this.notSeen = notSeen;
+            return this;
+        }
+
         public DetailedUserDTO build() {
             DetailedUserDTO userDTO = new DetailedUserDTO();
             userDTO.setId(id);
@@ -146,6 +165,7 @@ public class DetailedUserDTO {
             userDTO.setPassword(password);
             userDTO.setRole(role);
             userDTO.setBlocked(blocked);
+            userDTO.setNotSeen(notSeen);
             return userDTO;
         }
     }
