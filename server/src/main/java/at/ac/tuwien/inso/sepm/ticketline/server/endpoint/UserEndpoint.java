@@ -37,6 +37,12 @@ public class UserEndpoint {
         return userMapper.userToDetailedUserDTO(userService.findOne(id));
     }
 
+    @RequestMapping(value = "/{name}", method = RequestMethod.GET)
+    @ApiOperation(value = "Get detailed information about a specific user entry")
+    public DetailedUserDTO findByName(@PathVariable String name) {
+        return userMapper.userToDetailedUserDTO(userService.findOneByName(name));
+    }
+
     @RequestMapping(method = RequestMethod.POST)
     @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation(value = "Create a new user entry")

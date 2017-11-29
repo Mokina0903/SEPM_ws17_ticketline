@@ -28,6 +28,11 @@ public class SimpleUserService implements UserService {
     }
 
     @Override
+    public User findOneByName( String name ) {
+        return userRepository.findOneByUserName(name);
+    }
+
+    @Override
     public User createUser(User user) {
         return null;
     }
