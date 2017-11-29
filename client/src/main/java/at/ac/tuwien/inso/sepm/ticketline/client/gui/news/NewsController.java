@@ -112,8 +112,7 @@ public class NewsController {
            SpringFxmlLoader.Wrapper<NewsAddFormularController> wrapper =
                 springFxmlLoader.loadAndWrap("/fxml/news/addNewsFormular.fxml");
             NewsAddFormularController c = wrapper.getController();
-            c.setVBox(vBContainer);
-           VBox addNewsRoot = FXMLLoader.load(getClass().getResource("/fxml/news/addNewsFormular.fxml"));
+            VBox addNewsRoot = FXMLLoader.load(getClass().getResource("/fxml/news/addNewsFormular.fxml"));
             vBContainer.getChildren().setAll(addNewsRoot);
         } catch (IOException e) {
             e.printStackTrace();

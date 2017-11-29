@@ -49,11 +49,12 @@ public class NewsAddFormularController {
 
     private NewsService newsService;
 
-    private VBox NewsOverview;
+    private NewsController c;
 
-    public void setVBox (VBox box){
-        NewsOverview = box;
+    public void setNewsController(NewsController con){
+        c = con;
     }
+
     public void setFxmlLoader(SpringFxmlLoader loader){
         this.springFxmlLoader = loader;
     }
@@ -68,17 +69,17 @@ public class NewsAddFormularController {
     public void saveNewNews(ActionEvent actionEvent) {
 
         DetailedNewsDTO.NewsDTOBuilder builder = new DetailedNewsDTO.NewsDTOBuilder();
-        builder.publishedAt(LocalDateTime.now());
         builder.title(TitleTF.getText());
         builder.path(imgPath);
         builder.text(TextArea.getText());
         newNews = builder.build();
         try {
            newNews = newsService.publishNews(newNews);
+           c.loadNews();
         } catch (DataAccessException e) {
             e.printStackTrace();
         }
-        //TODO: publish news, add to new News by Users, go back to newsOverview
+        //TODO: add to new News by Users, go back to newsOverview
     }
 
     public void addImage(ActionEvent actionEvent) {
