@@ -20,7 +20,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
      * @param userName the is of the user entry
      * @return Optional containing the user entry
      */
-    User findByUserName(String userName);
+    User findOneByUserName(String userName);
 
     /**
      * Find a single user entry by id.

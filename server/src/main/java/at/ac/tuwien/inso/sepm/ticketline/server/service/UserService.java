@@ -20,6 +20,13 @@ public interface UserService {
      */
     User findOne(Long id);
 
+    /**
+     * Find a single user entry by name.
+     *
+     * @param name of the user entry
+     * @return the user entry
+     */
+    User findOneByName(String name);
 
     /**
      * Create a single user entry

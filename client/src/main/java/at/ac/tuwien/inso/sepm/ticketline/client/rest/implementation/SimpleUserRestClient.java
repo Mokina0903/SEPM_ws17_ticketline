@@ -17,7 +17,7 @@ import org.springframework.web.client.RestClientException;
 @Component
 public class SimpleUserRestClient implements UserRestClient{
     private static final Logger LOGGER = LoggerFactory.getLogger(SimpleUserRestClient.class);
-    private static final String User_URL = "/User";
+    private static final String User_URL = "/user";
 
     private final RestClient restClient;
 
@@ -26,12 +26,12 @@ public class SimpleUserRestClient implements UserRestClient{
     }
 
     @Override
-    public DetailedUserDTO findByName( @PathVariable String name ) throws DataAccessException {
+    public DetailedUserDTO findByName( String name ) throws DataAccessException {
         try {
             LOGGER.debug("Retrieving user by name from {}", restClient.getServiceURI(User_URL));
             ResponseEntity<DetailedUserDTO> user =
                 restClient.exchange(
-                    restClient.getServiceURI(User_URL+"/"+name),
+                    restClient.getServiceURI(User_URL+"/find/"+name),
                     HttpMethod.GET,
                     null,
                     new ParameterizedTypeReference<DetailedUserDTO>() {}

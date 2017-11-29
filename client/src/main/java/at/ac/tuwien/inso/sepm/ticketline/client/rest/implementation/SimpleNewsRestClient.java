@@ -54,7 +54,7 @@ public class SimpleNewsRestClient implements NewsRestClient {
     }
 
     @Override
-    public DetailedNewsDTO findById( @PathVariable Long id ) throws DataAccessException {
+    public DetailedNewsDTO findById( Long id ) throws DataAccessException {
         try {
             LOGGER.debug("Retrieving news by id from {}", restClient.getServiceURI(NEWS_URL));
             ResponseEntity<DetailedNewsDTO> news =
