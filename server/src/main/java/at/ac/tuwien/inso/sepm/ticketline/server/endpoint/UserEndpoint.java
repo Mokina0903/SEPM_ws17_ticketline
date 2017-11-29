@@ -37,10 +37,10 @@ public class UserEndpoint {
         return userMapper.userToDetailedUserDTO(userService.findOne(id));
     }
 
-    @RequestMapping(value = "/{name}", method = RequestMethod.GET)
-    @ApiOperation(value = "Get detailed information about a specific user entry")
-    public DetailedUserDTO findByName(@PathVariable String name) {
-        return userMapper.userToDetailedUserDTO(userService.findOneByName(name));
+    @RequestMapping(value = "/find/{userName}", method = RequestMethod.GET)
+    @ApiOperation(value = "Get detailed information about a specific user entry by name")
+    public DetailedUserDTO findByName(@PathVariable("userName") String userName) {
+        return userMapper.userToDetailedUserDTO(userService.findOneByName(userName));
     }
 
     @RequestMapping(method = RequestMethod.POST)
