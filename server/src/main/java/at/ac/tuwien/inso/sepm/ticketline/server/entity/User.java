@@ -16,7 +16,7 @@ public class User {
     //@Column(nullable = false, name = "user_name")
     @Column(nullable = false, unique = true)
     private String userName;
-    @Column(nullable = false, length = 60, name = "passwrd")       //encoded; length = 60
+    @Column(nullable = false, length = 60)       //encoded; length = 60
     private String password;
     @Column(nullable = false)
     private Integer role;

@@ -3,6 +3,7 @@ package at.ac.tuwien.inso.sepm.ticketline.server.configuration;
 import at.ac.tuwien.inso.sepm.ticketline.server.configuration.properties.H2ConsoleConfigurationProperties;
 import at.ac.tuwien.inso.sepm.ticketline.server.security.HeaderTokenAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.tomcat.jdbc.pool.DataSource;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.boot.autoconfigure.web.DefaultErrorAttributes;
 import org.springframework.boot.autoconfigure.web.ErrorAttributes;
@@ -42,6 +43,9 @@ public class SecurityConfiguration {
         this.passwordEncoder = passwordEncoder;
     }
 
+    @Autowired
+    DataSource dataSource;
+
     @Bean
     public static PasswordEncoder configureDefaultPasswordEncoder() {
         return new BCryptPasswordEncoder(10);
@@ -61,11 +65,12 @@ public class SecurityConfiguration {
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth, List<AuthenticationProvider> providerList) throws Exception {
-        new InMemoryUserDetailsManagerConfigurer<AuthenticationManagerBuilder>()
-            .withUser("user").password(passwordEncoder.encode("password")).authorities("USER").and()
-            .withUser("admin").password(passwordEncoder.encode("password")).authorities("ADMIN", "USER").and()
-            .passwordEncoder(passwordEncoder)
-            .configure(auth);
+        auth.jdbcAuthentication()
+            .dataSource(dataSource)
+            .usersByUsernameQuery(
+                "SELECT user_name, password, (not blocked) as enabled from users where user_name=?")
+            .authoritiesByUsernameQuery("select user_name, role from users where user_name=?");
+        //.passwordEncoder(passwordEncoder);
         providerList.forEach(auth::authenticationProvider);
     }
 
