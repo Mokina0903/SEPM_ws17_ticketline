@@ -44,9 +44,20 @@ public class NewsController {
     @FXML
     private TabHeaderController tabHeaderController;
 
+    private Tab newsTab;
+
+
     private final MainController mainController;
     private final SpringFxmlLoader springFxmlLoader;
     private final NewsService newsService;
+
+    public Tab getNewsTab() {
+        return newsTab;
+    }
+
+    public void setNewsTab(Tab newsTab) {
+        this.newsTab = newsTab;
+    }
 
     public NewsController(MainController mainController, SpringFxmlLoader springFxmlLoader, NewsService newsService) {
         this.mainController = mainController;
@@ -87,7 +98,6 @@ public class NewsController {
                         springFxmlLoader.loadAndWrap("/fxml/news/newsElement.fxml");
                     wrapper.getController().initializeData(news,newsService,mainController,NewsController.this);
                     vbNewsBoxChildren.add(wrapper.getController().vbNewsElement);
-
                 }
             }
 
@@ -108,16 +118,11 @@ public class NewsController {
 
     public void addNewNews(ActionEvent actionEvent) {
 
-        try {
            SpringFxmlLoader.Wrapper<NewsAddFormularController> wrapper =
                 springFxmlLoader.loadAndWrap("/fxml/news/addNewsFormular.fxml");
-            NewsAddFormularController c = wrapper.getController();
-            VBox addNewsRoot = FXMLLoader.load(getClass().getResource("/fxml/news/addNewsFormular.fxml"));
-            vBContainer.getChildren().setAll(addNewsRoot);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+           wrapper.getController().initializeData(springFxmlLoader, newsService, NewsController.this, vBContainer);
+            VBox addNewsRoot = springFxmlLoader.load("/fxml/news/addNewsFormular.fxml");
+            newsTab.setContent(addNewsRoot);
 
     }
 }

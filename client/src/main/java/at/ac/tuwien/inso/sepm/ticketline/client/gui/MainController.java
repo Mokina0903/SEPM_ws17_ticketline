@@ -52,6 +52,10 @@ public class MainController {
     private UserService userService;
     private DetailedUserDTO detailedUserDTO;
 
+    public Tab getNewsTab() {
+        return newsTab;
+    }
+
     public MainController(
         SpringFxmlLoader springFxmlLoader,
         FontAwesome fontAwesome,
@@ -92,11 +96,14 @@ public class MainController {
         dialog.showAndWait();
     }
 
+    Tab newsTab;
+
     private void initNewsTabPane() {
         SpringFxmlLoader.Wrapper<NewsController> wrapper =
             springFxmlLoader.loadAndWrap("/fxml/news/newsComponent.fxml");
         newsController = wrapper.getController();
-        Tab newsTab = new Tab(null, wrapper.getLoadedObject());
+        newsTab = new Tab(null, wrapper.getLoadedObject());
+        newsController.setNewsTab(newsTab);
         Glyph newsGlyph = fontAwesome.create(FontAwesome.Glyph.NEWSPAPER_ALT);
         newsGlyph.setFontSize(TAB_ICON_FONT_SIZE);
         newsGlyph.setColor(Color.WHITE);

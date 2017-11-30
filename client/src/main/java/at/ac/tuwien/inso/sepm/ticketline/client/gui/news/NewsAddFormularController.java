@@ -1,27 +1,25 @@
 package at.ac.tuwien.inso.sepm.ticketline.client.gui.news;
 
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.TabHeaderController;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.NewsService;
 import at.ac.tuwien.inso.sepm.ticketline.rest.news.DetailedNewsDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import org.controlsfx.glyphfont.FontAwesome;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-
-import javax.swing.*;
 import java.io.File;
-import java.io.IOException;
-import java.time.LocalDateTime;
 
 @Component
 public class NewsAddFormularController {
@@ -49,20 +47,19 @@ public class NewsAddFormularController {
 
     private NewsService newsService;
 
+    private Node oldContent;
+
+
     private NewsController c;
+    private TabHeaderController tabHeaderController;
 
-    public void setNewsController(NewsController con){
-        c = con;
+
+     void initializeData(SpringFxmlLoader loader, NewsService service, NewsController controller, Node oldContent){
+        springFxmlLoader = loader;
+        newsService = service;
+        c = controller;
+        this.oldContent = oldContent;
     }
-
-    public void setFxmlLoader(SpringFxmlLoader loader){
-        this.springFxmlLoader = loader;
-    }
-
-    public void setNewsService (NewsService newsService){
-        this.newsService = newsService;
-    }
-
 
 
     @FXML
@@ -73,12 +70,12 @@ public class NewsAddFormularController {
         builder.path(imgPath);
         builder.text(TextArea.getText());
         newNews = builder.build();
-        try {
-           newNews = newsService.publishNews(newNews);
-           c.loadNews();
-        } catch (DataAccessException e) {
-            e.printStackTrace();
-        }
+        // try {
+        // newNews = newsService.publishNews(newNews);
+        c.getNewsTab().setContent(oldContent);
+       // } catch (DataAccessException e) {
+        //    e.printStackTrace();
+       // }
         //TODO: add to new News by Users, go back to newsOverview
     }
 
