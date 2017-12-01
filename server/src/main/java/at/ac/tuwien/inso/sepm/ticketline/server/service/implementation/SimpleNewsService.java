@@ -35,16 +35,17 @@ public class SimpleNewsService implements NewsService {
     @Override
     public News publishNews(News news) {
         news.setPublishedAt(LocalDateTime.now());
-        List<User> users = userService.findAll();
+        News newsTMP =newsRepository.save(news);
+        /*List<User> users = userService.findAll();
         if(!users.isEmpty()) {
             for (User user : users) {
                 List<News> notSeen = user.getNotSeen();
-                notSeen.add(news);
+                notSeen.add(newsTMP);
                 user.setNotSeen(notSeen);
-                userService.updateNotSeen(user);
+                userService.save(user);
             }
-        }
-        return newsRepository.save(news);
+        }*/
+        return newsTMP;
     }
 
 }

@@ -37,12 +37,12 @@ public interface UserService {
     User createUser(User user);
 
     /**
-     * update user
+     * save/update user
      *
-     * @param user to update
-     * @return updated user
+     * @param user to save/update
+     * @return saved/updated user
      */
-    void updateNotSeen(User user);
+    void save(User user);
 
     // TODO: oder einfach nur update?
     /**

@@ -38,8 +38,8 @@ public class SimpleUserService implements UserService {
     }
 
     @Override
-    public void updateNotSeen( User user ) {
-        userRepository.updateNotSeen(user.getNotSeen(),user.getId());
+    public void save( User user ) {
+        userRepository.save(user);
     }
 
     @Override

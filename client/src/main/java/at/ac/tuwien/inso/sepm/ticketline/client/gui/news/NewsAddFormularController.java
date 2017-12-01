@@ -70,19 +70,19 @@ public class NewsAddFormularController {
         builder.path(imgPath);
         builder.text(TextArea.getText());
         newNews = builder.build();
-        // try {
-        // newNews = newsService.publishNews(newNews);
+        try {
+        newNews = newsService.publishNews(newNews);
         c.getNewsTab().setContent(oldContent);
-       // } catch (DataAccessException e) {
-        //    e.printStackTrace();
-       // }
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+        }
         //TODO: add to new News by Users, go back to newsOverview
     }
 
     public void addImage(ActionEvent actionEvent) {
 
         FileChooser fc = new FileChooser();
-        fc.setInitialDirectory(new File("C:/Users/Verena/Pictures"));
+        fc.setInitialDirectory(new File("C:/Users/"));
         FileChooser.ExtensionFilter f1 = new FileChooser.ExtensionFilter("Image Files", "*.jpg", "*.png");
         fc.getExtensionFilters().addAll(f1);
         File file = fc.showOpenDialog(null);

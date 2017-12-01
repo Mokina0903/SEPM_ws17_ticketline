@@ -4,6 +4,7 @@ import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.rest.NewsRestClient;
 import at.ac.tuwien.inso.sepm.ticketline.rest.news.DetailedNewsDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.news.SimpleNewsDTO;
+import io.swagger.annotations.Authorization;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -73,7 +74,7 @@ public class SimpleNewsRestClient implements NewsRestClient {
         }    }
 
     @Override
-    public DetailedNewsDTO publishNews(DetailedNewsDTO newNews) throws DataAccessException {
+    public DetailedNewsDTO publishNews( DetailedNewsDTO newNews) throws DataAccessException {
         try {
             LOGGER.debug("Publish news", restClient.getServiceURI(NEWS_URL));
             ResponseEntity<DetailedNewsDTO> news =
