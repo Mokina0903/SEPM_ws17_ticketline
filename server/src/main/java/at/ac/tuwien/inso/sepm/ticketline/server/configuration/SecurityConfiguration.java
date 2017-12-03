@@ -111,13 +111,17 @@ public class SecurityConfiguration{
                 .exceptionHandling().authenticationEntryPoint((req, res, aE) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED)).and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS).permitAll()
-                .antMatchers(HttpMethod.POST, "/authentication").permitAll()
+                .antMatchers(HttpMethod.POST,
+                    "/authentication",
+                    "/user/decreaseAttempts",
+                    "/user/resetAttempts",
+                    "/user/block").permitAll()
                 .antMatchers(HttpMethod.GET,
                     "/v2/api-docs",
                     "/swagger-resources/**",
                     "/webjars/springfox-swagger-ui/**",
                     "/swagger-ui.html",
-                    "/user/**/loginAttemptsLeft"
+                    "/user/**/getAttempts"
                     // add here methods that need to omit security
                 )
                 .permitAll()
