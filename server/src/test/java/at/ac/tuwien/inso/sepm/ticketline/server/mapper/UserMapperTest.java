@@ -35,7 +35,7 @@ public class UserMapperTest {
 
     //no summary of user needed
 
-  /*  @Test
+    @Test
     public void shouldMapUserToSimpleUserDTOShorteningTextToSummary() {
         User user = User.builder()
             .id(USER_ID)
@@ -51,10 +51,10 @@ public class UserMapperTest {
         assertThat(simpleUserDTO.getPassword()).isEqualTo(USER_PASSWORD);
         assertThat(simpleUserDTO.getRole()).isEqualTo(USER_ROLE);
         assertThat(simpleUserDTO.isBlocked() == BLOCKED);
-    }*/
+    }
 
 
-/*    @Test
+    @Test
     public void shouldMapUserToSimpleUserDTONotShorteningTextToSummary() {
         User user = User.builder()
             .id(USER_ID)
@@ -70,7 +70,7 @@ public class UserMapperTest {
         assertThat(simpleUserDTO.getPassword()).isEqualTo(USER_PASSWORD);
         assertThat(simpleUserDTO.getRole()).isEqualTo(USER_ROLE);
         assertThat(simpleUserDTO.isBlocked() == BLOCKED);
-    }*/
+    }
 
     @Test
     public void shouldMapUserToDetailedUserDTO() {

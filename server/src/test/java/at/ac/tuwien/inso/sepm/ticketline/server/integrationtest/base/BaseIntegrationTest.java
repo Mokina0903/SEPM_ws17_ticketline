@@ -21,11 +21,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 @ActiveProfiles("integration-test")
 public abstract class BaseIntegrationTest {
 
-    private static final String SERVER_HOST = "http://localhost";
-    private static final String USER_USERNAME = "user";
-    private static final String USER_PASSWORD = "password";
-    private static final String ADMIN_PASSWORD = "password";
-    private static final String ADMIN_USERNAME = "admin";
+    protected static final String SERVER_HOST = "http://localhost";
+    protected static final String USER_USERNAME = "user";
+    protected static final String USER_PASSWORD = "password";
+    protected static final String ADMIN_PASSWORD = "password";
+    protected static final String ADMIN_USERNAME = "admin";
 
     @Value("${server.context-path}")
     private String contextPath;
@@ -34,7 +34,7 @@ public abstract class BaseIntegrationTest {
     private int port;
 
     @Autowired
-    private SimpleHeaderTokenAuthenticationService simpleHeaderTokenAuthenticationService;
+    protected SimpleHeaderTokenAuthenticationService simpleHeaderTokenAuthenticationService;
 
     @Autowired
     private JacksonConfiguration jacksonConfiguration;
