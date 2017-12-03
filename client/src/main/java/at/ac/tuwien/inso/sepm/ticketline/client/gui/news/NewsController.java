@@ -19,6 +19,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,7 +84,8 @@ public class NewsController {
     public void loadNews() {
         ObservableList<VBox> vbNewsBoxChildren = vbNewsElements.getItems();
         vbNewsBoxChildren.clear();
-        Task<List<SimpleNewsDTO>> task = new Task<>() {
+
+        Task<List<SimpleNewsDTO>> taskNewNews = new Task<>() {
             @Override
             protected List<SimpleNewsDTO> call() throws DataAccessException {
                 return newsService.findAll();
@@ -94,10 +96,49 @@ public class NewsController {
                 super.succeeded();
                 for (Iterator<SimpleNewsDTO> iterator = getValue().iterator(); iterator.hasNext(); ) {
                     SimpleNewsDTO news = iterator.next();
-                    SpringFxmlLoader.Wrapper<NewsElementController> wrapper =
-                        springFxmlLoader.loadAndWrap("/fxml/news/newsElement.fxml");
-                    wrapper.getController().initializeData(news,newsService,mainController,NewsController.this);
-                    vbNewsBoxChildren.add(wrapper.getController().vbNewsElement);
+                    if(mainController.getUser().getNotSeen().contains(news)) {
+                        SpringFxmlLoader.Wrapper<NewsElementController> wrapper =
+                            springFxmlLoader.loadAndWrap("/fxml/news/newsElement.fxml");
+                        wrapper.getController().initializeData(news, newsService, mainController, NewsController.this);
+                        Label title = wrapper.getController().getLblTitle();
+
+                        wrapper.getController().getLblTitle().setText("<b>"+wrapper.getController().getLblTitle().getText()+"</b>");
+                        vbNewsBoxChildren.add(wrapper.getController().vbNewsElement);
+                    }
+                }
+            }
+
+            @Override
+            protected void failed() {
+                if(getValue()==null || getValue().isEmpty()) {
+                    super.failed();
+                    JavaFXUtils.createExceptionDialog(getException(),
+                        vbNewsElements.getScene().getWindow()).showAndWait();
+                }
+            }
+        };
+        taskNewNews.runningProperty().addListener((observable, oldValue, running) ->
+            mainController.setProgressbarProgress(
+                running ? ProgressBar.INDETERMINATE_PROGRESS : 0)
+        );
+
+        Task<List<SimpleNewsDTO>> taskOldNews = new Task<>() {
+            @Override
+            protected List<SimpleNewsDTO> call() throws DataAccessException {
+                return newsService.findAll();
+            }
+
+            @Override
+            protected void succeeded() {
+                super.succeeded();
+                for (Iterator<SimpleNewsDTO> iterator = getValue().iterator(); iterator.hasNext(); ) {
+                    SimpleNewsDTO news = iterator.next();
+                    if(!mainController.getUser().getNotSeen().contains(news)) {
+                        SpringFxmlLoader.Wrapper<NewsElementController> wrapper =
+                            springFxmlLoader.loadAndWrap("/fxml/news/newsElement.fxml");
+                        wrapper.getController().initializeData(news, newsService, mainController, NewsController.this);
+                        vbNewsBoxChildren.add(wrapper.getController().vbNewsElement);
+                    }
                 }
             }
 
@@ -108,11 +149,12 @@ public class NewsController {
                     vbNewsElements.getScene().getWindow()).showAndWait();
             }
         };
-        task.runningProperty().addListener((observable, oldValue, running) ->
+        taskOldNews.runningProperty().addListener((observable, oldValue, running) ->
             mainController.setProgressbarProgress(
                 running ? ProgressBar.INDETERMINATE_PROGRESS : 0)
         );
-        new Thread(task).start();
+        //new Thread(taskNewNews).start();
+        new Thread(taskOldNews).start();
     }
 
 

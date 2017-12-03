@@ -50,9 +50,16 @@ public class NewsElementController {
     private MainController mainController;
     private NewsController newsController;
 
+    public Label getLblTitle() {
+        return lblTitle;
+    }
 
-    public void initializeData(SimpleNewsDTO simpleNewsDTO, NewsService newsService,
-                               MainController mainController,NewsController newsController) {
+    public void setLblTitle( Label lblTitle ) {
+        this.lblTitle = lblTitle;
+    }
+
+    public void initializeData( SimpleNewsDTO simpleNewsDTO, NewsService newsService,
+                                MainController mainController, NewsController newsController) {
         lblDate.setText(NEWS_DTF.format(simpleNewsDTO.getPublishedAt()));
         lblTitle.setText(simpleNewsDTO.getTitle());
         lblText.setText(simpleNewsDTO.getSummary());
