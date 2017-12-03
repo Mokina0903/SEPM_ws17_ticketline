@@ -2,6 +2,7 @@ package at.ac.tuwien.inso.sepm.ticketline.client.rest.implementation;
 
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.rest.UserRestClient;
+import at.ac.tuwien.inso.sepm.ticketline.rest.user.DetailedUserDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.user.SimpleUserDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,14 +70,14 @@ public class SimpleUserRestClient implements UserRestClient {
             throw new DataAccessException(e.getMessage(), e);
         }
     }
-    
+
     @Override
-    public DetailedUserDTO findByName( String name ) throws DataAccessException {
+    public DetailedUserDTO findByName(String name ) throws DataAccessException {
         try {
-            LOGGER.debug("Retrieving user by name from {}", restClient.getServiceURI(User_URL));
+            LOGGER.debug("Retrieving user by name from {}", restClient.getServiceURI(USER_URL));
             ResponseEntity<DetailedUserDTO> user =
                 restClient.exchange(
-                    restClient.getServiceURI(User_URL+"/find/"+name),
+                    restClient.getServiceURI(USER_URL+"/find/"+name),
                     HttpMethod.GET,
                     null,
                     new ParameterizedTypeReference<DetailedUserDTO>() {}

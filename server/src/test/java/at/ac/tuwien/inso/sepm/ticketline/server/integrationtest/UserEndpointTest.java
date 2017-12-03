@@ -47,7 +47,7 @@ public class UserEndpointTest extends BaseIntegrationTest {
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED.value()));
     }
 
-   /* @Test
+    @Test
     public void loginWithCorrectNameAndWrongPassword(){
 
         String wrong = Strings
@@ -55,21 +55,18 @@ public class UserEndpointTest extends BaseIntegrationTest {
                 AuthenticationConstants.TOKEN_PREFIX,
                 super.simpleHeaderTokenAuthenticationService.authenticate(ADMIN_USERNAME, ADMIN_PASSWORD.substring(2)).getCurrentToken())
             .with(" ");
-        System.out.println(wrong + " Geschlechtsverkehr1");
         wrong = Strings
             .join(
                 AuthenticationConstants.TOKEN_PREFIX,
                 super.simpleHeaderTokenAuthenticationService.authenticate(ADMIN_USERNAME, ADMIN_PASSWORD.substring(2)).getCurrentToken())
             .with(" ");
-        System.out.println(wrong + " Geschlechtsverkehr2");
         wrong = Strings
             .join(
                 AuthenticationConstants.TOKEN_PREFIX,
                 super.simpleHeaderTokenAuthenticationService.authenticate(ADMIN_USERNAME, ADMIN_PASSWORD).getCurrentToken())
             .with(" ");
-        System.out.println(wrong + " Geschlechtsverkehr3");
     }
-*/
+
 
 
 }

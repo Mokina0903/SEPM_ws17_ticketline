@@ -70,7 +70,7 @@ public class SecurityConfiguration{
         auth.jdbcAuthentication()
             .dataSource(dataSource)
             .usersByUsernameQuery(
-                "SELECT user_name, attempts, (not blocked) as enabled from users where user_name=?")
+                "SELECT user_name, password, (not blocked) as enabled from users where user_name=?")
             .authoritiesByUsernameQuery("select user_name, role from users where user_name=?");
         //.passwordEncoder(passwordEncoder);
         providerList.forEach(auth::authenticationProvider);
