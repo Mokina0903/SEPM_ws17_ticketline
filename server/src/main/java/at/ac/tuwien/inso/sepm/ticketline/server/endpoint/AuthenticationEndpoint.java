@@ -3,8 +3,11 @@ package at.ac.tuwien.inso.sepm.ticketline.server.endpoint;
 import at.ac.tuwien.inso.sepm.ticketline.rest.authentication.AuthenticationRequest;
 import at.ac.tuwien.inso.sepm.ticketline.rest.authentication.AuthenticationToken;
 import at.ac.tuwien.inso.sepm.ticketline.rest.authentication.AuthenticationTokenInfo;
+import at.ac.tuwien.inso.sepm.ticketline.rest.user.SimpleUserDTO;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.user.UserMapper;
 import at.ac.tuwien.inso.sepm.ticketline.server.security.AuthenticationConstants;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.HeaderTokenAuthenticationService;
+import at.ac.tuwien.inso.sepm.ticketline.server.service.UserService;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.implementation.SimpleHeaderTokenAuthenticationService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -18,9 +21,14 @@ import springfox.documentation.annotations.ApiIgnore;
 public class AuthenticationEndpoint {
 
     private final HeaderTokenAuthenticationService authenticationService;
+    private final UserService userService;
+    private final UserMapper userMapper;
 
-    public AuthenticationEndpoint(SimpleHeaderTokenAuthenticationService simpleHeaderTokenAuthenticationService) {
+
+    public AuthenticationEndpoint(SimpleHeaderTokenAuthenticationService simpleHeaderTokenAuthenticationService, UserService userService, UserMapper userMapper) {
         authenticationService = simpleHeaderTokenAuthenticationService;
+        this.userService = userService;
+        this.userMapper = userMapper;
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -46,4 +54,5 @@ public class AuthenticationEndpoint {
     public AuthenticationTokenInfo tokenInfoCurrent(@ApiIgnore @RequestHeader(value = HttpHeaders.AUTHORIZATION) String authorizationHeader) {
         return authenticationService.authenticationTokenInfo(authorizationHeader.substring(AuthenticationConstants.TOKEN_PREFIX.length()).trim());
     }
+
 }

@@ -17,6 +17,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.authentication.configurers.provisioning.InMemoryUserDetailsManagerConfigurer;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -35,7 +36,7 @@ import java.util.Map;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
-public class SecurityConfiguration {
+public class SecurityConfiguration{
 
     private final PasswordEncoder passwordEncoder;
 
@@ -45,6 +46,7 @@ public class SecurityConfiguration {
 
     @Autowired
     DataSource dataSource;
+
 
     @Bean
     public static PasswordEncoder configureDefaultPasswordEncoder() {
@@ -68,11 +70,14 @@ public class SecurityConfiguration {
         auth.jdbcAuthentication()
             .dataSource(dataSource)
             .usersByUsernameQuery(
-                "SELECT user_name, password, (not blocked) as enabled from users where user_name=?")
+                "SELECT user_name, attempts, (not blocked) as enabled from users where user_name=?")
             .authoritiesByUsernameQuery("select user_name, role from users where user_name=?");
         //.passwordEncoder(passwordEncoder);
         providerList.forEach(auth::authenticationProvider);
     }
+
+
+
 
     @Configuration
     @Order(SecurityProperties.BASIC_AUTH_ORDER)
@@ -91,8 +96,14 @@ public class SecurityConfiguration {
             h2AccessMatcher = h2ConsoleConfigurationProperties.getAccessMatcher();
         }
 
+/*        @Override
+        public void configure(WebSecurity web) throws Exception {
+            web.ignoring().antMatchers(HttpMethod.POST, "/authentication/**");
+        }*/
+
         @Override
         protected void configure(HttpSecurity http) throws Exception {
+
             http
                 .csrf().disable()
                 .headers().frameOptions().sameOrigin().and()
@@ -105,7 +116,10 @@ public class SecurityConfiguration {
                     "/v2/api-docs",
                     "/swagger-resources/**",
                     "/webjars/springfox-swagger-ui/**",
-                    "/swagger-ui.html")
+                    "/swagger-ui.html",
+                    "/user/**/loginAttemptsLeft"
+                    // add here methods that need to omit security
+                )
                 .permitAll()
             ;
             if (h2ConsolePath != null && h2AccessMatcher != null) {

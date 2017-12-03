@@ -22,6 +22,15 @@ public interface UserService {
 
 
     /**
+     * Find a single user entry by name.
+     *
+     * @param userName of the user entry
+     * @return the user entry
+     */
+    User findByUsername(String userName);
+
+
+    /**
      * Create a single user entry
      *
      * @param user to create

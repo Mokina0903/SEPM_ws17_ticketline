@@ -17,6 +17,9 @@ public class SimpleUserDTO {
     @ApiModelProperty(required = true, readOnly = true, name = "The password of the user")
     private String password;
 
+    @ApiModelProperty(required = true, readOnly = true, name = "The number of free login attempts of the user")
+    private Integer attempts;
+
     @ApiModelProperty(required = true, readOnly = true, name = "The role of the user")
     private Integer role;
 
@@ -45,6 +48,14 @@ public class SimpleUserDTO {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Integer getAttempts() {
+        return attempts;
+    }
+
+    public void setAttempts(Integer attempts) {
+        this.attempts = attempts;
     }
 
     public Integer getRole() {
@@ -83,6 +94,7 @@ public class SimpleUserDTO {
         private Long id;
         private String userName;
         private String password;
+        private Integer attempts;
         private Integer role;
         private boolean blocked;
 
@@ -104,6 +116,11 @@ public class SimpleUserDTO {
             return this;
         }
 
+        public UserDTOBuilder attempts(Integer attempts) {
+            this.attempts = attempts;
+            return this;
+        }
+
         public UserDTOBuilder role(Integer role) {
             this.role = role;
             return this;
@@ -115,13 +132,14 @@ public class SimpleUserDTO {
         }
 
         public SimpleUserDTO build() {
-            SimpleUserDTO user = new SimpleUserDTO();
-            user.setId(id);
-            user.setUserName(userName);
-            user.setPassword(password);
-            user.setRole(role);
-            user.setBlocked(blocked);
-            return user;
+            SimpleUserDTO userDTO = new SimpleUserDTO();
+            userDTO.setId(id);
+            userDTO.setUserName(userName);
+            userDTO.setPassword(password);
+            userDTO.setAttempts(attempts);
+            userDTO.setRole(role);
+            userDTO.setBlocked(blocked);
+            return userDTO;
         }
     }
 }

@@ -6,18 +6,17 @@ import javax.persistence.*;
 @Table (name = "users")
 public class User {
 
-
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq_user_id")
     @SequenceGenerator(name = "seq_user_id", sequenceName = "seq_user_id")
     private Long id;
-    //@Column(nullable = false, name = "user_name")
     @Column(nullable = false, unique = true)
     private String userName;
     @Column(nullable = false, length = 60)       //encoded; length = 60
     private String password;
+    //counts down to 0 if password is wrong + blocks user afterwards
+    @Column(nullable = false)
+    private Integer attempts = 3;
     @Column(nullable = false)
     private Integer role;
     @Column(nullable = false)
@@ -27,6 +26,7 @@ public class User {
     private String lastName;
     private LocalDate birthdate;
     private String emailAdress;*/
+
 
 
     public Long getId() {
@@ -51,6 +51,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Integer getAttempts() {
+        return attempts;
+    }
+
+    public void setAttempts(Integer attempts) {
+        this.attempts = attempts;
     }
 
     public Integer getRole() {
