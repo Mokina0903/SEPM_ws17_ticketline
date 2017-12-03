@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.annotation.AliasFor;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -77,11 +78,12 @@ public class SimpleNewsRestClient implements NewsRestClient {
     public DetailedNewsDTO publishNews( DetailedNewsDTO newNews) throws DataAccessException {
         try {
             LOGGER.debug("Publish news", restClient.getServiceURI(NEWS_URL));
+            HttpEntity<DetailedNewsDTO> httpEntity = new HttpEntity<>(newNews);
             ResponseEntity<DetailedNewsDTO> news =
                 restClient.exchange(
                     restClient.getServiceURI(NEWS_URL),
                     HttpMethod.POST,
-                    null,
+                    httpEntity,
                     new ParameterizedTypeReference<DetailedNewsDTO>() {}
                 );
             LOGGER.debug("Result status was {} with content {}", news.getStatusCode(), news.getBody());

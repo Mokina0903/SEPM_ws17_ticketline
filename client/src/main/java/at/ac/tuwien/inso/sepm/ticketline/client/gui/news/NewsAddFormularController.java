@@ -72,6 +72,7 @@ public class NewsAddFormularController {
         newNews = builder.build();
         try {
         newNews = newsService.publishNews(newNews);
+        c.loadNews();
         c.getNewsTab().setContent(oldContent);
         } catch (DataAccessException e) {
             e.printStackTrace();
