@@ -71,8 +71,8 @@ public class SecurityConfiguration{
             .dataSource(dataSource)
             .usersByUsernameQuery(
                 "SELECT user_name, password, (not blocked) as enabled from users where user_name=?")
-            .authoritiesByUsernameQuery("select user_name, role from users where user_name=?");
-        //.passwordEncoder(passwordEncoder);
+            .authoritiesByUsernameQuery("select user_name, role from users where user_name=?")
+            .passwordEncoder(new BCryptPasswordEncoder(10));
         providerList.forEach(auth::authenticationProvider);
     }
 
