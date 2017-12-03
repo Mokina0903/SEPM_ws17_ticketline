@@ -24,6 +24,38 @@ public interface  UserRestClient {
     Integer getLoginAttemptsLeft(String username) throws DataAccessException;
 
     /**
+     * decrease login Attempts by username by 1
+     *
+     * @param attempts of the user searched for
+     * @return Integer attempts
+     */
+    SimpleUserDTO decreaseLoginAttempts(String username) throws DataAccessException;
+
+    /**
+     * reset login Attempts by username
+     *
+     * @param SimpleDTO
+     * @return Integer attempts
+     */
+    SimpleUserDTO resetLoginAttempts(String username) throws DataAccessException;
+
+    /**
+     * block user by username
+     *
+     * @param SimpleDTO
+     * @return Integer attempts
+     */
+    SimpleUserDTO blockUser(String username) throws DataAccessException;
+
+    /**
+     * unblock user by username
+     *
+     * @param SimpleDTO
+     * @return Integer attempts
+     */
+    SimpleUserDTO unblockUser(String username) throws DataAccessException;
+
+    /**
      * Find User by name
      *
      * @param name of the user

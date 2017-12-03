@@ -22,6 +22,7 @@ public class UserEndpoint {
 
     private final UserService userService;
     private final UserMapper userMapper;
+    private final Integer LOGIN_ATTEMPTS = 5;
 
     @Autowired
     UserRepository userRepository;
@@ -65,12 +66,52 @@ public class UserEndpoint {
     }
 
 
-    @RequestMapping(value = "/{username}/loginAttemptsLeft", method = RequestMethod.GET)
+    @RequestMapping(value = "/{username}/getAttempts", method = RequestMethod.GET)
     @ApiOperation(value = "Get left login attempts of a specific user entry")
     public Integer getLoginAttemptsLeft(@PathVariable String username) {
 
         User user = userService.findByUsername(username);
         return user.getAttempts();
-        }
+    }
+
+
+    @RequestMapping(value = "/decreaseAttempts", method = RequestMethod.POST)
+    @ApiOperation(value = "Decrease login attempts of a specific user entry")
+    public void decreaseLoginAttemptsOfUser(@RequestBody String username) {
+
+        User user = userService.findByUsername(username);
+        user.setAttempts(user.getAttempts()-1);
+        userService.save(user);
+    }
+
+    @RequestMapping(value = "/resetAttempts", method = RequestMethod.POST)
+    @ApiOperation(value = "Decrease login attempts of a specific user entry")
+    public void resetAttempts(@RequestBody String username) {
+
+        User user = userService.findByUsername(username);
+        user.setAttempts(LOGIN_ATTEMPTS);
+        userService.save(user);
+    }
+
+
+    @RequestMapping(value = "/block", method = RequestMethod.POST)
+    @ApiOperation(value = "Block a specific user entry")
+    public void blockUser(@RequestBody String username) {
+
+        User user = userService.findByUsername(username);
+        user.setBlocked(true);
+        userService.save(user);
+    }
+
+
+    @RequestMapping(value = "/unblock", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('ADMIN')")
+    @ApiOperation(value = "Unblock a specific user entry")
+    public void unblockUser(@RequestBody String username) {
+
+        User user = userService.findByUsername(username);
+        user.setBlocked(false);
+        userService.save(user);
+    }
 
 }

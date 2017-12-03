@@ -6,7 +6,6 @@ import at.ac.tuwien.inso.sepm.ticketline.client.service.UserService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.JavaFXUtils;
 import at.ac.tuwien.inso.sepm.ticketline.rest.authentication.AuthenticationRequest;
 import at.ac.tuwien.inso.sepm.ticketline.rest.authentication.AuthenticationTokenInfo;
-import at.ac.tuwien.inso.sepm.ticketline.rest.user.SimpleUserDTO;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -29,7 +28,15 @@ public class AuthenticationController {
     private PasswordField txtPassword;
 
     @FXML
-    private Label noAttempts;
+    private Label lblNumberFreeAttempts;
+    @FXML
+    private Label lblLoginInfo;
+    @FXML
+    private Label lblLoginFaild;
+    @FXML
+    private Label lblBlocked;
+    @FXML
+    private Label lblContactAdmin;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticationController.class);
 
@@ -41,12 +48,20 @@ public class AuthenticationController {
     private final MainController mainController;
 
 
+
     public AuthenticationController(AuthenticationService authenticationService, UserService userService, MainController mainController) {
         this.authenticationService = authenticationService;
         this.userService = userService;
         this.mainController = mainController;
     }
 
+    @FXML
+    public void initialize() {
+        lblLoginInfo.setVisible(false);
+        lblLoginFaild.setVisible(false);
+        lblBlocked.setVisible(false);
+        lblContactAdmin.setVisible(false);
+    }
 
     @FXML
     private void handleAuthenticate(ActionEvent actionEvent) {
@@ -63,15 +78,20 @@ public class AuthenticationController {
 
             @Override
             protected void succeeded() {
+                try {
+                    userService.resetLoginAttempts(txtUsername.getText());
+                } catch (DataAccessException e) {
+                    LOGGER.info("Faild login cause no valid username or password");
+                }
                 mainController.loadDetailedUserDTO(getValue().getUsername());
             }
 
             @Override
             protected void failed() {
                 try {
-                    setAttemptsLabel();
+                    checkLeftAttempts();
                 } catch (DataAccessException e) {
-                    LOGGER.info("Faild login cause no valid username");
+                    LOGGER.info("Faild login cause no valid username or password");
                 }
                 super.failed();
                 JavaFXUtils.createExceptionDialog(getException(),
@@ -93,9 +113,35 @@ public class AuthenticationController {
         new Thread(task).start();
     }
 
-    private void setAttemptsLabel() throws DataAccessException {
-        String name = txtUsername.getText();
-        noAttempts.setText(Integer.toString(userService.getLoginAttemptsLeft(name)));
+    private void checkLeftAttempts() throws DataAccessException {
+        Integer freeAttempts = userService.getLoginAttemptsLeft(txtUsername.getText());
+        if(freeAttempts > 0) {
+            setLabels(false);
+            userService.decreaseLoginAttempts(txtUsername.getText());
+        }
+        else {
+            setLabels(true);
+            userService.blockUser(txtUsername.getText());
+
+        }
     }
+
+
+    private void setLabels(boolean isBlocked) throws DataAccessException {
+        Integer freeAttempts = userService.getLoginAttemptsLeft(txtUsername.getText());
+        lblLoginInfo.setVisible(!isBlocked);
+        lblLoginFaild.setVisible(!isBlocked);
+        lblBlocked.setVisible(isBlocked);
+        lblContactAdmin.setVisible(isBlocked);
+
+        if (isBlocked) {
+            lblNumberFreeAttempts.setVisible(false);
+        } else {
+            lblNumberFreeAttempts.setVisible(true);
+            lblNumberFreeAttempts.setText(Integer.toString(freeAttempts));
+        }
+    }
+
+
 
 }

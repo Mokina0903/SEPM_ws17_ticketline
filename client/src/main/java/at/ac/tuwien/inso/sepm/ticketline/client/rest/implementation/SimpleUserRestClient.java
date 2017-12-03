@@ -53,7 +53,7 @@ public class SimpleUserRestClient implements UserRestClient {
 
         try {
             ResponseEntity<Integer> loginAttemptsLeft = restClient.getForEntity(
-                restClient.getServiceURI(USER_URL) + "/{username}/loginAttemptsLeft",
+                restClient.getServiceURI(USER_URL) + "/{username}/getAttempts",
                 Integer.class,
                 username
             );
@@ -66,6 +66,101 @@ public class SimpleUserRestClient implements UserRestClient {
             throw new DataAccessException("Failed to retrieve the number of login attempts left for user " + username, e);
         }
         catch(RestClientException e) {
+
+            throw new DataAccessException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public SimpleUserDTO decreaseLoginAttempts(String username) throws DataAccessException {
+
+        try {
+            ResponseEntity<SimpleUserDTO> user = restClient.postForEntity(
+                restClient.getServiceURI(USER_URL) + "/decreaseAttempts",
+                username,
+                SimpleUserDTO.class
+            );
+            LOGGER.debug("Result status code was {}", user.getStatusCode());
+            return user.getBody();
+        }
+        catch(HttpStatusCodeException e) {
+            LOGGER.debug("Result status code was {}", e.getMessage());
+
+            throw new DataAccessException("Failed to update user " + username + " with status code " + e.getStatusCode());
+        }
+        catch(RestClientException e) {
+            LOGGER.debug("Result status code was {}", e.getMessage());
+
+            throw new DataAccessException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public SimpleUserDTO resetLoginAttempts(String username) throws DataAccessException {
+
+        try {
+            ResponseEntity<SimpleUserDTO> user = restClient.postForEntity(
+                restClient.getServiceURI(USER_URL) + "/resetAttempts",
+                username,
+                SimpleUserDTO.class
+            );
+            LOGGER.debug("Result status code was {}", user.getStatusCode());
+            return user.getBody();
+        }
+        catch(HttpStatusCodeException e) {
+            LOGGER.debug("Result status code was {}", e.getMessage());
+
+            throw new DataAccessException("Failed to update user " + username + " with status code " + e.getStatusCode());
+        }
+        catch(RestClientException e) {
+            LOGGER.debug("Result status code was {}", e.getMessage());
+
+            throw new DataAccessException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public SimpleUserDTO blockUser(String username) throws DataAccessException {
+        try {
+            ResponseEntity<SimpleUserDTO> user = restClient.postForEntity(
+                restClient.getServiceURI(USER_URL) + "/block",
+                username,
+                SimpleUserDTO.class
+            );
+            LOGGER.debug("Result status code was {}", user.getStatusCode());
+            return user.getBody();
+        }
+        catch(HttpStatusCodeException e) {
+            LOGGER.debug("Result status code was {}", e.getMessage());
+
+            throw new DataAccessException("Failed to block user " + username + " with status code " + e.getStatusCode());
+        }
+        catch(RestClientException e) {
+            LOGGER.debug("Result status code was {}", e.getMessage());
+
+            throw new DataAccessException(e.getMessage(), e);
+        }
+    }
+
+
+    @Override
+    public SimpleUserDTO unblockUser(String username) throws DataAccessException {
+        try {
+            ResponseEntity<SimpleUserDTO> user = restClient.postForEntity(
+                restClient.getServiceURI(USER_URL) + "/unblock",
+                username,
+                SimpleUserDTO.class
+            );
+            LOGGER.debug("Result status code was {}", user.getStatusCode());
+            return user.getBody();
+        }
+        catch(HttpStatusCodeException e) {
+            LOGGER.debug("Result status code was {}", e.getMessage());
+
+            throw new DataAccessException("Failed to unblock user " + username + " with status code " + e.getStatusCode());
+        }
+        catch(RestClientException e) {
+            LOGGER.debug("Result status code was {}", e.getMessage());
 
             throw new DataAccessException(e.getMessage(), e);
         }

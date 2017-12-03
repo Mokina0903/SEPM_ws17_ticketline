@@ -38,6 +38,26 @@ public class SimpleUserService implements UserService {
     }
 
     @Override
+    public SimpleUserDTO decreaseLoginAttempts(String userName) throws DataAccessException {
+        return userRestClient.decreaseLoginAttempts(userName);
+    }
+
+    @Override
+    public SimpleUserDTO resetLoginAttempts(String userName) throws DataAccessException {
+        return userRestClient.resetLoginAttempts(userName);
+    }
+
+    @Override
+    public SimpleUserDTO blockUser(String userName) throws DataAccessException {
+        return userRestClient.blockUser(userName);
+    }
+
+    @Override
+    public SimpleUserDTO unblockUser(String userName) throws DataAccessException {
+        return userRestClient.unblockUser(userName);
+    }
+
+    @Override
     public DetailedUserDTO findByName( String name ) throws DataAccessException {
         return userRestClient.findByName(name);
     }

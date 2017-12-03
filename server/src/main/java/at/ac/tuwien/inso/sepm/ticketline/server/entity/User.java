@@ -7,6 +7,8 @@ import java.util.List;
 @Table (name = "users")
 public class User {
 
+    private static final Integer LOGIN_ATTEMPTS = 5;
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq_user_id")
     @SequenceGenerator(name = "seq_user_id", sequenceName = "seq_user_id")
@@ -17,7 +19,7 @@ public class User {
     private String password;
     //counts down to 0 if password is wrong + blocks user afterwards
     @Column(nullable = false)
-    private Integer attempts = 3;
+    private Integer attempts = LOGIN_ATTEMPTS;
     @Column(nullable = false)
     private Integer role;
     @Column(nullable = false)
@@ -134,6 +136,7 @@ public class User {
             user.setId(id);
             user.setUserName(userName);
             user.setPassword(password);
+            user.setAttempts(LOGIN_ATTEMPTS);
             user.setRole(role);
             user.setBlocked(blocked);
             return user;
