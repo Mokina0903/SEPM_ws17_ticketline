@@ -71,7 +71,7 @@ public class SecurityConfiguration{
             .dataSource(dataSource)
             .usersByUsernameQuery(
                 "SELECT user_name, password, (not blocked) as enabled from users where user_name=?")
-            .authoritiesByUsernameQuery("select user_name, role from users where user_name=?")
+            .authoritiesByUsernameQuery("SELECT user_name as username, (CASE WHEN Role = 1 THEN 'ADMIN' ELSE 'USER' END) as authority FROM USERS where user_name=?")
             .passwordEncoder(new BCryptPasswordEncoder(10));
         providerList.forEach(auth::authenticationProvider);
     }
