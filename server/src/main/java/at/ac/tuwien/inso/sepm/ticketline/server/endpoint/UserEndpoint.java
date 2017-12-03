@@ -58,13 +58,6 @@ public class UserEndpoint {
         return userMapper.userToSimpleUserDTO(userService.findByUsername(userName));
     }
 
-/*    @RequestMapping(value = "/{userName}", method = RequestMethod.GET)
-    @ApiOperation(value = "Set attempts of user entry")
-    public SimpleUserDTO setAttempts(@PathVariable String userName, Integer attempts) {
-        SimpleUserDTO user = userMapper.userToSimpleUserDTO(userService.findByUsername(userName));
-        user.setAttempts(attempts);
-        return user;
-    }*/
 
     @RequestMapping(value = "/{username}/loginAttemptsLeft", method = RequestMethod.GET)
     @ApiOperation(value = "Get left login attempts of a specific user entry")
