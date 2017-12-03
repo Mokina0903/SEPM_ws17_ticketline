@@ -20,6 +20,17 @@ public class DetailedNewsDTO {
     @ApiModelProperty(required = true, name = "The text content of the news")
     private String text;
 
+    @ApiModelProperty(required = true, name = "The path of the added image")
+    private String imagePath;
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
     public Long getId() {
         return id;
     }
@@ -95,9 +106,15 @@ public class DetailedNewsDTO {
         private LocalDateTime publishedAt;
         private String title;
         private String text;
+        private String path;
 
         public NewsDTOBuilder id(Long id) {
             this.id = id;
+            return this;
+        }
+
+        public NewsDTOBuilder path(String p) {
+            this.path = p;
             return this;
         }
 

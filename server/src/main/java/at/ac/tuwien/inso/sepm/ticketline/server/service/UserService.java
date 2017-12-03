@@ -20,6 +20,13 @@ public interface UserService {
      */
     User findOne(Long id);
 
+    /**
+     * Find a single user entry by name.
+     *
+     * @param name of the user entry
+     * @return the user entry
+     */
+    User findOneByName(String name);
 
     /**
      * Find a single user entry by name.
@@ -38,6 +45,13 @@ public interface UserService {
      */
     User createUser(User user);
 
+    /**
+     * save/update user
+     *
+     * @param user to save/update
+     * @return saved/updated user
+     */
+    void save(User user);
 
     // TODO: oder einfach nur update?
     /**

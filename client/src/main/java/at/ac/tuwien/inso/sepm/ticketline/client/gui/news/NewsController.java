@@ -11,16 +11,20 @@ import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
@@ -30,14 +34,30 @@ public class NewsController {
     private static final Logger LOGGER = LoggerFactory.getLogger(NewsController.class);
 
     @FXML
+    public Button addNewNews;
+    @FXML
+    public VBox vBContainer;
+
+    @FXML
     private ListView<VBox> vbNewsElements;
 
     @FXML
     private TabHeaderController tabHeaderController;
 
+    private Tab newsTab;
+
+
     private final MainController mainController;
     private final SpringFxmlLoader springFxmlLoader;
     private final NewsService newsService;
+
+    public Tab getNewsTab() {
+        return newsTab;
+    }
+
+    public void setNewsTab(Tab newsTab) {
+        this.newsTab = newsTab;
+    }
 
     public NewsController(MainController mainController, SpringFxmlLoader springFxmlLoader, NewsService newsService) {
         this.mainController = mainController;
@@ -78,7 +98,6 @@ public class NewsController {
                         springFxmlLoader.loadAndWrap("/fxml/news/newsElement.fxml");
                     wrapper.getController().initializeData(news,newsService,mainController,NewsController.this);
                     vbNewsBoxChildren.add(wrapper.getController().vbNewsElement);
-
                 }
             }
 
@@ -97,4 +116,13 @@ public class NewsController {
     }
 
 
+    public void addNewNews(ActionEvent actionEvent) {
+
+           SpringFxmlLoader.Wrapper<NewsAddFormularController> wrapper =
+                springFxmlLoader.loadAndWrap("/fxml/news/addNewsFormular.fxml");
+           wrapper.getController().initializeData(springFxmlLoader, newsService, NewsController.this, vBContainer);
+            VBox addNewsRoot = springFxmlLoader.load("/fxml/news/addNewsFormular.fxml");
+            newsTab.setContent(addNewsRoot);
+
+    }
 }

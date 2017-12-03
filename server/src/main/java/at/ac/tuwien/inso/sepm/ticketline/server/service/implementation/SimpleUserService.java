@@ -27,14 +27,25 @@ public class SimpleUserService implements UserService {
         return userRepository.findOneById(id).orElseThrow(NotFoundException::new);
     }
 
+    // TODO: Check Merge
     @Override
     public User findByUsername(String userName) {
         return userRepository.findByUserName(userName).orElseThrow(NotFoundException::new);
     }
 
     @Override
+    public User findOneByName( String name ) {
+        return userRepository.findOneByUserName(name);
+    }
+
+    @Override
     public User createUser(User user) {
         return null;
+    }
+
+    @Override
+    public void save( User user ) {
+        userRepository.save(user);
     }
 
     @Override

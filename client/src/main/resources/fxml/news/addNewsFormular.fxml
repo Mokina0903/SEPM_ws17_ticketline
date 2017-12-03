@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<?import java.net.URL?>
+<?import javafx.scene.image.ImageView?>
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.news.NewsAddFormularController"
+      prefHeight="400.0" prefWidth="600.0" fx:id="VBroot">
+    <BorderPane>
+        <stylesheets>
+            <URL value="@/css/newsElement.css"/>
+        </stylesheets>
+
+        <top>
+            <GridPane hgap="5" vgap="25">
+                <BorderPane.margin>
+                    <Insets left="20" top="10" bottom="10" right="20"/>
+                </BorderPane.margin>
+                <HBox spacing="8" GridPane.rowIndex="0" GridPane.columnIndex="0">
+                    <Label text="Title: "/>
+                    <TextField fx:id="TitleTF"/>
+                </HBox>
+                <columnConstraints>
+                    <ColumnConstraints hgrow="ALWAYS"/>
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints/>
+                </rowConstraints>
+            </GridPane>
+        </top>
+        <center>
+            <GridPane hgap="5" vgap="25">
+                <BorderPane.margin>
+                    <Insets left="20" top="10" bottom="10" right="20"/>
+                </BorderPane.margin>
+                <HBox spacing="8" GridPane.rowIndex="0" GridPane.columnIndex="0">
+                    <Label text="Text: "/>
+                    <TextArea fx:id="TextArea"/>
+                </HBox>
+                <VBox GridPane.rowIndex="0" GridPane.columnIndex="1">
+                    <HBox spacing="8">
+                        <Label text="Add Image: "/>
+                        <Button fx:id="addImgBtn" onAction="#addImage" text="+" minWidth="30"/>
+                    </HBox>
+
+                    <ImageView fx:id="newsImage"/>
+                </VBox>
+                <columnConstraints>
+                    <ColumnConstraints hgrow="ALWAYS"/>
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints/>
+                </rowConstraints>
+            </GridPane>
+        </center>
+        <bottom>
+            <GridPane hgap="5" vgap="25">
+                <BorderPane.margin>
+                    <Insets left="20" top="10" bottom="10" right="20"/>
+                </BorderPane.margin>
+                <HBox alignment="CENTER_RIGHT" spacing="8" GridPane.rowIndex="0" GridPane.columnIndex="0">
+                    <Button fx:id="saveBtn" text="Save" onAction="#saveNewNews"/>
+                </HBox>
+                <columnConstraints>
+                    <ColumnConstraints hgrow="ALWAYS"/>
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints/>
+                </rowConstraints>
+            </GridPane>
+        </bottom>
+    </BorderPane>
+
+</VBox>

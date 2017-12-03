@@ -1,6 +1,7 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.entity;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table (name = "users")
@@ -21,6 +22,9 @@ public class User {
     private Integer role;
     @Column(nullable = false)
     private boolean blocked;
+
+    @OneToMany()
+    private List<News> notSeen;
 
     /*private String firstName;
     private String lastName;
@@ -75,6 +79,14 @@ public class User {
 
     public void setBlocked(boolean blocked) {
         this.blocked = blocked;
+    }
+
+    public List<News> getNotSeen() {
+        return notSeen;
+    }
+
+    public void setNotSeen( List<News> notSeen ) {
+        this.notSeen = notSeen;
     }
 
     public static UserBuilder builder() {

@@ -32,4 +32,9 @@ public class SimpleNewsService implements NewsService {
         return newsRestClient.findById(id);
     }
 
+    @Override
+    public DetailedNewsDTO publishNews(DetailedNewsDTO newNews) throws DataAccessException {
+       return newsRestClient.publishNews(newNews);
+    }
+
 }

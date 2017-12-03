@@ -24,4 +24,6 @@ public interface NewsRestClient {
      * @throws DataAccessException in case something went wrong
      */
     DetailedNewsDTO findById(Long id) throws DataAccessException;
+
+    DetailedNewsDTO publishNews(DetailedNewsDTO newNews) throws DataAccessException;
 }

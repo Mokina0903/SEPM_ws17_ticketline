@@ -2,9 +2,7 @@ package at.ac.tuwien.inso.sepm.ticketline.client.rest;
 
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.rest.user.SimpleUserDTO;
-
-public interface UserRestClient {
-
+import at.ac.tuwien.inso.sepm.ticketline.rest.user.DetailedUserDTO;
 /**
  * Find user by username
  *
@@ -23,4 +21,12 @@ public interface UserRestClient {
      */
     Integer getLoginAttemptsLeft(String username) throws DataAccessException;
 
+    /**
+     * Find User by name
+     *
+     * @param name of the user
+     * @return DetailedUserDTO
+     * @throws DataAccessException if something went wrong
+     */
+    DetailedUserDTO findByName(String name) throws DataAccessException;
 }

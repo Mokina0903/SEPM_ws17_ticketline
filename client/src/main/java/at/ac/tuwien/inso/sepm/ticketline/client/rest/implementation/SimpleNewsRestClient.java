@@ -4,6 +4,7 @@ import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.rest.NewsRestClient;
 import at.ac.tuwien.inso.sepm.ticketline.rest.news.DetailedNewsDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.news.SimpleNewsDTO;
+import io.swagger.annotations.Authorization;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -54,7 +55,7 @@ public class SimpleNewsRestClient implements NewsRestClient {
     }
 
     @Override
-    public DetailedNewsDTO findById( @PathVariable Long id ) throws DataAccessException {
+    public DetailedNewsDTO findById( Long id ) throws DataAccessException {
         try {
             LOGGER.debug("Retrieving news by id from {}", restClient.getServiceURI(NEWS_URL));
             ResponseEntity<DetailedNewsDTO> news =
@@ -71,6 +72,26 @@ public class SimpleNewsRestClient implements NewsRestClient {
         } catch (RestClientException e) {
             throw new DataAccessException(e.getMessage(), e);
         }    }
+
+    @Override
+    public DetailedNewsDTO publishNews( DetailedNewsDTO newNews) throws DataAccessException {
+        try {
+            LOGGER.debug("Publish news", restClient.getServiceURI(NEWS_URL));
+            ResponseEntity<DetailedNewsDTO> news =
+                restClient.exchange(
+                    restClient.getServiceURI(NEWS_URL),
+                    HttpMethod.POST,
+                    null,
+                    new ParameterizedTypeReference<DetailedNewsDTO>() {}
+                );
+            LOGGER.debug("Result status was {} with content {}", news.getStatusCode(), news.getBody());
+            return news.getBody();
+        } catch (HttpStatusCodeException e) {
+            throw new DataAccessException("Failed retrieve news with status code " + e.getStatusCode().toString());
+        } catch (RestClientException e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+    }
 
 
 }

@@ -47,28 +47,6 @@ public class SimpleUserRestClient implements UserRestClient {
         }
     }
 
-
-/*    @Override
-    public Integer getLoginAttemptsLeft(String userName) throws DataAccessException {
-        try {
-            LOGGER.debug("Retrieving attempts by userName from {}", restClient.getServiceURI(USER_URL));
-            ResponseEntity<SimpleUserDTO> user =
-                restClient.exchange(
-                    restClient.getServiceURI(USER_URL + "/{username}/loginAttemptsLeft"),
-                    HttpMethod.GET,
-                    null,
-                    new ParameterizedTypeReference<SimpleUserDTO>() {
-                    }
-                );
-            LOGGER.debug("Result status was {} with content {}", user.getStatusCode(), user.getBody());
-            return user.getBody().getAttempts();
-        } catch (HttpStatusCodeException e) {
-            throw new DataAccessException("Failed retrieve userAttempts with status code " + e.getStatusCode().toString());
-        } catch (RestClientException e) {
-            throw new DataAccessException(e.getMessage(), e);
-        }
-    }*/
-
     @Override
     public Integer getLoginAttemptsLeft(String username) throws DataAccessException {
 
@@ -91,5 +69,26 @@ public class SimpleUserRestClient implements UserRestClient {
             throw new DataAccessException(e.getMessage(), e);
         }
     }
+    
+    @Override
+    public DetailedUserDTO findByName( String name ) throws DataAccessException {
+        try {
+            LOGGER.debug("Retrieving user by name from {}", restClient.getServiceURI(User_URL));
+            ResponseEntity<DetailedUserDTO> user =
+                restClient.exchange(
+                    restClient.getServiceURI(User_URL+"/find/"+name),
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<DetailedUserDTO>() {}
+                );
+            LOGGER.debug("Result status was {} with content {}", user.getStatusCode(), user.getBody());
+            return user.getBody();
+        } catch (HttpStatusCodeException e) {
+            throw new DataAccessException("Failed retrieve user with status code " + e.getStatusCode().toString());
+        } catch (RestClientException e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+    }
+
 
 }
