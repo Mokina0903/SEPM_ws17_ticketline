@@ -6,6 +6,8 @@ import com.github.javafaker.Faker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -23,6 +25,8 @@ public class UserDataGenerator {
     private final UserRepository userRepository;
     private final Faker faker;
 
+    PasswordEncoder encoder = new BCryptPasswordEncoder(10);
+
     public UserDataGenerator(UserRepository userRepository) {
         this.userRepository = userRepository;
         faker = new Faker();
@@ -37,7 +41,7 @@ public class UserDataGenerator {
 
             User user = User.builder()
                 .userName("user")
-                .password("password")
+                .password(encoder.encode("password"))
                 .role(2)
                 .blocked(false)
                 .build();
@@ -63,7 +67,7 @@ public class UserDataGenerator {
 
             User user = User.builder()
                 .userName("admin")
-                .password("password")
+                .password(encoder.encode("password"))
                 .role(1)
                 .blocked(false)
                 .build();
