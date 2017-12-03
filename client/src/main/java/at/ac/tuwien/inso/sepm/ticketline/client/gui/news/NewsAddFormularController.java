@@ -12,6 +12,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
@@ -20,6 +21,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 @Component
 public class NewsAddFormularController {
@@ -38,16 +41,19 @@ public class NewsAddFormularController {
     public javafx.scene.control.TextArea TextArea;
     @FXML
     public VBox VBroot;
+    @FXML
+    public Button backWithoutSaveBtn;
 
     private DetailedNewsDTO newNews;
 
-    private String imgPath;
 
     private SpringFxmlLoader springFxmlLoader;
 
     private NewsService newsService;
 
     private Node oldContent;
+
+    private FileInputStream inputStream;
 
 
     private NewsController c;
@@ -67,7 +73,9 @@ public class NewsAddFormularController {
 
         DetailedNewsDTO.NewsDTOBuilder builder = new DetailedNewsDTO.NewsDTOBuilder();
         builder.title(TitleTF.getText());
-        builder.path(imgPath);
+        if(inputStream!= null){
+            builder.picture(inputStream);
+        }
         builder.text(TextArea.getText());
         newNews = builder.build();
         try {
@@ -77,7 +85,6 @@ public class NewsAddFormularController {
         } catch (DataAccessException e) {
             e.printStackTrace();
         }
-        //TODO: add to new News by Users, go back to newsOverview
     }
 
     public void addImage(ActionEvent actionEvent) {
@@ -90,12 +97,29 @@ public class NewsAddFormularController {
 
 
         if (file == null) {
-           imgPath = null;
+            //TODO: add alert
             return;
         }
         if (file.length() > 5 * 1024 * 1024) {
            //TODO: add alert
             return;
         }
+
+        Image img = new Image(file.toURI().toString());
+        newsImage.setImage(img);
+        try {
+            inputStream = new FileInputStream(file);
+        } catch (FileNotFoundException e) {
+            //TODO: add alert
+            e.printStackTrace();
+        }
+
+
+
+    }
+
+    @FXML
+    public void goBackWithoutSave(ActionEvent actionEvent) {
+        c.getNewsTab().setContent(oldContent);
     }
 }

@@ -5,6 +5,10 @@
 <?import javafx.scene.layout.VBox?>
 <?import java.net.URL?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.RowConstraints?>
 <VBox fx:id="vbNewsElement"
       xmlns="http://javafx.com/javafx/8.0.92"
       xmlns:fx="http://javafx.com/fxml/1"
@@ -17,8 +21,22 @@
     <padding>
         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
     </padding>
-    <Label fx:id="lblDate" styleClass="newsPublishDate" text="&lt;DD.MM.YYYY | hh:mm&gt;"/>
-    <Label fx:id="lblTitle" styleClass="newsTitle" text="&lt;NewsTitle&gt;"/>
-    <Label fx:id="lblText" styleClass="newsText" wrapText="true" text="&lt;NewsText&gt;"/>
-    <Button fx:id="backButton" onAction="#backToSimpleNewsView" text="%detailedNews.backButton"/>
+    <GridPane>
+        <Label fx:id="lblDate"  GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="newsPublishDate" text="&lt;DD.MM.YYYY | hh:mm&gt;"/>
+        <Label fx:id="lblTitle" GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="newsTitle" text="&lt;NewsTitle&gt;"/>
+        <Label fx:id="lblText" GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="newsText" wrapText="true" text="&lt;NewsText&gt;"/>
+        <Button fx:id="backButton" GridPane.rowIndex="3" GridPane.columnIndex="0" onAction="#backToSimpleNewsView" text="%detailedNews.backButton"/>
+        <ImageView fx:id="newsImageView" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+        <columnConstraints>
+            <ColumnConstraints hgrow="ALWAYS"/>
+            <ColumnConstraints hgrow="ALWAYS"/>
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints/>
+            <RowConstraints/>
+            <RowConstraints/>
+            <RowConstraints/>
+        </rowConstraints>
+    </GridPane>
+
 </VBox>

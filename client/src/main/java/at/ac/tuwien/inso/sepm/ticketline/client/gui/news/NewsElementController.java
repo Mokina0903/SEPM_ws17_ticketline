@@ -14,6 +14,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Separator;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -35,6 +37,8 @@ public class NewsElementController {
     public VBox vbNewsElement;
     @FXML
     public Button backButton;
+    @FXML
+    public ImageView newsImageView;
 
     @FXML
     private Label lblDate;
@@ -69,11 +73,14 @@ public class NewsElementController {
         this.mainController=mainController;
         this.newsController=newsController;
         backButton.setVisible(false);
+        newsImageView.setVisible(false);
     }
 
     public void backToSimpleNewsView(ActionEvent actionEvent) {
         lblText.setText(simpleNewsDTO.getSummary());
+        newsImageView.setVisible(false);
         backButton.setVisible(false);
+
     }
 
     public void detailedNews(MouseEvent mouseEvent) {
@@ -90,7 +97,11 @@ public class NewsElementController {
                 super.succeeded();
                 DetailedNewsDTO detailedNewsDTO= getValue();
                 lblText.setText(detailedNewsDTO.getText());
-
+                if(detailedNewsDTO.getPic() != null){
+                    Image img = new Image(detailedNewsDTO.getPic());
+                    newsImageView.setImage(img);
+                    newsImageView.setVisible(true);
+                }
 
                 backButton.setVisible(true);
 

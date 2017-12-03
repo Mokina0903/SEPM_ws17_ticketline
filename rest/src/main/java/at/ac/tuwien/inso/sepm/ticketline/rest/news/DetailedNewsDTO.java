@@ -3,6 +3,9 @@ package at.ac.tuwien.inso.sepm.ticketline.rest.news;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.sql.Blob;
 import java.time.LocalDateTime;
 
 @ApiModel(value = "DetailedNewsDTO", description = "A detailed DTO for news entries via rest")
@@ -21,14 +24,14 @@ public class DetailedNewsDTO {
     private String text;
 
     @ApiModelProperty(required = true, name = "The path of the added image")
-    private String imagePath;
+    private FileInputStream pic;
 
-    public String getImagePath() {
-        return imagePath;
+    public FileInputStream getPic() {
+        return pic;
     }
 
-    public void setImagePath(String imagePath) {
-        this.imagePath = imagePath;
+    public void setPic(FileInputStream pic) {
+        this.pic = pic;
     }
 
     public Long getId() {
@@ -106,15 +109,15 @@ public class DetailedNewsDTO {
         private LocalDateTime publishedAt;
         private String title;
         private String text;
-        private String path;
+        private FileInputStream fileInputStream;
 
         public NewsDTOBuilder id(Long id) {
             this.id = id;
             return this;
         }
 
-        public NewsDTOBuilder path(String p) {
-            this.path = p;
+        public NewsDTOBuilder picture(FileInputStream p) {
+            this.fileInputStream = p;
             return this;
         }
 
@@ -139,6 +142,7 @@ public class DetailedNewsDTO {
             newsDTO.setPublishedAt(publishedAt);
             newsDTO.setTitle(title);
             newsDTO.setText(text);
+            newsDTO.setPic(fileInputStream);
             return newsDTO;
         }
     }
