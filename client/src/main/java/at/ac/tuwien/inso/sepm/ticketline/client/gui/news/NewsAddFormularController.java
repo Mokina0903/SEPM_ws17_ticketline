@@ -67,6 +67,7 @@ public class NewsAddFormularController {
         newsService = service;
         c = controller;
         this.oldContent = oldContent;
+        picPath = null;
     }
 
 

@@ -99,11 +99,12 @@ public class NewsController {
                     if(newNews==null || newNews.isEmpty() ){return;}
                     for (SimpleNewsDTO news:newNews){
 
-                        SpringFxmlLoader.Wrapper<NewsElementController> wrapper =
-                            springFxmlLoader.loadAndWrap("/fxml/news/newsElement.fxml");
-                        wrapper.getController().initializeData(news, newsService, mainController, NewsController.this);
-                        Label title = wrapper.getController().getLblTitle();
-                        title.setText("(NEW)" + title.getText());
+                    SpringFxmlLoader.Wrapper<NewsElementController> wrapper =
+                        springFxmlLoader.loadAndWrap("/fxml/news/newsElement.fxml");
+                    wrapper.getController().initializeData(news, newsService, mainController, NewsController.this);
+                    Label title = wrapper.getController().getLblTitle();
+                    title.setText("(NEW)" + title.getText());
+                    wrapper.getLoadedObject().setStyle("-fx-background-color:rgba(220, 229, 244, .7)");
 
                         vbNewsBoxChildren.add(wrapper.getController().vbNewsElement);
                     }
