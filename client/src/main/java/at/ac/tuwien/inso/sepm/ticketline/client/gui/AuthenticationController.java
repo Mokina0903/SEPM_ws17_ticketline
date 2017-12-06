@@ -73,6 +73,7 @@ public class AuthenticationController {
                         .username(txtUsername.getText())
                         .password(txtPassword.getText())
                         .build());
+                mainController.loadDetailedUserDTO(authenticationTokenInfo.getUsername());
                 return authenticationTokenInfo;
             }
 
@@ -83,7 +84,7 @@ public class AuthenticationController {
                 } catch (DataAccessException e) {
                     LOGGER.info("Faild login cause no valid username or password");
                 }
-                mainController.loadDetailedUserDTO(getValue().getUsername());
+
             }
 
             @Override

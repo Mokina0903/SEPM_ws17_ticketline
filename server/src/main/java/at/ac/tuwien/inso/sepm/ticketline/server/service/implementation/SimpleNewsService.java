@@ -34,6 +34,11 @@ public class SimpleNewsService implements NewsService {
     }
 
     @Override
+    public List<News> findNotSeenByUser( Long userId ) {
+        return newsRepository.findNotSeenByUser(userId);
+    }
+
+    @Override
     public News publishNews(News news) {
         news.setPublishedAt(LocalDateTime.now());
         News newsTMP =newsRepository.save(news);

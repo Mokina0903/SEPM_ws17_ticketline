@@ -5,6 +5,7 @@ import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name="news")
 public class News {
 
     @Id
@@ -25,7 +26,6 @@ public class News {
     @Column(length = 10_000)
     private String picPath;
 
-    @JoinColumn(name="news_id")
     public Long getId() {
         return id;
     }

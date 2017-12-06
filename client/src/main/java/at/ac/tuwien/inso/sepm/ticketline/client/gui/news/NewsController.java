@@ -97,17 +97,13 @@ public class NewsController {
                 for (Iterator<SimpleNewsDTO> iterator = getValue().iterator(); iterator.hasNext(); ) {
                     SimpleNewsDTO news = iterator.next();
 
-                    for(SimpleNewsDTO notSeen :mainController.getUser().getNotSeen()) {
-                        if(news.getId()==notSeen.getId()) {
-                            SpringFxmlLoader.Wrapper<NewsElementController> wrapper =
-                                springFxmlLoader.loadAndWrap("/fxml/news/newsElement.fxml");
-                            wrapper.getController().initializeData(news, newsService, mainController, NewsController.this);
-                            Label title = wrapper.getController().getLblTitle();
-                            title.setText("(NEW)" + title.getText());
+                    SpringFxmlLoader.Wrapper<NewsElementController> wrapper =
+                        springFxmlLoader.loadAndWrap("/fxml/news/newsElement.fxml");
+                    wrapper.getController().initializeData(news, newsService, mainController, NewsController.this);
+                    Label title = wrapper.getController().getLblTitle();
+                    title.setText("(NEW)" + title.getText());
 
-                            vbNewsBoxChildren.add(wrapper.getController().vbNewsElement);
-                        }
-                    }
+                    vbNewsBoxChildren.add(wrapper.getController().vbNewsElement);
                 }
             }
 

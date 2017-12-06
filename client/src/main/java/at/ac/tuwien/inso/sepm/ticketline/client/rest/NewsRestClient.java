@@ -25,5 +25,22 @@ public interface NewsRestClient {
      */
     DetailedNewsDTO findById(Long id) throws DataAccessException;
 
+
+    /**
+     * find new news for user
+     *
+     * @param userId of the user
+     * @return list of new news
+     * @throws DataAccessException
+     */
+    List<SimpleNewsDTO> findNotSeenByUser(Long userId) throws DataAccessException;
+
+    /**
+     * save new news and save news for all users
+     *
+     * @param newNews to publish
+     * @return published news with date and id
+     * @throws DataAccessException
+     */
     DetailedNewsDTO publishNews(DetailedNewsDTO newNews) throws DataAccessException;
 }

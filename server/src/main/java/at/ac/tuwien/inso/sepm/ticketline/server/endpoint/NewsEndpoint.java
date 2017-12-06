@@ -2,6 +2,7 @@ package at.ac.tuwien.inso.sepm.ticketline.server.endpoint;
 
 import at.ac.tuwien.inso.sepm.ticketline.rest.news.DetailedNewsDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.news.SimpleNewsDTO;
+import at.ac.tuwien.inso.sepm.ticketline.rest.user.DetailedUserDTO;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.News;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.news.NewsMapper;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.NewsService;
@@ -35,6 +36,12 @@ public class NewsEndpoint {
     @ApiOperation(value = "Get detailed information about a specific news entry")
     public DetailedNewsDTO find(@PathVariable Long id) {
         return newsMapper.newsToDetailedNewsDTO(newsService.findOne(id));
+    }
+
+    @RequestMapping(value = "/notSeen/{userId}", method = RequestMethod.GET)
+    @ApiOperation(value = "Get list of not seen news for User")
+    List<SimpleNewsDTO> findNotSeenByUser(@PathVariable Long userId){
+        return newsMapper.newsToSimpleNewsDTO(newsService.findNotSeenByUser(userId));
     }
 
     @RequestMapping(method = RequestMethod.POST)

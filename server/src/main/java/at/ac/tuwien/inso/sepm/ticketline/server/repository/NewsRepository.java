@@ -1,7 +1,11 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.repository;
 
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.News;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.User;
+import org.mapstruct.Mapper;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -24,5 +28,12 @@ public interface NewsRepository extends JpaRepository<News, Long> {
      * @return ordered list of al news entries
      */
     List<News> findAllByOrderByPublishedAtDesc();
+
+
+    @Query(value = "select n from " +
+        "news n join not_seen s on n.id=s.news_id " +
+        "where s.users_id= :userId " +
+        "order by n.published_at desc)",nativeQuery = true)
+    List<News> findNotSeenByUser(@Param("userId") Long userId );
 
 }
