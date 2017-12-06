@@ -8,8 +8,8 @@ public interface  UserRestClient {
 /**
  * Find user by username
  *
- * @param SimpleUserDTO of the user searched for
- * @return Integer attempts
+ * @param userName of the user searched for
+ * @return SimpleUserDTO
  * @throws DataAccessException in case something went wrong
  */
     SimpleUserDTO findByUsername(String userName) throws DataAccessException;
@@ -26,7 +26,7 @@ public interface  UserRestClient {
     /**
      * decrease login Attempts by username by 1
      *
-     * @param attempts of the user searched for
+     * @param SimpleUserDTO of the user searched for
      * @return Integer attempts
      */
     SimpleUserDTO decreaseLoginAttempts(String username) throws DataAccessException;

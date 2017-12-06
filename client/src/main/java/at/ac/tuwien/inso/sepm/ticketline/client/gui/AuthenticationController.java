@@ -89,6 +89,7 @@ public class AuthenticationController {
             @Override
             protected void failed() {
                 try {
+                    userService.decreaseLoginAttempts(txtUsername.getText());
                     checkLeftAttempts();
                 } catch (DataAccessException e) {
                     LOGGER.info("Faild login cause no valid username or password");
@@ -117,7 +118,6 @@ public class AuthenticationController {
         Integer freeAttempts = userService.getLoginAttemptsLeft(txtUsername.getText());
         if(freeAttempts > 0) {
             setLabels(false);
-            userService.decreaseLoginAttempts(txtUsername.getText());
         }
         else {
             setLabels(true);
