@@ -23,6 +23,8 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
 
 @Component
 public class NewsAddFormularController {
@@ -53,7 +55,7 @@ public class NewsAddFormularController {
 
     private Node oldContent;
 
-    private FileInputStream inputStream;
+    private String picPath;
 
 
     private NewsController c;
@@ -73,8 +75,8 @@ public class NewsAddFormularController {
 
         DetailedNewsDTO.NewsDTOBuilder builder = new DetailedNewsDTO.NewsDTOBuilder();
         builder.title(TitleTF.getText());
-        if(inputStream!= null){
-            builder.picture(inputStream);
+        if(picPath!= null){
+            builder.picture(picPath);
         }
         builder.text(TextArea.getText());
         newNews = builder.build();
@@ -89,8 +91,9 @@ public class NewsAddFormularController {
 
     public void addImage(ActionEvent actionEvent) {
 
+        String home = System.getProperty("user.home");
         FileChooser fc = new FileChooser();
-        fc.setInitialDirectory(new File("C:/Users/"));
+        fc.setInitialDirectory(new File(home));
         FileChooser.ExtensionFilter f1 = new FileChooser.ExtensionFilter("Image Files", "*.jpg", "*.png");
         fc.getExtensionFilters().addAll(f1);
         File file = fc.showOpenDialog(null);
@@ -107,12 +110,17 @@ public class NewsAddFormularController {
 
         Image img = new Image(file.toURI().toString());
         newsImage.setImage(img);
+        new File(home).mkdir();
+
         try {
-            inputStream = new FileInputStream(file);
-        } catch (FileNotFoundException e) {
+            File destination = new File(home);
+            Files.copy(file.toPath(), destination.toPath());
+            picPath = destination.getCanonicalPath();
+        } catch (IOException e) {
             //TODO: add alert
             e.printStackTrace();
         }
+
 
 
 

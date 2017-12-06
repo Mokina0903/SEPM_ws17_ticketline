@@ -24,14 +24,14 @@ public class DetailedNewsDTO {
     private String text;
 
     @ApiModelProperty(required = true, name = "The path of the added image")
-    private FileInputStream pic;
+    private String picPath;
 
-    public FileInputStream getPic() {
-        return pic;
+    public String getPicPath() {
+        return picPath;
     }
 
-    public void setPic(FileInputStream pic) {
-        this.pic = pic;
+    public void setPicPath(String picPath) {
+        this.picPath = picPath;
     }
 
     public Long getId() {
@@ -109,15 +109,15 @@ public class DetailedNewsDTO {
         private LocalDateTime publishedAt;
         private String title;
         private String text;
-        private FileInputStream fileInputStream;
+        private String path;
 
         public NewsDTOBuilder id(Long id) {
             this.id = id;
             return this;
         }
 
-        public NewsDTOBuilder picture(FileInputStream p) {
-            this.fileInputStream = p;
+        public NewsDTOBuilder picture(String path) {
+            this.path = path;
             return this;
         }
 
@@ -142,7 +142,7 @@ public class DetailedNewsDTO {
             newsDTO.setPublishedAt(publishedAt);
             newsDTO.setTitle(title);
             newsDTO.setText(text);
-            newsDTO.setPic(fileInputStream);
+            newsDTO.setPicPath(path);
             return newsDTO;
         }
     }
