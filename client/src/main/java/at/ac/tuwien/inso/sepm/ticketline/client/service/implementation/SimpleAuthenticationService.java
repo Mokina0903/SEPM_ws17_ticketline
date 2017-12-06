@@ -34,6 +34,7 @@ public class SimpleAuthenticationService implements AuthenticationService, Dispo
         AuthenticationRestClient authenticationRestClient,
         AuthenticationInformationService authenticationInformationService
     ) {
+        System.out.println("HalloDavidmain");
         this.authenticationInformationService = authenticationInformationService;
         this.authenticationRestClient = authenticationRestClient;
         taskScheduler = new ThreadPoolTaskScheduler();
@@ -45,6 +46,7 @@ public class SimpleAuthenticationService implements AuthenticationService, Dispo
     public AuthenticationTokenInfo authenticate(
         AuthenticationRequest authenticationRequest
     ) throws DataAccessException {
+        System.out.println("HalloDavidinfo");
         if (LOGGER.isTraceEnabled()) {
             LOGGER.trace("trying to authenticate {}", authenticationRequest);
         } else {
@@ -54,12 +56,14 @@ public class SimpleAuthenticationService implements AuthenticationService, Dispo
     }
 
     private AuthenticationTokenInfo authenticateAndScheduleNextAuthentication() throws DataAccessException {
+        System.out.println("HalloDavidauthenticateandschude");
         return authenticateAndScheduleNextAuthentication(null);
     }
 
     private AuthenticationTokenInfo authenticateAndScheduleNextAuthentication(
         AuthenticationRequest authenticationRequest
     ) throws DataAccessException {
+        System.out.println("HalloDavidautheandschedule");
         if (null == authenticationRequest) {
             authenticationToken = authenticationRestClient.authenticate();
         } else {
@@ -76,6 +80,7 @@ public class SimpleAuthenticationService implements AuthenticationService, Dispo
     }
 
     private void scheduleReAuthenticationTask(LocalDateTime runAt) {
+        System.out.println("HalloDavidschedule");
         schedule = taskScheduler.schedule(
             () -> {
                 LOGGER.debug("setting current token to future token");
@@ -92,6 +97,7 @@ public class SimpleAuthenticationService implements AuthenticationService, Dispo
 
     @Override
     public void deAuthenticate() {
+        System.out.println("HalloDavidauthenti");
         LOGGER.debug("de authenticating");
         authenticationInformationService.clearAuthentication();
         authenticationToken = null;
@@ -103,6 +109,7 @@ public class SimpleAuthenticationService implements AuthenticationService, Dispo
 
     @Override
     public void destroy() {
+        System.out.println("HalloDaviddestroy");
         deAuthenticate();
     }
 

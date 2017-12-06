@@ -15,6 +15,9 @@
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#exitApplication" text="%menu.application.exit"/>
                     </items>
+                    <items>
+                        <MenuItem fx:id="btLogout" mnemonicParsing="false" onAction="#logoutApplication" text="%menu.application.logout"/>
+                    </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="%menu.help">
                     <items>

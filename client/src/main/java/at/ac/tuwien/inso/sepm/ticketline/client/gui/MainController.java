@@ -14,10 +14,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
+import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
@@ -43,6 +40,9 @@ public class MainController {
 
     @FXML
     private MenuBar mbMain;
+
+    @FXML
+    private MenuItem btLogout;
 
     private Node login;
 
@@ -82,6 +82,16 @@ public class MainController {
     private void exitApplication(ActionEvent actionEvent) {
         Stage stage = (Stage) spMainContent.getScene().getWindow();
         stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
+    }
+
+    @FXML
+    private void logoutApplication(ActionEvent actionEvent) {
+        //btLogout.setDisable(true);
+        Stage stage = (Stage) spMainContent.getScene().getWindow();
+        stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
+        initialize();
+
+
     }
 
     @FXML
