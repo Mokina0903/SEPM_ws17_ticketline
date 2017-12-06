@@ -171,11 +171,11 @@ public class NewsController {
 
     public void addNewNews(ActionEvent actionEvent) {
 
-           SpringFxmlLoader.Wrapper<NewsAddFormularController> wrapper =
-                springFxmlLoader.loadAndWrap("/fxml/news/addNewsFormular.fxml");
-           wrapper.getController().initializeData(springFxmlLoader, newsService, NewsController.this, vBContainer);
-            VBox addNewsRoot = springFxmlLoader.load("/fxml/news/addNewsFormular.fxml");
-            newsTab.setContent(addNewsRoot);
+        SpringFxmlLoader.Wrapper<NewsAddFormularController> wrapper =
+            springFxmlLoader.loadAndWrap("/fxml/news/addNewsFormular.fxml");
+        wrapper.getController().initializeData(springFxmlLoader, newsService, NewsController.this, vBContainer);
+        VBox addNewsRoot = springFxmlLoader.load("/fxml/news/addNewsFormular.fxml");
+        newsTab.setContent(addNewsRoot);
 
     }
 }
