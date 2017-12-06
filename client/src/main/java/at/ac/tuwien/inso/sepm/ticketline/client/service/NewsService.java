@@ -36,6 +36,15 @@ public interface NewsService {
     List<SimpleNewsDTO> findNotSeenByUser(long userId) throws DataAccessException;
 
     /**
+     * find old news for user
+     *
+     * @param userId of the user
+     * @return list of old news
+     * @throws DataAccessException
+     */
+    List<SimpleNewsDTO> findOldNewsByUser(long userId) throws DataAccessException;
+
+    /**
      * publishes new added News
      *
      * @param newNews to be published

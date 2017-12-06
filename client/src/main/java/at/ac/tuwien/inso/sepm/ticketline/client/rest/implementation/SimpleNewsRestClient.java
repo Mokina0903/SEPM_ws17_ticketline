@@ -95,6 +95,26 @@ public class SimpleNewsRestClient implements NewsRestClient {
     }
 
     @Override
+    public List<SimpleNewsDTO> findOldNewsByUser( Long userId ) throws DataAccessException {
+        try {
+            LOGGER.debug("Retrieving old news by userId from {}", restClient.getServiceURI(NEWS_URL));
+            ResponseEntity<List<SimpleNewsDTO>> news =
+                restClient.exchange(
+                    restClient.getServiceURI(NEWS_URL+"/old/"+userId),
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<List<SimpleNewsDTO>>() {}
+                );
+            LOGGER.debug("Result status was {} with content {}", news.getStatusCode(), news.getBody());
+            return news.getBody();
+        } catch (HttpStatusCodeException e) {
+            throw new DataAccessException("Failed retrieve news with status code " + e.getStatusCode().toString());
+        } catch (RestClientException e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+    }
+
+    @Override
     public DetailedNewsDTO publishNews( DetailedNewsDTO newNews) throws DataAccessException {
         try {
             LOGGER.debug("Publish news", restClient.getServiceURI(NEWS_URL));

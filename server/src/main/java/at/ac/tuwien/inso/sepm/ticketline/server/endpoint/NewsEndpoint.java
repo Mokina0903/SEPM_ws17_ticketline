@@ -40,8 +40,14 @@ public class NewsEndpoint {
 
     @RequestMapping(value = "/notSeen/{userId}", method = RequestMethod.GET)
     @ApiOperation(value = "Get list of not seen news for User")
-    List<SimpleNewsDTO> findNotSeenByUser(@PathVariable Long userId){
+    List<SimpleNewsDTO> findNotSeenByUser(@PathVariable("userId") Long userId){
         return newsMapper.newsToSimpleNewsDTO(newsService.findNotSeenByUser(userId));
+    }
+
+    @RequestMapping(value = "/old/{userId}", method = RequestMethod.GET)
+    @ApiOperation(value = "Get list of old news for User")
+    List<SimpleNewsDTO> findOldNewsByUser(@PathVariable("userId") Long userId){
+        return newsMapper.newsToSimpleNewsDTO(newsService.findOldNewsByUser(userId));
     }
 
     @RequestMapping(method = RequestMethod.POST)

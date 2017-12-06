@@ -39,6 +39,11 @@ public class SimpleNewsService implements NewsService {
     }
 
     @Override
+    public List<News> findOldNewsByUser( Long userId ) {
+        return newsRepository.findOldNewsByUser(userId);
+    }
+
+    @Override
     public News publishNews(News news) {
         news.setPublishedAt(LocalDateTime.now());
         News newsTMP =newsRepository.save(news);

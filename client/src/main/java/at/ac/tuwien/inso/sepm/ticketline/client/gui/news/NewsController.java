@@ -94,16 +94,21 @@ public class NewsController {
             @Override
             protected void succeeded() {
                 super.succeeded();
-                for (Iterator<SimpleNewsDTO> iterator = getValue().iterator(); iterator.hasNext(); ) {
-                    SimpleNewsDTO news = iterator.next();
+                try {
+                    List<SimpleNewsDTO> newNews = newsService.findNotSeenByUser(mainController.getUser().getId());
+                    if(newNews==null || newNews.isEmpty() ){return;}
+                    for (SimpleNewsDTO news:newNews){
 
-                    SpringFxmlLoader.Wrapper<NewsElementController> wrapper =
-                        springFxmlLoader.loadAndWrap("/fxml/news/newsElement.fxml");
-                    wrapper.getController().initializeData(news, newsService, mainController, NewsController.this);
-                    Label title = wrapper.getController().getLblTitle();
-                    title.setText("(NEW)" + title.getText());
+                        SpringFxmlLoader.Wrapper<NewsElementController> wrapper =
+                            springFxmlLoader.loadAndWrap("/fxml/news/newsElement.fxml");
+                        wrapper.getController().initializeData(news, newsService, mainController, NewsController.this);
+                        Label title = wrapper.getController().getLblTitle();
+                        title.setText("(NEW)" + title.getText());
 
-                    vbNewsBoxChildren.add(wrapper.getController().vbNewsElement);
+                        vbNewsBoxChildren.add(wrapper.getController().vbNewsElement);
+                    }
+                } catch (DataAccessException e) {
+                    e.printStackTrace();
                 }
             }
 
@@ -130,21 +135,19 @@ public class NewsController {
             @Override
             protected void succeeded() {
                 super.succeeded();
-                for (Iterator<SimpleNewsDTO> iterator = getValue().iterator(); iterator.hasNext(); ) {
-                    SimpleNewsDTO news = iterator.next();
-                    boolean isOld = true;
-                    for(SimpleNewsDTO notSeen : mainController.getUser().getNotSeen()) {
-                        if(notSeen.getId()==news.getId()) {
-                            isOld=false;
-                            break;
-                        }
-                    }
-                    if(isOld) {
+                try {
+                    List<SimpleNewsDTO> oldNews = newsService.findOldNewsByUser(mainController.getUser().getId());
+                    if(oldNews==null || oldNews.isEmpty() ){return;}
+                    for (SimpleNewsDTO news:oldNews){
+
                         SpringFxmlLoader.Wrapper<NewsElementController> wrapper =
                             springFxmlLoader.loadAndWrap("/fxml/news/newsElement.fxml");
                         wrapper.getController().initializeData(news, newsService, mainController, NewsController.this);
                         vbNewsBoxChildren.add(wrapper.getController().vbNewsElement);
+
                     }
+                } catch (DataAccessException e) {
+                    e.printStackTrace();
                 }
             }
 

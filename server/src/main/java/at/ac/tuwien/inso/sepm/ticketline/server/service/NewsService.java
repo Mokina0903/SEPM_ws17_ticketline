@@ -32,6 +32,14 @@ public interface NewsService {
     List<News> findNotSeenByUser(Long userId);
 
     /**
+     * find list of all news already seen by the user
+     *
+     * @param userId of the user
+     * @return list of old news
+     */
+    List<News> findOldNewsByUser(Long userId);
+
+    /**
      * Publish a single news entry
      *
      * @param news to publish
