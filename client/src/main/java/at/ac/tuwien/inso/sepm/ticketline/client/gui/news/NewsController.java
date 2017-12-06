@@ -108,7 +108,9 @@ public class NewsController {
                         vbNewsBoxChildren.add(wrapper.getController().vbNewsElement);
                     }
                 } catch (DataAccessException e) {
-                    e.printStackTrace();
+                    JavaFXUtils.createExceptionDialog(getException(),
+                        vbNewsElements.getScene().getWindow()).showAndWait();
+                    //e.printStackTrace();
                 }
             }
 
@@ -147,7 +149,9 @@ public class NewsController {
 
                     }
                 } catch (DataAccessException e) {
-                    e.printStackTrace();
+                    JavaFXUtils.createExceptionDialog(getException(),
+                        vbNewsElements.getScene().getWindow()).showAndWait();
+                    // e.printStackTrace();
                 }
             }
 

@@ -186,5 +186,24 @@ public class SimpleUserRestClient implements UserRestClient {
         }
     }
 
+    @Override
+    public void removeFromUserNotSeen( Long userId, Long newsId ) throws DataAccessException {
+        try {
+            LOGGER.debug("removing news from users notSeen from {}", restClient.getServiceURI(USER_URL));
+            ResponseEntity user =
+                restClient.exchange(
+                    restClient.getServiceURI(USER_URL+"/"+userId+"/"+newsId),
+                    HttpMethod.POST,
+                    null,
+                    new ParameterizedTypeReference<DetailedUserDTO>() {}
+                );
+            LOGGER.debug("Result status was {} with content {}", user.getStatusCode(), user.getBody());
+        } catch (HttpStatusCodeException e) {
+            throw new DataAccessException("Failed to update user with status code " + e.getStatusCode().toString());
+        } catch (RestClientException e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+    }
+
 
 }
