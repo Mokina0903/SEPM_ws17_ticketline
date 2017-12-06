@@ -71,6 +71,13 @@ public interface UserService {
      */
     DetailedUserDTO findByName(String name) throws DataAccessException;
 
-
+    /**
+     * removes news from notSeen
+     *
+     * @param userId of user to remove news
+     * @param newsId of news to remove from user
+     * @throws DataAccessException
+     */
+    void removeFromUserNotSeen(Long userId,Long newsId) throws DataAccessException;
 
 }

@@ -4,6 +4,7 @@ import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.MainController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.TabHeaderController;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.NewsService;
+import at.ac.tuwien.inso.sepm.ticketline.client.service.UserService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.JavaFXUtils;
 import at.ac.tuwien.inso.sepm.ticketline.rest.news.DetailedNewsDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.news.SimpleNewsDTO;
@@ -51,6 +52,7 @@ public class NewsController {
     private final MainController mainController;
     private final SpringFxmlLoader springFxmlLoader;
     private final NewsService newsService;
+    private final UserService userService;
 
     public Tab getNewsTab() {
         return newsTab;
@@ -60,10 +62,11 @@ public class NewsController {
         this.newsTab = newsTab;
     }
 
-    public NewsController(MainController mainController, SpringFxmlLoader springFxmlLoader, NewsService newsService) {
+    public NewsController(MainController mainController, SpringFxmlLoader springFxmlLoader, NewsService newsService, UserService userService) {
         this.mainController = mainController;
         this.springFxmlLoader = springFxmlLoader;
         this.newsService = newsService;
+        this.userService = userService;
     }
 
     @FXML
@@ -101,7 +104,7 @@ public class NewsController {
 
                     SpringFxmlLoader.Wrapper<NewsElementController> wrapper =
                         springFxmlLoader.loadAndWrap("/fxml/news/newsElement.fxml");
-                    wrapper.getController().initializeData(news, newsService, mainController, NewsController.this);
+                    wrapper.getController().initializeData(news, newsService, mainController, NewsController.this,userService);
                     Label title = wrapper.getController().getLblTitle();
                     title.setText("(NEW)" + title.getText());
                     wrapper.getLoadedObject().setStyle("-fx-background-color:rgba(220, 229, 244, .7)");
@@ -145,7 +148,7 @@ public class NewsController {
 
                         SpringFxmlLoader.Wrapper<NewsElementController> wrapper =
                             springFxmlLoader.loadAndWrap("/fxml/news/newsElement.fxml");
-                        wrapper.getController().initializeData(news, newsService, mainController, NewsController.this);
+                        wrapper.getController().initializeData(news, newsService, mainController, NewsController.this,userService);
                         vbNewsBoxChildren.add(wrapper.getController().vbNewsElement);
 
                     }
