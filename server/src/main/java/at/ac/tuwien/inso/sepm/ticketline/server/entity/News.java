@@ -22,6 +22,7 @@ public class News {
     @Column(nullable = false, length = 10_000)
     private String text;
 
+    @JoinColumn(name="news_id")
     public Long getId() {
         return id;
     }

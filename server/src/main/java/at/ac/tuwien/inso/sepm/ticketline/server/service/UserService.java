@@ -1,5 +1,6 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.service;
 
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.News;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.User;
 import java.util.List;
 
@@ -53,7 +54,8 @@ public interface UserService {
      */
     void save(User user);
 
-    // TODO: oder einfach nur update?
+    //void updateNotSeen( Long id, List<News> notSeen );
+
     /**
      * Block a single user entry
      *

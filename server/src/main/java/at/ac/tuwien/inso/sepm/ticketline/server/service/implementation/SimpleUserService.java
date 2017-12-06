@@ -1,5 +1,6 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.service.implementation;
 
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.News;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.User;
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.NotFoundException;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.UserRepository;
@@ -48,6 +49,12 @@ public class SimpleUserService implements UserService {
         userRepository.save(user);
     }
 
+    /*
+    @Override
+    public void updateNotSeen( Long id, List<News> notSeen ) {
+        userRepository.updateNotSeen(notSeen,id);
+    }
+*/
     @Override
     public boolean blockUser(User user) {
         user.setBlocked(true);

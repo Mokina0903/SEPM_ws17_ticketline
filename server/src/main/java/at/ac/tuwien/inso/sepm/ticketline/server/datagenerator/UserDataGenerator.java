@@ -1,6 +1,7 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.datagenerator;
 
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.User;
+import at.ac.tuwien.inso.sepm.ticketline.server.repository.NewsRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.UserRepository;
 import com.github.javafaker.Faker;
 import org.slf4j.Logger;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 @Profile("generateData")
@@ -23,12 +25,14 @@ public class UserDataGenerator {
     private static final int NUMBER_OF_USER_TO_GENERATE = 3;
 
     private final UserRepository userRepository;
+    private final NewsRepository newsRepository;
     private final Faker faker;
 
     PasswordEncoder encoder = new BCryptPasswordEncoder(10);
 
-    public UserDataGenerator(UserRepository userRepository) {
+    public UserDataGenerator(UserRepository userRepository, NewsRepository newsRepository) {
         this.userRepository = userRepository;
+        this.newsRepository = newsRepository;
         faker = new Faker();
     }
 
@@ -42,6 +46,7 @@ public class UserDataGenerator {
             User user = User.builder()
                 .userName("user")
                 .password(encoder.encode("password"))
+                .notSeen(newsRepository.findAllByOrderByPublishedAtDesc())
                 .role(2)
                 .blocked(false)
                 .build();
@@ -51,6 +56,7 @@ public class UserDataGenerator {
             User florian = User.builder()
                 .userName("Florian")
                 .password("Florian")
+                //.notSeen(newsRepository.findAllByOrderByPublishedAtDesc())
                 .role(2)
                 .blocked(false)
                 .build();
@@ -70,6 +76,7 @@ public class UserDataGenerator {
                 .password(encoder.encode("password"))
                 .role(1)
                 .blocked(false)
+                .notSeen(newsRepository.findAllByOrderByPublishedAtDesc())
                 .build();
             LOGGER.debug("saving user {}", user);
             userRepository.save(user);
@@ -78,6 +85,7 @@ public class UserDataGenerator {
                 .userName("David")
                 .password("David")
                 .role(1)
+                .notSeen(newsRepository.findAllByOrderByPublishedAtDesc())
                 .blocked(false)
                 .build();
             LOGGER.debug("saving admin {}", david);

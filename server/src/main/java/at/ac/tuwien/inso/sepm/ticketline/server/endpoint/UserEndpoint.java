@@ -47,7 +47,7 @@ public class UserEndpoint {
     @RequestMapping(value = "/find/{userName}", method = RequestMethod.GET)
     @ApiOperation(value = "Get detailed information about a specific user entry by name")
     public DetailedUserDTO findByName(@PathVariable("userName") String userName) {
-        return userMapper.userToDetailedUserDTO(userService.findOneByName(userName));
+        return userMapper.userToDetailedUserDTO(userService.findOneByName(userName)); //todo news summary
     }
 
     @RequestMapping(method = RequestMethod.POST)
