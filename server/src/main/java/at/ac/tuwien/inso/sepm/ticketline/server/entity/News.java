@@ -22,6 +22,9 @@ public class News {
     @Column(nullable = false, length = 10_000)
     private String text;
 
+    @Column(length = 10_000)
+    private String picPath;
+
     @JoinColumn(name="news_id")
     public Long getId() {
         return id;
@@ -53,6 +56,14 @@ public class News {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public String getPicPath() {
+        return picPath;
+    }
+
+    public void setPicPath(String picPath) {
+        this.picPath = picPath;
     }
 
     public static NewsBuilder builder() {
@@ -97,6 +108,7 @@ public class News {
         private LocalDateTime publishedAt;
         private String title;
         private String text;
+        private String path;
 
         private NewsBuilder() {
         }
@@ -121,12 +133,20 @@ public class News {
             return this;
         }
 
+
+        public NewsBuilder picPath(String path) {
+            this.path = path;
+            return this;
+        }
+
+
         public News build() {
             News news = new News();
             news.setId(id);
             news.setPublishedAt(publishedAt);
             news.setTitle(title);
             news.setText(text);
+            news.setPicPath(path);
             return news;
         }
     }

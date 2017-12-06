@@ -25,7 +25,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 
 @Component
 public class NewsAddFormularController {
@@ -116,12 +115,11 @@ public class NewsAddFormularController {
         try {
 
             Files.copy(file.toPath(),destination.toPath());
-            picPath = destination.getCanonicalPath();
+            picPath = destination.toURI().toString();
         } catch (IOException e) {
             //TODO: add alert
             e.printStackTrace();
         }
-
 
 
 
