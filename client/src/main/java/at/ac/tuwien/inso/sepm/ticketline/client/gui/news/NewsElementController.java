@@ -78,8 +78,9 @@ public class NewsElementController {
 
     public void backToSimpleNewsView(ActionEvent actionEvent) {
         lblText.setText(simpleNewsDTO.getSummary());
-        newsImageView.setVisible(false);
+        newsImageView.setImage(null);
         backButton.setVisible(false);
+        backButton.setDisable(true);
 
     }
 
@@ -104,6 +105,7 @@ public class NewsElementController {
                 }
 
                 backButton.setVisible(true);
+                backButton.setDisable(false);
 
             }
 

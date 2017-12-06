@@ -108,7 +108,7 @@ public class NewsAddFormularController {
             return;
         }
 
-        Image img = new Image(file.toURI().toString());
+        Image img = new Image(file.toURI().toString(),640 , 480, true, true);
         newsImage.setImage(img);
         new File(home +"/NewsPictures").mkdir();
         File destination = new File(home+"/NewsPictures/"+ file.getName());
