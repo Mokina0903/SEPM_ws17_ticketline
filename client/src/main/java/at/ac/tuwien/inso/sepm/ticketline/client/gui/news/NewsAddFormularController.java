@@ -108,14 +108,15 @@ public class NewsAddFormularController {
             return;
         }
 
-        Image img = new Image(file.toURI().toString(),640 , 480, true, true);
+        Image img = new Image(file.toURI().toString(),540 , 380, false, false);
         newsImage.setImage(img);
         new File(home +"/NewsPictures").mkdir();
         File destination = new File(home+"/NewsPictures/"+ file.getName());
+        picPath = destination.toURI().toString();
         try {
 
             Files.copy(file.toPath(),destination.toPath());
-            picPath = destination.toURI().toString();
+
         } catch (IOException e) {
             //TODO: add alert
             e.printStackTrace();

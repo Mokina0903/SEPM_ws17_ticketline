@@ -99,7 +99,7 @@ public class NewsElementController {
                 DetailedNewsDTO detailedNewsDTO= getValue();
                 lblText.setText(detailedNewsDTO.getText());
                 if(detailedNewsDTO.getPicPath() != null && !detailedNewsDTO.getPicPath().isEmpty()){
-                    Image img = new Image(detailedNewsDTO.getPicPath());
+                    Image img = new Image(detailedNewsDTO.getPicPath(),540 , 380, false, false);
                     newsImageView.setImage(img);
                     newsImageView.setVisible(true);
                 }
