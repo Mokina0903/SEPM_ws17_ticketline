@@ -54,7 +54,7 @@ public interface UserService {
      */
     void save(User user);
 
-    //void updateNotSeen( Long id, List<News> notSeen );
+    void updateNotSeen( Long userId, Long newsId );
 
     /**
      * Block a single user entry

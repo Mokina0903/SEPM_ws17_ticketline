@@ -46,9 +46,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
      *        id of user to update
      * @return updated user
      */
-/*
+
     @Modifying
-    @Query("UPDATE User u SET u.notSeen = :notSeen WHERE u.id = :id")
-    void updateNotSeen( @Param("notSeen") List<News> notSeen, @Param("id") Long id);
-*/
+    @Query(value = "Delete from Not_Seen n WHERE n.users_id = :userId and n.news_id= :newsId",nativeQuery = true)
+    void updateNotSeen( @Param("userId") Long userIs, @Param("newsId") Long newsId);
+
 }

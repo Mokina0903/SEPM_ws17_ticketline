@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -53,6 +54,8 @@ public class NewsController {
     private final SpringFxmlLoader springFxmlLoader;
     private final NewsService newsService;
     private final UserService userService;
+    private List<SimpleNewsDTO> newNews;
+    private List<SimpleNewsDTO> oldNews;
 
     public Tab getNewsTab() {
         return newsTab;
@@ -91,31 +94,42 @@ public class NewsController {
         Task<List<SimpleNewsDTO>> taskNewNews = new Task<>() {
             @Override
             protected List<SimpleNewsDTO> call() throws DataAccessException {
-                return newsService.findAll();
+                Long userID = mainController.getUser().getId();
+                List<SimpleNewsDTO> news = new ArrayList<>();
+                NewsController.this.oldNews = newsService.findOldNewsByUser(userID);
+                NewsController.this.newNews = newsService.findNotSeenByUser(userID);
+                return news;
             }
 
             @Override
             protected void succeeded() {
                 super.succeeded();
-                try {
-                    List<SimpleNewsDTO> newNews = newsService.findNotSeenByUser(mainController.getUser().getId());
-                    if(newNews==null || newNews.isEmpty() ){return;}
-                    for (SimpleNewsDTO news:newNews){
+                if (NewsController.this.newNews != null && !NewsController.this.newNews.isEmpty() ) {
+                    for (SimpleNewsDTO newsDTO : NewsController.this.newNews) {
 
-                    SpringFxmlLoader.Wrapper<NewsElementController> wrapper =
-                        springFxmlLoader.loadAndWrap("/fxml/news/newsElement.fxml");
-                    wrapper.getController().initializeData(news, newsService, mainController, NewsController.this,userService);
-                    Label title = wrapper.getController().getLblTitle();
-                    title.setText("(NEW)" + title.getText());
-                    wrapper.getLoadedObject().setStyle("-fx-background-color:rgba(220, 229, 244, .7)");
+                        SpringFxmlLoader.Wrapper<NewsElementController> wrapper =
+                            springFxmlLoader.loadAndWrap("/fxml/news/newsElement.fxml");
+                        wrapper.getController().initializeData(newsDTO, newsService, mainController, NewsController.this, userService);
+                        Label title = wrapper.getController().getLblTitle();
+                        title.setText("(NEW)" + title.getText());
+                        wrapper.getLoadedObject().setStyle("-fx-background-color:rgba(220, 229, 244, .7)");
 
                         vbNewsBoxChildren.add(wrapper.getController().vbNewsElement);
                     }
-                } catch (DataAccessException e) {
-                    JavaFXUtils.createExceptionDialog(getException(),
-                        vbNewsElements.getScene().getWindow()).showAndWait();
-                    //e.printStackTrace();
+
                 }
+                if (NewsController.this.oldNews != null && !NewsController.this.oldNews.isEmpty() ) {
+                    for (SimpleNewsDTO oldNewsDTO : NewsController.this.oldNews) {
+
+                        SpringFxmlLoader.Wrapper<NewsElementController> wrapper =
+                            springFxmlLoader.loadAndWrap("/fxml/news/newsElement.fxml");
+                        wrapper.getController().initializeData(oldNewsDTO, newsService, mainController, NewsController.this, userService);
+
+                        vbNewsBoxChildren.add(wrapper.getController().vbNewsElement);
+                    }
+
+                }
+
             }
 
             @Override
@@ -132,7 +146,7 @@ public class NewsController {
                 running ? ProgressBar.INDETERMINATE_PROGRESS : 0)
         );
 
-        Task<List<SimpleNewsDTO>> taskOldNews = new Task<>() {
+        /*Task<List<SimpleNewsDTO>> taskOldNews = new Task<>() {
             @Override
             protected List<SimpleNewsDTO> call() throws DataAccessException {
                 return newsService.findAll();
@@ -170,7 +184,7 @@ public class NewsController {
             mainController.setProgressbarProgress(
                 running ? ProgressBar.INDETERMINATE_PROGRESS : 0)
         );
-        new Thread(taskOldNews).start();
+        new Thread(taskOldNews).start();*/
         new Thread(taskNewNews).start();
 
     }

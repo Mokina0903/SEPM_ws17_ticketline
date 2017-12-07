@@ -75,7 +75,7 @@ public class MainController {
         pbLoadingProgress.setProgress(0);
         login = springFxmlLoader.load("/fxml/authenticationComponent.fxml");
         spMainContent.getChildren().add(login);
-        initNewsTabPane();
+
     }
 
     @FXML
@@ -116,6 +116,7 @@ public class MainController {
             if (spMainContent.getChildren().contains(login)) {
                 spMainContent.getChildren().remove(login);
             }
+            initNewsTabPane();
             newsController.loadNews();
         } else {
             if (!spMainContent.getChildren().contains(login)) {

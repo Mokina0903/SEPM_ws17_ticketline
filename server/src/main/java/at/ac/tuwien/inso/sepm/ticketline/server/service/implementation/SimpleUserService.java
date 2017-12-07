@@ -49,12 +49,12 @@ public class SimpleUserService implements UserService {
         userRepository.save(user);
     }
 
-    /*
+
     @Override
-    public void updateNotSeen( Long id, List<News> notSeen ) {
-        userRepository.updateNotSeen(notSeen,id);
+    public void updateNotSeen( Long userId, Long newsId ) {
+        userRepository.updateNotSeen(userId,newsId);
     }
-*/
+
     @Override
     public boolean blockUser(User user) {
         user.setBlocked(true);

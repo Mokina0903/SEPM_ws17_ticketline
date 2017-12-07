@@ -87,16 +87,19 @@ public class UserEndpoint {
 
         User user = userService.findOne(userId);
         for(News news:user.getNotSeen()){
-            if(news.getId()==newsId){
+            if(news.getId().equals(newsId) || news.getId() == newsId){
                 List<News> notSeen= user.getNotSeen();
                 notSeen.remove(news);
                 user.setNotSeen(notSeen);
+
                 userService.save(user);
                 return;
             }
 
         }
-        userService.save(user);
+
+       // userService.updateNotSeen(userId,newsId);
+       // userService.save(user);
     }
 
     @RequestMapping(value = "/decreaseAttempts", method = RequestMethod.POST)
