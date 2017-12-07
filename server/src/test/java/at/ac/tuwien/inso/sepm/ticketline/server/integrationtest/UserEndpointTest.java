@@ -49,7 +49,7 @@ public class UserEndpointTest extends BaseIntegrationTest {
 
     @Test
     public void loginWithCorrectNameAndWrongPassword(){
-
+        // TODO: (Florian) Bitte diesen Testfall ansehen
         String wrong = Strings
             .join(
                 AuthenticationConstants.TOKEN_PREFIX,

@@ -3,6 +3,8 @@ package at.ac.tuwien.inso.sepm.ticketline.server.integrationtest.base;
 import at.ac.tuwien.inso.sepm.ticketline.rest.authentication.AuthenticationToken;
 import at.ac.tuwien.inso.sepm.ticketline.server.configuration.JacksonConfiguration;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.News;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.User;
+import at.ac.tuwien.inso.sepm.ticketline.server.repository.UserRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.security.AuthenticationConstants;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.implementation.SimpleHeaderTokenAuthenticationService;
 import com.jayway.restassured.RestAssured;
@@ -17,8 +19,10 @@ import org.mockito.BDDMockito;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoRestTemplateCustomizer;
 import org.springframework.boot.context.embedded.LocalServerPort;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -55,6 +59,13 @@ public abstract class BaseIntegrationTest {
     @Autowired
     private JacksonConfiguration jacksonConfiguration;
 
+
+    @Autowired
+    private PasswordEncoder encoder;
+
+    @Autowired
+    private UserRepository userRepository;
+
     protected String validUserTokenWithPrefix;
     protected String validAdminTokenWithPrefix;
 
@@ -74,42 +85,8 @@ public abstract class BaseIntegrationTest {
 
     @Before
     public void beforeBase() throws Exception {
-
-        assertNotNull(dataSource);
-
-        when(c.prepareStatement(startsWith(
-            "SELECT user_name, password, (not blocked) as enabled from users where user_name"))).thenReturn(stmt);
-
-
-
-        when(c.prepareStatement(any(String.class))).thenReturn(stmt);
-        when(dataSource.getConnection()).thenReturn(c);
-
-        //user_name, password, (not blocked) as enabled
-
-        when(rs.first()).thenReturn(true);
-
-        when(rs.getString(1)).thenReturn(USER_USERNAME);
-        when(rs.getString(2)).thenReturn(USER_PASSWORD);
-        when(rs.getBoolean(3)).thenReturn(false);
-
-        when(rs.getString("user_name")).thenReturn(USER_USERNAME);
-        when(rs.getString("password")).thenReturn(USER_PASSWORD);
-        when(rs.getBoolean("enabled")).thenReturn(false);
-
-        when(stmt.executeQuery()).thenReturn(rs);
-
-
-        PreparedStatement preparedStatement =  c.prepareStatement("SELECT user_name, password, (not blocked) as enabled from users where user_name=?");
-
-        preparedStatement.setInt(1,3);
-        preparedStatement.executeQuery();
-
-        System.out.println(rs.getString(1));
-
-
-
-
+        userRepository.deleteAll();
+        setupDefaultUsers();
 
         RestAssured.baseURI = SERVER_HOST;
         RestAssured.basePath = contextPath;
@@ -117,23 +94,6 @@ public abstract class BaseIntegrationTest {
         RestAssured.config = RestAssuredConfig.config().
             objectMapperConfig(new ObjectMapperConfig().jackson2ObjectMapperFactory((aClass, s) ->
                 jacksonConfiguration.jackson2ObjectMapperBuilder().build()));
-
-
-        /*
-
-             BDDMockito.
-            given(newsRepository.findAllByOrderByPublishedAtDesc()).
-            willReturn(Collections.singletonList(
-                News.builder()
-                    .id(TEST_NEWS_ID)
-                    .title(TEST_NEWS_TITLE)
-                    .text(TEST_NEWS_TEXT)
-                    .publishedAt(TEST_NEWS_PUBLISHED_AT)
-                    .build()));
-
-             */
-
-
 
 
         validUserTokenWithPrefix = Strings
@@ -148,10 +108,19 @@ public abstract class BaseIntegrationTest {
                 AuthenticationConstants.TOKEN_PREFIX,
                 simpleHeaderTokenAuthenticationService.authenticate(ADMIN_USERNAME, ADMIN_PASSWORD).getCurrentToken())
             .with(" ");
+    }
 
+    private void setupDefaultUsers() {
+        userRepository.save(User.builder()
+            .userName(ADMIN_USERNAME)
+            .password(encoder.encode(ADMIN_PASSWORD))
+            .role(1)
+            .build());
 
-        //validAdminTokenWithPrefix = "adm";
-        //validUserTokenWithPrefix = "usr";
-
+        userRepository.save(User.builder()
+            .userName(USER_USERNAME)
+            .password(encoder.encode(USER_PASSWORD))
+            .role(2)
+            .build());
     }
 }
