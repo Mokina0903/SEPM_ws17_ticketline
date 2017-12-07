@@ -3,14 +3,17 @@ package at.ac.tuwien.inso.sepm.ticketline.server.service.implementation;
 import at.ac.tuwien.inso.sepm.ticketline.rest.authentication.AuthenticationToken;
 import at.ac.tuwien.inso.sepm.ticketline.rest.authentication.AuthenticationTokenInfo;
 import at.ac.tuwien.inso.sepm.ticketline.server.configuration.properties.AuthenticationConfigurationProperties;
+import at.ac.tuwien.inso.sepm.ticketline.server.repository.UserRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.security.AuthenticationConstants;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.HeaderTokenAuthenticationService;
+import at.ac.tuwien.inso.sepm.ticketline.server.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -39,6 +42,10 @@ public class SimpleHeaderTokenAuthenticationService implements HeaderTokenAuthen
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SimpleHeaderTokenAuthenticationService.class);
 
+
+    @Autowired
+    protected UserService userService;
+
     private final AuthenticationManager authenticationManager;
     private final ObjectMapper objectMapper;
     private final SecretKeySpec signingKey;
@@ -63,6 +70,22 @@ public class SimpleHeaderTokenAuthenticationService implements HeaderTokenAuthen
 
     @Override
     public AuthenticationToken authenticate(String username, CharSequence password) {
+        // Decrease
+        at.ac.tuwien.inso.sepm.ticketline.server.entity.User user = userService.findByUsername(username);
+
+
+        if (user != null) {
+            if (user.getAttempts() <= 0)
+                user.setBlocked(true);
+
+            user.setAttempts(user.getAttempts()-1);
+
+
+            userService.save(user);
+        }
+
+
+
         Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(username, password));
         Instant now = Instant.now();
@@ -98,6 +121,11 @@ public class SimpleHeaderTokenAuthenticationService implements HeaderTokenAuthen
                     .minus(overlapDuration))))
             .signWith(signatureAlgorithm, signingKey)
             .compact();
+
+        user.resetAttempts();
+
+        userService.save(user);
+
         return AuthenticationToken.builder()
             .currentToken(currentToken)
             .futureToken(futureToken)
