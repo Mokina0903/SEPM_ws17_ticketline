@@ -109,15 +109,7 @@ public class MainController {
         stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
     }
 
-    @FXML
-    private void logoutApplication(ActionEvent actionEvent) {
-        //btLogout.setDisable(true);
-        Stage stage = (Stage) spMainContent.getScene().getWindow();
-        stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
-        initialize();
 
-
-    }
 
     @FXML
     private void aboutApplication(ActionEvent actionEvent) {
