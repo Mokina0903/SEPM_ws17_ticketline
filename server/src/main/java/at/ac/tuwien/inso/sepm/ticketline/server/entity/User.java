@@ -7,7 +7,7 @@ import java.util.List;
 @Table (name = "users")
 public class User {
 
-    private static final Integer LOGIN_ATTEMPTS = 5;
+    public static final Integer LOGIN_ATTEMPTS = 5;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq_user_id")
@@ -93,6 +93,10 @@ public class User {
 
     public static UserBuilder builder() {
         return new UserBuilder();
+    }
+
+    public void resetAttempts() {
+        this.attempts = LOGIN_ATTEMPTS;
     }
 
 
