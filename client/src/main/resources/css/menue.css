@@ -1,0 +1,14 @@
+
+.hbox {
+    -fx-background-color: #3c3f41;
+}
+
+
+.button {
+    -fx-background-radius: 3;
+}
+
+.button:default {
+    -fx-background-radius: 3 10;
+}
+

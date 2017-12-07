@@ -7,14 +7,15 @@ import at.ac.tuwien.inso.sepm.ticketline.client.service.UserService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.JavaFXUtils;
 import at.ac.tuwien.inso.sepm.ticketline.rest.user.DetailedUserDTO;
-import at.ac.tuwien.inso.sepm.ticketline.rest.user.SimpleUserDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
@@ -22,10 +23,17 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.Glyph;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
+import java.io.IOException;
 
 @Component
 public class MainController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MainController.class);
+
 
     private static final int TAB_ICON_FONT_SIZE = 20;
 
@@ -44,11 +52,15 @@ public class MainController {
     @FXML
     private MenuItem btLogout;
 
+    @FXML
+    private StackPane spMenue;
+
     private Node login;
 
     private final SpringFxmlLoader springFxmlLoader;
     private final FontAwesome fontAwesome;
     private NewsController newsController;
+    private MenueController menueController;
     private UserService userService;
     private DetailedUserDTO detailedUserDTO;
 
@@ -75,7 +87,20 @@ public class MainController {
         pbLoadingProgress.setProgress(0);
         login = springFxmlLoader.load("/fxml/authenticationComponent.fxml");
         spMainContent.getChildren().add(login);
+
         initNewsTabPane();
+    }
+
+
+    @FXML
+    private void initMenue(){
+        Pane newLoadedPane = null;
+        try {
+            newLoadedPane = FXMLLoader.load(getClass().getResource("/fxml/menueBox.fxml"));
+        } catch (IOException e) {
+            LOGGER.warn("Could not initialize Menue StackPane cause : {}" ,e.getMessage());
+        }
+        spMenue.getChildren().add(newLoadedPane);
     }
 
     @FXML
@@ -127,6 +152,7 @@ public class MainController {
                 spMainContent.getChildren().remove(login);
             }
             newsController.loadNews();
+            initMenue();
         } else {
             if (!spMainContent.getChildren().contains(login)) {
                 spMainContent.getChildren().add(login);
