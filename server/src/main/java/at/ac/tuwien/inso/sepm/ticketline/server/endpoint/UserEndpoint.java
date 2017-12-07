@@ -114,4 +114,12 @@ public class UserEndpoint {
         userService.save(user);
     }
 
+    @RequestMapping(value = "/{username}/isBlocked", method = RequestMethod.GET)
+    @ApiOperation(value = "Get left login attempts of a specific user entry")
+    public boolean isBlocked(@PathVariable String username) {
+
+        User user = userService.findByUsername(username);
+        return user.isBlocked();
+    }
+
 }

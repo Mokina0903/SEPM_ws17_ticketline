@@ -4,21 +4,21 @@ import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.rest.user.SimpleUserDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.user.DetailedUserDTO;
 
-public interface  UserRestClient {
-/**
- * Find user by username
- *
- * @param userName of the user searched for
- * @return SimpleUserDTO
- * @throws DataAccessException in case something went wrong
- */
+public interface UserRestClient {
+    /**
+     * Find user by username
+     *
+     * @param userName of the user searched for
+     * @return SimpleUserDTO
+     * @throws DataAccessException in case something went wrong
+     */
     SimpleUserDTO findByUsername(String userName) throws DataAccessException;
 
 
     /**
      * get left login Attempts by username
      *
-     * @param attempts of the user searched for
+     * @param username of the user searched for
      * @return Integer attempts
      */
     Integer getLoginAttemptsLeft(String username) throws DataAccessException;
@@ -26,7 +26,7 @@ public interface  UserRestClient {
     /**
      * decrease login Attempts by username by 1
      *
-     * @param SimpleUserDTO of the user searched for
+     * @param username of the user searched for
      * @return Integer attempts
      */
     SimpleUserDTO decreaseLoginAttempts(String username) throws DataAccessException;
@@ -34,7 +34,7 @@ public interface  UserRestClient {
     /**
      * reset login Attempts by username
      *
-     * @param SimpleDTO
+     * @param username
      * @return Integer attempts
      */
     SimpleUserDTO resetLoginAttempts(String username) throws DataAccessException;
@@ -42,7 +42,7 @@ public interface  UserRestClient {
     /**
      * block user by username
      *
-     * @param SimpleDTO
+     * @param username
      * @return Integer attempts
      */
     SimpleUserDTO blockUser(String username) throws DataAccessException;
@@ -50,10 +50,20 @@ public interface  UserRestClient {
     /**
      * unblock user by username
      *
-     * @param SimpleDTO
+     * @param username
      * @return Integer attempts
      */
     SimpleUserDTO unblockUser(String username) throws DataAccessException;
+
+
+    /**
+     * check if user is blocked
+     *
+     * @param username
+     * @return boolean isBlocked
+     */
+    boolean isBlocked(String username) throws DataAccessException;
+
 
     /**
      * Find User by name

@@ -63,6 +63,16 @@ public interface UserService {
     SimpleUserDTO unblockUser(String userName) throws DataAccessException;
 
     /**
+     * check if user is blocked
+     *
+     * @param userName of userAttemps entry
+     * @return UserDTO
+     * @throws DataAccessException in case something went wrong
+     */
+    boolean isBlocked(String userName) throws DataAccessException;
+
+
+    /**
      * find user by username
      *
      * @param name of the user

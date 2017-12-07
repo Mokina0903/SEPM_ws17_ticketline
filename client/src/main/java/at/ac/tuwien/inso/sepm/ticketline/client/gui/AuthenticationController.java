@@ -1,11 +1,14 @@
 package at.ac.tuwien.inso.sepm.ticketline.client.gui;
 
+import at.ac.tuwien.inso.sepm.ticketline.client.exception.BlockedUserException;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.AuthenticationService;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.UserService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.JavaFXUtils;
 import at.ac.tuwien.inso.sepm.ticketline.rest.authentication.AuthenticationRequest;
 import at.ac.tuwien.inso.sepm.ticketline.rest.authentication.AuthenticationTokenInfo;
+import at.ac.tuwien.inso.sepm.ticketline.rest.user.DetailedUserDTO;
+import at.ac.tuwien.inso.sepm.ticketline.rest.user.SimpleUserDTO;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -48,7 +51,6 @@ public class AuthenticationController {
     private final MainController mainController;
 
 
-
     public AuthenticationController(AuthenticationService authenticationService, UserService userService, MainController mainController) {
         this.authenticationService = authenticationService;
         this.userService = userService;
@@ -64,39 +66,49 @@ public class AuthenticationController {
     }
 
     @FXML
-    private void handleAuthenticate(ActionEvent actionEvent) {
-        Task<AuthenticationTokenInfo> task = new Task<>() {
-            @Override
-            protected AuthenticationTokenInfo call() throws DataAccessException {
-                AuthenticationTokenInfo authenticationTokenInfo= authenticationService.authenticate(
-                    AuthenticationRequest.builder()
-                        .username(txtUsername.getText())
-                        .password(txtPassword.getText())
-                        .build());
-                return authenticationTokenInfo;
-            }
+    private void handleAuthenticate(ActionEvent actionEvent) throws DataAccessException {
+        //check if user not blocked
+        boolean blocked = userService.isBlocked(txtUsername.getText());
+        if (!blocked) {
+            Task<AuthenticationTokenInfo> task = new Task<>() {
 
-            @Override
-            protected void succeeded() {
-                try {
-                    userService.resetLoginAttempts(txtUsername.getText());
-                } catch (DataAccessException e) {
-                    LOGGER.info("Faild login cause no valid username or password");
+                @Override
+                protected AuthenticationTokenInfo call() throws DataAccessException, BlockedUserException {
+                    //check if user not blocked
+                    boolean blocked = userService.isBlocked(txtUsername.getText());
+                    if (!blocked) {
+                        AuthenticationTokenInfo authenticationTokenInfo = authenticationService.authenticate(
+                            AuthenticationRequest.builder()
+                                .username(txtUsername.getText())
+                                .password(txtPassword.getText())
+                                .build());
+                        return authenticationTokenInfo;
+                    } else {
+                        throw new BlockedUserException();
+                    }
                 }
-                mainController.loadDetailedUserDTO(getValue().getUsername());
-            }
 
-            @Override
-            protected void failed() {
-                try {
-                    userService.decreaseLoginAttempts(txtUsername.getText());
-                    checkLeftAttempts();
-                } catch (DataAccessException e) {
-                    LOGGER.info("Faild login cause no valid username or password");
+                @Override
+                protected void succeeded() {
+                    try {
+                        userService.resetLoginAttempts(txtUsername.getText());
+                    } catch (DataAccessException e) {
+                        LOGGER.info("Faild login cause no valid username or password");
+                    }
+                    mainController.loadDetailedUserDTO(getValue().getUsername());
                 }
-                super.failed();
-                JavaFXUtils.createExceptionDialog(getException(),
-                    ((Node) actionEvent.getTarget()).getScene().getWindow()).showAndWait();
+
+                @Override
+                protected void failed() {
+                    try {
+                        userService.decreaseLoginAttempts(txtUsername.getText());
+                        checkLeftAttempts();
+                    } catch (DataAccessException e) {
+                        LOGGER.info("Faild login cause no valid username or password");
+                    }
+                    super.failed();
+                    JavaFXUtils.createExceptionDialog(getException(),
+                        ((Node) actionEvent.getTarget()).getScene().getWindow()).showAndWait();
 /*
                 try {
 
@@ -105,21 +117,21 @@ public class AuthenticationController {
                 }
 */
 
-            }
-        };
-        task.runningProperty().addListener((observable, oldValue, running) ->
-            mainController.setProgressbarProgress(
-                running ? ProgressBar.INDETERMINATE_PROGRESS : 0)
-        );
-        new Thread(task).start();
+                }
+            };
+            task.runningProperty().addListener((observable, oldValue, running) ->
+                mainController.setProgressbarProgress(
+                    running ? ProgressBar.INDETERMINATE_PROGRESS : 0)
+            );
+            new Thread(task).start();
+        }
     }
 
     private void checkLeftAttempts() throws DataAccessException {
         Integer freeAttempts = userService.getLoginAttemptsLeft(txtUsername.getText());
-        if(freeAttempts > 0) {
+        if (freeAttempts > 0) {
             setLabels(false);
-        }
-        else {
+        } else {
             setLabels(true);
             userService.blockUser(txtUsername.getText());
 
@@ -141,7 +153,6 @@ public class AuthenticationController {
             lblNumberFreeAttempts.setText(Integer.toString(freeAttempts));
         }
     }
-
 
 
 }

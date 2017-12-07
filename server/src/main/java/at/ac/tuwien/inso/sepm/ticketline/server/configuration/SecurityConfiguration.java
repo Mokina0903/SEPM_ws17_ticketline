@@ -121,7 +121,8 @@ public class SecurityConfiguration{
                     "/swagger-resources/**",
                     "/webjars/springfox-swagger-ui/**",
                     "/swagger-ui.html",
-                    "/user/**/getAttempts"
+                    "/user/**/getAttempts",
+                    "/user/**/isBlocked"
                     // add here methods that need to omit security
                 )
                 .permitAll()

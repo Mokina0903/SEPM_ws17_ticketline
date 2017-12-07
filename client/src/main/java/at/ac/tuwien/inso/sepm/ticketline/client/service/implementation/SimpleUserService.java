@@ -58,6 +58,11 @@ public class SimpleUserService implements UserService {
     }
 
     @Override
+    public boolean isBlocked(String userName) throws DataAccessException {
+        return userRestClient.isBlocked(userName);
+    }
+
+    @Override
     public DetailedUserDTO findByName( String name ) throws DataAccessException {
         return userRestClient.findByName(name);
     }
