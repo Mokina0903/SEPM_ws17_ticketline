@@ -38,11 +38,84 @@ public class UserEndpointTest extends BaseIntegrationTest {
     }
 
 
+    @Test
+    public void loginBlockwhenAttempsZero() {
+        super.setupDefaultUsers();
+
+        for (int i = 1; i <= User.LOGIN_ATTEMPTS; i++) {
+            try {
+                super.simpleHeaderTokenAuthenticationService.authenticate(ADMIN_USERNAME, ADMIN_PASSWORD.substring(2));
+            } catch (Exception e) {
+
+            }
+
+            Assert.assertFalse("Failure at run " + i + " is allready blocked",
+                    userRepository.findOneByUserName(ADMIN_USERNAME).isBlocked());
+        }
+
+        try {
+            super.simpleHeaderTokenAuthenticationService.authenticate(ADMIN_USERNAME, ADMIN_PASSWORD.substring(2));
+        } catch (Exception e) {
+
+        }
+
+        Assert.assertTrue("Failure at run " + User.LOGIN_ATTEMPTS+1 + " is not blocked",
+            userRepository.findOneByUserName(ADMIN_USERNAME).isBlocked());
+    }
+
+
+    @Test
+    public void loginnerlyBlocked() {
+        super.setupDefaultUsers();
+
+        for (int i = 1; i < User.LOGIN_ATTEMPTS; i++) {
+            try {
+                super.simpleHeaderTokenAuthenticationService.authenticate(ADMIN_USERNAME, ADMIN_PASSWORD.substring(2));
+            } catch (Exception e) {
+
+
+            }
+
+            Assert.assertFalse("Failure at run " + i + " is allready blocked",
+                userRepository.findOneByUserName(ADMIN_USERNAME).isBlocked());
+
+        }
+
+        try {
+            super.simpleHeaderTokenAuthenticationService.authenticate(ADMIN_USERNAME, ADMIN_PASSWORD);
+        } catch (Exception e) {
+
+        }
+
+        Assert.assertFalse("Failure at run " + (User.LOGIN_ATTEMPTS + 1) + " blocked",
+            userRepository.findOneByUserName(ADMIN_USERNAME).isBlocked());
+    }
+
+
+    @Test
+    public void loginResetAttemps(){
+        super.setupDefaultUsers();
+        try {
+            super.simpleHeaderTokenAuthenticationService.authenticate(ADMIN_USERNAME, ADMIN_PASSWORD.substring(2));
+        } catch (Exception e) {
+
+        }
+
+        int beforeLogin = userRepository.findOneByUserName(ADMIN_USERNAME).getAttempts();
+
+        super.simpleHeaderTokenAuthenticationService.authenticate(ADMIN_USERNAME, ADMIN_PASSWORD).getCurrentToken();
+
+        int afterLogin = userRepository.findOneByUserName(ADMIN_USERNAME).getAttempts();
+
+        Assert.assertTrue("Attemptreset does not work correct",beforeLogin < afterLogin);
+
+    }
 
     @Test
     public void loginWithCorrectNameAndWrongPassword(){
-        // TODO: TestCase edit after Reorganisation of Blocking users and count attempts
+        // TODO: (Florian) Bitte deine Tests noch hier implementieren
 
+        /*
         try {
             String wrong = Strings
                 .join(
@@ -83,6 +156,7 @@ public class UserEndpointTest extends BaseIntegrationTest {
                 super.simpleHeaderTokenAuthenticationService.authenticate(ADMIN_USERNAME, ADMIN_PASSWORD).getCurrentToken())
             .with(" ");
             */
+
     }
 
 
