@@ -54,7 +54,6 @@ public abstract class BaseIntegrationTest {
 
     @Before
     public void beforeBase() throws Exception {
-        userRepository.deleteAll();
         setupDefaultUsers();
 
         RestAssured.baseURI = SERVER_HOST;
@@ -64,13 +63,11 @@ public abstract class BaseIntegrationTest {
             objectMapperConfig(new ObjectMapperConfig().jackson2ObjectMapperFactory((aClass, s) ->
                 jacksonConfiguration.jackson2ObjectMapperBuilder().build()));
 
-
         validUserTokenWithPrefix = Strings
             .join(
                 AuthenticationConstants.TOKEN_PREFIX,
                 simpleHeaderTokenAuthenticationService.authenticate(USER_USERNAME, USER_PASSWORD).getCurrentToken())
             .with(" ");
-
 
         validAdminTokenWithPrefix = Strings
             .join(
@@ -79,7 +76,9 @@ public abstract class BaseIntegrationTest {
             .with(" ");
     }
 
-    private void setupDefaultUsers() {
+    protected void setupDefaultUsers() {
+        userRepository.deleteAll();
+
         userRepository.save(User.builder()
             .userName(ADMIN_USERNAME)
             .password(encoder.encode(ADMIN_PASSWORD))
