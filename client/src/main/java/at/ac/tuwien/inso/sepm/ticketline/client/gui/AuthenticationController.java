@@ -3,6 +3,7 @@ package at.ac.tuwien.inso.sepm.ticketline.client.gui;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.AuthenticationService;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.UserService;
+import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
 import at.ac.tuwien.inso.sepm.ticketline.rest.authentication.AuthenticationRequest;
 import at.ac.tuwien.inso.sepm.ticketline.rest.authentication.AuthenticationTokenInfo;
 import javafx.concurrent.Task;
@@ -28,7 +29,7 @@ public class AuthenticationController {
     @FXML
     private Label lblNumberFreeAttempts;
     @FXML
-    private Label lblLoginInfo;
+    private Label lblLoginAttempts;
     @FXML
     private Label lblLoginFailed;
     @FXML
@@ -54,11 +55,20 @@ public class AuthenticationController {
 
     @FXML
     public void initialize() {
-        lblLoginInfo.setVisible(false);
+
+        lblLoginAttempts.setVisible(false);
+        lblLoginAttempts.setText(BundleManager.getBundle().getString("authenticate.attempts"));
         lblLoginFailed.setVisible(false);
+        lblLoginFailed.setText(BundleManager.getBundle().getString("authenticate.loginFailed"));
         lblBlocked.setVisible(false);
+        lblBlocked.setText(BundleManager.getBundle().getString("authenticate.blocked"));
         lblContactAdmin.setVisible(false);
+        lblContactAdmin.setText(BundleManager.getBundle().getString("authenticate.contactAdmin"));
     }
+
+
+    //todo login after log out not possible -> task failed() instead of succeeded()
+
 
     @FXML
     private void handleAuthenticate(ActionEvent actionEvent) {
@@ -114,13 +124,13 @@ public class AuthenticationController {
         Integer freeAttempts = userService.getLoginAttemptsLeft(txtUsername.getText());
 
         if (freeAttempts > 0) {
-            lblLoginInfo.setVisible(true);
+            lblLoginAttempts.setVisible(true);
             lblLoginFailed.setVisible(true);
             lblBlocked.setVisible(false);
             lblContactAdmin.setVisible(false);
             lblNumberFreeAttempts.setText(Integer.toString(freeAttempts));
         } else {
-            lblLoginInfo.setVisible(false);
+            lblLoginAttempts.setVisible(false);
             lblLoginFailed.setVisible(false);
             lblBlocked.setVisible(true);
             lblContactAdmin.setVisible(true);

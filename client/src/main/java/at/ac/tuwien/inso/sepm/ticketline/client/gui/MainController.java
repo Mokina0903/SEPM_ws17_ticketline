@@ -11,7 +11,6 @@ import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -26,8 +25,6 @@ import org.controlsfx.glyphfont.Glyph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-
-import java.io.IOException;
 
 @Component
 public class MainController {
@@ -50,9 +47,6 @@ public class MainController {
     private MenuBar mbMain;
 
     @FXML
-    private MenuItem btLogout;
-
-    @FXML
     private StackPane spMenue;
 
     private Node login;
@@ -60,7 +54,6 @@ public class MainController {
     private final SpringFxmlLoader springFxmlLoader;
     private final FontAwesome fontAwesome;
     private NewsController newsController;
-    private MenueController menueController;
     private UserService userService;
     private DetailedUserDTO detailedUserDTO;
 
@@ -78,7 +71,7 @@ public class MainController {
         this.fontAwesome = fontAwesome;
         authenticationInformationService.addAuthenticationChangeListener(
             authenticationTokenInfo -> setAuthenticated(null != authenticationTokenInfo));
-        this.userService=userService;
+        this.userService = userService;
     }
 
     @FXML
@@ -87,20 +80,14 @@ public class MainController {
         pbLoadingProgress.setProgress(0);
         login = springFxmlLoader.load("/fxml/authenticationComponent.fxml");
         spMainContent.getChildren().add(login);
-
         initNewsTabPane();
     }
 
-
     @FXML
-    private void initMenue(){
-        Pane newLoadedPane = null;
-        try {
-            newLoadedPane = FXMLLoader.load(getClass().getResource("/fxml/menueBox.fxml"));
-        } catch (IOException e) {
-            LOGGER.warn("Could not initialize Menue StackPane cause : {}" ,e.getMessage());
-        }
-        spMenue.getChildren().add(newLoadedPane);
+    private void initMenue() {
+        Pane menuePane = null;
+        menuePane = springFxmlLoader.load("/fxml/menuePane.fxml");
+        spMenue.getChildren().add(menuePane);
     }
 
     @FXML
@@ -108,7 +95,6 @@ public class MainController {
         Stage stage = (Stage) spMainContent.getScene().getWindow();
         stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
     }
-
 
 
     @FXML
@@ -148,6 +134,7 @@ public class MainController {
         } else {
             if (!spMainContent.getChildren().contains(login)) {
                 spMainContent.getChildren().add(login);
+                spMenue.getChildren().clear();
             }
         }
     }
@@ -156,13 +143,16 @@ public class MainController {
         pbLoadingProgress.setProgress(progress);
     }
 
-    public void loadDetailedUserDTO(String name){
+    public void loadDetailedUserDTO(String name) {
         try {
-            this.detailedUserDTO=userService.findByName(name);
+            this.detailedUserDTO = userService.findByName(name);
         } catch (DataAccessException e) {
-            JavaFXUtils.createExceptionDialog(e,spMainContent.getScene().getWindow()).showAndWait();
-           // e.printStackTrace();
+            JavaFXUtils.createExceptionDialog(e, spMainContent.getScene().getWindow()).showAndWait();
+            // e.printStackTrace();
         }
     }
-    public DetailedUserDTO getUser(){return this.detailedUserDTO;}
+
+    public DetailedUserDTO getUser() {
+        return this.detailedUserDTO;
+    }
 }
