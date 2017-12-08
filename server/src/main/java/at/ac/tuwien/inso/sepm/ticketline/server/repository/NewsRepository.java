@@ -30,12 +30,24 @@ public interface NewsRepository extends JpaRepository<News, Long> {
     List<News> findAllByOrderByPublishedAtDesc();
 
 
+    /**
+     * Find all news that are new to user with given id
+     *
+     * @param userId of the user
+     * @return list of new news
+     */
     @Query(value = "select * from " +
         "(news n join not_seen s on n.id=s.news_id )" +
         "where s.users_id = :userId " +
         "order by n.published_at desc",nativeQuery = true)
     List<News> findNotSeenByUser(@Param("userId")Long userId );
 
+    /**
+     * Find list of old news for user with given id
+     *
+     * @param userId of the user
+     * @return list of old news
+     */
     @Query(value = "select * from news n " +
         "where n.id not in " +
         "(select x.id from news x join not_seen s on x.id=s.news_id where s.users_id= :userId) " +
