@@ -53,7 +53,6 @@ public interface UserService {
      */
     void save(User user);
 
-    // TODO: oder einfach nur update?
     /**
      * Block a single user entry
      *

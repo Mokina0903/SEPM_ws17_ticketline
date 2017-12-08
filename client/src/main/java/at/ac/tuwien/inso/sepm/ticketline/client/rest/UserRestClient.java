@@ -4,14 +4,14 @@ import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.rest.user.SimpleUserDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.user.DetailedUserDTO;
 
-public interface UserRestClient {
-    /**
-     * Find user by username
-     *
-     * @param userName of the user searched for
-     * @return SimpleUserDTO
-     * @throws DataAccessException in case something went wrong
-     */
+public interface  UserRestClient {
+/**
+ * Find user by username
+ *
+ * @param userName of the user searched for
+ * @return SimpleUserDTO
+ * @throws DataAccessException in case something went wrong
+ */
     SimpleUserDTO findByUsername(String userName) throws DataAccessException;
 
 
@@ -29,7 +29,7 @@ public interface UserRestClient {
      * @param username of the user searched for
      * @return Integer attempts
      */
-    SimpleUserDTO decreaseLoginAttempts(String username) throws DataAccessException;
+ //   SimpleUserDTO decreaseLoginAttempts(String username) throws DataAccessException;
 
     /**
      * reset login Attempts by username
@@ -37,7 +37,7 @@ public interface UserRestClient {
      * @param username
      * @return Integer attempts
      */
-    SimpleUserDTO resetLoginAttempts(String username) throws DataAccessException;
+ //   SimpleUserDTO resetLoginAttempts(String username) throws DataAccessException;
 
     /**
      * block user by username
@@ -45,7 +45,7 @@ public interface UserRestClient {
      * @param username
      * @return Integer attempts
      */
-    SimpleUserDTO blockUser(String username) throws DataAccessException;
+ //   SimpleUserDTO blockUser(String username) throws DataAccessException;
 
     /**
      * unblock user by username
@@ -53,7 +53,7 @@ public interface UserRestClient {
      * @param username
      * @return Integer attempts
      */
-    SimpleUserDTO unblockUser(String username) throws DataAccessException;
+ //   SimpleUserDTO unblockUser(String username) throws DataAccessException;
 
 
     /**
@@ -65,12 +65,12 @@ public interface UserRestClient {
     boolean isBlocked(String username) throws DataAccessException;
 
 
-    /**
-     * Find User by name
-     *
-     * @param name of the user
-     * @return DetailedUserDTO
-     * @throws DataAccessException if something went wrong
-     */
+        /**
+         * Find User by name
+         *
+         * @param name of the user
+         * @return DetailedUserDTO
+         * @throws DataAccessException if something went wrong
+         */
     DetailedUserDTO findByName(String name) throws DataAccessException;
 }

@@ -7,8 +7,6 @@ import at.ac.tuwien.inso.sepm.ticketline.client.service.UserService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.JavaFXUtils;
 import at.ac.tuwien.inso.sepm.ticketline.rest.authentication.AuthenticationRequest;
 import at.ac.tuwien.inso.sepm.ticketline.rest.authentication.AuthenticationTokenInfo;
-import at.ac.tuwien.inso.sepm.ticketline.rest.user.DetailedUserDTO;
-import at.ac.tuwien.inso.sepm.ticketline.rest.user.SimpleUserDTO;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -67,55 +65,33 @@ public class AuthenticationController {
 
     @FXML
     private void handleAuthenticate(ActionEvent actionEvent) throws DataAccessException {
-        //check if user not blocked
+
         boolean blocked = userService.isBlocked(txtUsername.getText());
         if (!blocked) {
             Task<AuthenticationTokenInfo> task = new Task<>() {
 
                 @Override
-                protected AuthenticationTokenInfo call() throws DataAccessException, BlockedUserException {
-                    //check if user not blocked
-                    boolean blocked = userService.isBlocked(txtUsername.getText());
-                    if (!blocked) {
+                protected AuthenticationTokenInfo call() throws DataAccessException {
+
                         AuthenticationTokenInfo authenticationTokenInfo = authenticationService.authenticate(
                             AuthenticationRequest.builder()
                                 .username(txtUsername.getText())
                                 .password(txtPassword.getText())
                                 .build());
                         return authenticationTokenInfo;
-                    } else {
-                        throw new BlockedUserException();
-                    }
                 }
 
                 @Override
                 protected void succeeded() {
-                    try {
-                        userService.resetLoginAttempts(txtUsername.getText());
-                    } catch (DataAccessException e) {
-                        LOGGER.info("Faild login cause no valid username or password");
-                    }
                     mainController.loadDetailedUserDTO(getValue().getUsername());
                 }
 
                 @Override
                 protected void failed() {
-                    try {
-                        userService.decreaseLoginAttempts(txtUsername.getText());
-                        checkLeftAttempts();
-                    } catch (DataAccessException e) {
-                        LOGGER.info("Faild login cause no valid username or password");
-                    }
+
                     super.failed();
                     JavaFXUtils.createExceptionDialog(getException(),
                         ((Node) actionEvent.getTarget()).getScene().getWindow()).showAndWait();
-/*
-                try {
-
-                } catch (DataAccessException e) {
-
-                }
-*/
 
                 }
             };
@@ -125,32 +101,26 @@ public class AuthenticationController {
             );
             new Thread(task).start();
         }
+        setLabels();
+//        throw new BlockedUserException();
     }
 
-    private void checkLeftAttempts() throws DataAccessException {
-        Integer freeAttempts = userService.getLoginAttemptsLeft(txtUsername.getText());
+
+    private void setLabels() throws DataAccessException {
+        Integer freeAttempts = userService.getLoginAttemptsLeft(txtUsername.getText())-1;
+
         if (freeAttempts > 0) {
-            setLabels(false);
-        } else {
-            setLabels(true);
-            userService.blockUser(txtUsername.getText());
-
-        }
-    }
-
-
-    private void setLabels(boolean isBlocked) throws DataAccessException {
-        Integer freeAttempts = userService.getLoginAttemptsLeft(txtUsername.getText());
-        lblLoginInfo.setVisible(!isBlocked);
-        lblLoginFaild.setVisible(!isBlocked);
-        lblBlocked.setVisible(isBlocked);
-        lblContactAdmin.setVisible(isBlocked);
-
-        if (isBlocked) {
-            lblNumberFreeAttempts.setVisible(false);
-        } else {
-            lblNumberFreeAttempts.setVisible(true);
+            lblLoginInfo.setVisible(true);
+            lblLoginFaild.setVisible(true);
+            lblBlocked.setVisible(false);
+            lblContactAdmin.setVisible(false);
             lblNumberFreeAttempts.setText(Integer.toString(freeAttempts));
+        } else {
+            lblLoginInfo.setVisible(false);
+            lblLoginFaild.setVisible(false);
+            lblBlocked.setVisible(true);
+            lblContactAdmin.setVisible(true);
+            lblNumberFreeAttempts.setText("");
         }
     }
 

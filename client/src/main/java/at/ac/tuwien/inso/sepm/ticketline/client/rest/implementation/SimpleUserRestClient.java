@@ -71,7 +71,7 @@ public class SimpleUserRestClient implements UserRestClient {
         }
     }
 
-    @Override
+/*    @Override
     public SimpleUserDTO decreaseLoginAttempts(String username) throws DataAccessException {
 
         try {
@@ -93,9 +93,9 @@ public class SimpleUserRestClient implements UserRestClient {
 
             throw new DataAccessException(e.getMessage(), e);
         }
-    }
+    }*/
 
-    @Override
+  /*  @Override
     public SimpleUserDTO resetLoginAttempts(String username) throws DataAccessException {
 
         try {
@@ -117,9 +117,9 @@ public class SimpleUserRestClient implements UserRestClient {
 
             throw new DataAccessException(e.getMessage(), e);
         }
-    }
+    }*/
 
-    @Override
+   /* @Override
     public SimpleUserDTO blockUser(String username) throws DataAccessException {
         try {
             ResponseEntity<SimpleUserDTO> user = restClient.postForEntity(
@@ -140,10 +140,10 @@ public class SimpleUserRestClient implements UserRestClient {
 
             throw new DataAccessException(e.getMessage(), e);
         }
-    }
+    }*/
 
 
-    @Override
+   /* @Override
     public SimpleUserDTO unblockUser(String username) throws DataAccessException {
         try {
             ResponseEntity<SimpleUserDTO> user = restClient.postForEntity(
@@ -164,7 +164,7 @@ public class SimpleUserRestClient implements UserRestClient {
 
             throw new DataAccessException(e.getMessage(), e);
         }
-    }
+    }*/
 
     @Override
     public boolean isBlocked(String username) throws DataAccessException {
@@ -180,15 +180,12 @@ public class SimpleUserRestClient implements UserRestClient {
             return blocked.getBody();
         }
         catch(HttpStatusCodeException e) {
-
             throw new DataAccessException("Failed to retrieve blocked status of user " + username, e);
         }
         catch(RestClientException e) {
-
             throw new DataAccessException(e.getMessage(), e);
         }
     }
-
 
 
     @Override
@@ -210,6 +207,4 @@ public class SimpleUserRestClient implements UserRestClient {
             throw new DataAccessException(e.getMessage(), e);
         }
     }
-
-
 }
