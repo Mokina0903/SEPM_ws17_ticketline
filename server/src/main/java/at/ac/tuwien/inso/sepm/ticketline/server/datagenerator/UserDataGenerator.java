@@ -50,7 +50,7 @@ public class UserDataGenerator {
 
             User florian = User.builder()
                 .userName("Florian")
-                .password("Florian")
+                .password(encoder.encode("Florian"))
                 .role(2)
                 .blocked(false)
                 .build();
@@ -76,7 +76,7 @@ public class UserDataGenerator {
 
             User david = User.builder()
                 .userName("David")
-                .password("David")
+                .password(encoder.encode("David"))
                 .role(1)
                 .blocked(false)
                 .build();

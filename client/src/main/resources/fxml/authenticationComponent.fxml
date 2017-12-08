@@ -55,7 +55,7 @@
                 </GridPane>
                 <HBox alignment="CENTER_RIGHT">
                     <children>
-                  <Label fx:id="lblLoginFaild" text="%authenticate.loginFaild" textFill="#f43939">
+                  <Label fx:id="lblLoginFailed" text="%authenticate.loginFaild" textFill="#f43939">
                      <font>
                         <Font name="System Bold" size="13.0" />
                      </font></Label>
