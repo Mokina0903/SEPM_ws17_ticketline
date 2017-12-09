@@ -4,6 +4,7 @@ import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.MainController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.TabHeaderController;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.NewsService;
+import at.ac.tuwien.inso.sepm.ticketline.client.service.UserService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.JavaFXUtils;
 import at.ac.tuwien.inso.sepm.ticketline.rest.news.DetailedNewsDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.news.SimpleNewsDTO;
@@ -26,8 +27,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class NewsController {
@@ -51,6 +54,9 @@ public class NewsController {
     private final MainController mainController;
     private final SpringFxmlLoader springFxmlLoader;
     private final NewsService newsService;
+    private final UserService userService;
+    private List<SimpleNewsDTO> newNews;
+    private List<SimpleNewsDTO> oldNews;
 
     public Tab getNewsTab() {
         return newsTab;
@@ -60,10 +66,11 @@ public class NewsController {
         this.newsTab = newsTab;
     }
 
-    public NewsController(MainController mainController, SpringFxmlLoader springFxmlLoader, NewsService newsService) {
+    public NewsController(MainController mainController, SpringFxmlLoader springFxmlLoader, NewsService newsService, UserService userService) {
         this.mainController = mainController;
         this.springFxmlLoader = springFxmlLoader;
         this.newsService = newsService;
+        this.userService = userService;
     }
 
     @FXML
@@ -81,31 +88,106 @@ public class NewsController {
             });
     }
 
+
     public void loadNews() {
         ObservableList<VBox> vbNewsBoxChildren = vbNewsElements.getItems();
         vbNewsBoxChildren.clear();
 
+        /*
+        try {
+            TimeUnit.SECONDS.sleep(1);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        Long userID = mainController.getUser().getId();
+
+        try {
+            this.oldNews = newsService.findOldNewsByUser(userID);
+            this.newNews = newsService.findNotSeenByUser(userID);
+
+        } catch (DataAccessException e) {
+
+            JavaFXUtils.createExceptionDialog(e,
+                vbNewsElements.getScene().getWindow()).showAndWait();
+            //e.printStackTrace();
+        }
+
+
+        if (NewsController.this.newNews != null && !NewsController.this.newNews.isEmpty() ) {
+            for (SimpleNewsDTO newsDTO : NewsController.this.newNews) {
+
+                SpringFxmlLoader.Wrapper<NewsElementController> wrapper =
+                    springFxmlLoader.loadAndWrap("/fxml/news/newsElement.fxml");
+                wrapper.getController().initializeData(newsDTO, newsService, mainController, NewsController.this, userService);
+                Label title = wrapper.getController().getLblTitle();
+                title.setText("(NEW)" + title.getText());
+                wrapper.getLoadedObject().setStyle("-fx-background-color:rgba(220, 229, 244, .7)");
+
+                vbNewsBoxChildren.add(wrapper.getController().vbNewsElement);
+            }
+
+        }
+        if (NewsController.this.oldNews != null && !NewsController.this.oldNews.isEmpty() ) {
+            for (SimpleNewsDTO oldNewsDTO : NewsController.this.oldNews) {
+
+                SpringFxmlLoader.Wrapper<NewsElementController> wrapper =
+                    springFxmlLoader.loadAndWrap("/fxml/news/newsElement.fxml");
+                wrapper.getController().initializeData(oldNewsDTO, newsService, mainController, NewsController.this, userService);
+
+                vbNewsBoxChildren.add(wrapper.getController().vbNewsElement);
+            }
+
+        }
+*/
+
+
         Task<List<SimpleNewsDTO>> taskNewNews = new Task<>() {
             @Override
-            protected List<SimpleNewsDTO> call() throws DataAccessException {
-                return newsService.findAll();
+            protected List<SimpleNewsDTO> call() throws DataAccessException, InterruptedException {
+
+                Long userID;
+                try {
+                    userID = mainController.getUser().getId();
+                }catch(NullPointerException e){
+                    TimeUnit.MILLISECONDS.sleep(300);
+                    userID = mainController.getUser().getId();
+                }
+
+                List<SimpleNewsDTO> news = new ArrayList<>();
+                NewsController.this.oldNews = newsService.findOldNewsByUser(userID);
+                NewsController.this.newNews = newsService.findNotSeenByUser(userID);
+                return news;
             }
 
             @Override
             protected void succeeded() {
                 super.succeeded();
-                for (Iterator<SimpleNewsDTO> iterator = getValue().iterator(); iterator.hasNext(); ) {
-                    SimpleNewsDTO news = iterator.next();
-                    if(mainController.getUser().getNotSeen().contains(news)) {
+                if (NewsController.this.newNews != null && !NewsController.this.newNews.isEmpty() ) {
+                    for (SimpleNewsDTO newsDTO : NewsController.this.newNews) {
+
                         SpringFxmlLoader.Wrapper<NewsElementController> wrapper =
                             springFxmlLoader.loadAndWrap("/fxml/news/newsElement.fxml");
-                        wrapper.getController().initializeData(news, newsService, mainController, NewsController.this);
+                        wrapper.getController().initializeData(newsDTO, newsService, mainController, NewsController.this, userService);
                         Label title = wrapper.getController().getLblTitle();
+                        title.setText("(NEW)" + title.getText());
+                        wrapper.getLoadedObject().setStyle("-fx-background-color:rgba(220, 229, 244, .7)");
 
-                        wrapper.getController().getLblTitle().setText("<b>"+wrapper.getController().getLblTitle().getText()+"</b>");
                         vbNewsBoxChildren.add(wrapper.getController().vbNewsElement);
                     }
+
                 }
+                if (NewsController.this.oldNews != null && !NewsController.this.oldNews.isEmpty() ) {
+                    for (SimpleNewsDTO oldNewsDTO : NewsController.this.oldNews) {
+
+                        SpringFxmlLoader.Wrapper<NewsElementController> wrapper =
+                            springFxmlLoader.loadAndWrap("/fxml/news/newsElement.fxml");
+                        wrapper.getController().initializeData(oldNewsDTO, newsService, mainController, NewsController.this, userService);
+
+                        vbNewsBoxChildren.add(wrapper.getController().vbNewsElement);
+                    }
+
+                }
+
             }
 
             @Override
@@ -122,49 +204,19 @@ public class NewsController {
                 running ? ProgressBar.INDETERMINATE_PROGRESS : 0)
         );
 
-        Task<List<SimpleNewsDTO>> taskOldNews = new Task<>() {
-            @Override
-            protected List<SimpleNewsDTO> call() throws DataAccessException {
-                return newsService.findAll();
-            }
 
-            @Override
-            protected void succeeded() {
-                super.succeeded();
-                for (Iterator<SimpleNewsDTO> iterator = getValue().iterator(); iterator.hasNext(); ) {
-                    SimpleNewsDTO news = iterator.next();
-                    if(!mainController.getUser().getNotSeen().contains(news)) {
-                        SpringFxmlLoader.Wrapper<NewsElementController> wrapper =
-                            springFxmlLoader.loadAndWrap("/fxml/news/newsElement.fxml");
-                        wrapper.getController().initializeData(news, newsService, mainController, NewsController.this);
-                        vbNewsBoxChildren.add(wrapper.getController().vbNewsElement);
-                    }
-                }
-            }
+        new Thread(taskNewNews).start();
 
-            @Override
-            protected void failed() {
-                super.failed();
-                JavaFXUtils.createExceptionDialog(getException(),
-                    vbNewsElements.getScene().getWindow()).showAndWait();
-            }
-        };
-        taskOldNews.runningProperty().addListener((observable, oldValue, running) ->
-            mainController.setProgressbarProgress(
-                running ? ProgressBar.INDETERMINATE_PROGRESS : 0)
-        );
-        //new Thread(taskNewNews).start();
-        new Thread(taskOldNews).start();
     }
 
 
     public void addNewNews(ActionEvent actionEvent) {
 
-           SpringFxmlLoader.Wrapper<NewsAddFormularController> wrapper =
-                springFxmlLoader.loadAndWrap("/fxml/news/addNewsFormular.fxml");
-           wrapper.getController().initializeData(springFxmlLoader, newsService, NewsController.this, vBContainer);
-            VBox addNewsRoot = springFxmlLoader.load("/fxml/news/addNewsFormular.fxml");
-            newsTab.setContent(addNewsRoot);
+        SpringFxmlLoader.Wrapper<NewsAddFormularController> wrapper =
+            springFxmlLoader.loadAndWrap("/fxml/news/addNewsFormular.fxml");
+        wrapper.getController().initializeData(springFxmlLoader, newsService, NewsController.this, vBContainer);
+        VBox addNewsRoot = springFxmlLoader.load("/fxml/news/addNewsFormular.fxml");
+        newsTab.setContent(addNewsRoot);
 
     }
 }

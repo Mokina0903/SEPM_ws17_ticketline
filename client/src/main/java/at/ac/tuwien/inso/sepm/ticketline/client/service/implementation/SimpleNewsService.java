@@ -33,6 +33,16 @@ public class SimpleNewsService implements NewsService {
     }
 
     @Override
+    public List<SimpleNewsDTO> findNotSeenByUser( long userId ) throws DataAccessException {
+        return newsRestClient.findNotSeenByUser(userId);
+    }
+
+    @Override
+    public List<SimpleNewsDTO> findOldNewsByUser( long userId ) throws DataAccessException {
+        return newsRestClient.findOldNewsByUser(userId);
+    }
+
+    @Override
     public DetailedNewsDTO publishNews(DetailedNewsDTO newNews) throws DataAccessException {
        return newsRestClient.publishNews(newNews);
     }

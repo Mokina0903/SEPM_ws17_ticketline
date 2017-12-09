@@ -1,6 +1,7 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.entity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -25,8 +26,12 @@ public class User {
     @Column(nullable = false)
     private boolean blocked;
 
-    @OneToMany()
-    private List<News> notSeen;
+    @ManyToMany()
+    @JoinTable(
+        name = "notSeen",
+        joinColumns = @JoinColumn(name = "users_id"),
+        inverseJoinColumns = @JoinColumn(name = "news_id")) //toDo: make unique
+    private List<News> notSeen = new ArrayList<>();
 
     /*private String firstName;
     private String lastName;
@@ -102,6 +107,7 @@ public class User {
         private String password;
         private Integer role;
         private boolean blocked;
+        private List<News> notSeen;
 
         private UserBuilder() {
         }
@@ -131,6 +137,11 @@ public class User {
             return this;
         }
 
+        public UserBuilder notSeen(List<News> notSeen){
+            this.notSeen = notSeen;
+            return this;
+        }
+
         public User build() {
             User user = new User();
             user.setId(id);
@@ -139,6 +150,7 @@ public class User {
             user.setAttempts(LOGIN_ATTEMPTS);
             user.setRole(role);
             user.setBlocked(blocked);
+            user.setNotSeen(notSeen);
             return user;
         }
     }

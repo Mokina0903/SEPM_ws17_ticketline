@@ -61,4 +61,9 @@ public class SimpleUserService implements UserService {
     public DetailedUserDTO findByName( String name ) throws DataAccessException {
         return userRestClient.findByName(name);
     }
+
+    @Override
+    public void removeFromUserNotSeen( Long userId, Long newsId ) throws DataAccessException {
+        userRestClient.removeFromUserNotSeen(userId,newsId);
+    }
 }

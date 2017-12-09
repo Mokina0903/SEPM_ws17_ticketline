@@ -3,6 +3,7 @@ package at.ac.tuwien.inso.sepm.ticketline.client.gui.news;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.MainController;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.NewsService;
+import at.ac.tuwien.inso.sepm.ticketline.client.service.UserService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.JavaFXUtils;
 import at.ac.tuwien.inso.sepm.ticketline.rest.news.DetailedNewsDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.news.SimpleNewsDTO;
@@ -51,6 +52,7 @@ public class NewsElementController {
 
     private SimpleNewsDTO simpleNewsDTO;
     private NewsService newsService;
+    private UserService userService;
     private MainController mainController;
     private NewsController newsController;
 
@@ -63,7 +65,7 @@ public class NewsElementController {
     }
 
     public void initializeData( SimpleNewsDTO simpleNewsDTO, NewsService newsService,
-                                MainController mainController, NewsController newsController) {
+                                MainController mainController, NewsController newsController, UserService userService) {
         lblDate.setText(NEWS_DTF.format(simpleNewsDTO.getPublishedAt()));
         lblTitle.setText(simpleNewsDTO.getTitle());
         lblText.setText(simpleNewsDTO.getSummary());
@@ -72,15 +74,25 @@ public class NewsElementController {
         this.newsService=newsService;
         this.mainController=mainController;
         this.newsController=newsController;
+        this.userService=userService;
         backButton.setVisible(false);
         newsImageView.setVisible(false);
     }
 
     public void backToSimpleNewsView(ActionEvent actionEvent) {
         lblText.setText(simpleNewsDTO.getSummary());
-        newsImageView.setVisible(false);
+        newsImageView.setImage(null);
         backButton.setVisible(false);
+        backButton.setDisable(true);
 
+        try {
+            userService.removeFromUserNotSeen(mainController.getUser().getId(),simpleNewsDTO.getId());
+        } catch (DataAccessException e) {
+            JavaFXUtils.createExceptionDialog(e,
+                vbNewsElement.getScene().getWindow()).showAndWait();
+            e.printStackTrace();
+        }
+        vbNewsElement.setStyle("-fx-background-color:rgba(245, 245, 245,0)");
     }
 
     public void detailedNews(MouseEvent mouseEvent) {
@@ -97,13 +109,14 @@ public class NewsElementController {
                 super.succeeded();
                 DetailedNewsDTO detailedNewsDTO= getValue();
                 lblText.setText(detailedNewsDTO.getText());
-                if(detailedNewsDTO.getPicPath() != null){
-                    Image img = new Image(detailedNewsDTO.getPicPath());
+                if(detailedNewsDTO.getPicPath() != null && !detailedNewsDTO.getPicPath().isEmpty()){
+                    Image img = new Image(detailedNewsDTO.getPicPath(),540 , 380, false, false);
                     newsImageView.setImage(img);
                     newsImageView.setVisible(true);
                 }
 
                 backButton.setVisible(true);
+                backButton.setDisable(false);
 
             }
 

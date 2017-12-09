@@ -2,7 +2,9 @@ package at.ac.tuwien.inso.sepm.ticketline.server.endpoint;
 
 import at.ac.tuwien.inso.sepm.ticketline.rest.user.SimpleUserDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.user.DetailedUserDTO;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.News;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.User;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.news.NewsMapper;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.user.UserMapper;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.UserRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.UserService;
@@ -22,14 +24,16 @@ public class UserEndpoint {
 
     private final UserService userService;
     private final UserMapper userMapper;
+    private final NewsMapper newsMapper;
     private final Integer LOGIN_ATTEMPTS = 5;
 
     @Autowired
     UserRepository userRepository;
 
-    public UserEndpoint(UserService userService, UserMapper userMapper) {
+    public UserEndpoint(UserService userService, UserMapper userMapper, NewsMapper newsMapper) {
         this.userService = userService;
         this.userMapper = userMapper;
+        this.newsMapper = newsMapper;
     }
 
     @RequestMapping(method = RequestMethod.GET)
@@ -47,7 +51,10 @@ public class UserEndpoint {
     @RequestMapping(value = "/find/{userName}", method = RequestMethod.GET)
     @ApiOperation(value = "Get detailed information about a specific user entry by name")
     public DetailedUserDTO findByName(@PathVariable("userName") String userName) {
-        return userMapper.userToDetailedUserDTO(userService.findOneByName(userName));
+        User user=userService.findOneByName(userName);
+        DetailedUserDTO userDTO = userMapper.userToDetailedUserDTO(user);
+        userDTO.setNotSeen(newsMapper.newsToSimpleNewsDTO(user.getNotSeen()));
+        return userDTO;
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -74,6 +81,26 @@ public class UserEndpoint {
         return user.getAttempts();
     }
 
+    @RequestMapping(value = "/{userId}/{newsId}", method = RequestMethod.POST)
+    @ApiOperation(value = "remove news from notSeen")
+    public void removeFromUserNotSeen(@PathVariable Long userId, @PathVariable Long newsId) {
+
+        User user = userService.findOne(userId);
+        for(News news:user.getNotSeen()){
+            if(news.getId().equals(newsId) || news.getId() == newsId){
+                List<News> notSeen= user.getNotSeen();
+                notSeen.remove(news);
+                user.setNotSeen(notSeen);
+
+                userService.save(user);
+                return;
+            }
+
+        }
+
+       // userService.updateNotSeen(userId,newsId);
+       // userService.save(user);
+    }
 
     @RequestMapping(value = "/decreaseAttempts", method = RequestMethod.POST)
     @ApiOperation(value = "Decrease login attempts of a specific user entry")

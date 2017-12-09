@@ -62,11 +62,12 @@ public class NewsAddFormularController {
     private TabHeaderController tabHeaderController;
 
 
-     void initializeData(SpringFxmlLoader loader, NewsService service, NewsController controller, Node oldContent){
+    void initializeData(SpringFxmlLoader loader, NewsService service, NewsController controller, Node oldContent){
         springFxmlLoader = loader;
         newsService = service;
         c = controller;
         this.oldContent = oldContent;
+        picPath = null;
     }
 
 
@@ -81,9 +82,9 @@ public class NewsAddFormularController {
         builder.text(TextArea.getText());
         newNews = builder.build();
         try {
-        newNews = newsService.publishNews(newNews);
-        c.loadNews();
-        c.getNewsTab().setContent(oldContent);
+            newNews = newsService.publishNews(newNews);
+            c.loadNews();
+            c.getNewsTab().setContent(oldContent);
         } catch (DataAccessException e) {
             e.printStackTrace();
         }
@@ -104,23 +105,23 @@ public class NewsAddFormularController {
             return;
         }
         if (file.length() > 5 * 1024 * 1024) {
-           //TODO: add alert
+            //TODO: add alert
             return;
         }
 
-        Image img = new Image(file.toURI().toString());
+        Image img = new Image(file.toURI().toString(),540 , 380, false, false);
         newsImage.setImage(img);
-        new File(home).mkdir();
-
+        new File(home +"/NewsPictures").mkdir();
+        File destination = new File(home+"/NewsPictures/"+ file.getName());
+        picPath = destination.toURI().toString();
         try {
-            File destination = new File(home);
-            Files.copy(file.toPath(), destination.toPath());
-            picPath = destination.getCanonicalPath();
+
+            Files.copy(file.toPath(),destination.toPath());
+
         } catch (IOException e) {
             //TODO: add alert
             e.printStackTrace();
         }
-
 
 
 
