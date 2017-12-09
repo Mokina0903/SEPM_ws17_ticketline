@@ -149,7 +149,7 @@ public class NewsController {
                 try {
                     userID = mainController.getUser().getId();
                 }catch(NullPointerException e){
-                    TimeUnit.MILLISECONDS.sleep(275);
+                    TimeUnit.MILLISECONDS.sleep(300);
                     userID = mainController.getUser().getId();
                 }
 
