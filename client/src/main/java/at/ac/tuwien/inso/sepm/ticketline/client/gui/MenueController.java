@@ -4,6 +4,7 @@ import at.ac.tuwien.inso.sepm.ticketline.client.service.implementation.SimpleAut
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,11 +24,16 @@ public class MenueController {
     @FXML
     private ToggleButton tbtDe;
 
+    @FXML
+    private Label lbLanguage;
+
     @Autowired
     private SimpleAuthenticationService authenticationService;
 
 
     //todo change languages on runtime! remove test.language label
+    //FIXME: cannot login after logout
+
     @FXML
     private void setLanguageToGerman() {
         BundleManager.changeLocale(Locale.GERMAN);
@@ -43,7 +49,6 @@ public class MenueController {
     private void handleLogout() {
         authenticationService.deAuthenticate();
     }
-
 
 
 }

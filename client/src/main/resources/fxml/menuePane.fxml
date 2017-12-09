@@ -21,7 +21,7 @@
             </HBox.margin>
         </ToggleButton>
         <Region prefHeight="200.0" prefWidth="200.0" />
-        <Button fx:id="btLogout" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#handleLogout" prefHeight="26.0" prefWidth="76.0" text="%menu.application.logout">
+        <Button fx:id="btLogout" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#handleLogout" prefHeight="26.0" prefWidth="76.0" text="Logout">
             <HBox.margin>
                 <Insets left="10.0" right="10.0" />
             </HBox.margin>
