@@ -51,7 +51,6 @@ buildNumber.properties
 .idea/
 .idea_modules/
 *.iws
-*.iml
 out/
 
 ### Eclipse ###
