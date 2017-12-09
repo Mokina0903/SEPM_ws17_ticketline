@@ -185,4 +185,8 @@ public class NewsEndpointTest extends BaseIntegrationTest {
             .publishedAt(TEST_NEWS_PUBLISHED_AT)
             .build()));
     }
+
+    //ToDO: Tests for findNotSeenByUser, findOldNewsByUser,
+    //TODo: test to check if publishNews automatically adds news to users notSeen
+
 }
