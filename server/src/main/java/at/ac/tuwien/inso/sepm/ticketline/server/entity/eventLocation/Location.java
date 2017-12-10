@@ -2,6 +2,7 @@ package at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 @Entity
 @Table(name = "location")
@@ -29,6 +30,9 @@ public class Location {
     private String street;
 
     private int houseNr;
+
+    @OneToMany(mappedBy = "location")
+    private List<Hall> eventHalls;
 
     public Long getId() {
         return id;
@@ -86,6 +90,14 @@ public class Location {
         this.houseNr = houseNr;
     }
 
+    public List<Hall> getEventHalls() {
+        return eventHalls;
+    }
+
+    public void setEventHalls( List<Hall> eventHalls ) {
+        this.eventHalls = eventHalls;
+    }
+
     @Override
     public String toString() {
         return "Location{" +
@@ -96,6 +108,7 @@ public class Location {
             ", zip=" + zip +
             ", street='" + street + '\'' +
             ", houseNr=" + houseNr +
+            ", eventHalls=" + eventHalls +
             '}';
     }
 
@@ -108,22 +121,27 @@ public class Location {
 
         if (getZip() != location.getZip()) return false;
         if (getHouseNr() != location.getHouseNr()) return false;
-        if (!getId().equals(location.getId())) return false;
-        if (!getDescription().equals(location.getDescription())) return false;
-        if (!getCountry().equals(location.getCountry())) return false;
-        if (!getCity().equals(location.getCity())) return false;
-        return getStreet().equals(location.getStreet());
+        if (getId() != null ? !getId().equals(location.getId()) : location.getId() != null) return false;
+        if (getDescription() != null ? !getDescription().equals(location.getDescription()) : location.getDescription() != null)
+            return false;
+        if (getCountry() != null ? !getCountry().equals(location.getCountry()) : location.getCountry() != null)
+            return false;
+        if (getCity() != null ? !getCity().equals(location.getCity()) : location.getCity() != null) return false;
+        if (getStreet() != null ? !getStreet().equals(location.getStreet()) : location.getStreet() != null)
+            return false;
+        return eventHalls != null ? eventHalls.equals(location.eventHalls) : location.eventHalls == null;
     }
 
     @Override
     public int hashCode() {
-        int result = getId().hashCode();
-        result = 31 * result + getDescription().hashCode();
-        result = 31 * result + getCountry().hashCode();
-        result = 31 * result + getCity().hashCode();
+        int result = getId() != null ? getId().hashCode() : 0;
+        result = 31 * result + (getDescription() != null ? getDescription().hashCode() : 0);
+        result = 31 * result + (getCountry() != null ? getCountry().hashCode() : 0);
+        result = 31 * result + (getCity() != null ? getCity().hashCode() : 0);
         result = 31 * result + getZip();
-        result = 31 * result + getStreet().hashCode();
+        result = 31 * result + (getStreet() != null ? getStreet().hashCode() : 0);
         result = 31 * result + getHouseNr();
+        result = 31 * result + (eventHalls != null ? eventHalls.hashCode() : 0);
         return result;
     }
 
@@ -135,6 +153,7 @@ public class Location {
         private int zip;
         private String street;
         private int houseNr;
+        private List<Hall> eventHalls;
 
         public LocationBuilder id( Long id ) {
             this.id = id;
@@ -171,6 +190,10 @@ public class Location {
             return this;
         }
 
+        public LocationBuilder eventHalls(List<Hall> eventHalls){
+            this.eventHalls = eventHalls;
+            return this;
+        }
         public Location build(){
             Location location = new Location();
             location.setCity(city);
@@ -180,6 +203,7 @@ public class Location {
             location.setStreet(street);
             location.setZip(zip);
             location.setHouseNr(houseNr);
+            location.setEventHalls(eventHalls);
 
             return location;
         }
