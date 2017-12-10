@@ -1,4 +1,4 @@
-package at.ac.tuwien.inso.sepm.ticketline.server.repository;
+package at.ac.tuwien.inso.sepm.ticketline.server.repository.Location;
 
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Seat;
 import org.springframework.data.jpa.repository.JpaRepository;
