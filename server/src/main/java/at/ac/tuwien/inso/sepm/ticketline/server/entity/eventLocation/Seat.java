@@ -18,7 +18,6 @@ public class Seat {
     private char sector;
 
     @ManyToOne
-    @Column(nullable = false)
     private Hall hall;
 
     public Long getId() {
@@ -60,6 +59,8 @@ public class Seat {
     public void setHall( Hall hall ) {
         this.hall = hall;
     }
+
+    public static SeatBuilder builder(){return new SeatBuilder();}
 
     @Override
     public boolean equals( Object o ) {

@@ -18,7 +18,6 @@ public class Hall {
     private String description;
 
     @ManyToOne
-    @Column(nullable = false)
     private Location location;
 
     @OneToMany(mappedBy = "hall")
@@ -55,6 +54,8 @@ public class Hall {
     public void setSeats( List<Seat> seats ) {
         this.seats = seats;
     }
+
+    public static HallBuilder builder(){return new HallBuilder();}
 
     @Override
     public String toString() {

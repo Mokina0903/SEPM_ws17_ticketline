@@ -98,6 +98,8 @@ public class Location {
         this.eventHalls = eventHalls;
     }
 
+    public static LocationBuilder builder(){return new LocationBuilder();}
+
     @Override
     public String toString() {
         return "Location{" +
