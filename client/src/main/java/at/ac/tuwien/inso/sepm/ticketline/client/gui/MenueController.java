@@ -32,7 +32,12 @@ public class MenueController {
 
 
     //todo change languages on runtime! remove test.language label
-    //FIXME: cannot login after logout
+
+    @FXML
+    private void initialize(){
+        lbLanguage.setText(BundleManager.getBundle().getString("test.language"));
+
+    }
 
     @FXML
     private void setLanguageToGerman() {

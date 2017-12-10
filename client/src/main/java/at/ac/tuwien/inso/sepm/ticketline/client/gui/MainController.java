@@ -1,7 +1,11 @@
 package at.ac.tuwien.inso.sepm.ticketline.client.gui;
 
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.customer.CustomerController;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.event.EventController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.news.NewsController;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket.TicketController;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.user.UserController;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.AuthenticationInformationService;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.UserService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
@@ -53,7 +57,13 @@ public class MainController {
 
     private final SpringFxmlLoader springFxmlLoader;
     private final FontAwesome fontAwesome;
+
     private NewsController newsController;
+    private CustomerController customerController;
+    private UserController userController;
+    private EventController eventController;
+    private TicketController ticketController;
+
     private UserService userService;
     private DetailedUserDTO detailedUserDTO;
 
@@ -81,6 +91,11 @@ public class MainController {
         login = springFxmlLoader.load("/fxml/authenticationComponent.fxml");
         spMainContent.getChildren().add(login);
         initNewsTabPane();
+        initEventTabPane();
+        initTicketTabPane();
+        initCustomerTabPane();
+        initUserTabPane();
+
     }
 
     @FXML
@@ -122,6 +137,67 @@ public class MainController {
         newsGlyph.setColor(Color.WHITE);
         newsTab.setGraphic(newsGlyph);
         tpContent.getTabs().add(newsTab);
+
+    }
+
+    Tab customerTab;
+
+    private void initCustomerTabPane(){
+        SpringFxmlLoader.Wrapper<CustomerController> wrapper =
+            springFxmlLoader.loadAndWrap("/fxml/customer/customerComponent.fxml");
+        customerController = wrapper.getController();
+        customerTab = new Tab(null, wrapper.getLoadedObject());
+        customerController.setCustomerTab(customerTab);
+        Glyph customerGlyph = fontAwesome.create(FontAwesome.Glyph.USERS);
+        customerGlyph.setFontSize(TAB_ICON_FONT_SIZE);
+        customerGlyph.setColor(Color.WHITE);
+        customerTab.setGraphic(customerGlyph);
+        tpContent.getTabs().add(customerTab);
+    }
+
+    Tab userTab;
+
+    private void initUserTabPane(){
+        SpringFxmlLoader.Wrapper<UserController> wrapper =
+            springFxmlLoader.loadAndWrap("/fxml/user/userComponent.fxml");
+        userController = wrapper.getController();
+        userTab = new Tab(null, wrapper.getLoadedObject());
+        userController.setUserTab(userTab);
+        Glyph userGlyph = fontAwesome.create(FontAwesome.Glyph.USER);
+        userGlyph.setFontSize(TAB_ICON_FONT_SIZE);
+        userGlyph.setColor(Color.WHITE);
+        userTab.setGraphic(userGlyph);
+        tpContent.getTabs().add(userTab);
+    }
+
+    Tab eventTab;
+
+    private void initEventTabPane(){
+        SpringFxmlLoader.Wrapper<EventController> wrapper =
+            springFxmlLoader.loadAndWrap("/fxml/event/eventComponent.fxml");
+        eventController = wrapper.getController();
+        eventTab = new Tab(null, wrapper.getLoadedObject());
+        eventController.setEventTab(eventTab);
+        Glyph eventGlyph = fontAwesome.create(FontAwesome.Glyph.FILM);
+        eventGlyph.setFontSize(TAB_ICON_FONT_SIZE);
+        eventGlyph.setColor(Color.WHITE);
+        eventTab.setGraphic(eventGlyph);
+        tpContent.getTabs().add(eventTab);
+    }
+
+    Tab ticketTab;
+
+    private void initTicketTabPane(){
+        SpringFxmlLoader.Wrapper<TicketController> wrapper =
+            springFxmlLoader.loadAndWrap("/fxml/ticket/ticketComponent.fxml");
+        ticketController = wrapper.getController();
+        ticketTab = new Tab(null, wrapper.getLoadedObject());
+        ticketController.setTicketTab(ticketTab);
+        Glyph ticketGlyph = fontAwesome.create(FontAwesome.Glyph.TICKET);
+        ticketGlyph.setFontSize(TAB_ICON_FONT_SIZE);
+        ticketGlyph.setColor(Color.WHITE);
+        ticketTab.setGraphic(ticketGlyph);
+        tpContent.getTabs().add(ticketTab);
     }
 
     private void setAuthenticated(boolean authenticated) {
