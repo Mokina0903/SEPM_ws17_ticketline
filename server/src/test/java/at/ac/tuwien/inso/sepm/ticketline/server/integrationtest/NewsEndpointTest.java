@@ -157,6 +157,8 @@ public class NewsEndpointTest extends BaseIntegrationTest {
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN.value()));
     }
 
+
+    // TODO: Solve this Problem (David)
     @Test
     public void publishNewsAsAdmin() {
         BDDMockito.
