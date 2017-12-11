@@ -71,8 +71,8 @@ public class SecurityConfiguration{
             .dataSource(dataSource)
             .usersByUsernameQuery(
                 "SELECT user_name, password, (not blocked) as enabled from users where user_name=?")
-            .authoritiesByUsernameQuery("SELECT user_name as username, (CASE WHEN Role = 1 THEN 'ADMIN' ELSE 'USER' END) as authority FROM USERS where user_name=?")
-            .passwordEncoder(passwordEncoder);
+        .authoritiesByUsernameQuery("SELECT user_name as username, (CASE WHEN Role = 1 THEN 'ADMIN' ELSE 'USER' END) as authority FROM USERS where user_name=?")
+        .passwordEncoder(passwordEncoder);
         providerList.forEach(auth::authenticationProvider);
     }
 
@@ -121,7 +121,8 @@ public class SecurityConfiguration{
                     "/swagger-resources/**",
                     "/webjars/springfox-swagger-ui/**",
                     "/swagger-ui.html",
-                    "/user/**/getAttempts"
+                    "/user/**/getAttempts",
+                    "/user/**/isBlocked"
                     // add here methods that need to omit security
                 )
                 .permitAll()

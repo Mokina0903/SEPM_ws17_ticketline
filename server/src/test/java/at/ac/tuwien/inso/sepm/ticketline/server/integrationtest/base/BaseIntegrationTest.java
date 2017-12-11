@@ -1,6 +1,8 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.integrationtest.base;
 
 import at.ac.tuwien.inso.sepm.ticketline.server.configuration.JacksonConfiguration;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.User;
+import at.ac.tuwien.inso.sepm.ticketline.server.repository.UserRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.security.AuthenticationConstants;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.implementation.SimpleHeaderTokenAuthenticationService;
 import com.jayway.restassured.RestAssured;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.embedded.LocalServerPort;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -39,26 +42,53 @@ public abstract class BaseIntegrationTest {
     @Autowired
     private JacksonConfiguration jacksonConfiguration;
 
+
+    @Autowired
+    private PasswordEncoder encoder;
+
+    @Autowired
+    protected UserRepository userRepository;
+
     protected String validUserTokenWithPrefix;
     protected String validAdminTokenWithPrefix;
 
     @Before
-    public void beforeBase() {
+    public void beforeBase() throws Exception {
+        setupDefaultUsers();
+
         RestAssured.baseURI = SERVER_HOST;
         RestAssured.basePath = contextPath;
         RestAssured.port = port;
         RestAssured.config = RestAssuredConfig.config().
             objectMapperConfig(new ObjectMapperConfig().jackson2ObjectMapperFactory((aClass, s) ->
                 jacksonConfiguration.jackson2ObjectMapperBuilder().build()));
+
         validUserTokenWithPrefix = Strings
             .join(
                 AuthenticationConstants.TOKEN_PREFIX,
                 simpleHeaderTokenAuthenticationService.authenticate(USER_USERNAME, USER_PASSWORD).getCurrentToken())
             .with(" ");
+
         validAdminTokenWithPrefix = Strings
             .join(
                 AuthenticationConstants.TOKEN_PREFIX,
                 simpleHeaderTokenAuthenticationService.authenticate(ADMIN_USERNAME, ADMIN_PASSWORD).getCurrentToken())
             .with(" ");
+    }
+
+    protected void setupDefaultUsers() {
+        userRepository.deleteAll();
+
+        userRepository.save(User.builder()
+            .userName(ADMIN_USERNAME)
+            .password(encoder.encode(ADMIN_PASSWORD))
+            .role(1)
+            .build());
+
+        userRepository.save(User.builder()
+            .userName(USER_USERNAME)
+            .password(encoder.encode(USER_PASSWORD))
+            .role(2)
+            .build());
     }
 }

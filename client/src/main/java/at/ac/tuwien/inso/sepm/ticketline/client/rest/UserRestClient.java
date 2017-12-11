@@ -18,7 +18,7 @@ public interface  UserRestClient {
     /**
      * get left login Attempts by username
      *
-     * @param attempts of the user searched for
+     * @param username of the user searched for
      * @return Integer attempts
      */
     Integer getLoginAttemptsLeft(String username) throws DataAccessException;
@@ -26,42 +26,52 @@ public interface  UserRestClient {
     /**
      * decrease login Attempts by username by 1
      *
-     * @param SimpleUserDTO of the user searched for
+     * @param username of the user searched for
      * @return Integer attempts
      */
-    SimpleUserDTO decreaseLoginAttempts(String username) throws DataAccessException;
+ //   SimpleUserDTO decreaseLoginAttempts(String username) throws DataAccessException;
 
     /**
      * reset login Attempts by username
      *
-     * @param SimpleDTO
+     * @param username
      * @return Integer attempts
      */
-    SimpleUserDTO resetLoginAttempts(String username) throws DataAccessException;
+ //   SimpleUserDTO resetLoginAttempts(String username) throws DataAccessException;
 
     /**
      * block user by username
      *
-     * @param SimpleDTO
+     * @param username
      * @return Integer attempts
      */
-    SimpleUserDTO blockUser(String username) throws DataAccessException;
+ //   SimpleUserDTO blockUser(String username) throws DataAccessException;
 
     /**
      * unblock user by username
      *
-     * @param SimpleDTO
+     * @param username
      * @return Integer attempts
      */
-    SimpleUserDTO unblockUser(String username) throws DataAccessException;
+ //   SimpleUserDTO unblockUser(String username) throws DataAccessException;
+
 
     /**
-     * Find User by name
+     * check if user is blocked
      *
-     * @param name of the user
-     * @return DetailedUserDTO
-     * @throws DataAccessException if something went wrong
+     * @param username
+     * @return boolean isBlocked
      */
+    boolean isBlocked(String username) throws DataAccessException;
+
+
+        /**
+         * Find User by name
+         *
+         * @param name of the user
+         * @return DetailedUserDTO
+         * @throws DataAccessException if something went wrong
+         */
     DetailedUserDTO findByName(String name) throws DataAccessException;
 
     /**

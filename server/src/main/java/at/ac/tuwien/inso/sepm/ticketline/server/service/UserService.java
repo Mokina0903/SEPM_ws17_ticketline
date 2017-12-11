@@ -54,6 +54,7 @@ public interface UserService {
      */
     void save(User user);
 
+    // TODO: Javadoc
     void updateNotSeen( Long userId, Long newsId );
 
     /**

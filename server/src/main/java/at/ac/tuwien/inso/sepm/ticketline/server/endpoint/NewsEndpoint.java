@@ -54,7 +54,6 @@ public class NewsEndpoint {
     @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation(value = "Publish a new news entry")
     public DetailedNewsDTO publishNews(@RequestBody DetailedNewsDTO detailedNewsDTO) {
-        System.out.println(detailedNewsDTO.toString());
         News news = newsMapper.detailedNewsDTOToNews(detailedNewsDTO);
         news = newsService.publishNews(news);
         return newsMapper.newsToDetailedNewsDTO(news);

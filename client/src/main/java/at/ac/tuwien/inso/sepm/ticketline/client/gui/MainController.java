@@ -7,17 +7,14 @@ import at.ac.tuwien.inso.sepm.ticketline.client.service.UserService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.JavaFXUtils;
 import at.ac.tuwien.inso.sepm.ticketline.rest.user.DetailedUserDTO;
-import at.ac.tuwien.inso.sepm.ticketline.rest.user.SimpleUserDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
+import javafx.scene.control.*;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
@@ -25,10 +22,15 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.Glyph;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
 public class MainController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(MainController.class);
+
 
     private static final int TAB_ICON_FONT_SIZE = 20;
 
@@ -43,6 +45,9 @@ public class MainController {
 
     @FXML
     private MenuBar mbMain;
+
+    @FXML
+    private StackPane spMenue;
 
     private Node login;
 
@@ -66,7 +71,7 @@ public class MainController {
         this.fontAwesome = fontAwesome;
         authenticationInformationService.addAuthenticationChangeListener(
             authenticationTokenInfo -> setAuthenticated(null != authenticationTokenInfo));
-        this.userService=userService;
+        this.userService = userService;
     }
 
     @FXML
@@ -79,10 +84,18 @@ public class MainController {
     }
 
     @FXML
+    private void initMenue() {
+        Pane menuePane = null;
+        menuePane = springFxmlLoader.load("/fxml/menuePane.fxml");
+        spMenue.getChildren().add(menuePane);
+    }
+
+    @FXML
     private void exitApplication(ActionEvent actionEvent) {
         Stage stage = (Stage) spMainContent.getScene().getWindow();
         stage.fireEvent(new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
     }
+
 
     @FXML
     private void aboutApplication(ActionEvent actionEvent) {
@@ -118,9 +131,11 @@ public class MainController {
             }
             initNewsTabPane();
             newsController.loadNews();
+            initMenue();
         } else {
             if (!spMainContent.getChildren().contains(login)) {
                 spMainContent.getChildren().add(login);
+                spMenue.getChildren().clear();
             }
         }
     }
@@ -129,13 +144,16 @@ public class MainController {
         pbLoadingProgress.setProgress(progress);
     }
 
-    public void loadDetailedUserDTO(String name){
+    public void loadDetailedUserDTO(String name) {
         try {
-            this.detailedUserDTO=userService.findByName(name);
+            this.detailedUserDTO = userService.findByName(name);
         } catch (DataAccessException e) {
-            JavaFXUtils.createExceptionDialog(e,spMainContent.getScene().getWindow()).showAndWait();
-           // e.printStackTrace();
+            JavaFXUtils.createExceptionDialog(e, spMainContent.getScene().getWindow()).showAndWait();
+            // e.printStackTrace();
         }
     }
-    public DetailedUserDTO getUser(){return this.detailedUserDTO;}
+
+    public DetailedUserDTO getUser() {
+        return this.detailedUserDTO;
+    }
 }

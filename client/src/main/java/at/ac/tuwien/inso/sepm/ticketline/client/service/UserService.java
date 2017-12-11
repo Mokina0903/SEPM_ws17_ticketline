@@ -32,7 +32,7 @@ public interface UserService {
      * @return UserDTO
      * @throws DataAccessException in case something went wrong
      */
-    SimpleUserDTO decreaseLoginAttempts(String userName) throws DataAccessException;
+//    SimpleUserDTO decreaseLoginAttempts(String userName) throws DataAccessException;
 
     /**
      * reset login attempts by name
@@ -41,7 +41,7 @@ public interface UserService {
      * @return UserDTO
      * @throws DataAccessException in case something went wrong
      */
-    SimpleUserDTO resetLoginAttempts(String userName) throws DataAccessException;
+//    SimpleUserDTO resetLoginAttempts(String userName) throws DataAccessException;
 
 
     /**
@@ -51,7 +51,7 @@ public interface UserService {
      * @return UserDTO
      * @throws DataAccessException in case something went wrong
      */
-    SimpleUserDTO blockUser(String userName) throws DataAccessException;
+  //  SimpleUserDTO blockUser(String userName) throws DataAccessException;
 
     /**
      * unblock user by name
@@ -60,7 +60,17 @@ public interface UserService {
      * @return UserDTO
      * @throws DataAccessException in case something went wrong
      */
-    SimpleUserDTO unblockUser(String userName) throws DataAccessException;
+ //   SimpleUserDTO unblockUser(String userName) throws DataAccessException;
+
+    /**
+     * check if user
+     *
+     * @param userName of userAttemps entry
+     * @return UserDTO
+     * @throws DataAccessException in case something went wrong
+     */
+    boolean isBlocked(String userName) throws DataAccessException;
+
 
     /**
      * find user by username
