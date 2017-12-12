@@ -21,8 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/location")
-@Api(value = "location")
+@RequestMapping(value = "/eventlocation")
+@Api(value = "eventlocation")
 public class LocationEndpoint {
 
     private final LocationRepository locationRepository;
