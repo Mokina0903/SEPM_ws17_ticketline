@@ -1,7 +1,10 @@
 package at.ac.tuwien.inso.sepm.ticketline.client.gui.user;
 
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationObserver;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationSubject;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.MainController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.TabHeaderController;
+import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -9,10 +12,11 @@ import javafx.scene.control.Tab;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UserController {
+public class UserController implements LocalizationObserver{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
@@ -24,6 +28,9 @@ public class UserController {
 
     private final MainController mainController;
     private final SpringFxmlLoader springFxmlLoader;
+
+    @Autowired
+    private LocalizationSubject localizationSubject;
 
 
     public Tab getUserTab() {
@@ -43,7 +50,13 @@ public class UserController {
     @FXML
     private void initialize() {
         tabHeaderController.setIcon(FontAwesome.Glyph.USER);
-        tabHeaderController.setTitle("User");
+        tabHeaderController.setTitle(BundleManager.getBundle().getString("user.user"));
+        localizationSubject.attach(this);
 
+    }
+
+    @Override
+    public void update() {
+        tabHeaderController.setTitle(BundleManager.getBundle().getString("user.user"));
     }
 }

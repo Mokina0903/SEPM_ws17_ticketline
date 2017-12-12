@@ -12,9 +12,8 @@ import org.springframework.stereotype.Component;
 import java.util.Locale;
 
 @Component
-public class MenueController {
+public class MenueController implements LocalizationObserver {
 
-//todo implement function of logout button, language switch...
 
     @FXML
     private Button btLogout;
@@ -30,14 +29,25 @@ public class MenueController {
     @Autowired
     private SimpleAuthenticationService authenticationService;
 
+    @Autowired
+    private LocalizationSubject localizationSubject;
 
     //todo change languages on runtime! remove test.language label
 
     @FXML
     private void initialize(){
+        localizationSubject.attach(this);
         lbLanguage.setText(BundleManager.getBundle().getString("test.language"));
-
+        localizationSubject.attach(this);
     }
+
+    //@JmsListener in abstract class(destination=..., containerFactory=..)
+    //Spring in action buch
+    //recieve(String message)
+    //message Queue
+
+    //mitmproxy certificat --cadir=ordner mitmproxy-ca.pem als filename
+    //mitmweb proxyport
 
     @FXML
     private void setLanguageToGerman() {
@@ -55,5 +65,8 @@ public class MenueController {
         authenticationService.deAuthenticate();
     }
 
-
+    @Override
+    public void update() {
+        lbLanguage.setText(BundleManager.getBundle().getString("test.language"));
+    }
 }

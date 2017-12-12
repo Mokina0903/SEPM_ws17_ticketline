@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MainController {
+public class MainController implements LocalizationObserver{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MainController.class);
 
@@ -70,6 +70,7 @@ public class MainController {
     public Tab getNewsTab() {
         return newsTab;
     }
+
 
     public MainController(
         SpringFxmlLoader springFxmlLoader,
@@ -137,7 +138,6 @@ public class MainController {
         newsGlyph.setColor(Color.WHITE);
         newsTab.setGraphic(newsGlyph);
         tpContent.getTabs().add(newsTab);
-
     }
 
     Tab customerTab;
@@ -148,7 +148,7 @@ public class MainController {
         customerController = wrapper.getController();
         customerTab = new Tab(null, wrapper.getLoadedObject());
         customerController.setCustomerTab(customerTab);
-        Glyph customerGlyph = fontAwesome.create(FontAwesome.Glyph.USERS);
+        Glyph customerGlyph = fontAwesome.create(FontAwesome.Glyph.valueOf("USERS"));
         customerGlyph.setFontSize(TAB_ICON_FONT_SIZE);
         customerGlyph.setColor(Color.WHITE);
         customerTab.setGraphic(customerGlyph);
@@ -230,5 +230,29 @@ public class MainController {
 
     public DetailedUserDTO getUser() {
         return this.detailedUserDTO;
+    }
+
+
+    public MenueCategory getActiveMenueCategory() {
+        Tab tab = tpContent.getSelectionModel().getSelectedItem();
+
+        if (tab.equals(newsTab)) {
+            return MenueCategory.NEWS;
+        }
+        else if (tab.equals(userTab)) {
+            return MenueCategory.USER;
+        }
+        else if (tab.equals(customerTab)) {
+            return MenueCategory.CUSTOMER;
+        }
+        else if (tab.equals(eventTab)) {
+            return MenueCategory.EVENT;
+        }
+        else return MenueCategory.TICKET;
+    }
+
+    @Override
+    public void update() {
+
     }
 }
