@@ -111,6 +111,13 @@ public class UserEndpointTest extends BaseIntegrationTest {
 
     }
 
+    // TODO: (TEST) Add Test for Logout US 1
+    // TODO: (TEST) Add Test Admin unlock US 1
+    // TODO: (TEST) Test correct privileges at REST US 1
+    // TODO: (TEST) Show Users US 1
+    // TODO: (TEST) Admin can not lock himself BUS
+    // TODO: (TEST) Add New Users (Admin/Seller) (1/2) BUS
+
     @Test
     public void loginWithCorrectNameAndWrongPassword(){
         // TODO: (Florian) Bitte deine Tests noch hier implementieren

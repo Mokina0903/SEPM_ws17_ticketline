@@ -57,7 +57,7 @@ public class UserEndpoint {
         return userDTO;
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(value = "/createUser", method = RequestMethod.POST)
     @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation(value = "Create a new user entry")
     public DetailedUserDTO createUser(@RequestBody DetailedUserDTO detailedUserDTO) {
@@ -102,6 +102,7 @@ public class UserEndpoint {
        // userService.save(user);
     }
 
+    /*
     @RequestMapping(value = "/decreaseAttempts", method = RequestMethod.POST)
     @ApiOperation(value = "Decrease login attempts of a specific user entry")
     public void decreaseLoginAttemptsOfUser(@RequestBody String username) {
@@ -110,7 +111,9 @@ public class UserEndpoint {
         user.setAttempts(user.getAttempts()-1);
         userService.save(user);
     }
+    */
 
+    /*
     @RequestMapping(value = "/resetAttempts", method = RequestMethod.POST)
     @ApiOperation(value = "Decrease login attempts of a specific user entry")
     public void resetAttempts(@RequestBody String username) {
@@ -119,15 +122,23 @@ public class UserEndpoint {
         user.setAttempts(LOGIN_ATTEMPTS);
         userService.save(user);
     }
+    */
 
+    @RequestMapping(value = "/resetPassword", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('ADMIN')")
+    @ApiOperation(value = "Reset a specific users password")
+    public DetailedUserDTO resetUserPassword(@RequestBody DetailedUserDTO detailedUserDTO) {
+        User user = userMapper.detailedUserDTOToUser(detailedUserDTO);
+        user = userService.resetPassword(user);
+        return userMapper.userToDetailedUserDTO(user);
+    }
 
     @RequestMapping(value = "/block", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation(value = "Block a specific user entry")
     public void blockUser(@RequestBody String username) {
-
         User user = userService.findByUsername(username);
-        user.setBlocked(true);
-        userService.save(user);
+        userService.blockUser(user);
     }
 
 
@@ -135,16 +146,13 @@ public class UserEndpoint {
     @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation(value = "Unblock a specific user entry")
     public void unblockUser(@RequestBody String username) {
-
         User user = userService.findByUsername(username);
-        user.setBlocked(false);
-        userService.save(user);
+        userService.unblockUser(user);
     }
 
     @RequestMapping(value = "/{username}/isBlocked", method = RequestMethod.GET)
     @ApiOperation(value = "Get left login attempts of a specific user entry")
     public boolean isBlocked(@PathVariable String username) {
-
         User user = userService.findByUsername(username);
         return user.isBlocked();
     }

@@ -45,7 +45,7 @@ public interface  UserRestClient {
      * @param username
      * @return Integer attempts
      */
- //   SimpleUserDTO blockUser(String username) throws DataAccessException;
+    SimpleUserDTO blockUser(String username) throws DataAccessException;
 
     /**
      * unblock user by username
@@ -53,7 +53,7 @@ public interface  UserRestClient {
      * @param username
      * @return Integer attempts
      */
- //   SimpleUserDTO unblockUser(String username) throws DataAccessException;
+     SimpleUserDTO unblockUser(String username) throws DataAccessException;
 
 
     /**
@@ -65,13 +65,13 @@ public interface  UserRestClient {
     boolean isBlocked(String username) throws DataAccessException;
 
 
-        /**
-         * Find User by name
-         *
-         * @param name of the user
-         * @return DetailedUserDTO
-         * @throws DataAccessException if something went wrong
-         */
+    /**
+     * Find User by name
+     *
+     * @param name of the user
+     * @return DetailedUserDTO
+     * @throws DataAccessException if something went wrong
+     */
     DetailedUserDTO findByName(String name) throws DataAccessException;
 
     /**
@@ -82,4 +82,20 @@ public interface  UserRestClient {
      * @throws DataAccessException
      */
     void removeFromUserNotSeen(Long userId,Long newsId) throws DataAccessException;
+
+    /**
+     * Reset Password of User
+     *
+     * @param detailedUserDTO
+     * @return SimpleUserDTO
+     */
+    SimpleUserDTO resetUserPassword(DetailedUserDTO detailedUserDTO);
+
+    /**
+     * add new User
+     *
+     * @param detailedUserDTO
+     * @return SimpleUserDTO
+     */
+    SimpleUserDTO addNewUser(DetailedUserDTO detailedUserDTO);
 }
