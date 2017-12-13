@@ -28,7 +28,6 @@ public class SimpleUserService implements UserService {
         return userRepository.findOneById(id).orElseThrow(NotFoundException::new);
     }
 
-    // TODO: Check Merge
     @Override
     public User findByUsername(String userName) {
         return userRepository.findByUserName(userName).orElseThrow(NotFoundException::new);
@@ -58,13 +57,20 @@ public class SimpleUserService implements UserService {
 
     @Override
     public boolean blockUser(User user) {
+        // TODO: Implement here (is code Correct?)
         user.setBlocked(true);
         return false;
     }
 
     @Override
+    public boolean unblockUser(User user) {
+        // TODO: Implement here
+        return false;
+    }
+
+    @Override
     public User resetPassword(User user) {
-        // TODO: Implement
+        // TODO: Implement here
         return null;
     }
 }

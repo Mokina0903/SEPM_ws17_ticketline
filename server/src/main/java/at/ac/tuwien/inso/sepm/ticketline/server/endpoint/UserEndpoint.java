@@ -138,8 +138,7 @@ public class UserEndpoint {
     @ApiOperation(value = "Block a specific user entry")
     public void blockUser(@RequestBody String username) {
         User user = userService.findByUsername(username);
-        user.setBlocked(true);
-        userService.save(user);
+        userService.blockUser(user);
     }
 
 
@@ -148,14 +147,12 @@ public class UserEndpoint {
     @ApiOperation(value = "Unblock a specific user entry")
     public void unblockUser(@RequestBody String username) {
         User user = userService.findByUsername(username);
-        user.setBlocked(false);
-        userService.save(user);
+        userService.unblockUser(user);
     }
 
     @RequestMapping(value = "/{username}/isBlocked", method = RequestMethod.GET)
     @ApiOperation(value = "Get left login attempts of a specific user entry")
     public boolean isBlocked(@PathVariable String username) {
-
         User user = userService.findByUsername(username);
         return user.isBlocked();
     }
