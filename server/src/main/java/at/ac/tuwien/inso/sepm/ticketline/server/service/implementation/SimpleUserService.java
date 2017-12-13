@@ -1,13 +1,17 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.service.implementation;
 
-import at.ac.tuwien.inso.sepm.ticketline.server.entity.News;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.User;
+import at.ac.tuwien.inso.sepm.ticketline.server.exception.AlreadyExistsException;
+import at.ac.tuwien.inso.sepm.ticketline.server.exception.EmptyFieldException;
+import at.ac.tuwien.inso.sepm.ticketline.server.exception.IllegalValueException;
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.NotFoundException;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.UserRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.UserService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SimpleUserService implements UserService {
@@ -40,12 +44,39 @@ public class SimpleUserService implements UserService {
 
     @Override
     public User createUser(User user) {
-        // TODO: Implement here
-        return null;
+        // TODO: (David) solve Random ID
+        // TODO: (David) Testcases
+
+        String username = user.getUserName();
+        String password = user.getPassword();
+        Integer role = user.getRole();
+
+        if (username == null || username.trim().isEmpty())
+            throw new EmptyFieldException("username");
+
+        if (password == null || password.trim().isEmpty())
+            throw new EmptyFieldException("password");
+
+        if (role < 1 || role > 2)
+            throw new IllegalValueException("role = " + role);
+
+        if (userRepository.findOneByUserName(user.getUserName()) != null)
+            throw new AlreadyExistsException(user.getUserName());
+
+        User newUser = User.builder()
+            .userName(username)
+            .password((new BCryptPasswordEncoder(10)).encode(password))
+            //.notSeen() TODO: (Ask Stefan) Add NewNews not seen
+            .role(role)
+            .build();
+
+        save(newUser);
+
+        return this.findByUsername(username);
     }
 
     @Override
-    public void save( User user ) {
+    public void save(User user ) {
         userRepository.save(user);
     }
 
@@ -57,20 +88,23 @@ public class SimpleUserService implements UserService {
 
     @Override
     public boolean blockUser(User user) {
-        // TODO: Implement here (is code Correct?)
         user.setBlocked(true);
-        return false;
+        userRepository.save(user);
+        return true;
     }
 
     @Override
     public boolean unblockUser(User user) {
-        // TODO: Implement here
-        return false;
+        user.setBlocked(false);
+        userRepository.save(user);
+        return true;
     }
 
     @Override
     public User resetPassword(User user) {
-        // TODO: Implement here
+        user.setPassword(user.getPassword());
+        //user.setPassword((new BCryptPasswordEncoder(10)).encode(user.getPassword()));
+        userRepository.save(user);
         return null;
     }
 }
