@@ -9,7 +9,7 @@
 
 <HBox alignment="CENTER_RIGHT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" nodeOrientation="LEFT_TO_RIGHT" prefHeight="40.0" style="-fx-background-color: #3c3f41;" stylesheets="@/css/menue.css" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.MenueController">
     <children>
-      <Label text="%test.language" textFill="WHITE" />
+      <Label fx:id="lbLanguage" text="%test.language" textFill="WHITE" />
         <ToggleButton fx:id="tbtEn" mnemonicParsing="false" onAction="#setLanguageToEnglish" prefHeight="26.0" prefWidth="45.0" text="EN">
             <HBox.margin>
                 <Insets left="5.0" right="5.0" />

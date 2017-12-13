@@ -68,9 +68,6 @@ public class SimpleAuthenticationService implements AuthenticationService, Dispo
         LOGGER.debug("authentication result {}", authenticationToken);
         authenticationInformationService.setCurrentAuthenticationToken(authenticationToken.getCurrentToken());
         AuthenticationTokenInfo authenticationTokenInfo = authenticationRestClient.tokenInfoCurrent();
-
-        // TODO: Tutorin fragen, ob das so passt
-
         /*scheduleReAuthenticationTask(authenticationTokenInfo
             .getExpireAt()
             .minus(authenticationTokenInfo.getOverlapDuration().dividedBy(2)));*/

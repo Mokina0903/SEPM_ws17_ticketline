@@ -5,6 +5,7 @@ import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
 import javafx.scene.control.ToggleButton;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -12,9 +13,8 @@ import org.springframework.stereotype.Component;
 import java.util.Locale;
 
 @Component
-public class MenueController {
+public class MenueController implements LocalizationObserver {
 
-//todo implement function of logout button, language switch...
 
     @FXML
     private Button btLogout;
@@ -30,9 +30,17 @@ public class MenueController {
     @Autowired
     private SimpleAuthenticationService authenticationService;
 
+    @Autowired
+    private LocalizationSubject localizationSubject;
 
     //todo change languages on runtime! remove test.language label
-    //FIXME: cannot login after logout
+
+    @FXML
+    private void initialize(){
+        localizationSubject.attach(this);
+        lbLanguage.setText(BundleManager.getBundle().getString("test.language"));
+        localizationSubject.attach(this);
+    }
 
     @FXML
     private void setLanguageToGerman() {
@@ -48,6 +56,11 @@ public class MenueController {
     @FXML
     private void handleLogout() {
         authenticationService.deAuthenticate();
+    }
+
+    @Override
+    public void update() {
+        lbLanguage.setText(BundleManager.getBundle().getString("test.language"));
     }
 
 

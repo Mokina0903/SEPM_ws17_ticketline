@@ -1,9 +1,9 @@
 package at.ac.tuwien.inso.sepm.ticketline.client.gui.news;
 
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
-import at.ac.tuwien.inso.sepm.ticketline.client.gui.MainController;
-import at.ac.tuwien.inso.sepm.ticketline.client.gui.TabHeaderController;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.*;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.NewsService;
+import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.UserService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.JavaFXUtils;
 import at.ac.tuwien.inso.sepm.ticketline.rest.news.DetailedNewsDTO;
@@ -24,6 +24,7 @@ import javafx.scene.text.Font;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -33,7 +34,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Component
-public class NewsController {
+public class NewsController extends TabElement implements LocalizationObserver{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NewsController.class);
 
@@ -50,6 +51,9 @@ public class NewsController {
 
     private Tab newsTab;
 
+    @Autowired
+    private LocalizationSubject localizationSubject;
+
 
     private final MainController mainController;
     private final SpringFxmlLoader springFxmlLoader;
@@ -62,9 +66,9 @@ public class NewsController {
         return newsTab;
     }
 
-    public void setNewsTab(Tab newsTab) {
+/*    public void setNewsTab(Tab newsTab) {
         this.newsTab = newsTab;
-    }
+    }*/
 
     public NewsController(MainController mainController, SpringFxmlLoader springFxmlLoader, NewsService newsService, UserService userService) {
         this.mainController = mainController;
@@ -76,7 +80,8 @@ public class NewsController {
     @FXML
     private void initialize() {
         tabHeaderController.setIcon(FontAwesome.Glyph.NEWSPAPER_ALT);
-        tabHeaderController.setTitle("News");
+        tabHeaderController.setTitle(BundleManager.getBundle().getString("news.news"));
+        localizationSubject.attach(this);
         vbNewsElements.getSelectionModel()
             .selectedIndexProperty()
             .addListener((observable, oldvalue, newValue) -> {
@@ -218,5 +223,15 @@ public class NewsController {
         VBox addNewsRoot = springFxmlLoader.load("/fxml/news/addNewsFormular.fxml");
         newsTab.setContent(addNewsRoot);
 
+    }
+
+    @Override
+    public void update() {
+        tabHeaderController.setTitle(BundleManager.getBundle().getString("news.news"));
+    }
+
+    @Override
+    protected void setTab(Tab tab) {
+        newsTab = tab;
     }
 }

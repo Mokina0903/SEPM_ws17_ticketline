@@ -1,7 +1,11 @@
 package at.ac.tuwien.inso.sepm.ticketline.client.gui;
 
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.customer.CustomerController;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.event.EventController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.news.NewsController;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket.TicketController;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.user.UserController;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.AuthenticationInformationService;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.UserService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
@@ -27,7 +31,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MainController {
+public class MainController implements LocalizationObserver{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MainController.class);
 
@@ -53,13 +57,26 @@ public class MainController {
 
     private final SpringFxmlLoader springFxmlLoader;
     private final FontAwesome fontAwesome;
+
     private NewsController newsController;
+    private CustomerController customerController;
+    private UserController userController;
+    private EventController eventController;
+    private TicketController ticketController;
+
     private UserService userService;
     private DetailedUserDTO detailedUserDTO;
+
+    private Tab newsTab;
+    private Tab eventTab;
+    private Tab ticketTab;
+    private Tab userTab;
+    private Tab customerTab;
 
     public Tab getNewsTab() {
         return newsTab;
     }
+
 
     public MainController(
         SpringFxmlLoader springFxmlLoader,
@@ -81,6 +98,14 @@ public class MainController {
         login = springFxmlLoader.load("/fxml/authenticationComponent.fxml");
         spMainContent.getChildren().add(login);
 
+        //todo tutorin fragen
+
+        newsController = (NewsController) initTabPane(newsController, "news/newsComponent.fxml", newsTab, "NEWSPAPER_ALT");
+        eventController = (EventController) initTabPane(eventController, "event/eventComponent.fxml", eventTab, "FILM");
+        ticketController = (TicketController) initTabPane(ticketController, "ticket/ticketComponent.fxml", ticketTab, "TICKET");
+        customerController = (CustomerController) initTabPane(customerController, "customer/customerComponent.fxml", customerTab, "USERS");
+        userController = (UserController) initTabPane(userController, "user/userComponent.fxml", userTab, "USER");
+        System.out.println("asdf");
     }
 
     @FXML
@@ -109,19 +134,17 @@ public class MainController {
         dialog.showAndWait();
     }
 
-    Tab newsTab;
-
-    private void initNewsTabPane() {
-        SpringFxmlLoader.Wrapper<NewsController> wrapper =
-            springFxmlLoader.loadAndWrap("/fxml/news/newsComponent.fxml");
-        newsController = wrapper.getController();
-        newsTab = new Tab(null, wrapper.getLoadedObject());
-        newsController.setNewsTab(newsTab);
-        Glyph newsGlyph = fontAwesome.create(FontAwesome.Glyph.NEWSPAPER_ALT);
-        newsGlyph.setFontSize(TAB_ICON_FONT_SIZE);
-        newsGlyph.setColor(Color.WHITE);
-        newsTab.setGraphic(newsGlyph);
-        tpContent.getTabs().add(newsTab);
+    private TabElement initTabPane(TabElement controller, String fxmlPath, Tab tab, String glyphSymbol) {
+        SpringFxmlLoader.Wrapper<TabElement> wrapper =
+            springFxmlLoader.loadAndWrap("/fxml/"+ fxmlPath);
+        controller = wrapper.getController();
+        tab = new Tab(null, wrapper.getLoadedObject());
+        Glyph glyph = fontAwesome.create(FontAwesome.Glyph.valueOf(glyphSymbol));
+        glyph.setFontSize(TAB_ICON_FONT_SIZE);
+        glyph.setColor(Color.WHITE);
+        tab.setGraphic(glyph);
+        tpContent.getTabs().add(tab);
+        return controller;
     }
 
     private void setAuthenticated(boolean authenticated) {
@@ -156,4 +179,29 @@ public class MainController {
     public DetailedUserDTO getUser() {
         return this.detailedUserDTO;
     }
+
+/* //to update only active frame labels for localization
+    public MenueCategory getActiveMenueCategory() {
+        Tab tab = tpContent.getSelectionModel().getSelectedItem();
+
+        if (tab.equals(newsTab)) {
+            return MenueCategory.NEWS;
+        }
+        else if (tab.equals(userTab)) {
+            return MenueCategory.USER;
+        }
+        else if (tab.equals(customerTab)) {
+            return MenueCategory.CUSTOMER;
+        }
+        else if (tab.equals(eventTab)) {
+            return MenueCategory.EVENT;
+        }
+        else return MenueCategory.TICKET;
+    }*/
+
+    @Override
+    public void update() {
+        //reset labels for localization here
+    }
+
 }
