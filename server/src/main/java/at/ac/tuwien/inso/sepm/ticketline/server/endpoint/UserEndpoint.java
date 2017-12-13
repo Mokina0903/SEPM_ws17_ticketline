@@ -57,13 +57,13 @@ public class UserEndpoint {
         return userDTO;
     }
 
-    @RequestMapping(value = "/createUser", method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST)
     @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation(value = "Create a new user entry")
-    public DetailedUserDTO createUser(@RequestBody DetailedUserDTO detailedUserDTO) {
-        User user = userMapper.detailedUserDTOToUser(detailedUserDTO);
+    public SimpleUserDTO createUser(@RequestBody SimpleUserDTO simpleUserDTO) {
+        User user = userMapper.simpleUserDTOToUser(simpleUserDTO);
         user = userService.createUser(user);
-        return userMapper.userToDetailedUserDTO(user);
+        return userMapper.userToSimpleUserDTO(user);
     }
 
     @RequestMapping(value = "/{userName}", method = RequestMethod.GET)
@@ -127,8 +127,9 @@ public class UserEndpoint {
     @RequestMapping(value = "/resetPassword", method = RequestMethod.POST)
     @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation(value = "Reset a specific users password")
-    public DetailedUserDTO resetUserPassword(@RequestBody DetailedUserDTO detailedUserDTO) {
-        User user = userMapper.detailedUserDTOToUser(detailedUserDTO);
+    public DetailedUserDTO resetUserPassword(@RequestBody SimpleUserDTO simpleUserDTO) {
+        User user = userService.findByUsername(simpleUserDTO.getUserName());
+        user.setPassword(simpleUserDTO.getPassword());
         user = userService.resetPassword(user);
         return userMapper.userToDetailedUserDTO(user);
     }
