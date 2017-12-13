@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.collections.FXCollections?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.user.UserDialogController"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <center>
+
+
+        <GridPane hgap="10" vgap="20">
+
+                <Label text="Username: " GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                <TextField fx:id="usernaeTF" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+
+                <Label text="Password: " GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                <TextField fx:id="passwordTF" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+
+                <Label text="Confirm: " GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                <TextField fx:id="passwordConfirmTF" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+
+                <Label text="Role: " GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                <ComboBox fx:id="roleCombo" promptText="choose"  GridPane.columnIndex="1" GridPane.rowIndex="3">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="Admin" />
+                            <String fx:value="User" />
+                        </FXCollections>
+                    </items>
+                </ComboBox>
+
+                <Button fx:id="saveBtn" onAction="#saveUserData" text="Save" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+
+            <columnConstraints>
+                <ColumnConstraints />
+                <ColumnConstraints />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints/>
+                <RowConstraints/>
+                <RowConstraints/>
+                <RowConstraints/>
+            </rowConstraints>
+        </GridPane>
+
+    </center>
+    <padding>
+        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+    </padding>
+
+
+</BorderPane>
