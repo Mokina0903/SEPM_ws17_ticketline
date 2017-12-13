@@ -41,6 +41,7 @@ public class SimpleUserService implements UserService {
 
     @Override
     public User createUser(User user) {
+        // TODO: Implement here
         return null;
     }
 
@@ -59,5 +60,11 @@ public class SimpleUserService implements UserService {
     public boolean blockUser(User user) {
         user.setBlocked(true);
         return false;
+    }
+
+    @Override
+    public User resetPassword(User user) {
+        // TODO: Implement
+        return null;
     }
 }

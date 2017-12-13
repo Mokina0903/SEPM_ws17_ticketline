@@ -51,7 +51,7 @@ public interface UserService {
      * @return UserDTO
      * @throws DataAccessException in case something went wrong
      */
-  //  SimpleUserDTO blockUser(String userName) throws DataAccessException;
+    SimpleUserDTO blockUser(String userName) throws DataAccessException;
 
     /**
      * unblock user by name
@@ -60,10 +60,28 @@ public interface UserService {
      * @return UserDTO
      * @throws DataAccessException in case something went wrong
      */
- //   SimpleUserDTO unblockUser(String userName) throws DataAccessException;
+    SimpleUserDTO unblockUser(String userName) throws DataAccessException;
 
     /**
-     * check if user
+     * reset password by username
+     *
+     * @param detailedUserDTO of userAttemps entry
+     * @return UserDTO
+     * @throws DataAccessException in case something went wrong
+     */
+    SimpleUserDTO resetUserPassword(DetailedUserDTO detailedUserDTO) throws DataAccessException;
+
+    /**
+     * add new User
+     *
+     * @param detailedUserDTO of userAttemps entry
+     * @return UserDTO
+     * @throws DataAccessException in case something went wrong
+     */
+    SimpleUserDTO addNewUser(DetailedUserDTO detailedUserDTO) throws DataAccessException;
+
+    /**
+     * check if user is blocked
      *
      * @param userName of userAttemps entry
      * @return UserDTO

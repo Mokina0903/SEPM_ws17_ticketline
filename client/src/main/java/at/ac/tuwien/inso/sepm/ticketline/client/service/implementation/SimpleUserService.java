@@ -37,25 +37,39 @@ public class SimpleUserService implements UserService {
         return userRestClient.getLoginAttemptsLeft(userName);
     }
 
-/*    @Override
+    /*
+    @Override
     public SimpleUserDTO decreaseLoginAttempts(String userName) throws DataAccessException {
         return userRestClient.decreaseLoginAttempts(userName);
-    }*/
+    }
+    */
 
-   /* @Override
+    /*
+    @Override
     public SimpleUserDTO resetLoginAttempts(String userName) throws DataAccessException {
         return userRestClient.resetLoginAttempts(userName);
-    }*/
+    }
+    */
 
- /*   @Override
+    @Override
+    public SimpleUserDTO resetUserPassword(DetailedUserDTO detailedUserDTO) throws DataAccessException {
+        return userRestClient.resetUserPassword(detailedUserDTO);
+    }
+
+    @Override
+    public SimpleUserDTO addNewUser(DetailedUserDTO detailedUserDTO) throws DataAccessException {
+        return userRestClient.addNewUser(detailedUserDTO);
+    }
+
+    @Override
     public SimpleUserDTO blockUser(String userName) throws DataAccessException {
         return userRestClient.blockUser(userName);
-    }*/
-/*
+    }
+
     @Override
     public SimpleUserDTO unblockUser(String userName) throws DataAccessException {
         return userRestClient.unblockUser(userName);
-    }*/
+    }
 
     @Override
     public boolean isBlocked(String userName) throws DataAccessException {

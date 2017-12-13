@@ -65,6 +65,14 @@ public interface UserService {
      */
     boolean blockUser(User user);
 
+    /**
+     * Reset a specific users password
+     *
+     * @param user to block
+     * @return blocked user entry
+     */
+    User resetPassword(User user);
+
     //boolean changeRole(User user, Integer role);
     //boolean updatePassword(User user, String password);
 

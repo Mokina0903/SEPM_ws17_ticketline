@@ -119,9 +119,11 @@ public class SimpleUserRestClient implements UserRestClient {
         }
     }*/
 
-   /* @Override
+   @Override
     public SimpleUserDTO blockUser(String username) throws DataAccessException {
-        try {
+       // TODO: Implement
+       /*
+       try {
             ResponseEntity<SimpleUserDTO> user = restClient.postForEntity(
                 restClient.getServiceURI(USER_URL) + "/block",
                 username,
@@ -140,12 +142,16 @@ public class SimpleUserRestClient implements UserRestClient {
 
             throw new DataAccessException(e.getMessage(), e);
         }
-    }*/
+        */
+       return null;
+    }
 
 
-   /* @Override
+   @Override
     public SimpleUserDTO unblockUser(String username) throws DataAccessException {
-        try {
+       // TODO: Implement
+       /*
+       try {
             ResponseEntity<SimpleUserDTO> user = restClient.postForEntity(
                 restClient.getServiceURI(USER_URL) + "/unblock",
                 username,
@@ -164,7 +170,21 @@ public class SimpleUserRestClient implements UserRestClient {
 
             throw new DataAccessException(e.getMessage(), e);
         }
-    }*/
+        */
+       return null;
+    }
+
+    @Override
+    public SimpleUserDTO resetUserPassword(DetailedUserDTO detailedUserDTO) {
+       // TODO: Implement
+       return null;
+    }
+
+    @Override
+    public SimpleUserDTO addNewUser(DetailedUserDTO detailedUserDTO) {
+       // TODO: Implement
+       return null;
+    }
 
     @Override
     public boolean isBlocked(String username) throws DataAccessException {
