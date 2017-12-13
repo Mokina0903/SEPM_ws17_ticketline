@@ -107,4 +107,6 @@ public class UserMapperTest {
         assertThat(detailedUserDTO.getRole()).isEqualTo(USER_ROLE);
         assertThat(detailedUserDTO.isBlocked() == BLOCKED);
     }
+
+    // TODO: (Test) simpleUserDTOToUser
 }
