@@ -1,9 +1,6 @@
 package at.ac.tuwien.inso.sepm.ticketline.client.gui.user;
 
-import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationObserver;
-import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationSubject;
-import at.ac.tuwien.inso.sepm.ticketline.client.gui.MainController;
-import at.ac.tuwien.inso.sepm.ticketline.client.gui.TabHeaderController;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.*;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
 import javafx.application.Platform;
@@ -16,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UserController implements LocalizationObserver{
+public class UserController extends TabElement implements LocalizationObserver{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
@@ -58,5 +55,10 @@ public class UserController implements LocalizationObserver{
     @Override
     public void update() {
         tabHeaderController.setTitle(BundleManager.getBundle().getString("user.user"));
+    }
+
+    @Override
+    protected void setTab(Tab tab) {
+        userTab = tab;
     }
 }

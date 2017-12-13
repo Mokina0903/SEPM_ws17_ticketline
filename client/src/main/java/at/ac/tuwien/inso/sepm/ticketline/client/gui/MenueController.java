@@ -5,6 +5,7 @@ import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
 import javafx.scene.control.ToggleButton;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -41,14 +42,6 @@ public class MenueController implements LocalizationObserver {
         localizationSubject.attach(this);
     }
 
-    //@JmsListener in abstract class(destination=..., containerFactory=..)
-    //Spring in action buch
-    //recieve(String message)
-    //message Queue
-
-    //mitmproxy certificat --cadir=ordner mitmproxy-ca.pem als filename
-    //mitmweb proxyport
-
     @FXML
     private void setLanguageToGerman() {
         BundleManager.changeLocale(Locale.GERMAN);
@@ -69,4 +62,6 @@ public class MenueController implements LocalizationObserver {
     public void update() {
         lbLanguage.setText(BundleManager.getBundle().getString("test.language"));
     }
+
+
 }

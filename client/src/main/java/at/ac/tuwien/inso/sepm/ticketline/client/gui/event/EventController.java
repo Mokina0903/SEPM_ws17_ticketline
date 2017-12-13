@@ -1,9 +1,6 @@
 package at.ac.tuwien.inso.sepm.ticketline.client.gui.event;
 
-import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationObserver;
-import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationSubject;
-import at.ac.tuwien.inso.sepm.ticketline.client.gui.MainController;
-import at.ac.tuwien.inso.sepm.ticketline.client.gui.TabHeaderController;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.*;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
 import javafx.fxml.FXML;
@@ -14,8 +11,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.AbstractSet;
+
 @Component
-public class EventController implements LocalizationObserver{
+public class EventController extends TabElement implements LocalizationObserver {
 
 
     private static final Logger LOGGER = LoggerFactory.getLogger(at.ac.tuwien.inso.sepm.ticketline.client.gui.event.EventController.class);
@@ -58,5 +57,11 @@ public class EventController implements LocalizationObserver{
     @Override
     public void update() {
         tabHeaderController.setTitle(BundleManager.getBundle().getString("events.events"));
+    }
+
+
+    @Override
+    protected void setTab(Tab tab) {
+        eventTab = tab;
     }
 }

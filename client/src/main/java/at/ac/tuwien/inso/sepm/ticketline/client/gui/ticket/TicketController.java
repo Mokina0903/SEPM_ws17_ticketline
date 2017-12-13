@@ -1,6 +1,7 @@
 package at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket;
 
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.MainController;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.TabElement;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.TabHeaderController;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
 import javafx.fxml.FXML;
@@ -11,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
-public class TicketController {
+public class TicketController extends TabElement{
 
 
     private static final Logger LOGGER = LoggerFactory.getLogger(at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket.TicketController.class);
@@ -44,7 +45,10 @@ public class TicketController {
     private void initialize() {
         tabHeaderController.setIcon(FontAwesome.Glyph.TICKET);
         tabHeaderController.setTitle("Tickets");
-
     }
 
+    @Override
+    protected void setTab(Tab tab) {
+        ticketTab = tab;
+    }
 }

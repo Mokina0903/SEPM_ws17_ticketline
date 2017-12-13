@@ -1,10 +1,7 @@
 package at.ac.tuwien.inso.sepm.ticketline.client.gui.news;
 
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
-import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationObserver;
-import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationSubject;
-import at.ac.tuwien.inso.sepm.ticketline.client.gui.MainController;
-import at.ac.tuwien.inso.sepm.ticketline.client.gui.TabHeaderController;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.*;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.NewsService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.JavaFXUtils;
@@ -34,7 +31,7 @@ import java.util.Iterator;
 import java.util.List;
 
 @Component
-public class NewsController implements LocalizationObserver{
+public class NewsController extends TabElement implements LocalizationObserver{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NewsController.class);
 
@@ -63,9 +60,9 @@ public class NewsController implements LocalizationObserver{
         return newsTab;
     }
 
-    public void setNewsTab(Tab newsTab) {
+/*    public void setNewsTab(Tab newsTab) {
         this.newsTab = newsTab;
-    }
+    }*/
 
     public NewsController(MainController mainController, SpringFxmlLoader springFxmlLoader, NewsService newsService) {
         this.mainController = mainController;
@@ -179,5 +176,10 @@ public class NewsController implements LocalizationObserver{
     @Override
     public void update() {
         tabHeaderController.setTitle(BundleManager.getBundle().getString("news.news"));
+    }
+
+    @Override
+    protected void setTab(Tab tab) {
+        newsTab = tab;
     }
 }

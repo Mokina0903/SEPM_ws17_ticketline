@@ -67,6 +67,12 @@ public class MainController implements LocalizationObserver{
     private UserService userService;
     private DetailedUserDTO detailedUserDTO;
 
+    private Tab newsTab;
+    private Tab eventTab;
+    private Tab ticketTab;
+    private Tab userTab;
+    private Tab customerTab;
+
     public Tab getNewsTab() {
         return newsTab;
     }
@@ -91,12 +97,15 @@ public class MainController implements LocalizationObserver{
         pbLoadingProgress.setProgress(0);
         login = springFxmlLoader.load("/fxml/authenticationComponent.fxml");
         spMainContent.getChildren().add(login);
-        initNewsTabPane();
-        initEventTabPane();
-        initTicketTabPane();
-        initCustomerTabPane();
-        initUserTabPane();
 
+        //todo tutorin fragen
+
+        newsController = (NewsController) initTabPane(newsController, "news/newsComponent.fxml", newsTab, "NEWSPAPER_ALT");
+        eventController = (EventController) initTabPane(eventController, "event/eventComponent.fxml", eventTab, "FILM");
+        ticketController = (TicketController) initTabPane(ticketController, "ticket/ticketComponent.fxml", ticketTab, "TICKET");
+        customerController = (CustomerController) initTabPane(customerController, "customer/customerComponent.fxml", customerTab, "USERS");
+        userController = (UserController) initTabPane(userController, "user/userComponent.fxml", userTab, "USER");
+        System.out.println("asdf");
     }
 
     @FXML
@@ -125,79 +134,17 @@ public class MainController implements LocalizationObserver{
         dialog.showAndWait();
     }
 
-    Tab newsTab;
-
-    private void initNewsTabPane() {
-        SpringFxmlLoader.Wrapper<NewsController> wrapper =
-            springFxmlLoader.loadAndWrap("/fxml/news/newsComponent.fxml");
-        newsController = wrapper.getController();
-        newsTab = new Tab(null, wrapper.getLoadedObject());
-        newsController.setNewsTab(newsTab);
-        Glyph newsGlyph = fontAwesome.create(FontAwesome.Glyph.NEWSPAPER_ALT);
-        newsGlyph.setFontSize(TAB_ICON_FONT_SIZE);
-        newsGlyph.setColor(Color.WHITE);
-        newsTab.setGraphic(newsGlyph);
-        tpContent.getTabs().add(newsTab);
-    }
-
-    Tab customerTab;
-
-    private void initCustomerTabPane(){
-        SpringFxmlLoader.Wrapper<CustomerController> wrapper =
-            springFxmlLoader.loadAndWrap("/fxml/customer/customerComponent.fxml");
-        customerController = wrapper.getController();
-        customerTab = new Tab(null, wrapper.getLoadedObject());
-        customerController.setCustomerTab(customerTab);
-        Glyph customerGlyph = fontAwesome.create(FontAwesome.Glyph.valueOf("USERS"));
-        customerGlyph.setFontSize(TAB_ICON_FONT_SIZE);
-        customerGlyph.setColor(Color.WHITE);
-        customerTab.setGraphic(customerGlyph);
-        tpContent.getTabs().add(customerTab);
-    }
-
-    Tab userTab;
-
-    private void initUserTabPane(){
-        SpringFxmlLoader.Wrapper<UserController> wrapper =
-            springFxmlLoader.loadAndWrap("/fxml/user/userComponent.fxml");
-        userController = wrapper.getController();
-        userTab = new Tab(null, wrapper.getLoadedObject());
-        userController.setUserTab(userTab);
-        Glyph userGlyph = fontAwesome.create(FontAwesome.Glyph.USER);
-        userGlyph.setFontSize(TAB_ICON_FONT_SIZE);
-        userGlyph.setColor(Color.WHITE);
-        userTab.setGraphic(userGlyph);
-        tpContent.getTabs().add(userTab);
-    }
-
-    Tab eventTab;
-
-    private void initEventTabPane(){
-        SpringFxmlLoader.Wrapper<EventController> wrapper =
-            springFxmlLoader.loadAndWrap("/fxml/event/eventComponent.fxml");
-        eventController = wrapper.getController();
-        eventTab = new Tab(null, wrapper.getLoadedObject());
-        eventController.setEventTab(eventTab);
-        Glyph eventGlyph = fontAwesome.create(FontAwesome.Glyph.FILM);
-        eventGlyph.setFontSize(TAB_ICON_FONT_SIZE);
-        eventGlyph.setColor(Color.WHITE);
-        eventTab.setGraphic(eventGlyph);
-        tpContent.getTabs().add(eventTab);
-    }
-
-    Tab ticketTab;
-
-    private void initTicketTabPane(){
-        SpringFxmlLoader.Wrapper<TicketController> wrapper =
-            springFxmlLoader.loadAndWrap("/fxml/ticket/ticketComponent.fxml");
-        ticketController = wrapper.getController();
-        ticketTab = new Tab(null, wrapper.getLoadedObject());
-        ticketController.setTicketTab(ticketTab);
-        Glyph ticketGlyph = fontAwesome.create(FontAwesome.Glyph.TICKET);
-        ticketGlyph.setFontSize(TAB_ICON_FONT_SIZE);
-        ticketGlyph.setColor(Color.WHITE);
-        ticketTab.setGraphic(ticketGlyph);
-        tpContent.getTabs().add(ticketTab);
+    private TabElement initTabPane(TabElement controller, String fxmlPath, Tab tab, String glyphSymbol) {
+        SpringFxmlLoader.Wrapper<TabElement> wrapper =
+            springFxmlLoader.loadAndWrap("/fxml/"+ fxmlPath);
+        controller = wrapper.getController();
+        tab = new Tab(null, wrapper.getLoadedObject());
+        Glyph glyph = fontAwesome.create(FontAwesome.Glyph.valueOf(glyphSymbol));
+        glyph.setFontSize(TAB_ICON_FONT_SIZE);
+        glyph.setColor(Color.WHITE);
+        tab.setGraphic(glyph);
+        tpContent.getTabs().add(tab);
+        return controller;
     }
 
     private void setAuthenticated(boolean authenticated) {
@@ -232,7 +179,7 @@ public class MainController implements LocalizationObserver{
         return this.detailedUserDTO;
     }
 
-
+/* //to update only active frame labels for localization
     public MenueCategory getActiveMenueCategory() {
         Tab tab = tpContent.getSelectionModel().getSelectedItem();
 
@@ -249,10 +196,11 @@ public class MainController implements LocalizationObserver{
             return MenueCategory.EVENT;
         }
         else return MenueCategory.TICKET;
-    }
+    }*/
 
     @Override
     public void update() {
-
+        //reset labels for localization here
     }
+
 }
