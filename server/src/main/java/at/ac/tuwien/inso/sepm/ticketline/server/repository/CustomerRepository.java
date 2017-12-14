@@ -2,10 +2,12 @@ package at.ac.tuwien.inso.sepm.ticketline.server.repository;
 
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Customer;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.News;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.awt.print.Pageable;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -26,7 +28,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
      * @param request defienes how to read paged from the database
      * @return a list of customer, though the size of the list is dependent of the pageable object
      */
-    List<Customer> findAll(Pageable request);
+    Page<Customer> findAll(Pageable request);
 
 
 
