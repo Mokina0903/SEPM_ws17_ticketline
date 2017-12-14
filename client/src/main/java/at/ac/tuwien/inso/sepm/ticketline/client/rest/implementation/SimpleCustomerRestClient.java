@@ -27,9 +27,9 @@ public class SimpleCustomerRestClient implements CustomerRestClient{
     }
 
     @Override
-    public List<CustomerDTO> findAll() throws DataAccessException {
+    public List<CustomerDTO> findAll(int pageIndex, int costumerPerPage) throws DataAccessException {
         try {
-            LOGGER.debug("Retrieving all news from {}", restClient.getServiceURI(CUSTOMER_URL ));
+            LOGGER.debug("Retrieving all costumers from {}", restClient.getServiceURI(CUSTOMER_URL+"/"+pageIndex+"/"+costumerPerPage ));
             ResponseEntity<List<CustomerDTO>> news =
                 restClient.exchange(
                     restClient.getServiceURI(CUSTOMER_URL),

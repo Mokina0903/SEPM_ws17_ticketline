@@ -14,7 +14,7 @@ public interface CustomerRestClient {
      * @return list of customer entries
      * @throws DataAccessException in case something went wrong
      */
-    List<CustomerDTO> findAll() throws DataAccessException;
+    List<CustomerDTO> findAll(int pageIndex, int costumerPerPage) throws DataAccessException;
 
     /**
      * Find customer entries by name
