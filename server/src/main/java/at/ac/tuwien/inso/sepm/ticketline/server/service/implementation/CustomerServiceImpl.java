@@ -5,9 +5,12 @@ import at.ac.tuwien.inso.sepm.ticketline.server.exception.NotFoundException;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.CustomerRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.NewsRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.CustomerService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.awt.print.Pageable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +25,8 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public List<Customer> findAll(Pageable request) {
-        return customerRepository.findAll(request);
+        Page<Customer> p = customerRepository.findAll(request);
+        return p.getContent();
     }
 
     @Override
