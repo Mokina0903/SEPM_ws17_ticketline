@@ -67,6 +67,17 @@ public class CustomerServiceImpl implements CustomerService {
         return c;
     }
 
+    @Override
+    public List<Customer> findByName(String name) {
+
+        return null;
+    }
+
+    @Override
+    public List<Customer> findBySurname(String surename) {
+        return null;
+    }
+
 
     private boolean validateIdOrKnr(Long id){
         return id >= 0;

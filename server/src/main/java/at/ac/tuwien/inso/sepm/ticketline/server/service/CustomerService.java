@@ -52,9 +52,9 @@ public interface CustomerService {
      */
     Customer findByKnr(Long knr) throws InvalidIdException, CustomerNotValidException;
 
-    Customer findOneByName(Long id) throws InvalidIdException;
+    List<Customer> findByName(String name);
 
-    Customer findOneBySurname(Long id) throws InvalidIdException;
+    List<Customer> findBySurname(String surename);
 
 
 
