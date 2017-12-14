@@ -7,13 +7,12 @@ import at.ac.tuwien.inso.sepm.ticketline.server.exception.InvalidIdException;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.CustomerService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import net.bytebuddy.matcher.NullMatcher;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.crypto.Cipher;
 import java.util.List;
 
 @RestController
@@ -35,7 +34,7 @@ public class CustomerEndpoint {
         return customerMapper.customerToCustomerDTO(customerService.findAll(request));
     }
     @RequestMapping(value= "/{id}",method = RequestMethod.GET)
-    @ApiOperation(value = "Get one spezific customer entry")
+    @ApiOperation(value = "Get one spezific customer entry by id")
     public CustomerDTO findById(@PathVariable("id") Long id){
         try {
             return customerMapper.customerToCustomerDTO(customerService.findOneById(id));
@@ -43,6 +42,40 @@ public class CustomerEndpoint {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @RequestMapping(value="/findWithKnr/{knr}", method = RequestMethod.GET)
+    @ApiOperation(value = "Get one spezific customer entry by knr")
+    public CustomerDTO findByKnr(@PathVariable("knr") long knr){
+        try {
+            return customerMapper.customerToCustomerDTO(customerService.findByKnr(knr));
+        } catch (InvalidIdException | CustomerNotValidException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    @RequestMapping(value="/create", method = RequestMethod.POST)
+    @ApiOperation(value = "Create and save the given customer")
+    public CustomerDTO createCustomer(@RequestBody CustomerDTO customer){
+        try {
+            return customerMapper.customerToCustomerDTO(customerService.createCustomer(customerMapper.customerDTOToCustomer(customer)));
+        } catch (CustomerNotValidException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @RequestMapping(value="/create", method = RequestMethod.POST)
+    @ApiOperation(value = "Update and save the given customer")
+    public void updateCustomer(@RequestBody CustomerDTO customerDTO){
+        try {
+           customerService.updateCustomer(customerMapper.customerDTOToCustomer(customerDTO));
+        } catch (CustomerNotValidException e) {
+            e.printStackTrace();
+        }
+
     }
 
 
