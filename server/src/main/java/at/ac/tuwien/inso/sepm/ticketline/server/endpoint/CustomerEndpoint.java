@@ -27,7 +27,7 @@ public class CustomerEndpoint {
         this.customerService = service;
     }
 
-    @RequestMapping(value= "/pageIndex}/{customerPerPage}", method = RequestMethod.GET)
+    @RequestMapping(value= "/{pageIndex}/{customerPerPage}", method = RequestMethod.GET)
     @ApiOperation(value = "Get list of customer entries")
     public List<CustomerDTO> findAll(@PathVariable("pageIndex")int pageIndex, @PathVariable("customerPerPage")int customerPerPage){
         PageRequest request = new PageRequest(pageIndex, customerPerPage, Sort.Direction.ASC, "surname");
@@ -76,6 +76,20 @@ public class CustomerEndpoint {
             e.printStackTrace();
         }
 
+    }
+
+    @RequestMapping(value="/findName/{pageIndex}/{customerPerPage}/{name}", method = RequestMethod.GET)
+    @ApiOperation(value = "Gets all customers with the given name")
+    public List<CustomerDTO> findByName(@PathVariable("pageIndex")int pageIndex, @PathVariable("customerPerPage")int customerPerPage, @PathVariable("name") String name){
+        PageRequest request = new PageRequest(pageIndex, customerPerPage, Sort.Direction.ASC, "surname");
+        return customerMapper.customerToCustomerDTO(customerService.findByName(name, request));
+    }
+
+    @RequestMapping(value="/findName/{pageIndex}/{customerPerPage}/{surname}", method = RequestMethod.GET)
+    @ApiOperation(value = "Gets all customers with the given name")
+    public List<CustomerDTO> findBySurname(@PathVariable("pageIndex")int pageIndex, @PathVariable("customerPerPage")int customerPerPage, @PathVariable("surname") String surname){
+        PageRequest request = new PageRequest(pageIndex, customerPerPage, Sort.Direction.ASC, "surname");
+        return customerMapper.customerToCustomerDTO(customerService.findBySurname(surname, request));
     }
 
 
