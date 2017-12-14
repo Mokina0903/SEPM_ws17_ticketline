@@ -21,12 +21,11 @@ public class Customer {
     private String name;
 
     @Column(nullable = false, name ="surname")
-    private String surName;
+    private String surname;
 
     @Column(nullable = false, name ="knr")
-
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq_customer_knr")
-    @SequenceGenerator(initialValue=1000, name = "seq_customer_knr", sequenceName = "seq_customer_knr")
+    @SequenceGenerator(initialValue=1000, allocationSize = 23, name = "seq_customer_knr", sequenceName = "seq_customer_knr")
     private Long knr;
 
     @Column( name = "email")
@@ -35,6 +34,30 @@ public class Customer {
 
     @Column(nullable = false, name = "birthDate")
     private LocalDate birthDate;
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public void setSurname(String surName) {
+        this.surname = surName;
+    }
+
+    public Long getKnr() {
+        return knr;
+    }
+
+    public void setKnr(Long knr) {
+        this.knr = knr;
+    }
+
+    public LocalDate getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(LocalDate birthDate) {
+        this.birthDate = birthDate;
+    }
 
     public Long getId() {
         return id;
@@ -60,24 +83,20 @@ public class Customer {
         this.email = email;
     }
 
-    public LocalDate getBrithDate() {
-        return birthDate;
-    }
-
-    public void setBrithDate(LocalDate brithDate) {
-        this.birthDate = brithDate;
-    }
-
 
     public static CustomerBuilder builder() {
         return new CustomerBuilder();
     }
+
+
 
     public static final class CustomerBuilder {
         private Long id;
         private LocalDate birthDate;
         private String name;
         private String mail;
+        private Long knr;
+        private String surname;
 
 
         private CustomerBuilder() {
@@ -87,6 +106,16 @@ public class Customer {
             this.id = id;
             return this;
         }
+        public CustomerBuilder knr (Long knr){
+            this.knr= knr;
+            return this;
+        }
+
+        public CustomerBuilder surname(String name){
+            this.surname = name;
+            return this;
+        }
+
         public CustomerBuilder name(String name){
             this.name = name;
             return this;
@@ -105,8 +134,10 @@ public class Customer {
             Customer customer = new Customer();
             customer.setId(id);
             customer.setName(name);
+            customer.setSurname(surname);
+            customer.setKnr(knr);
             customer.setEmail(mail);
-           customer.setBrithDate(birthDate);
+           customer.setBirthDate(birthDate);
             return customer;
         }
     }

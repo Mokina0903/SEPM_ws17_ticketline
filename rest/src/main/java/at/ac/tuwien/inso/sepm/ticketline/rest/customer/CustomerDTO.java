@@ -11,14 +11,45 @@ public class CustomerDTO {
     @ApiModelProperty(readOnly = true, name = "The automatically generated database id")
     private Long id;
 
+    @ApiModelProperty(readOnly = true, name = "The automatically generated database knr, which is not equal to id")
+    private Long knr;
+
     @ApiModelProperty(required = true, name = "The name of the customer")
     private String name;
+
+    @ApiModelProperty(required = true, name = "The name of the customer")
+    private String surname;
 
     @ApiModelProperty(required = true, name = "The email of the customer")
     private String email;
 
     @ApiModelProperty(required = true, name = "The birthdate of the customer")
     private LocalDate birthDate;
+
+
+    public Long getKnr() {
+        return knr;
+    }
+
+    public void setKnr(Long knr) {
+        this.knr = knr;
+    }
+
+    public String getSurname() {
+        return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
+    public LocalDate getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(LocalDate birthDate) {
+        this.birthDate = birthDate;
+    }
 
     public Long getId() {
         return id;
@@ -44,14 +75,6 @@ public class CustomerDTO {
         this.email = email;
     }
 
-    public LocalDate getBrithDate() {
-        return birthDate;
-    }
-
-    public void setBrithDate(LocalDate brithDate) {
-        this.birthDate = brithDate;
-    }
-
 
     public static CustomerDTOBuilder builder() {
         return new CustomerDTOBuilder();
@@ -62,6 +85,8 @@ public class CustomerDTO {
         private LocalDate birthDate;
         private String name;
         private String mail;
+        private Long knr;
+        private String surname;
 
 
         private CustomerDTOBuilder() {
@@ -69,6 +94,15 @@ public class CustomerDTO {
 
         public CustomerDTOBuilder id(Long id){
             this.id = id;
+            return this;
+        }
+        public CustomerDTOBuilder knr (Long knr){
+            this.knr= knr;
+            return this;
+        }
+
+        public CustomerDTOBuilder surname(String name){
+            this.surname = name;
             return this;
         }
         public CustomerDTOBuilder name(String name){
@@ -90,7 +124,9 @@ public class CustomerDTO {
             customer.setId(id);
             customer.setName(name);
             customer.setEmail(mail);
-            customer.setBrithDate(birthDate);
+            customer.setSurname(surname);
+            customer.setKnr(knr);
+            customer.setBirthDate(birthDate);
             return customer;
         }
     }
