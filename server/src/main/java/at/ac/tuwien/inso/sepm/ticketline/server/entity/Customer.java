@@ -88,7 +88,9 @@ public class Customer {
         return new CustomerBuilder();
     }
 
-
+    public int compareTo(Customer customer) {
+        return this.getId().compareTo(customer.getId());
+    }
 
     public static final class CustomerBuilder {
         private Long id;
