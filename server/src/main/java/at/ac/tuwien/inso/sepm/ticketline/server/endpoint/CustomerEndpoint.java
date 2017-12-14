@@ -67,7 +67,7 @@ public class CustomerEndpoint {
         return null;
     }
 
-    @RequestMapping(value="/create", method = RequestMethod.POST)
+    @RequestMapping(value="/update", method = RequestMethod.POST)
     @ApiOperation(value = "Update and save the given customer")
     public void updateCustomer(@RequestBody CustomerDTO customerDTO){
         try {
@@ -85,7 +85,7 @@ public class CustomerEndpoint {
         return customerMapper.customerToCustomerDTO(customerService.findByName(name, request));
     }
 
-    @RequestMapping(value="/findName/{pageIndex}/{customerPerPage}/{surname}", method = RequestMethod.GET)
+    @RequestMapping(value="/findSurename/{pageIndex}/{customerPerPage}/{surname}", method = RequestMethod.GET)
     @ApiOperation(value = "Gets all customers with the given name")
     public List<CustomerDTO> findBySurname(@PathVariable("pageIndex")int pageIndex, @PathVariable("customerPerPage")int customerPerPage, @PathVariable("surname") String surname){
         PageRequest request = new PageRequest(pageIndex, customerPerPage, Sort.Direction.ASC, "surname");
