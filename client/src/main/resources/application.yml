@@ -8,7 +8,7 @@ banner:
 spring:
   application:
     name: Ticketline Client
-    version: @project.version@
+    version: project.version
   profiles:
     active: development
 

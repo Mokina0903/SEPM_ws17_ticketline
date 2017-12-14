@@ -29,6 +29,10 @@ public class CustomerController extends TabElement implements LocalizationObserv
 
 
     @FXML
+    public Pagination pagination;
+
+
+    @FXML
     private TabHeaderController tabHeaderController;
     @FXML
     public BorderPane customerOverviewRoot;
@@ -84,6 +88,9 @@ public class CustomerController extends TabElement implements LocalizationObserv
         btNew.setGraphic(fontAwesome.create("USER_PLUS"));
     //    lbNoMatch.setVisible(false);
         initTableView();
+        pagination.setPageCount(20); //TODO: add right calulation
+        pagination.setCurrentPageIndex(0);
+
     }
 
     private void initTableView() {

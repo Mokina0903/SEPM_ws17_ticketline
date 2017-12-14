@@ -12,6 +12,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
+<?import javafx.scene.control.Pagination?>
 <BorderPane fx:id="customerOverviewRoot" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.customer.CustomerController">
 
     <top>
@@ -40,19 +41,23 @@
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </VBox.margin>
             </GridPane>
+            <Pagination fx:id="pagination">
+                <fx:define>
+                    <TableView fx:id="userTableView" prefHeight="286.0" prefWidth="483.0">
+                        <columns>
+                            <TableColumn fx:id="colNumber" text="%customer.number" />
+                            <TableColumn fx:id="colFname" text="%customer.fname" />
+                            <TableColumn fx:id="colLname" text="%customer.lname" />
+                            <TableColumn fx:id="colBirthdate" text="%customer.birthdate" />
+                            <TableColumn fx:id="colEmail" text="Email" />
+                        </columns>
+                        <columnResizePolicy>
+                            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                        </columnResizePolicy>
+                    </TableView>
+                </fx:define>
+            </Pagination>
 
-              <TableView fx:id="userTableView" prefHeight="286.0" prefWidth="483.0">
-                  <columns>
-                      <TableColumn fx:id="colNumber" text="%customer.number" />
-                      <TableColumn fx:id="colFname" text="%customer.fname" />
-                  <TableColumn fx:id="colLname" text="%customer.lname" />
-                  <TableColumn fx:id="colBirthdate" text="%customer.birthdate" />
-                  <TableColumn fx:id="colEmail" text="Email" />
-                  </columns>
-               <columnResizePolicy>
-                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-               </columnResizePolicy>
-              </TableView>
          </children>
       </VBox>
     </center>
