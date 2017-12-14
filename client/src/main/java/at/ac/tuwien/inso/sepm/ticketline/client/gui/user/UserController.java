@@ -3,6 +3,8 @@ package at.ac.tuwien.inso.sepm.ticketline.client.gui.user;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.*;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.news.NewsAddFormularController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.news.NewsController;
+import at.ac.tuwien.inso.sepm.ticketline.client.service.UserService;
+import at.ac.tuwien.inso.sepm.ticketline.client.service.implementation.SimpleUserService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
 import at.ac.tuwien.inso.sepm.ticketline.rest.news.DetailedNewsDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.user.DetailedUserDTO;
@@ -73,11 +75,14 @@ public class UserController extends TabElement implements LocalizationObserver{
     @FXML
     private void initialize() {
         tabHeaderController.setIcon(FontAwesome.Glyph.USER);
-        tabHeaderController.setTitle(BundleManager.getBundle().getString("user.user"));
+        update();
         localizationSubject.attach(this);
 
-        //TODO: implemt fillig of the Tableview
+        loadUsers();
+    }
 
+    public void loadUsers(){
+        //TODO: implemt fillig of the Tableview
     }
 
     @FXML
@@ -109,7 +114,14 @@ public class UserController extends TabElement implements LocalizationObserver{
 
     @Override
     public void update() {
-        tabHeaderController.setTitle(BundleManager.getBundle().getString("user.user"));
+        tabHeaderController.setTitle(BundleManager.getBundle().getString("user.title"));
+        lock.setText(BundleManager.getBundle().getString("user.unlock"));
+        unlock.setText(BundleManager.getBundle().getString("user.lock"));
+        resetPwd.setText(BundleManager.getBundle().getString("user.resetPassoword"));
+        addUser.setText(BundleManager.getBundle().getString("user.addUser"));
+
+        usernameCol.setText(BundleManager.getBundle().getString("authenticate.userName"));
+        blockedCol.setText(BundleManager.getBundle().getString("user.locked"));
     }
 
     @Override
