@@ -5,6 +5,8 @@ import at.ac.tuwien.inso.sepm.ticketline.rest.user.SimpleUserDTO;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.rest.user.DetailedUserDTO;
 
+import java.util.List;
+
 public interface UserService {
 
     /**
@@ -107,5 +109,13 @@ public interface UserService {
      * @throws DataAccessException
      */
     void removeFromUserNotSeen(Long userId,Long newsId) throws DataAccessException;
+
+    /**
+     * Find all user entries.
+     *
+     * @return list of news entries
+     * @throws DataAccessException in case something went wrong
+     */
+    List<SimpleUserDTO> findAll() throws DataAccessException;
 
 }

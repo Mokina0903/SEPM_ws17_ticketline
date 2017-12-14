@@ -4,6 +4,8 @@ import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.rest.user.SimpleUserDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.user.DetailedUserDTO;
 
+import java.util.List;
+
 public interface  UserRestClient {
 /**
  * Find user by username
@@ -98,4 +100,13 @@ public interface  UserRestClient {
      * @return SimpleUserDTO
      */
     SimpleUserDTO addNewUser(DetailedUserDTO detailedUserDTO);
+
+    /**
+     * Find all user entries.
+     *
+     * @return list of news entries
+     * @throws DataAccessException in case something went wrong
+     */
+    List<SimpleUserDTO> findAll() throws DataAccessException;
+
 }

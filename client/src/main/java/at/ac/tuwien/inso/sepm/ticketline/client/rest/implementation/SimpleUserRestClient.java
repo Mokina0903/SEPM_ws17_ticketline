@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestClientException;
 
+import java.util.List;
+
 @Component
 public class SimpleUserRestClient implements UserRestClient {
 
@@ -247,5 +249,9 @@ public class SimpleUserRestClient implements UserRestClient {
         }
     }
 
-
+    @Override
+    public List<SimpleUserDTO> findAll() throws DataAccessException {
+       // TODO: Implement here
+       return null;
+    }
 }

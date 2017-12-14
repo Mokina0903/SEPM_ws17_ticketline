@@ -15,6 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service
 public class SimpleUserService implements UserService {
@@ -84,5 +86,10 @@ public class SimpleUserService implements UserService {
     @Override
     public void removeFromUserNotSeen( Long userId, Long newsId ) throws DataAccessException {
         userRestClient.removeFromUserNotSeen(userId,newsId);
+    }
+
+    @Override
+    public List<SimpleUserDTO> findAll() throws DataAccessException {
+        return userRestClient.findAll();
     }
 }
