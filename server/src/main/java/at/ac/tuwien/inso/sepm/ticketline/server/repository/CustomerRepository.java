@@ -37,8 +37,20 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
      */
     Optional<Customer> findOneByKnr(Long knr);
 
+    /**
+     *
+     * @param name firstname of the wanted costumers
+     * @param request  defienes how to read paged from the database
+     * @return a list of customer,  though the size of the list is dependent of the pageable object
+     */
     Page<Customer> findByName(String name, Pageable request);
 
+    /**
+     *
+     * @param surname surname of the wanted costumers
+     * @param request  defienes how to read paged from the database
+     * @return a list of customer,  though the size of the list is dependent of the pageable object
+     */
     Page<Customer> findBySurname(String surname, Pageable request);
 
 
