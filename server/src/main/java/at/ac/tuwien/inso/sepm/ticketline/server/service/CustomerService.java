@@ -43,6 +43,13 @@ public interface CustomerService {
      */
     void updateCustomer(Customer customer) throws CustomerNotValidException;
 
+    /**
+     *
+     * @param knr of the wanted customer
+     * @return the customer with the given knr
+     * @throws InvalidIdException throwen when the knr <0
+     * @throws CustomerNotValidException throwen when the found customer is not valid
+     */
     Customer findByKnr(Long knr) throws InvalidIdException, CustomerNotValidException;
 
     Customer findOneByName(Long id) throws InvalidIdException;
