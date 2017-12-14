@@ -25,6 +25,7 @@
             <columns>
                 <TableColumn fx:id="usernameCol" text="Name"/>
                 <TableColumn fx:id="blockedCol" text="blocked"/>
+                <TableColumn fx:id="roleCol" text="Role"/>
             </columns>
         </TableView>
     </center>
