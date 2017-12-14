@@ -30,15 +30,15 @@ public class SimpleCustomerRestClient implements CustomerRestClient{
     public List<CustomerDTO> findAll(int pageIndex, int costumerPerPage) throws DataAccessException {
         try {
             LOGGER.debug("Retrieving all costumers from {}", restClient.getServiceURI(CUSTOMER_URL+"/"+pageIndex+"/"+costumerPerPage ));
-            ResponseEntity<List<CustomerDTO>> news =
+            ResponseEntity<List<CustomerDTO>> customer =
                 restClient.exchange(
-                    restClient.getServiceURI(CUSTOMER_URL),
+                    restClient.getServiceURI(CUSTOMER_URL+"/"+pageIndex+"/"+costumerPerPage ),
                     HttpMethod.GET,
                     null,
                     new ParameterizedTypeReference<List<CustomerDTO>>() {
                     });
-            LOGGER.debug("Result status was {} with content {}", news.getStatusCode(), news.getBody());
-            return news.getBody();
+            LOGGER.debug("Result status was {} with content {}", customer.getStatusCode(), customer.getBody());
+            return customer.getBody();
         } catch (HttpStatusCodeException e) {
             throw new DataAccessException("Failed retrieve customer with status code " + e.getStatusCode().toString());
         } catch (RestClientException e) {
