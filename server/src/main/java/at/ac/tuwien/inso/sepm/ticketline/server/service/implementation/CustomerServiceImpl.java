@@ -74,8 +74,8 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<Customer> findBySurname(String surename, Pageable request) {
-        Page<Customer> p = customerRepository.findBySurname(surename, request);
+    public List<Customer> findBySurname(String surname, Pageable request) {
+        Page<Customer> p = customerRepository.findBySurname(surname, request);
         return p.getContent();
     }
 

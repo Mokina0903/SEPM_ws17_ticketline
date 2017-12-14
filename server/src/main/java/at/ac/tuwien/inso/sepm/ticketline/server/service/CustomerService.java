@@ -52,9 +52,21 @@ public interface CustomerService {
      */
     Customer findByKnr(Long knr) throws InvalidIdException, CustomerNotValidException;
 
+    /**
+     *
+     * @param name firstname of the wanted costumer
+     * @param request  pageRequest, defining which page and how many items per page will be loaded
+     * @return List of costumers, as defined in request
+     */
     List<Customer> findByName(String name, Pageable request);
 
-    List<Customer> findBySurname(String surename, Pageable request);
+    /**
+     *
+     * @param surname firstname of the wanted costumer
+     * @param request  pageRequest, defining which page and how many items per page will be loaded
+     * @return List of costumers, as defined in request
+     */
+    List<Customer> findBySurname(String surname, Pageable request);
 
 
 
