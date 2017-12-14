@@ -4,6 +4,7 @@ import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationObserver;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationSubject;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.MainController;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
+import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -20,6 +21,8 @@ public class CustomerDialogController implements LocalizationObserver{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CustomerDialogController.class);
 
+    @FXML
+    private Label lbCustomerNumber;
     @FXML
     private Label lbCustomerNumberText;
     @FXML
@@ -42,7 +45,7 @@ public class CustomerDialogController implements LocalizationObserver{
     private final SpringFxmlLoader springFxmlLoader;
     private final CustomerController customerController;
 
-    //private CustomerDTO customer;
+    private CustomerDTO customer;
     private Node oldContent;
 
     public CustomerDialogController(MainController mainController, SpringFxmlLoader springFxmlLoader, CustomerController customerController) {
@@ -56,16 +59,15 @@ public class CustomerDialogController implements LocalizationObserver{
     void initialize(){
         //TODO: implement pre-filling of all Textfields/Boxes + visability issues of textfields
         localizationSubject.attach(this);
-        //lbCustomerNumber = (customer == null? "" : customer.getcustomerNumber);
+      //  lbCustomerNumber = (customer == null? "" : customer.getcustomerNumber);
 
-
-/*        lbInvalidName.setVisible(false);
+        lbInvalidName.setVisible(false);
         lbInvalidBirthdate.setVisible(false);
-        lbInvalidEmail.setVisible(false);*/
+        lbInvalidEmail.setVisible(false);
     }
 
-    void initializeData(/*CustomerDTO customer,*/ Node oldContent){
-        //this.customer = user;
+    void initializeData(CustomerDTO customer, Node oldContent){
+        this.customer = customer;
         this.oldContent = oldContent;
     }
 
