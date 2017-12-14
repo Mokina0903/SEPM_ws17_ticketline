@@ -171,6 +171,7 @@ public class MainController implements LocalizationObserver{
     public void loadDetailedUserDTO(String name) {
         try {
             this.detailedUserDTO = userService.findByName(name);
+            customerController.preparePagination();
         } catch (DataAccessException e) {
             JavaFXUtils.createExceptionDialog(e, spMainContent.getScene().getWindow()).showAndWait();
             // e.printStackTrace();

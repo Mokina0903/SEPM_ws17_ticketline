@@ -47,20 +47,6 @@
                     </VBox.margin>
                 </GridPane>
                 <Pagination fx:id="pagination">
-                    <fx:define>
-                        <TableView fx:id="tvCustomer" prefHeight="286.0" prefWidth="483.0">
-                            <columns>
-                                <TableColumn fx:id="tcNumber" text="%customer.number"/>
-                                <TableColumn fx:id="tcName" text="%customer.fname"/>
-                                <TableColumn fx:id="tcSurname" text="%customer.lname"/>
-                                <TableColumn fx:id="tcBirthdate" text="%customer.birthdate"/>
-                                <TableColumn fx:id="tcMail" text="Email"/>
-                            </columns>
-                            <columnResizePolicy>
-                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>
-                            </columnResizePolicy>
-                        </TableView>
-                    </fx:define>
                 </Pagination>
             </children>
         </VBox>

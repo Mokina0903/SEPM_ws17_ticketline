@@ -36,26 +36,12 @@ public class CustomerController extends TabElement implements LocalizationObserv
 
     @FXML
     public Pagination pagination;
-    @FXML
-    public TableColumn<CustomerDTO, Long> tcNumber;
-    @FXML
-    public TableColumn<CustomerDTO, String> tcSurname;
-    @FXML
-    public TableColumn<CustomerDTO, String> tcMail;
 
 
     @FXML
     private TabHeaderController tabHeaderController;
     @FXML
     public BorderPane customerOverviewRoot;
-
-
-    @FXML
-    private TableView<CustomerDTO> tvCustomer;
-    @FXML
-    private TableColumn<CustomerDTO, String> tcName;
-    @FXML
-    private TableColumn<CustomerDTO, LocalDate> tcBirthdate;
 
     @FXML
     private Button btNew;
@@ -72,7 +58,7 @@ public class CustomerController extends TabElement implements LocalizationObserv
     private TextField tfSearch;
 
     private Tab customerTab;
-    private int customersPerPage;
+    private int customersPerPage = 3;
 
     private final MainController mainController;
     private final SpringFxmlLoader springFxmlLoader;
@@ -103,7 +89,13 @@ public class CustomerController extends TabElement implements LocalizationObserv
         btNew.setGraphic(fontAwesome.create("USER_PLUS"));
     //    lbNoMatch.setVisible(false);
         initTableView();
-        pagination.setPageCount(20); //TODO: add right calulation
+
+
+    }
+
+    public void preparePagination(){
+        //TODO: get customer count for right calculation of the PageCount
+        pagination.setPageCount(20);
         pagination.setCurrentPageIndex(0);
         pagination.setPageFactory(new Callback<Integer, Node>() {
 
@@ -125,13 +117,32 @@ public class CustomerController extends TabElement implements LocalizationObserv
     }
 
     private Node createPage(int pageIndex){
+       pagination.setCurrentPageIndex(pageIndex);
         List<CustomerDTO> costumers = loadPage(pageIndex);
-        tvCustomer.getItems().addAll(costumers);
+
+        TableView<CustomerDTO> tvCustomer = new TableView<>();
+
+        TableColumn<CustomerDTO, String> tcName = new TableColumn<>();
+        TableColumn<CustomerDTO, String> tcSurname = new TableColumn<>();
+        TableColumn<CustomerDTO, LocalDate> tcBirthdate = new TableColumn<>();
+        TableColumn<CustomerDTO, String> tcMail = new TableColumn<>();
+        TableColumn<CustomerDTO, String> tcNumber = new TableColumn<>();
+
+        tcName.setText("Name");
+        tcSurname.setText("Surname");
+        tcBirthdate.setText("Birthdate");
+        tcMail.setText("E-Mail");
+        tcNumber.setText("Number");
+
         tcBirthdate.setCellValueFactory(new PropertyValueFactory<>("birthDate"));
         tcName.setCellValueFactory(new PropertyValueFactory<>("name"));
         tcSurname.setCellValueFactory(new PropertyValueFactory<>("surname"));
         tcMail.setCellValueFactory(new PropertyValueFactory<>("email"));
         tcNumber.setCellValueFactory(new PropertyValueFactory<>("knr"));
+
+        tvCustomer.getColumns().addAll(tcNumber, tcName, tcSurname, tcBirthdate, tcMail);
+        tvCustomer.getItems().addAll(costumers);
+        tvCustomer.refresh();
 
         return tvCustomer;
     }
