@@ -49,4 +49,74 @@ public class SeatDTO {
     public void setSector( char sector ) {
         this.sector = sector;
     }
+
+    @Override
+    public String toString() {
+        return "SeatDTO{" +
+            "id=" + id +
+            ", nr=" + nr +
+            ", row=" + row +
+            ", sector=" + sector +
+            '}';
+    }
+
+    @Override
+    public boolean equals( Object o ) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        SeatDTO seatDTO = (SeatDTO) o;
+
+        if (getNr() != seatDTO.getNr()) return false;
+        if (getRow() != seatDTO.getRow()) return false;
+        if (getSector() != seatDTO.getSector()) return false;
+        return getId().equals(seatDTO.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getId().hashCode();
+        result = 31 * result + getNr();
+        result = 31 * result + getRow();
+        result = 31 * result + (int) getSector();
+        return result;
+    }
+
+    public static final class SeatDTOBuilder{
+        private Long id;
+        private int nr;
+        private int row;
+        private char sector;
+
+        public SeatDTOBuilder id(Long id){
+            this.id=id;
+            return this;
+        }
+
+        public SeatDTOBuilder nr(int nr){
+            this.nr = nr;
+            return this;
+        }
+
+        public SeatDTOBuilder row(int row){
+            this.row = row;
+            return this;
+        }
+
+        public SeatDTOBuilder sector(char sector){
+            this.sector = sector;
+            return this;
+        }
+
+        public SeatDTO build(){
+            SeatDTO seat = new SeatDTO();
+
+            seat.setId(id);
+            seat.setNr(nr);
+            seat.setRow(row);
+            seat.setSector(sector);
+
+            return seat;
+        }
+    }
 }
