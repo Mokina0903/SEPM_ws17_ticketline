@@ -10,7 +10,7 @@ import java.util.List;
 @Service
 public class SimpleCustomerService implements CustomerService{
     @Override
-    public List<CustomerDTO> findAll() throws DataAccessException {
+    public List<CustomerDTO> findAll(int pageIndex, int customersPerPage) throws DataAccessException {
         return null;
     }
 

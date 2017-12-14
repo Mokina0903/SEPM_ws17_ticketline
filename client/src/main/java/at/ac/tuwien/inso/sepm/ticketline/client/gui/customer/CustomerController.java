@@ -9,8 +9,11 @@ import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
+import javafx.util.Callback;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.GlyphFont;
 import org.controlsfx.glyphfont.GlyphFontRegistry;
@@ -19,8 +22,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.Array;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Component
 public class CustomerController extends TabElement implements LocalizationObserver {
@@ -30,6 +36,12 @@ public class CustomerController extends TabElement implements LocalizationObserv
 
     @FXML
     public Pagination pagination;
+    @FXML
+    public TableColumn<CustomerDTO, Long> tcNumber;
+    @FXML
+    public TableColumn<CustomerDTO, String> tcSurname;
+    @FXML
+    public TableColumn<CustomerDTO, String> tcMail;
 
 
     @FXML
@@ -60,9 +72,11 @@ public class CustomerController extends TabElement implements LocalizationObserv
     private TextField tfSearch;
 
     private Tab customerTab;
+    private int customersPerPage;
 
     private final MainController mainController;
     private final SpringFxmlLoader springFxmlLoader;
+    private final CustomerService customerService;
     private GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
 
     @Autowired
@@ -75,9 +89,10 @@ public class CustomerController extends TabElement implements LocalizationObserv
     }
 
 
-    public CustomerController(MainController mainController, SpringFxmlLoader springFxmlLoader) {
+    public CustomerController(MainController mainController, SpringFxmlLoader springFxmlLoader, CustomerService customerService) {
         this.mainController = mainController;
         this.springFxmlLoader = springFxmlLoader;
+        this.customerService = customerService;
     }
 
     @FXML
@@ -90,7 +105,35 @@ public class CustomerController extends TabElement implements LocalizationObserv
         initTableView();
         pagination.setPageCount(20); //TODO: add right calulation
         pagination.setCurrentPageIndex(0);
+        pagination.setPageFactory(new Callback<Integer, Node>() {
 
+            @Override
+            public Node call(Integer pageIndex) {
+                return createPage(pageIndex);
+            }
+        });
+    }
+
+   private List<CustomerDTO> loadPage(int pageIndex){
+        List<CustomerDTO> list = new ArrayList<CustomerDTO>();
+        try {
+            list = customerService.findAll(pageIndex, customersPerPage);
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    private Node createPage(int pageIndex){
+        List<CustomerDTO> costumers = loadPage(pageIndex);
+        tvCustomer.getItems().addAll(costumers);
+        tcBirthdate.setCellValueFactory(new PropertyValueFactory<>("birthDate"));
+        tcName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        tcSurname.setCellValueFactory(new PropertyValueFactory<>("surname"));
+        tcMail.setCellValueFactory(new PropertyValueFactory<>("email"));
+        tcNumber.setCellValueFactory(new PropertyValueFactory<>("knr"));
+
+        return tvCustomer;
     }
 
     private void initTableView() {
