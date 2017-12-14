@@ -30,6 +30,8 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
      */
     Page<Customer> findAll(Pageable request);
 
+    Optional<Customer> findOneByKnr(Long knr);
+
 
 
 }

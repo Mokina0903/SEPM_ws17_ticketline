@@ -43,7 +43,10 @@ public interface CustomerService {
      */
     void updateCustomer(Customer customer) throws CustomerNotValidException;
 
+    Customer findByKnr(Long knr) throws InvalidIdException, CustomerNotValidException;
+
     Customer findOneByName(Long id) throws InvalidIdException;
+
     Customer findOneBySurname(Long id) throws InvalidIdException;
 
 

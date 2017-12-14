@@ -2,6 +2,7 @@ package at.ac.tuwien.inso.sepm.ticketline.server.endpoint;
 
 import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.customer.CustomerMapper;
+import at.ac.tuwien.inso.sepm.ticketline.server.exception.CustomerNotValidException;
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.InvalidIdException;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.CustomerService;
 import io.swagger.annotations.Api;
@@ -38,11 +39,12 @@ public class CustomerEndpoint {
     public CustomerDTO findById(@PathVariable("id") Long id){
         try {
             return customerMapper.customerToCustomerDTO(customerService.findOneById(id));
-        } catch (InvalidIdException e) {
+        } catch (InvalidIdException | CustomerNotValidException e) {
             e.printStackTrace();
         }
         return null;
     }
+
 
 
 }

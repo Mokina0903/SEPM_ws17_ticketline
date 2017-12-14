@@ -30,7 +30,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public Customer findOneById(Long id) throws InvalidIdException, CustomerNotValidException {
-        if(!validateId(id)){
+        if(!validateIdOrKnr(id)){
             throw new InvalidIdException("Given id was not valid.");
         }
         Customer customer =customerRepository.findOneById(id).orElseThrow(NotFoundException::new);
@@ -55,8 +55,20 @@ public class CustomerServiceImpl implements CustomerService {
         customerRepository.save(customer);
     }
 
+    @Override
+    public Customer findByKnr(Long knr) throws InvalidIdException, CustomerNotValidException {
+        if(!validateIdOrKnr(knr)){
+            throw new InvalidIdException("No valid knr!");
+        }
+        Customer c = customerRepository.findOneByKnr(knr).orElseThrow(NotFoundException::new);
+        if(!validateCustomer(c)){
+            throw new CustomerNotValidException("Found Customer not valid!");
+        }
+        return c;
+    }
 
-    private boolean validateId(Long id){
+
+    private boolean validateIdOrKnr(Long id){
         return id >= 0;
     }
 
