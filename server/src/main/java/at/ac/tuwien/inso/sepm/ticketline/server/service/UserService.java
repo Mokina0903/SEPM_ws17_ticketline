@@ -54,7 +54,12 @@ public interface UserService {
      */
     void save(User user);
 
-    // TODO: Javadoc
+    /**
+     * update not seen News of User
+     *
+     * @param userId id of user
+     * @param newsId id of news
+     */
     void updateNotSeen( Long userId, Long newsId );
 
     /**
