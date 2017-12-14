@@ -39,7 +39,6 @@ public class MenueController implements LocalizationObserver {
     private void initialize(){
         localizationSubject.attach(this);
         lbLanguage.setText(BundleManager.getBundle().getString("test.language"));
-        localizationSubject.attach(this);
     }
 
     @FXML

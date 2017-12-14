@@ -139,6 +139,7 @@ public class MainController implements LocalizationObserver{
             springFxmlLoader.loadAndWrap("/fxml/"+ fxmlPath);
         controller = wrapper.getController();
         tab = new Tab(null, wrapper.getLoadedObject());
+        controller.setTab(tab);
         Glyph glyph = fontAwesome.create(FontAwesome.Glyph.valueOf(glyphSymbol));
         glyph.setFontSize(TAB_ICON_FONT_SIZE);
         glyph.setColor(Color.WHITE);
@@ -152,7 +153,7 @@ public class MainController implements LocalizationObserver{
             if (spMainContent.getChildren().contains(login)) {
                 spMainContent.getChildren().remove(login);
             }
-            initNewsTabPane();
+            //initNewsTabPane();
             newsController.loadNews();
             initMenue();
         } else {
