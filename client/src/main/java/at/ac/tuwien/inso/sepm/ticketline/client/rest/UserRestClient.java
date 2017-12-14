@@ -47,7 +47,7 @@ public interface  UserRestClient {
      * @param username
      * @return Integer attempts
      */
-    SimpleUserDTO blockUser(String username) throws DataAccessException;
+    void blockUser(String username) throws DataAccessException;
 
     /**
      * unblock user by username
@@ -55,7 +55,7 @@ public interface  UserRestClient {
      * @param username
      * @return Integer attempts
      */
-     SimpleUserDTO unblockUser(String username) throws DataAccessException;
+     void unblockUser(String username) throws DataAccessException;
 
 
     /**

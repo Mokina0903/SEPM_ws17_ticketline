@@ -64,13 +64,13 @@ public class SimpleUserService implements UserService {
     }
 
     @Override
-    public SimpleUserDTO blockUser(String userName) throws DataAccessException {
-        return userRestClient.blockUser(userName);
+    public void blockUser(String userName) throws DataAccessException {
+        userRestClient.blockUser(userName);
     }
 
     @Override
-    public SimpleUserDTO unblockUser(String userName) throws DataAccessException {
-        return userRestClient.unblockUser(userName);
+    public void unblockUser(String userName) throws DataAccessException {
+        userRestClient.unblockUser(userName);
     }
 
     @Override

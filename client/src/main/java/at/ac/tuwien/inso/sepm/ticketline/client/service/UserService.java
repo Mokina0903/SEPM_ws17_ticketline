@@ -53,7 +53,7 @@ public interface UserService {
      * @return UserDTO
      * @throws DataAccessException in case something went wrong
      */
-    SimpleUserDTO blockUser(String userName) throws DataAccessException;
+    void blockUser(String userName) throws DataAccessException;
 
     /**
      * unblock user by name
@@ -62,7 +62,7 @@ public interface UserService {
      * @return UserDTO
      * @throws DataAccessException in case something went wrong
      */
-    SimpleUserDTO unblockUser(String userName) throws DataAccessException;
+    void unblockUser(String userName) throws DataAccessException;
 
     /**
      * reset password by username

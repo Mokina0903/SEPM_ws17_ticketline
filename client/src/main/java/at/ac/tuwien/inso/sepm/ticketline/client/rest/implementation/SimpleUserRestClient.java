@@ -122,9 +122,7 @@ public class SimpleUserRestClient implements UserRestClient {
     }*/
 
    @Override
-    public SimpleUserDTO blockUser(String username) throws DataAccessException {
-       // TODO: Implement
-       /*
+    public void blockUser(String username) throws DataAccessException {
        try {
             ResponseEntity<SimpleUserDTO> user = restClient.postForEntity(
                 restClient.getServiceURI(USER_URL) + "/block",
@@ -132,7 +130,6 @@ public class SimpleUserRestClient implements UserRestClient {
                 SimpleUserDTO.class
             );
             LOGGER.debug("Result status code was {}", user.getStatusCode());
-            return user.getBody();
         }
         catch(HttpStatusCodeException e) {
             LOGGER.debug("Result status code was {}", e.getMessage());
@@ -144,15 +141,11 @@ public class SimpleUserRestClient implements UserRestClient {
 
             throw new DataAccessException(e.getMessage(), e);
         }
-        */
-       return null;
     }
 
 
    @Override
-    public SimpleUserDTO unblockUser(String username) throws DataAccessException {
-       // TODO: Implement
-       /*
+    public void unblockUser(String username) throws DataAccessException {
        try {
             ResponseEntity<SimpleUserDTO> user = restClient.postForEntity(
                 restClient.getServiceURI(USER_URL) + "/unblock",
@@ -160,7 +153,6 @@ public class SimpleUserRestClient implements UserRestClient {
                 SimpleUserDTO.class
             );
             LOGGER.debug("Result status code was {}", user.getStatusCode());
-            return user.getBody();
         }
         catch(HttpStatusCodeException e) {
             LOGGER.debug("Result status code was {}", e.getMessage());
@@ -172,8 +164,7 @@ public class SimpleUserRestClient implements UserRestClient {
 
             throw new DataAccessException(e.getMessage(), e);
         }
-        */
-       return null;
+
     }
 
     @Override
@@ -251,7 +242,21 @@ public class SimpleUserRestClient implements UserRestClient {
 
     @Override
     public List<SimpleUserDTO> findAll() throws DataAccessException {
-       // TODO: Implement here
-       return null;
+       try {
+            LOGGER.debug("Retrieving all users from {}", restClient.getServiceURI(USER_URL));
+            ResponseEntity<List<SimpleUserDTO>> users =
+                restClient.exchange(
+                    restClient.getServiceURI(USER_URL),
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<List<SimpleUserDTO>>() {
+                    });
+            LOGGER.debug("Result status was {} with content {}", users.getStatusCode(), users.getBody());
+            return users.getBody();
+        } catch (HttpStatusCodeException e) {
+            throw new DataAccessException("Failed retrieve news with status code " + e.getStatusCode().toString());
+        } catch (RestClientException e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
     }
 }
