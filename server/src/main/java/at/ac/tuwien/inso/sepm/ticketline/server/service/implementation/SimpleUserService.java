@@ -44,9 +44,6 @@ public class SimpleUserService implements UserService {
 
     @Override
     public User createUser(User user) {
-        // TODO: (David) solve Random ID
-        // TODO: (David) Testcases
-
         String username = user.getUserName();
         String password = user.getPassword();
         Integer role = user.getRole();
@@ -57,8 +54,12 @@ public class SimpleUserService implements UserService {
         if (password == null || password.trim().isEmpty())
             throw new EmptyFieldException("password");
 
+        if (role == null) {
+            throw new EmptyFieldException("role");
+        }
+
         if (role < 1 || role > 2)
-            throw new IllegalValueException("role = " + role);
+            throw new IllegalValueException("role (1 Admin / 2 User) = " + role);
 
         if (userRepository.findOneByUserName(user.getUserName()) != null)
             throw new AlreadyExistsException(user.getUserName());

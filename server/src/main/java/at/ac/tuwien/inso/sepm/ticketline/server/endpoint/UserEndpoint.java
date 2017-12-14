@@ -6,6 +6,7 @@ import at.ac.tuwien.inso.sepm.ticketline.server.entity.News;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.User;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.news.NewsMapper;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.user.UserMapper;
+import at.ac.tuwien.inso.sepm.ticketline.server.exception.EmptyFieldException;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.UserRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.UserService;
 import io.swagger.annotations.Api;
@@ -61,7 +62,12 @@ public class UserEndpoint {
     @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation(value = "Create a new user entry")
     public SimpleUserDTO createUser(@RequestBody SimpleUserDTO simpleUserDTO) {
-        User user = userMapper.simpleUserDTOToUser(simpleUserDTO);
+        User user = null;
+        try {
+            user = userMapper.simpleUserDTOToUser(simpleUserDTO);
+        } catch (NullPointerException e) {
+            throw new EmptyFieldException("");
+        }
         user = userService.createUser(user);
         return userMapper.userToSimpleUserDTO(user);
     }
