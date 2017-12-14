@@ -108,5 +108,23 @@ public class UserMapperTest {
         assertThat(detailedUserDTO.isBlocked() == BLOCKED);
     }
 
-    // TODO: (Test) simpleUserDTOToUser
+    @Test
+    public void shouldMapSimpleUserDTOToUser() {
+        SimpleUserDTO simpleUserDTO = SimpleUserDTO.builder()
+            .id(USER_ID)
+            .userName(USER_NAME)
+            .password(USER_PASSWORD)
+            .role(USER_ROLE)
+            .blocked(BLOCKED)
+            .attempts(4)
+            .build();
+        User user = userMapper.simpleUserDTOToUser(simpleUserDTO);
+        assertThat(user).isNotNull();
+        assertThat(simpleUserDTO.getId()).isEqualTo(USER_ID);
+        assertThat(simpleUserDTO.getUserName()).isEqualTo(USER_NAME);
+        assertThat(simpleUserDTO.getPassword()).isEqualTo(USER_PASSWORD);
+        assertThat(simpleUserDTO.getRole()).isEqualTo(USER_ROLE);
+        assertThat(simpleUserDTO.isBlocked() == BLOCKED);
+        assertThat(simpleUserDTO.getAttempts() == 4);
+    }
 }
