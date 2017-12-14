@@ -19,15 +19,15 @@
         <GridPane hgap="10" vgap="20">
 
                 <Label text="Username: " GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-                <TextField fx:id="usernaeTF" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                <TextField fx:id="usernameTF" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
 
 
                 <Label text="Password: " GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-                <TextField fx:id="passwordTF" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                <PasswordField fx:id="passwordPF" promptText="%authenticate.password" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
 
                 <Label text="Confirm: " GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-                <TextField fx:id="passwordConfirmTF" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                <PasswordField fx:id="passwordConfirmPF" promptText="%authenticate.password" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
 
                 <Label text="Role: " GridPane.columnIndex="0" GridPane.rowIndex="3"/>
@@ -41,6 +41,7 @@
                 </ComboBox>
 
                 <Button fx:id="saveBtn" onAction="#saveUserData" text="Save" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+                <Button fx:id="backBtn" onAction="#goBackWithoutSave" text="Back" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
 
             <columnConstraints>
                 <ColumnConstraints />
