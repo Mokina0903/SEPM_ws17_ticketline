@@ -10,11 +10,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+
 import javax.swing.*;
 import java.time.LocalDate;
 import java.time.OffsetTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
@@ -54,8 +56,8 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public void updateCustomer(Customer customer) throws CustomerNotValidException {
-       // if(!validateCustomer(customer)){
-       // throw new CustomerNotValidException("Customer was not valid!"); }
+        if(!validateCustomer(customer)){
+        throw new CustomerNotValidException("Customer was not valid!"); }
         OffsetTime now = OffsetTime.now(ZoneOffset.UTC);
         String format = now.format(DateTimeFormatter.ISO_LOCAL_TIME);
         format.replace("-", "");
@@ -105,6 +107,9 @@ public class CustomerServiceImpl implements CustomerService {
         if(customer.getBirthDate().isAfter(LocalDate.now())){
             return false;
         }
+        if(ChronoUnit.DAYS.between(LocalDate.now(),customer.getBirthDate())<14*365){
+            return false;
+        }
         if(customer.getKnr()!= null && customer.getKnr()<0){
             return false;
         }
@@ -112,7 +117,7 @@ public class CustomerServiceImpl implements CustomerService {
             return false;
         }
         if(customer.getEmail()!= null && !customer.getEmail().isEmpty()){
-            if(!customer.getEmail().contains("@")){
+            if(!customer.getEmail().contains("@") && !customer.getEmail().contains(".")){
                 return false;
             }
         }
