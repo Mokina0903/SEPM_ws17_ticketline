@@ -4,13 +4,10 @@ import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.hall.DetailedHallDTO
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.hall.SimpleHallDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.location.DetailedLocationDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.location.SimpleLocationDTO;
-import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Location;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.eventLocation.hall.HallMapper;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.eventLocation.location.LocationMapper;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.eventLocation.seat.SeatMapper;
-import at.ac.tuwien.inso.sepm.ticketline.server.repository.Location.HallRepository;
-import at.ac.tuwien.inso.sepm.ticketline.server.repository.Location.LocationRepository;
-import at.ac.tuwien.inso.sepm.ticketline.server.repository.Location.SeatRepository;
+import at.ac.tuwien.inso.sepm.ticketline.server.service.LocationService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,18 +22,14 @@ import java.util.List;
 @Api(value = "eventlocation")
 public class LocationEndpoint {
 
-    private final LocationRepository locationRepository;
-    private final HallRepository hallRepository;
-    private final SeatRepository seatRepository;
+    private final LocationService locationService;
     private final LocationMapper locationMapper;
     private final HallMapper hallMapper;
     private final SeatMapper seatMapper;
 
-    public LocationEndpoint( LocationRepository locationRepository, HallRepository hallRepository, SeatRepository seatRepository,
+    public LocationEndpoint( LocationService locationService,
                              LocationMapper locationMapper, HallMapper hallMapper, SeatMapper seatMapper ) {
-        this.locationRepository = locationRepository;
-        this.hallRepository = hallRepository;
-        this.seatRepository = seatRepository;
+        this.locationService = locationService;
         this.locationMapper = locationMapper;
         this.hallMapper = hallMapper;
         this.seatMapper = seatMapper;
@@ -46,7 +39,8 @@ public class LocationEndpoint {
     @ApiOperation(value = "Get detailed information about a specific location entry")
     public DetailedLocationDTO findLocationById( @PathVariable Long locationId) {
 
-        DetailedLocationDTO detailedLocationDTO = locationMapper.locationToDetailedLocationDTO(locationRepository.findOne(locationId));
+        DetailedLocationDTO detailedLocationDTO =
+            locationMapper.locationToDetailedLocationDTO(locationService.findLocationById(locationId));
 
         return detailedLocationDTO;
     }
@@ -55,7 +49,7 @@ public class LocationEndpoint {
     @ApiOperation(value = "Get simple information about a all location entries")
     public List<SimpleLocationDTO> findAllLocations() {
 
-        List<SimpleLocationDTO> locations = locationMapper.locationToSimpleLocationDTO(locationRepository.findAll());
+        List<SimpleLocationDTO> locations = locationMapper.locationToSimpleLocationDTO(locationService.findAllLocations());
 
         return locations;
     }
@@ -64,7 +58,7 @@ public class LocationEndpoint {
     @ApiOperation(value = "Get detailed information about a specific hall entry")
     public DetailedHallDTO findHallById( @PathVariable Long hallId) {
 
-        DetailedHallDTO detailedHallDTO = hallMapper.hallToDetailedHallDTO(hallRepository.findOne(hallId));
+        DetailedHallDTO detailedHallDTO = hallMapper.hallToDetailedHallDTO(locationService.findHallById(hallId));
 
         return detailedHallDTO;
     }
@@ -73,7 +67,7 @@ public class LocationEndpoint {
     @ApiOperation(value = "Get simple information about a all hall entries")
     public List<SimpleHallDTO> findAllHalls() {
 
-        List<SimpleHallDTO> halls = hallMapper.hallToSimpleHallDTO(hallRepository.findAll());
+        List<SimpleHallDTO> halls = hallMapper.hallToSimpleHallDTO(locationService.findAllHalls());
 
         return halls;
     }
