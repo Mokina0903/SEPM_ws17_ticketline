@@ -34,6 +34,7 @@ public class UserEndpointTest extends BaseIntegrationTest {
 
     @Test
     public void loginAsAnonymous() {
+        super.setupDefaultUsers();
         Response response = RestAssured
             .given()
             .contentType(ContentType.JSON)
