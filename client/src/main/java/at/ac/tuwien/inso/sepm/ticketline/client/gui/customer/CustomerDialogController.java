@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.Glyph;
@@ -23,9 +24,16 @@ import org.springframework.stereotype.Component;
 
 
 @Component
-public class CustomerDialogController implements LocalizationObserver{
+public class CustomerDialogController implements LocalizationObserver {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CustomerDialogController.class);
+
+    @FXML
+    public TextField tfLname;
+    @FXML
+    public TextField tfBirthDate;
+    @FXML
+    public TextField tfEmail;
 
     @FXML
     private Label lbCustomerNumber;
@@ -70,14 +78,17 @@ public class CustomerDialogController implements LocalizationObserver{
 
 
     @FXML
-    void initialize(){
+    void initialize() {
         //TODO: implement pre-filling of all Textfields/Boxes + visability issues of textfields
         localizationSubject.attach(this);
-     //   lbCustomerNumber = (customer == null? "" : customer.getcustomerNumber);
+        //   lbCustomerNumber = (customer == null? "" : customer.getcustomerNumber);
 
         lbInvalidName.setVisible(false);
         lbInvalidBirthdate.setVisible(false);
         lbInvalidEmail.setVisible(false);
+        lbCustomerNumber.setVisible(false);
+        lbCustomerNumberText.setVisible(false);
+
 
         setButtonGraphic(btOk, "CHECK", Color.OLIVE);
         setButtonGraphic(btCancel, "TIMES", Color.CRIMSON);
@@ -89,9 +100,18 @@ public class CustomerDialogController implements LocalizationObserver{
         button.setGraphic(glyph);
     }
 
-    void initializeData(CustomerDTO customer, Node oldContent){
+    void initializeData(CustomerDTO customer, Node oldContent) {
         this.customer = customer;
         this.oldContent = oldContent;
+
+        if (customer != null) {
+            if (customer.getKnr() != null) {
+                lbCustomerNumber.setVisible(true);
+                lbCustomerNumberText.setText(String.valueOf(customer.getKnr()));
+                lbCustomerNumberText.setVisible(true);
+            }
+        }
+
     }
 
     @FXML
@@ -102,6 +122,7 @@ public class CustomerDialogController implements LocalizationObserver{
     @FXML
     public void handleOk(ActionEvent actionEvent) {
         //todo save customer
+
     }
 
     @Override
