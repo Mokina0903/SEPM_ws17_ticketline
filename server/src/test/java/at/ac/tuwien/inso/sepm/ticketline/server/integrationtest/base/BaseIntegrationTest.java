@@ -1,7 +1,9 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.integrationtest.base;
 
 import at.ac.tuwien.inso.sepm.ticketline.server.configuration.JacksonConfiguration;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.News;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.User;
+import at.ac.tuwien.inso.sepm.ticketline.server.repository.NewsRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.UserRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.security.AuthenticationConstants;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.UserService;
@@ -19,6 +21,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.time.LocalDateTime;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -53,11 +57,15 @@ public abstract class BaseIntegrationTest {
     @Autowired
     protected UserService userService;
 
+    @Autowired
+    private NewsRepository newsRepository;
+
     protected String validUserTokenWithPrefix;
     protected String validAdminTokenWithPrefix;
 
     @Before
     public void beforeBase() throws Exception {
+        setupDefaultNews();
         setupDefaultUsers();
 
         RestAssured.baseURI = SERVER_HOST;
@@ -86,13 +94,33 @@ public abstract class BaseIntegrationTest {
         userRepository.save(User.builder()
             .userName(ADMIN_USERNAME)
             .password(encoder.encode(ADMIN_PASSWORD))
+            .notSeen(newsRepository.findAllByOrderByPublishedAtDesc())
             .role(1)
             .build());
 
         userRepository.save(User.builder()
             .userName(USER_USERNAME)
             .password(encoder.encode(USER_PASSWORD))
+            .notSeen(newsRepository.findAllByOrderByPublishedAtDesc())
             .role(2)
             .build());
+    }
+
+    // TODO: (Tutorin) Is this correct?
+    public void setupDefaultNews(){
+        String TEST_NEWS_TEXT = "TestNewsText";
+        String TEST_NEWS_TITLE = "title";
+        LocalDateTime TEST_NEWS_PUBLISHED_AT =
+            LocalDateTime.of(2016, 11, 13, 12, 15, 0, 0);
+        long TEST_NEWS_ID = 1L;
+
+        if (newsRepository.findAll().size() == 0) {
+            newsRepository.save(News.builder()
+                .id(TEST_NEWS_ID)
+                .title(TEST_NEWS_TITLE)
+                .text(TEST_NEWS_TEXT)
+                .publishedAt(TEST_NEWS_PUBLISHED_AT)
+                .build());
+        }
     }
 }
