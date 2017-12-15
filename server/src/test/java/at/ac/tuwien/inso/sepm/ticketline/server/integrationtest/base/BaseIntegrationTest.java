@@ -4,6 +4,7 @@ import at.ac.tuwien.inso.sepm.ticketline.server.configuration.JacksonConfigurati
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.User;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.UserRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.security.AuthenticationConstants;
+import at.ac.tuwien.inso.sepm.ticketline.server.service.UserService;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.implementation.SimpleHeaderTokenAuthenticationService;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.config.ObjectMapperConfig;
@@ -44,10 +45,13 @@ public abstract class BaseIntegrationTest {
 
 
     @Autowired
-    private PasswordEncoder encoder;
+    protected PasswordEncoder encoder;
 
     @Autowired
     protected UserRepository userRepository;
+
+    @Autowired
+    protected UserService userService;
 
     protected String validUserTokenWithPrefix;
     protected String validAdminTokenWithPrefix;

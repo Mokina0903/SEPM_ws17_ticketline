@@ -1,6 +1,7 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.integrationtest;
 
 
+import at.ac.tuwien.inso.sepm.ticketline.rest.user.SimpleUserDTO;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.User;
 import at.ac.tuwien.inso.sepm.ticketline.server.integrationtest.base.BaseIntegrationTest;
 import at.ac.tuwien.inso.sepm.ticketline.server.security.AuthenticationConstants;
@@ -10,6 +11,7 @@ import com.jayway.restassured.response.Response;
 import org.assertj.core.util.Strings;
 import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
@@ -19,6 +21,9 @@ import static org.hamcrest.core.Is.is;
 public class UserEndpointTest extends BaseIntegrationTest {
 
     private static final String USER_ENDPOINT = "/user";
+    private static final String USER_ENDPOINT_BLOCK = "/user/block";
+    private static final String USER_ENDPOINT_FIND = "/user/find/{userName}";
+    private static final String USER_ENDPOINT_RESET = "/user/resetPassword";
     private static final String SPECIFIC_USER_PATH = "/{userId}";
 
     private static final String TEST_USER_TEXT = "TestUserText";
@@ -107,6 +112,7 @@ public class UserEndpointTest extends BaseIntegrationTest {
 
         int afterLogin = userRepository.findOneByUserName(ADMIN_USERNAME).getAttempts();
 
+        System.out.println(beforeLogin + "David" + afterLogin);
         Assert.assertTrue("Attemptreset does not work correct",beforeLogin < afterLogin);
 
     }
@@ -119,54 +125,54 @@ public class UserEndpointTest extends BaseIntegrationTest {
     // TODO: (TEST) Add New Users (Admin/Seller) (1/2) BUS
 
     @Test
-    public void loginWithCorrectNameAndWrongPassword(){
-        // TODO: (Florian) Bitte deine Tests noch hier implementieren
+    public void blockUser(){
+        super.setupDefaultUsers();
 
-        /*
-        try {
-            String wrong = Strings
-                .join(
-                    AuthenticationConstants.TOKEN_PREFIX,
-                    super.simpleHeaderTokenAuthenticationService.authenticate(ADMIN_USERNAME, ADMIN_PASSWORD.substring(2)).getCurrentToken())
-                .with(" ");
+        super.simpleHeaderTokenAuthenticationService.authenticate(ADMIN_USERNAME, ADMIN_PASSWORD).getCurrentToken();
 
-        }catch (Exception e){
+        User blockUser = userRepository.findOneByUserName(USER_USERNAME);
 
-        } finally {
-            User user = userRepository.findOneByUserName(ADMIN_USERNAME);
-            System.out.println(user.getAttempts());
-        }
+        userService.blockUser(blockUser);
 
-        try {
-            String wrong = Strings
-                .join(
-                    AuthenticationConstants.TOKEN_PREFIX,
-                    super.simpleHeaderTokenAuthenticationService.authenticate(ADMIN_USERNAME, ADMIN_PASSWORD.substring(2)).getCurrentToken())
-                .with(" ");
+        Assert.assertTrue("Could not block user.",
+            blockUser.isBlocked());
 
-        }catch (Exception e){
+    }
 
-        } finally {
-            User user = userRepository.findOneByUserName(ADMIN_USERNAME);
-            System.out.println(user.getAttempts());
-        }
 
-        /*
-        wrong = Strings
-            .join(
-                AuthenticationConstants.TOKEN_PREFIX,
-                super.simpleHeaderTokenAuthenticationService.authenticate(ADMIN_USERNAME, ADMIN_PASSWORD.substring(2)).getCurrentToken())
-            .with(" ");
-        wrong = Strings
-            .join(
-                AuthenticationConstants.TOKEN_PREFIX,
-                super.simpleHeaderTokenAuthenticationService.authenticate(ADMIN_USERNAME, ADMIN_PASSWORD).getCurrentToken())
-            .with(" ");
-            */
+/*
+    @Test
+    public void BlockUserAsAdmin() {
+        //super.setupDefaultUsers();
+        Response response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
+            .body(SimpleUserDTO.builder()
+                .userName(USER_USERNAME)
+                .build())
+            .when().post(USER_ENDPOINT_BLOCK)
+            .then().extract().response();
+
+        System.out.println(response.asString());
+
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
 
     }
 
 
 
+    @Test
+    public void BlockUserAsAdmin() {
+        Response response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
+            .when().get(USER_ENDPOINT_FIND, "Florian")
+            .then().extract().response();
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
+
+    }
+*/
 
 }
