@@ -1,5 +1,6 @@
 package at.ac.tuwien.inso.sepm.ticketline.client.gui.customer;
 
+import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationObserver;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationSubject;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.MainController;
@@ -144,8 +145,13 @@ public class CustomerDialogController implements LocalizationObserver {
         builder.mail(mail);
         customer = builder.build();
 
-        customerService.saveCustomer(customer);
-
+        try {
+            customerService.saveCustomer(customer);
+        } catch (DataAccessException e) {
+            //TODO: add alert
+            e.printStackTrace();
+        }
+        customerController.getCustomerTab().setContent(oldContent);
     }
 
     @Override
