@@ -89,7 +89,7 @@ public class CustomerDTO {
         private String surname;
 
 
-        private CustomerDTOBuilder() {
+        public CustomerDTOBuilder() {
         }
 
         public CustomerDTOBuilder id(Long id){

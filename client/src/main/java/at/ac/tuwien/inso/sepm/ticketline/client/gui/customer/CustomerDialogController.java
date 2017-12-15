@@ -5,11 +5,13 @@ import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationSubject;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.MainController;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
 import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
+import at.ac.tuwien.inso.sepm.ticketline.rest.news.DetailedNewsDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
@@ -22,6 +24,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+
 
 @Component
 public class CustomerDialogController implements LocalizationObserver {
@@ -31,9 +35,12 @@ public class CustomerDialogController implements LocalizationObserver {
     @FXML
     public TextField tfLname;
     @FXML
-    public TextField tfBirthDate;
+    public DatePicker dpBirthdate;
     @FXML
     public TextField tfEmail;
+    @FXML
+    public TextField tfFirstName;
+
 
     @FXML
     private Label lbCustomerNumber;
@@ -121,7 +128,20 @@ public class CustomerDialogController implements LocalizationObserver {
 
     @FXML
     public void handleOk(ActionEvent actionEvent) {
-        //todo save customer
+        String mail = tfEmail.getText();
+        String surname = tfLname.getText();
+        LocalDate birthDate = dpBirthdate.getValue();
+        String firstname = tfFirstName.getText();
+
+        CustomerDTO customer = new CustomerDTO();
+        CustomerDTO.CustomerDTOBuilder builder = new CustomerDTO.CustomerDTOBuilder();
+        builder.birthDate(birthDate);
+        builder.name(firstname);
+        builder.surname(surname);
+        builder.mail(mail);
+        customer = builder.build();
+
+
 
     }
 
