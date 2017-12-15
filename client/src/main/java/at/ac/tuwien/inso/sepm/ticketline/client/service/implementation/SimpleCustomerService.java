@@ -22,12 +22,12 @@ public class SimpleCustomerService implements CustomerService{
     }
 
     @Override
-    public List<CustomerDTO> findByName(String name) throws DataAccessException {
-        return null;
+    public List<CustomerDTO> findByName(String name, int pageIndex, int customersPerPage) throws DataAccessException {
+        return customerRestClient.findByName(name, pageIndex, customersPerPage);
     }
 
     @Override
     public List<CustomerDTO> findByNumber(Long customerNumber) throws DataAccessException {
-        return null;
+        return customerRestClient.findByNumber(customerNumber);
     }
 }

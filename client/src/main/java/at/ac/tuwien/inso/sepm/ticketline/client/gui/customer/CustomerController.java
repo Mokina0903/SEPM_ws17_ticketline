@@ -5,18 +5,16 @@ import at.ac.tuwien.inso.sepm.ticketline.client.gui.*;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.CustomerService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
 import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
-
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
+import javafx.beans.binding.Bindings;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.paint.Color;
 import javafx.util.Callback;
 import org.controlsfx.glyphfont.FontAwesome;
-import org.controlsfx.glyphfont.Glyph;
 import org.controlsfx.glyphfont.GlyphFont;
 import org.controlsfx.glyphfont.GlyphFontRegistry;
 import org.slf4j.Logger;
@@ -24,10 +22,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Component
@@ -35,15 +31,13 @@ public class CustomerController extends TabElement implements LocalizationObserv
 
     private static final Logger LOGGER = LoggerFactory.getLogger(at.ac.tuwien.inso.sepm.ticketline.client.gui.customer.CustomerController.class);
 
-
-    @FXML
-    public Pagination pagination;
-
-
     @FXML
     private TabHeaderController tabHeaderController;
     @FXML
     public BorderPane customerOverviewRoot;
+
+    @FXML
+    public Pagination pagination;
 
     @FXML
     private Button btNew;
@@ -61,13 +55,21 @@ public class CustomerController extends TabElement implements LocalizationObserv
     @FXML
     private TextField tfSearch;
 
+    private TableColumn<CustomerDTO, String> tcName;
+    private TableColumn<CustomerDTO, String> tcSurname;
+    private TableColumn<CustomerDTO, LocalDate> tcBirthdate;
+    private TableColumn<CustomerDTO, String> tcMail;
+    private TableColumn<CustomerDTO, String> tcNumber;
+
     private Tab customerTab;
-    private int customersPerPage = 3;
+    private final int CUSTOMER_PER_PAGE = 12;
 
     private final MainController mainController;
     private final SpringFxmlLoader springFxmlLoader;
     private final CustomerService customerService;
     private GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
+
+    private List<CustomerDTO> customer;
 
     @Autowired
     private LocalizationSubject localizationSubject;
@@ -94,55 +96,75 @@ public class CustomerController extends TabElement implements LocalizationObserv
         btEdit.setGraphic(fontAwesome.create("PENCIL_SQUARE_ALT"));
         btTickets.setGraphic(fontAwesome.create("TICKET"));
 
-
-        //    lbNoMatch.setVisible(false);
-        initTableView();
-
-
+        lbNoMatch.setVisible(false);
     }
 
 
+    public void preparePagination() {
+        //all customer at start or searchfield is empty
+        try {
+            customer = customerService.findAll(0, Integer.MAX_VALUE);
+            preparePagination(customer);
+        } catch (DataAccessException e) {
+            LOGGER.warn("Could not access total number of customers");
+        }
 
-    public void preparePagination(){
-        //TODO: get customer count for right calculation of the PageCount
-        pagination.setPageCount(20);
-        pagination.setCurrentPageIndex(0);
-        pagination.setPageFactory(new Callback<Integer, Node>() {
-
-            @Override
-            public Node call(Integer pageIndex) {
-                return createPage(pageIndex);
-            }
-        });
     }
 
-   private List<CustomerDTO> loadPage(int pageIndex){
+    public void preparePagination(List<CustomerDTO> customer) {
+
+        if (customer == null || customer.isEmpty()) {
+            LOGGER.info("no search match");
+            lbNoMatch.setVisible(true);
+            //set empty tv
+        } else {
+            LOGGER.info("search matches");
+
+            lbNoMatch.setVisible(false);
+            int numOfCustomers = customer.size();
+            pagination.setPageCount(numOfCustomers / CUSTOMER_PER_PAGE + 1);
+            pagination.setCurrentPageIndex(0);
+        }
+            pagination.setPageFactory(new Callback<Integer, Node>() {
+
+                @Override
+                public Node call(Integer pageIndex) {
+                    return createPage(pageIndex);
+                }
+            });
+    }
+
+    private List<CustomerDTO> loadPage(int pageIndex) {
         List<CustomerDTO> list = new ArrayList<CustomerDTO>();
         try {
-            list = customerService.findAll(pageIndex, customersPerPage);
+            //todo search according to text in field: null -> all, string -> names, int -> customernumber
+            list = customerService.findAll(pageIndex, CUSTOMER_PER_PAGE);
         } catch (DataAccessException e) {
-            e.printStackTrace();
+            LOGGER.warn("Could not access find all customers");
         }
         return list;
     }
 
-    private Node createPage(int pageIndex){
-       pagination.setCurrentPageIndex(pageIndex);
+    private Node createPage(int pageIndex) {
+        pagination.setCurrentPageIndex(pageIndex);
         List<CustomerDTO> costumers = loadPage(pageIndex);
 
         TableView<CustomerDTO> tvCustomer = new TableView<>();
 
-        TableColumn<CustomerDTO, String> tcName = new TableColumn<>();
-        TableColumn<CustomerDTO, String> tcSurname = new TableColumn<>();
-        TableColumn<CustomerDTO, LocalDate> tcBirthdate = new TableColumn<>();
-        TableColumn<CustomerDTO, String> tcMail = new TableColumn<>();
-        TableColumn<CustomerDTO, String> tcNumber = new TableColumn<>();
+        tvCustomer.setFixedCellSize(25);
+        tvCustomer.prefHeightProperty().bind(Bindings.size(tvCustomer.getItems()).multiply(tvCustomer.getFixedCellSize()).add(30));
 
-        tcName.setText("Name");
-        tcSurname.setText("Surname");
-        tcBirthdate.setText("Birthdate");
+        tcName = new TableColumn<>();
+        tcSurname = new TableColumn<>();
+        tcBirthdate = new TableColumn<>();
+        tcMail = new TableColumn<>();
+        tcNumber = new TableColumn<>();
+
+        tcName.setText(BundleManager.getBundle().getString("customer.fname"));
+        tcSurname.setText(BundleManager.getBundle().getString("customer.lname"));
+        tcBirthdate.setText(BundleManager.getBundle().getString("customer.birthdate"));
+        tcNumber.setText(BundleManager.getBundle().getString("customer.number"));
         tcMail.setText("E-Mail");
-        tcNumber.setText("Number");
 
         tcBirthdate.setCellValueFactory(new PropertyValueFactory<>("birthDate"));
         tcName.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -157,15 +179,28 @@ public class CustomerController extends TabElement implements LocalizationObserv
         return tvCustomer;
     }
 
-    private void initTableView() {
-        //todo implement me
 
-       /* try {
-            ObservableList<CustomerDTO> orders = FXCollections.observableList(customerService.findAll());
 
-         } catch (DataAccessException e) {
-           // e.printStackTrace();
-        }*/
+    @FXML
+    private void search(ActionEvent actionEvent) throws DataAccessException {
+
+        String searchText = tfSearch.getText();
+        if (searchText.isEmpty()) {
+            LOGGER.info("Empty search");
+            preparePagination();
+        } else {
+
+            try {
+                LOGGER.info("Search for Customer Number");
+                long customerNumber = Long.parseLong(tfSearch.getText());
+                customer = customerService.findByNumber(customerNumber);
+                preparePagination(customer);
+            } catch (NumberFormatException e) {
+                LOGGER.info("Search for Customer Name");
+                customer = customerService.findByName(searchText, 0, CUSTOMER_PER_PAGE);
+                preparePagination(customer);
+            }
+        }
     }
 
     @FXML
@@ -202,8 +237,10 @@ public class CustomerController extends TabElement implements LocalizationObserv
         tfSearch.setText(BundleManager.getBundle().getString("customer.searchField"));
         lbNoMatch.setText(BundleManager.getBundle().getString("customer.noMatches"));
 
-
-
+        tcName.setText(BundleManager.getBundle().getString("customer.fname"));
+        tcSurname.setText(BundleManager.getBundle().getString("customer.lname"));
+        tcBirthdate.setText(BundleManager.getBundle().getString("customer.birthdate"));
+        tcNumber.setText(BundleManager.getBundle().getString("customer.number"));
         //todo update TVcolumns
     }
 

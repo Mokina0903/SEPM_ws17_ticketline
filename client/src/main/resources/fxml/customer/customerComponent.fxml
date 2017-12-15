@@ -34,7 +34,7 @@
                     <children>
                         <Label fx:id="lbSearch" text="%menu.search" />
                         <TextField fx:id="tfSearch" prefHeight="26.0" prefWidth="343.0" promptText="%customer.searchField" GridPane.columnIndex="1" />
-                        <Button fx:id="btSearch" mnemonicParsing="false" text="%menu.search" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Button fx:id="btSearch" mnemonicParsing="false" onAction="#search" text="%menu.search" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <Label fx:id="lbNoMatch" text="%customer.noMatches" textFill="#cc1d1d" GridPane.rowIndex="1" />
                     </children>
                     <VBox.margin>

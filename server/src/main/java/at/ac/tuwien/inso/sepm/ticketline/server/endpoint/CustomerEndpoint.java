@@ -8,17 +8,23 @@ import at.ac.tuwien.inso.sepm.ticketline.server.service.CustomerService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import net.bytebuddy.matcher.NullMatcher;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import javax.crypto.Cipher;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 @RestController
 @RequestMapping(value = "/customer")
 @Api(value = "customer")
 public class CustomerEndpoint {
+
+    private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(CustomerEndpoint.class);
+
     private final CustomerMapper customerMapper;
     private final CustomerService customerService;
 
@@ -46,9 +52,12 @@ public class CustomerEndpoint {
 
     @RequestMapping(value="/findWithKnr/{knr}", method = RequestMethod.GET)
     @ApiOperation(value = "Get one spezific customer entry by knr")
-    public CustomerDTO findByKnr(@PathVariable("knr") long knr){
+    public List<CustomerDTO> findByKnr(@PathVariable("knr") long knr){
+        LOGGER.info("Finding by KNR in CustomerEndpoint");
         try {
-            return customerMapper.customerToCustomerDTO(customerService.findByKnr(knr));
+            List<CustomerDTO> customer = new ArrayList<CustomerDTO>();
+            customer.add(customerMapper.customerToCustomerDTO(customerService.findByKnr(knr)));
+            return customer;
         } catch (InvalidIdException | CustomerNotValidException e) {
             e.printStackTrace();
         }
