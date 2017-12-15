@@ -116,6 +116,8 @@ public class Event {
         this.hall = hall;
     }
 
+    public static EventBuilder builder(){return new EventBuilder();}
+
     @Override
     public boolean equals( Object o ) {
         if (this == o) return true;

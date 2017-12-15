@@ -1,8 +1,10 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.datagenerator;
 
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Hall;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Location;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Seat;
+import at.ac.tuwien.inso.sepm.ticketline.server.repository.EventRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.Location.HallRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.Location.LocationRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.Location.SeatRepository;
@@ -13,27 +15,35 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Profile("generateData")
 @Component
-public class LocationDataGenerator {
+public class EventLocationDataGenerator {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(LocationDataGenerator.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(EventLocationDataGenerator.class);
     private static final int NUMBER_OF_LOCATIONS_TO_GENERATE = 10;
+    private static final int NUMBER_OF_EVENTS_TO_GENERATE = 50;
 
     private final LocationRepository locationRepository;
     private final SeatRepository seatRepository;
     private final HallRepository hallRepository;
+    private final EventRepository eventRepository;
     private final Faker faker;
 
-    public LocationDataGenerator(LocationRepository locationRepository, SeatRepository seatRepository, HallRepository hallRepository) {
+    public EventLocationDataGenerator( LocationRepository locationRepository, SeatRepository seatRepository,
+                                       HallRepository hallRepository, EventRepository eventRepository) {
         this.locationRepository = locationRepository;
         this.seatRepository = seatRepository;
         this.hallRepository = hallRepository;
+        this.eventRepository = eventRepository;
         faker = new Faker();
     }
+
 
     @PostConstruct
     private void generateLocations() {
@@ -90,6 +100,34 @@ public class LocationDataGenerator {
                 LOGGER.debug("saving location {}", location);
                 locationRepository.save(location);
 
+            }
+        }
+        if (eventRepository.count() > 0) {
+            LOGGER.info("events already generated");
+        } else {
+            LOGGER.info("generating {} event entries", NUMBER_OF_EVENTS_TO_GENERATE);
+
+            for (int i = 0; i < NUMBER_OF_EVENTS_TO_GENERATE; i++) {
+
+                LocalDateTime start=LocalDateTime.ofInstant(
+                    faker.date()
+                        .past(365 * 3, TimeUnit.DAYS).
+                        toInstant(),
+                    ZoneId.systemDefault()
+                );
+
+                Event event = Event.builder()
+                    .startOfEvent(start)
+                    .endOfEvent(start.plusHours(2))
+                    .artistFirstname(faker.name().firstName())
+                    .artistLastName(faker.name().lastName())
+                    .price(faker.number().numberBetween(5L,100L))
+                    .description(faker.lorem().paragraph())
+                    .title(faker.lorem().characters(20,100))
+                    .hall(hallRepository.findAll().get(faker.number().numberBetween(0,(int)hallRepository.count())))
+                    .build();
+                LOGGER.debug("saving event {}", event);
+                eventRepository.save(event);
             }
         }
     }
