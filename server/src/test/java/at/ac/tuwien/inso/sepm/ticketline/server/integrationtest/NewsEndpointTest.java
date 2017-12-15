@@ -37,9 +37,6 @@ public class NewsEndpointTest extends BaseIntegrationTest {
         LocalDateTime.of(2016, 11, 13, 12, 15, 0, 0);
     private static final long TEST_NEWS_ID = 1L;
 
-    @Autowired
-    private NewsRepository newsRepository;
-
     @Test
     public void findAllNewsUnauthorizedAsAnonymous() {
         Response response = RestAssured
@@ -216,18 +213,27 @@ public class NewsEndpointTest extends BaseIntegrationTest {
             .build()));
     }
 
-    //ToDO: Tests for findNotSeenByUser, findOldNewsByUser,
-    //TODo: test to check if publishNews automatically adds news to users notSeen
+    // TODO: (TEST) for findNotSeenByUser, findOldNewsByUser,
+    // TODO: (TEST) to check if publishNews automatically adds news to users notSeen
+    // TODO: (TEST) create new User -> new User has all messages as unseen
 
-    // TODO: Is this correct?
-    public void setupDefaultNews(){
-        if (newsRepository.findAll().size() == 0) {
-            newsRepository.save(News.builder()
+    @Test
+    public void findNotSeenByUserAsUser(){
+        setupDefaultNews();
+        Response response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .header(HttpHeaders.AUTHORIZATION, validUserTokenWithPrefix)
+            .when().get(NEWS_ENDPOINT+"/notSeen/{userId}",1)
+            .then().extract().response();
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
+        Assert.assertThat(Arrays.asList(response.as(SimpleNewsDTO[].class)), is(Collections.singletonList(
+            SimpleNewsDTO.builder()
                 .id(TEST_NEWS_ID)
                 .title(TEST_NEWS_TITLE)
-                .text(TEST_NEWS_TEXT)
+                .summary(TEST_NEWS_TEXT)
                 .publishedAt(TEST_NEWS_PUBLISHED_AT)
-                .build());
-        }
+                .build())));
     }
+
 }
