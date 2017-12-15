@@ -1,6 +1,7 @@
 package at.ac.tuwien.inso.sepm.ticketline.client.rest.implementation;
 
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
+import at.ac.tuwien.inso.sepm.ticketline.client.exception.SearchNoMatchException;
 import at.ac.tuwien.inso.sepm.ticketline.client.rest.CustomerRestClient;
 import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
 import org.slf4j.Logger;
@@ -70,7 +71,7 @@ public class SimpleCustomerRestClient implements CustomerRestClient{
     }
 
     @Override
-    public List<CustomerDTO> findByNumber(Long customerNumber) throws DataAccessException {
+    public List<CustomerDTO> findByNumber(Long customerNumber) throws DataAccessException, SearchNoMatchException {
         try {
             LOGGER.debug("Retrieving all costumers from {}", restClient.getServiceURI(CUSTOMER_URL+"/findWithKnr/"+customerNumber));
             ResponseEntity<List<CustomerDTO>> customer =
@@ -83,6 +84,9 @@ public class SimpleCustomerRestClient implements CustomerRestClient{
             LOGGER.debug("Result status was {} with content {}", customer.getStatusCode(), customer.getBody());
             return customer.getBody();
         } catch (HttpStatusCodeException e) {
+            if (e.getStatusCode().value() == 404) {
+                throw new SearchNoMatchException();
+            }
             throw new DataAccessException("Failed retrieve customer with status code " + e.getStatusCode().toString());
         } catch (RestClientException e) {
             throw new DataAccessException(e.getMessage(), e);

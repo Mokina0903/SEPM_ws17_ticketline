@@ -110,6 +110,7 @@ public class SecurityConfiguration{
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .exceptionHandling().authenticationEntryPoint((req, res, aE) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED)).and()
                 .authorizeRequests()
+                .antMatchers(HttpMethod.GET, "/customer/**").hasRole("USER")
                 .antMatchers(HttpMethod.OPTIONS).permitAll()
                 .antMatchers(HttpMethod.POST,
                     "/authentication",
@@ -122,9 +123,9 @@ public class SecurityConfiguration{
                     "/webjars/springfox-swagger-ui/**",
                     "/swagger-ui.html",
                     "/user/**/getAttempts",
-                    "/user/**/isBlocked",
+                    "/user/**/isBlocked"
                     //todo only authorized users?
-                    "/customer/**"
+
                     // add here methods that need to omit security
                 )
                 .permitAll()

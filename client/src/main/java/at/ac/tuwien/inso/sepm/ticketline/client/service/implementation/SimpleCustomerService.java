@@ -1,6 +1,7 @@
 package at.ac.tuwien.inso.sepm.ticketline.client.service.implementation;
 
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
+import at.ac.tuwien.inso.sepm.ticketline.client.exception.SearchNoMatchException;
 import at.ac.tuwien.inso.sepm.ticketline.client.rest.CustomerRestClient;
 import at.ac.tuwien.inso.sepm.ticketline.client.rest.NewsRestClient;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.CustomerService;
@@ -27,7 +28,7 @@ public class SimpleCustomerService implements CustomerService{
     }
 
     @Override
-    public List<CustomerDTO> findByNumber(Long customerNumber) throws DataAccessException {
+    public List<CustomerDTO> findByNumber(Long customerNumber) throws DataAccessException, SearchNoMatchException {
         return customerRestClient.findByNumber(customerNumber);
     }
 

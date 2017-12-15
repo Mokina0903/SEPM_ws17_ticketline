@@ -1,6 +1,7 @@
 package at.ac.tuwien.inso.sepm.ticketline.client.gui.customer;
 
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
+import at.ac.tuwien.inso.sepm.ticketline.client.exception.SearchNoMatchException;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.*;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.CustomerService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
@@ -71,6 +72,8 @@ public class CustomerController extends TabElement implements LocalizationObserv
 
     private List<CustomerDTO> customer;
 
+    private CustomerSearchFor searchFor = CustomerSearchFor.ALL;
+
     @Autowired
     private LocalizationSubject localizationSubject;
 /*    @Autowired
@@ -104,45 +107,63 @@ public class CustomerController extends TabElement implements LocalizationObserv
         //all customer at start or searchfield is empty
         try {
             customer = customerService.findAll(0, Integer.MAX_VALUE);
+            pagination.setPageCount(customer.size() / CUSTOMER_PER_PAGE + 1);
             preparePagination(customer);
         } catch (DataAccessException e) {
             LOGGER.warn("Could not access total number of customers");
         }
-
     }
 
     public void preparePagination(List<CustomerDTO> customer) {
 
-        if (customer == null || customer.isEmpty()) {
-            LOGGER.info("no search match");
-            lbNoMatch.setVisible(true);
-            //set empty tv
-        } else {
-            LOGGER.info("search matches");
+/*        if (customer == null || customer.isEmpty()) {
+            noMatchFound();
+        } else {*/
+        LOGGER.info("search matches");
 
-            lbNoMatch.setVisible(false);
-            int numOfCustomers = customer.size();
-            pagination.setPageCount(numOfCustomers / CUSTOMER_PER_PAGE + 1);
-            pagination.setCurrentPageIndex(0);
-        }
-            pagination.setPageFactory(new Callback<Integer, Node>() {
+        lbNoMatch.setVisible(false);
+     //   int numOfCustomers = customer.size();
+    //    pagination.setPageCount(numOfCustomers / CUSTOMER_PER_PAGE + 1);
+        pagination.setCurrentPageIndex(0);
+        //      }
+        pagination.setPageFactory(new Callback<Integer, Node>() {
 
-                @Override
-                public Node call(Integer pageIndex) {
-                    return createPage(pageIndex);
-                }
-            });
+            @Override
+            public Node call(Integer pageIndex) {
+                return createPage(pageIndex);
+            }
+        });
     }
 
     private List<CustomerDTO> loadPage(int pageIndex) {
-        List<CustomerDTO> list = new ArrayList<CustomerDTO>();
+        List<CustomerDTO> page = new ArrayList<CustomerDTO>();
+
         try {
-            //todo search according to text in field: null -> all, string -> names, int -> customernumber
-            list = customerService.findAll(pageIndex, CUSTOMER_PER_PAGE);
+
+            switch (searchFor) {
+                case ALL:
+                    customer = customerService.findAll(0, Integer.MAX_VALUE);
+                    page = customerService.findAll(pageIndex, CUSTOMER_PER_PAGE);
+                    pagination.setPageCount(customer.size() / CUSTOMER_PER_PAGE + 1);
+                    break;
+                case NAME:
+                    customer = customerService.findByName(tfSearch.getText(), 0, Integer.MAX_VALUE);
+                    page = customerService.findByName(tfSearch.getText(), pageIndex, CUSTOMER_PER_PAGE);
+                    pagination.setPageCount(customer.size() / CUSTOMER_PER_PAGE + 1);
+
+                    break;
+                case CUSTOMER_NUMBER:
+                    page = customerService.findByNumber(Long.parseLong(tfSearch.getText()));
+                    pagination.setPageCount(1);
+                    break;
+            }
+
+        } catch (SearchNoMatchException e) {
+            noMatchFound();
         } catch (DataAccessException e) {
-            LOGGER.warn("Could not access find all customers");
+            LOGGER.warn("Could not access find customers");
         }
-        return list;
+        return page;
     }
 
     private Node createPage(int pageIndex) {
@@ -180,27 +201,35 @@ public class CustomerController extends TabElement implements LocalizationObserv
     }
 
 
-
     @FXML
     private void search(ActionEvent actionEvent) throws DataAccessException {
 
         String searchText = tfSearch.getText();
+
         if (searchText.isEmpty()) {
             LOGGER.info("Empty search");
+            searchFor = CustomerSearchFor.ALL;
             preparePagination();
         } else {
 
             try {
                 LOGGER.info("Search for Customer Number");
                 long customerNumber = Long.parseLong(tfSearch.getText());
-                customer = customerService.findByNumber(customerNumber);
+                searchFor = CustomerSearchFor.CUSTOMER_NUMBER;
                 preparePagination(customer);
             } catch (NumberFormatException e) {
                 LOGGER.info("Search for Customer Name");
-                customer = customerService.findByName(searchText, 0, CUSTOMER_PER_PAGE);
+                searchFor = CustomerSearchFor.NAME;
                 preparePagination(customer);
             }
         }
+    }
+
+    private void noMatchFound() {
+        LOGGER.info("no search match");
+        lbNoMatch.setVisible(true);
+
+        //set empty tv
     }
 
     @FXML

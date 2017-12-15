@@ -1,6 +1,7 @@
 package at.ac.tuwien.inso.sepm.ticketline.client.rest;
 
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
+import at.ac.tuwien.inso.sepm.ticketline.client.exception.SearchNoMatchException;
 import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
 
 import java.util.List;
@@ -32,7 +33,7 @@ public interface CustomerRestClient {
      * @return CustomerDTO
      * @throws DataAccessException in case something went wrong
      */
-    List<CustomerDTO> findByNumber(Long customerNumber) throws DataAccessException;
+    List<CustomerDTO> findByNumber(Long customerNumber) throws DataAccessException, SearchNoMatchException;
 
     void saveCustomer(CustomerDTO customerDTO) throws DataAccessException;
 }
