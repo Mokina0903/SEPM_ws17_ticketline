@@ -123,6 +123,9 @@ public class UserEndpointTest extends BaseIntegrationTest {
     // TODO: (TEST) Show Users US 1
     // TODO: (TEST) Admin can not lock himself BUS
     // TODO: (TEST) Add New Users (Admin/Seller) (1/2) BUS
+    // TODO: (TEST) Block/Unblock Users BUS
+    // TODO: (TEST) SetPassword: Login with old -> reset Password -> login with new Password BUS
+    // TODO: (TEST) AddNewUser(<bereits angelegter User>) darf nicht möglich sein
 
     @Test
     public void blockUser(){
