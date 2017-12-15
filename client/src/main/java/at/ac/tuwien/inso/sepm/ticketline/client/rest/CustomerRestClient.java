@@ -36,4 +36,5 @@ public interface CustomerRestClient {
     List<CustomerDTO> findByNumber(Long customerNumber) throws DataAccessException, SearchNoMatchException;
 
     void saveCustomer(CustomerDTO customerDTO) throws DataAccessException;
+    void updateCustomer(CustomerDTO customer) throws DataAccessException;
 }

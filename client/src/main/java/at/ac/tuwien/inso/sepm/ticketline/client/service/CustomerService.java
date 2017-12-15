@@ -36,4 +36,6 @@ public interface CustomerService {
     List<CustomerDTO> findByNumber(Long customerNumber) throws DataAccessException, SearchNoMatchException;
 
     void saveCustomer(CustomerDTO customer) throws DataAccessException;
+
+    void updateCustomer(CustomerDTO customer) throws DataAccessException;
 }

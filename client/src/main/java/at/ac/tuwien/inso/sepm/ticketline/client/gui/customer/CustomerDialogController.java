@@ -74,6 +74,8 @@ public class CustomerDialogController implements LocalizationObserver {
     private final CustomerController customerController;
     private final CustomerService customerService;
 
+    private boolean isUpdate;
+
     private GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
 
 
@@ -146,7 +148,12 @@ public class CustomerDialogController implements LocalizationObserver {
         customer = builder.build();
 
         try {
-            customerService.saveCustomer(customer);
+            if(!isUpdate){
+                customerService.saveCustomer(customer);
+            } else {
+                customerService.updateCustomer(customer);
+            }
+
         } catch (DataAccessException e) {
             //TODO: add alert
             e.printStackTrace();

@@ -50,14 +50,6 @@ public class CustomerServiceImpl implements CustomerService {
     public Customer createCustomer(Customer customer) throws CustomerNotValidException {
         if(!validateCustomer(customer)){
         throw new CustomerNotValidException("Customer was not valid!"); }
-        Customer c = customerRepository.save(customer);
-        return c;
-    }
-
-    @Override
-    public void updateCustomer(Customer customer) throws CustomerNotValidException {
-        if(!validateCustomer(customer)){
-        throw new CustomerNotValidException("Customer was not valid!"); }
         OffsetTime now = OffsetTime.now(ZoneOffset.UTC);
         String format = now.format(DateTimeFormatter.ISO_LOCAL_TIME);
         format.replace("-", "");
@@ -71,6 +63,15 @@ public class CustomerServiceImpl implements CustomerService {
         Long knr =Long.valueOf(seq);
         System.out.println(knr);
         customer.setKnr(knr);
+        Customer c = customerRepository.save(customer);
+        return c;
+    }
+
+    @Override
+    public void updateCustomer(Customer customer) throws CustomerNotValidException {
+        if(!validateCustomer(customer)){
+        throw new CustomerNotValidException("Customer was not valid!"); }
+
         customerRepository.save(customer);
     }
 
