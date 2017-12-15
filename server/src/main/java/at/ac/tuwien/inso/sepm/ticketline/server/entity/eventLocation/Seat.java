@@ -93,7 +93,7 @@ public class Seat {
             ", nr=" + nr +
             ", row=" + row +
             ", sector=" + sector +
-            //", hall=" + hall +
+            ", hall=" + hall +
             '}';
     }
 

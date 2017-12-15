@@ -63,7 +63,7 @@ public class Hall {
             "id=" + id +
             ", description='" + description + '\'' +
             ", location=" + location +
-            //", seats=" + seats +
+            ", seats=" + seats +
             '}';
     }
 
