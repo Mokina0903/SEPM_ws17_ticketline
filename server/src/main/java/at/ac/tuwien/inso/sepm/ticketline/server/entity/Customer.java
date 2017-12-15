@@ -23,9 +23,7 @@ public class Customer {
     @Column(nullable = false, name ="surname")
     private String surname;
 
-    @Column( name ="knr")
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq_customer_knr")
-    @SequenceGenerator(initialValue=1000, allocationSize = 23, name = "seq_customer_knr", sequenceName = "seq_customer_knr")
+    @Column(nullable = false, name ="knr")
     private Long knr;
 
     @Column( name = "email")

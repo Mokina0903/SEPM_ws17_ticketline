@@ -10,7 +10,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.swing.*;
 import java.time.LocalDate;
+import java.time.OffsetTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -52,6 +56,19 @@ public class CustomerServiceImpl implements CustomerService {
     public void updateCustomer(Customer customer) throws CustomerNotValidException {
        // if(!validateCustomer(customer)){
        // throw new CustomerNotValidException("Customer was not valid!"); }
+        OffsetTime now = OffsetTime.now(ZoneOffset.UTC);
+        String format = now.format(DateTimeFormatter.ISO_LOCAL_TIME);
+        format.replace("-", "");
+        format.replace(".", "");
+        format.replace("'", "");
+        format.replace(":", "");
+        System.out.println(format);
+        char[] myChar = format.toCharArray();
+
+        String seq = ""+myChar[myChar.length-1]+myChar[1]+myChar[0]+myChar[myChar.length-3]+myChar[myChar.length-2]+myChar[myChar.length-4];
+        Long knr =Long.valueOf(seq);
+        System.out.println(knr);
+        customer.setKnr(knr);
         customerRepository.save(customer);
     }
 
@@ -88,10 +105,10 @@ public class CustomerServiceImpl implements CustomerService {
         if(customer.getBirthDate().isAfter(LocalDate.now())){
             return false;
         }
-        if(customer.getKnr()<0){
+        if(customer.getKnr()!= null && customer.getKnr()<0){
             return false;
         }
-        if(customer.getId()<0){
+        if(customer.getId() != null && customer.getId()<0){
             return false;
         }
         if(customer.getEmail()!= null && !customer.getEmail().isEmpty()){
