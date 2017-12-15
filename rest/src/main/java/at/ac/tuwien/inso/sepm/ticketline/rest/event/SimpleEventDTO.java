@@ -1,48 +1,36 @@
-package at.ac.tuwien.inso.sepm.ticketline.server.entity;
+package at.ac.tuwien.inso.sepm.ticketline.rest.event;
 
-import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Hall;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
-import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "event")
-public class Event {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq_event_id")
-    @SequenceGenerator(name = "seq_event_id", sequenceName = "seq_event_id")
+@ApiModel(value = "SimpleEventDTO", description = "A simple DTO for event entries via rest")
+public class SimpleEventDTO {
+    @ApiModelProperty(readOnly = true, name = "The automatically generated database id")
     private Long id;
 
-    @Column(nullable = false)
-    @Size(max = 15)
+    @ApiModelProperty(required = true, name = "The first name of the artist")
     private String artistFirstName;
 
-    @Column(nullable = false)
-    @Size(max = 20)
+    @ApiModelProperty(required = true, name = "The last name of the artist")
     private String artistLastName;
 
-    @Column(nullable = false)
-    @Size(max = 100)
+
+    @ApiModelProperty(required = true, name = "The title of the event")
     private String title;
 
-    @Column(nullable = false)
-    @Size(max = 10000)
-    private String description;
+    @ApiModelProperty(required = true, name = "The description of the event")
+    private String descriptionSummary;
 
-    @Column(nullable = false)
-    private long price;
+    @ApiModelProperty(required = true, name = "The price of one ticket for the event")
+    private Long price;
 
-    @Column(nullable = false)
+    @ApiModelProperty(required = true, name = "The starting Time and Date of the event")
     private LocalDateTime startOfEvent;
 
-    @Column(nullable = false)
+    @ApiModelProperty(required = true, name = "The end Time and Date of the event")
     private LocalDateTime endOfEvent;
-
-    @Column(nullable = false)
-    private Hall hall;
-
 
     public Long getId() {
         return id;
@@ -76,19 +64,19 @@ public class Event {
         this.title = title;
     }
 
-    public String getDescription() {
-        return description;
+    public String getDescriptionSummary() {
+        return descriptionSummary;
     }
 
-    public void setDescription( String description ) {
-        this.description = description;
+    public void setDescriptionSummary( String descriptionSummary ) {
+        this.descriptionSummary = descriptionSummary;
     }
 
-    public long getPrice() {
+    public Long getPrice() {
         return price;
     }
 
-    public void setPrice( long price ) {
+    public void setPrice( Long price ) {
         this.price = price;
     }
 
@@ -108,30 +96,21 @@ public class Event {
         this.endOfEvent = endOfEvent;
     }
 
-    public Hall getHall() {
-        return hall;
-    }
-
-    public void setHall( Hall hall ) {
-        this.hall = hall;
-    }
-
     @Override
     public boolean equals( Object o ) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Event event = (Event) o;
+        SimpleEventDTO that = (SimpleEventDTO) o;
 
-        if (getPrice() != event.getPrice()) return false;
-        if (!getId().equals(event.getId())) return false;
-        if (!getArtistFirstName().equals(event.getArtistFirstName())) return false;
-        if (!getArtistLastName().equals(event.getArtistLastName())) return false;
-        if (!getTitle().equals(event.getTitle())) return false;
-        if (!getDescription().equals(event.getDescription())) return false;
-        if (!getStartOfEvent().equals(event.getStartOfEvent())) return false;
-        if (!getEndOfEvent().equals(event.getEndOfEvent())) return false;
-        return getHall().equals(event.getHall());
+        if (!getId().equals(that.getId())) return false;
+        if (!getArtistFirstName().equals(that.getArtistFirstName())) return false;
+        if (!getArtistLastName().equals(that.getArtistLastName())) return false;
+        if (!getTitle().equals(that.getTitle())) return false;
+        if (!getDescriptionSummary().equals(that.getDescriptionSummary())) return false;
+        if (!getPrice().equals(that.getPrice())) return false;
+        if (!getStartOfEvent().equals(that.getStartOfEvent())) return false;
+        return getEndOfEvent().equals(that.getEndOfEvent());
     }
 
     @Override
@@ -140,99 +119,89 @@ public class Event {
         result = 31 * result + getArtistFirstName().hashCode();
         result = 31 * result + getArtistLastName().hashCode();
         result = 31 * result + getTitle().hashCode();
-        result = 31 * result + getDescription().hashCode();
-        result = 31 * result + (int) (getPrice() ^ (getPrice() >>> 32));
+        result = 31 * result + getDescriptionSummary().hashCode();
+        result = 31 * result + getPrice().hashCode();
         result = 31 * result + getStartOfEvent().hashCode();
         result = 31 * result + getEndOfEvent().hashCode();
-        result = 31 * result + getHall().hashCode();
         return result;
     }
 
     @Override
     public String toString() {
-        return "Event{" +
+        return "SimpleEventDTO{" +
             "id=" + id +
             ", artistFirstName='" + artistFirstName + '\'' +
             ", artistLastName='" + artistLastName + '\'' +
             ", title='" + title + '\'' +
-            ", description='" + description + '\'' +
+            ", descriptionSummary='" + descriptionSummary + '\'' +
             ", price=" + price +
             ", startOfEvent=" + startOfEvent +
             ", endOfEvent=" + endOfEvent +
-            ", hall=" + hall +
             '}';
     }
 
-    public static final class EventBuilder{
+    public static final class SimpleEventDTOBuilder{
         private Long id;
         private String artistFirstName;
         private String artistLastName;
         private String title;
-        private String description;
+        private String descriptionSummary;
         private Long price;
         private LocalDateTime startOfEvent;
         private LocalDateTime endOfEvent;
-        private Hall hall;
 
-        public EventBuilder id(Long id){
+        public SimpleEventDTOBuilder id(Long id){
             this.id = id;
             return this;
         }
 
-        public EventBuilder artistFirstname(String artistFirstName){
+        public SimpleEventDTOBuilder artistFirstname(String artistFirstName){
             this.artistFirstName = artistFirstName;
             return this;
         }
 
-        public EventBuilder artistLastName(String artistLastName){
+        public SimpleEventDTOBuilder artistLastName(String artistLastName){
             this.artistLastName = artistLastName;
             return this;
         }
 
-        public EventBuilder title(String title){
+        public SimpleEventDTOBuilder title(String title){
             this.title = title;
             return this;
         }
 
-        public EventBuilder description(String description){
-            this.description = description;
+        public SimpleEventDTOBuilder descriptionSummary(String description){
+            this.descriptionSummary = description;
             return this;
         }
 
-        public EventBuilder price(Long price){
+        public SimpleEventDTOBuilder price(Long price){
             this.price = price;
             return this;
         }
 
-        public EventBuilder startOfEvent(LocalDateTime startOfEvent){
+        public SimpleEventDTOBuilder startOfEvent(LocalDateTime startOfEvent){
             this.startOfEvent = startOfEvent;
             return this;
         }
 
-        public EventBuilder endOfEvent(LocalDateTime endOfEvent){
+        public SimpleEventDTOBuilder endOfEvent(LocalDateTime endOfEvent){
             this.endOfEvent = endOfEvent;
             return this;
         }
 
-        public EventBuilder hall(Hall hall){
-            this.hall = hall;
-            return this;
-        }
-
-        public Event build(){
-            Event event = new Event();
+        public SimpleEventDTO build(){
+            SimpleEventDTO event = new SimpleEventDTO();
             event.setId(id);
             event.setTitle(title);
             event.setArtistFirstName(artistFirstName);
             event.setArtistLastName(artistLastName);
-            event.setDescription(description);
+            event.setDescriptionSummary(descriptionSummary);
             event.setPrice(price);
             event.setStartOfEvent(startOfEvent);
             event.setEndOfEvent(endOfEvent);
-            event.setHall(hall);
 
             return event;
         }
     }
 }
-
