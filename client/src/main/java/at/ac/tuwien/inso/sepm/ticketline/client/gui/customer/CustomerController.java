@@ -13,8 +13,10 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
 import javafx.util.Callback;
 import org.controlsfx.glyphfont.FontAwesome;
+import org.controlsfx.glyphfont.Glyph;
 import org.controlsfx.glyphfont.GlyphFont;
 import org.controlsfx.glyphfont.GlyphFontRegistry;
 import org.slf4j.Logger;
@@ -47,6 +49,8 @@ public class CustomerController extends TabElement implements LocalizationObserv
     private Button btNew;
     @FXML
     private Button btEdit;
+    @FXML
+    private Button btTickets;
     @FXML
     private Button btSearch;
 
@@ -87,11 +91,17 @@ public class CustomerController extends TabElement implements LocalizationObserv
         tabHeaderController.setTitle(BundleManager.getBundle().getString("customer.customer"));
         localizationSubject.attach(this);
         btNew.setGraphic(fontAwesome.create("USER_PLUS"));
-    //    lbNoMatch.setVisible(false);
+        btEdit.setGraphic(fontAwesome.create("PENCIL_SQUARE_ALT"));
+        btTickets.setGraphic(fontAwesome.create("TICKET"));
+
+
+        //    lbNoMatch.setVisible(false);
         initTableView();
 
 
     }
+
+
 
     public void preparePagination(){
         //TODO: get customer count for right calculation of the PageCount
@@ -191,6 +201,8 @@ public class CustomerController extends TabElement implements LocalizationObserv
         lbSearch.setText(BundleManager.getBundle().getString("menu.search"));
         tfSearch.setText(BundleManager.getBundle().getString("customer.searchField"));
         lbNoMatch.setText(BundleManager.getBundle().getString("customer.noMatches"));
+
+
 
         //todo update TVcolumns
     }

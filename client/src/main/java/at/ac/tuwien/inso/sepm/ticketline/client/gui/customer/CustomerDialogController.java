@@ -9,7 +9,13 @@ import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.paint.Color;
+import org.controlsfx.glyphfont.FontAwesome;
+import org.controlsfx.glyphfont.Glyph;
+import org.controlsfx.glyphfont.GlyphFont;
+import org.controlsfx.glyphfont.GlyphFontRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,12 +44,20 @@ public class CustomerDialogController implements LocalizationObserver{
     @FXML
     private Label lbInvalidEmail;
 
+    @FXML
+    private Button btOk;
+    @FXML
+    private Button btCancel;
+
     @Autowired
     private LocalizationSubject localizationSubject;
 
     private final MainController mainController;
     private final SpringFxmlLoader springFxmlLoader;
     private final CustomerController customerController;
+
+    private GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
+
 
     private CustomerDTO customer;
     private Node oldContent;
@@ -59,11 +73,20 @@ public class CustomerDialogController implements LocalizationObserver{
     void initialize(){
         //TODO: implement pre-filling of all Textfields/Boxes + visability issues of textfields
         localizationSubject.attach(this);
-      //  lbCustomerNumber = (customer == null? "" : customer.getcustomerNumber);
+     //   lbCustomerNumber = (customer == null? "" : customer.getcustomerNumber);
 
         lbInvalidName.setVisible(false);
         lbInvalidBirthdate.setVisible(false);
         lbInvalidEmail.setVisible(false);
+
+        setButtonGraphic(btOk, "CHECK", Color.OLIVE);
+        setButtonGraphic(btCancel, "TIMES", Color.CRIMSON);
+    }
+
+    private void setButtonGraphic(Button button, String glyphSymbol, Color color) {
+        Glyph glyph = fontAwesome.create(FontAwesome.Glyph.valueOf(glyphSymbol));
+        glyph.setColor(color);
+        button.setGraphic(glyph);
     }
 
     void initializeData(CustomerDTO customer, Node oldContent){
