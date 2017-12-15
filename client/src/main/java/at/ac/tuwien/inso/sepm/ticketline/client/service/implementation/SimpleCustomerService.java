@@ -30,4 +30,9 @@ public class SimpleCustomerService implements CustomerService{
     public List<CustomerDTO> findByNumber(Long customerNumber) throws DataAccessException {
         return customerRestClient.findByNumber(customerNumber);
     }
+
+    @Override
+    public void saveCustomer(CustomerDTO customer) throws DataAccessException {
+        customerRestClient.saveCustomer(customer);
+    }
 }

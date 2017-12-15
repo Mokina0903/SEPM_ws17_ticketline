@@ -6,6 +6,7 @@ import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -81,6 +82,24 @@ public class SimpleCustomerRestClient implements CustomerRestClient{
                     });
             LOGGER.debug("Result status was {} with content {}", customer.getStatusCode(), customer.getBody());
             return customer.getBody();
+        } catch (HttpStatusCodeException e) {
+            throw new DataAccessException("Failed retrieve customer with status code " + e.getStatusCode().toString());
+        } catch (RestClientException e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void saveCustomer(CustomerDTO customerDTO) throws DataAccessException {
+        try {
+            LOGGER.debug("Save customer");
+            HttpEntity<CustomerDTO> entity = new HttpEntity<>(customerDTO);
+            restClient.exchange(
+                    restClient.getServiceURI(CUSTOMER_URL+"/update"),
+                    HttpMethod.POST,
+                    entity,
+                    new ParameterizedTypeReference<List<CustomerDTO>>() {
+                    });
         } catch (HttpStatusCodeException e) {
             throw new DataAccessException("Failed retrieve customer with status code " + e.getStatusCode().toString());
         } catch (RestClientException e) {

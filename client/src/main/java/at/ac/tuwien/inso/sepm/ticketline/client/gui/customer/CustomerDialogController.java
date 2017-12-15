@@ -3,6 +3,7 @@ package at.ac.tuwien.inso.sepm.ticketline.client.gui.customer;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationObserver;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationSubject;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.MainController;
+import at.ac.tuwien.inso.sepm.ticketline.client.service.CustomerService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
 import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.news.DetailedNewsDTO;
@@ -70,6 +71,7 @@ public class CustomerDialogController implements LocalizationObserver {
     private final MainController mainController;
     private final SpringFxmlLoader springFxmlLoader;
     private final CustomerController customerController;
+    private final CustomerService customerService;
 
     private GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
 
@@ -77,10 +79,11 @@ public class CustomerDialogController implements LocalizationObserver {
     private CustomerDTO customer;
     private Node oldContent;
 
-    public CustomerDialogController(MainController mainController, SpringFxmlLoader springFxmlLoader, CustomerController customerController) {
+    public CustomerDialogController(MainController mainController, SpringFxmlLoader springFxmlLoader, CustomerController customerController, CustomerService customerService) {
         this.mainController = mainController;
         this.springFxmlLoader = springFxmlLoader;
         this.customerController = customerController;
+        this.customerService = customerService;
     }
 
 
@@ -141,7 +144,7 @@ public class CustomerDialogController implements LocalizationObserver {
         builder.mail(mail);
         customer = builder.build();
 
-
+        customerService.saveCustomer(customer);
 
     }
 

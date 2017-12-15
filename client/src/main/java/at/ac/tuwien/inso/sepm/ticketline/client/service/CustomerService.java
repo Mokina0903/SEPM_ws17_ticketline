@@ -33,4 +33,6 @@ public interface CustomerService {
      * @throws DataAccessException in case something went wrong
      */
     List<CustomerDTO> findByNumber(Long customerNumber) throws DataAccessException;
+
+    void saveCustomer(CustomerDTO customer) throws DataAccessException;
 }

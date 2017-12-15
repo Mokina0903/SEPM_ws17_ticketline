@@ -34,4 +34,5 @@ public interface CustomerRestClient {
      */
     List<CustomerDTO> findByNumber(Long customerNumber) throws DataAccessException;
 
+    void saveCustomer(CustomerDTO customerDTO) throws DataAccessException;
 }
