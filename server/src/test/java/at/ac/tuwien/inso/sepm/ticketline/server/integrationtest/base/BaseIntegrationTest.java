@@ -89,25 +89,40 @@ public abstract class BaseIntegrationTest {
     }
 
     protected void setupDefaultUsers() {
-        userRepository.deleteAll();
-
-        userRepository.save(User.builder()
+        User admin = User.builder()
             .userName(ADMIN_USERNAME)
             .password(encoder.encode(ADMIN_PASSWORD))
             .notSeen(newsRepository.findAllByOrderByPublishedAtDesc())
+            .blocked(false)
             .role(1)
-            .build());
+            .build();
 
-        userRepository.save(User.builder()
+        User user = User.builder()
             .userName(USER_USERNAME)
             .password(encoder.encode(USER_PASSWORD))
             .notSeen(newsRepository.findAllByOrderByPublishedAtDesc())
+            .blocked(false)
             .role(2)
-            .build());
+            .build();
+
+
+        if (userRepository == null || userRepository.findAll().size() == 0) {
+            userRepository.save(admin);
+            userRepository.save(user);
+        } else {
+            for (int i = 1; i <= 2; i++) {
+                User tUser = userRepository.findOne((long) i);
+                tUser.resetAttempts();
+                tUser.setBlocked(false);
+                tUser.setNotSeen(newsRepository.findAllByOrderByPublishedAtDesc());
+                userRepository.save(tUser);
+            }
+        }
     }
 
     // TODO: (Tutorin) Is this correct?
     public void setupDefaultNews(){
+        // TODO: David Start at 1 sequenc
         String TEST_NEWS_TEXT = "TestNewsText";
         String TEST_NEWS_TITLE = "title";
         LocalDateTime TEST_NEWS_PUBLISHED_AT =
