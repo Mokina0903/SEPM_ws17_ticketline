@@ -1,5 +1,6 @@
 package at.ac.tuwien.inso.sepm.ticketline.client.gui.user;
 
+import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationObserver;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.MainController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.news.NewsController;
@@ -58,8 +59,7 @@ public class UserDialogController {
         this.userService = userService;
     }
 
-    void initializeData(DetailedUserDTO user, Node oldContent, UserSimpleProperty userSimpleProperty){
-        this.user = user;
+    void initializeData(Node oldContent, UserSimpleProperty userSimpleProperty){
         this.oldContent = oldContent;
         this.userSimpleProperty = userSimpleProperty;
 
@@ -95,15 +95,41 @@ public class UserDialogController {
 
     @FXML
     public void saveUserData(ActionEvent actionEvent) {
-        //TODO: save the manipulated DTO to the Database. It should not make a difference either an new user or an exsisting user is updated
+        if (usernameTF.getText().trim().isEmpty())
+        {
+            System.out.println("Fehler"); // TODO: Alert
+            return;
+        }
+
+
+        if (passwordPF.getText().trim().isEmpty() || !passwordPF.getText().equals(passwordConfirmPF.getText())) {
+            System.out.println("Fehler"); // TODO: Alert
+            return;
+        }
+
+        int role = roleCombo.getSelectionModel().getSelectedIndex();
+        if (role == -1) {
+            System.out.println("Fehler"); // TODO: Alert
+        }
 
         if (userSimpleProperty == null) {
-            // TODO: Implement here
-            //userService.addNewUser()
             // Add new User
+            SimpleUserDTO simpleUserDTO = SimpleUserDTO.builder()
+                .userName(usernameTF.getText())
+                .password(passwordPF.getText())
+                .role(role + 1)
+                .build();
+
+            try {
+                userService.addNewUser(simpleUserDTO);
+            } catch (DataAccessException e) {
+                e.printStackTrace();
+            }
+
         } else {
             // TODO: Implement here
             // Reset Password
+            // userSimpleProperty
         }
 
         // TODO: Only when it was correct

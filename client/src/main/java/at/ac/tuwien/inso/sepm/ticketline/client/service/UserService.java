@@ -67,20 +67,20 @@ public interface UserService {
     /**
      * reset password by username
      *
-     * @param detailedUserDTO of userAttemps entry
+     * @param simpleUserDTO
      * @return UserDTO
      * @throws DataAccessException in case something went wrong
      */
-    SimpleUserDTO resetUserPassword(DetailedUserDTO detailedUserDTO) throws DataAccessException;
+    SimpleUserDTO resetUserPassword(SimpleUserDTO simpleUserDTO) throws DataAccessException;
 
     /**
      * add new User
      *
-     * @param detailedUserDTO of userAttemps entry
+     * @param simpleUserDTO of userAttemps entry
      * @return UserDTO
      * @throws DataAccessException in case something went wrong
      */
-    SimpleUserDTO addNewUser(DetailedUserDTO detailedUserDTO) throws DataAccessException;
+    SimpleUserDTO addNewUser(SimpleUserDTO simpleUserDTO) throws DataAccessException;
 
     /**
      * check if user is blocked

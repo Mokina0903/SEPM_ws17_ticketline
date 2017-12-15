@@ -213,7 +213,7 @@ public class UserController extends TabElement implements LocalizationObserver{
 
         SpringFxmlLoader.Wrapper<UserDialogController> wrapper =
             springFxmlLoader.loadAndWrap("/fxml/user/editUserDialog.fxml");
-        wrapper.getController().initializeData(new DetailedUserDTO(), userOverviewRoot,userSimpleProperty);
+        wrapper.getController().initializeData(userOverviewRoot,userSimpleProperty);
         userTab.setContent(wrapper.getLoadedObject());
 
     }
@@ -222,7 +222,7 @@ public class UserController extends TabElement implements LocalizationObserver{
     public void openAddUserDialog(ActionEvent actionEvent){
         SpringFxmlLoader.Wrapper<UserDialogController> wrapper =
             springFxmlLoader.loadAndWrap("/fxml/user/editUserDialog.fxml");
-        wrapper.getController().initializeData(new DetailedUserDTO(), userOverviewRoot,null);
+        wrapper.getController().initializeData(userOverviewRoot,null);
         userTab.setContent(wrapper.getLoadedObject());
     }
 

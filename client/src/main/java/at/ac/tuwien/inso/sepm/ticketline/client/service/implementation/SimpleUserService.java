@@ -54,13 +54,13 @@ public class SimpleUserService implements UserService {
     */
 
     @Override
-    public SimpleUserDTO resetUserPassword(DetailedUserDTO detailedUserDTO) throws DataAccessException {
-        return userRestClient.resetUserPassword(detailedUserDTO);
+    public SimpleUserDTO resetUserPassword(SimpleUserDTO simpleUserDTO) throws DataAccessException {
+        return userRestClient.resetUserPassword(simpleUserDTO);
     }
 
     @Override
-    public SimpleUserDTO addNewUser(DetailedUserDTO detailedUserDTO) throws DataAccessException {
-        return userRestClient.addNewUser(detailedUserDTO);
+    public SimpleUserDTO addNewUser(SimpleUserDTO simpleUserDTO) throws DataAccessException {
+        return userRestClient.addNewUser(simpleUserDTO);
     }
 
     @Override

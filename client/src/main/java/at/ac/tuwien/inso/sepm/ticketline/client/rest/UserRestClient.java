@@ -88,18 +88,18 @@ public interface  UserRestClient {
     /**
      * Reset Password of User
      *
-     * @param detailedUserDTO
+     * @param simpleUserDTO
      * @return SimpleUserDTO
      */
-    SimpleUserDTO resetUserPassword(DetailedUserDTO detailedUserDTO);
+    SimpleUserDTO resetUserPassword(SimpleUserDTO simpleUserDTO);
 
     /**
      * add new User
      *
-     * @param detailedUserDTO
+     * @param simpleUserDTO
      * @return SimpleUserDTO
      */
-    SimpleUserDTO addNewUser(DetailedUserDTO detailedUserDTO);
+    SimpleUserDTO addNewUser(SimpleUserDTO simpleUserDTO);
 
     /**
      * Find all user entries.
