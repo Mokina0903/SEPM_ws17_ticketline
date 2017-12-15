@@ -76,6 +76,14 @@ public class CustomerDialogController implements LocalizationObserver {
 
     private boolean isUpdate;
 
+    public boolean isUpdate() {
+        return isUpdate;
+    }
+
+    public void setUpdate(boolean update) {
+        isUpdate = update;
+    }
+
     private GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
 
 
@@ -105,6 +113,8 @@ public class CustomerDialogController implements LocalizationObserver {
 
         setButtonGraphic(btOk, "CHECK", Color.OLIVE);
         setButtonGraphic(btCancel, "TIMES", Color.CRIMSON);
+
+        isUpdate=false;
     }
 
     private void setButtonGraphic(Button button, String glyphSymbol, Color color) {
@@ -122,6 +132,18 @@ public class CustomerDialogController implements LocalizationObserver {
                 lbCustomerNumber.setVisible(true);
                 lbCustomerNumberText.setText(String.valueOf(customer.getKnr()));
                 lbCustomerNumberText.setVisible(true);
+            }
+            if(customer.getBirthDate() != null){
+                dpBirthdate.setValue(customer.getBirthDate());
+            }
+            if(customer.getEmail() != null){
+                tfEmail.setText(customer.getEmail());
+            }
+            if(customer.getName() != null){
+                tfFirstName.setText(customer.getName());
+            }
+            if(customer.getSurname()!=null){
+                tfLname.setText(customer.getSurname());
             }
         }
 
@@ -152,6 +174,7 @@ public class CustomerDialogController implements LocalizationObserver {
                 customerService.saveCustomer(customer);
             } else {
                 customerService.updateCustomer(customer);
+                isUpdate =false;
             }
 
         } catch (DataAccessException e) {

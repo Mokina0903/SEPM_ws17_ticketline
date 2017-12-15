@@ -56,6 +56,8 @@ public class CustomerController extends TabElement implements LocalizationObserv
     @FXML
     private TextField tfSearch;
 
+    private TableView<CustomerDTO> currentTableview;
+
     private TableColumn<CustomerDTO, String> tcName;
     private TableColumn<CustomerDTO, String> tcSurname;
     private TableColumn<CustomerDTO, LocalDate> tcBirthdate;
@@ -196,6 +198,7 @@ public class CustomerController extends TabElement implements LocalizationObserv
         tvCustomer.getColumns().addAll(tcNumber, tcName, tcSurname, tcBirthdate, tcMail);
         tvCustomer.getItems().addAll(costumers);
         tvCustomer.refresh();
+        currentTableview = tvCustomer;
 
         return tvCustomer;
     }
@@ -247,14 +250,15 @@ public class CustomerController extends TabElement implements LocalizationObserv
     @FXML
     public void openEditDialog(ActionEvent actionEvent) {
         //todo implement me
- /*       CustomerDTO customer = tvCustomer.getSelectionModel().getSelectedItem();
+   CustomerDTO customer = currentTableview.getSelectionModel().getSelectedItem();
 
         if (customer != null) {
             SpringFxmlLoader.Wrapper<CustomerDialogController> wrapper =
                 springFxmlLoader.loadAndWrap("/fxml/customer/customerEdit.fxml");
-            wrapper.getController().initializeData(new CustomerDTO(), customerOverviewRoot);
+            wrapper.getController().initializeData(customer, customerOverviewRoot);
+            wrapper.getController().setUpdate(true);
             customerTab.setContent(wrapper.getLoadedObject());
-        }*/
+        }
     }
 
 
