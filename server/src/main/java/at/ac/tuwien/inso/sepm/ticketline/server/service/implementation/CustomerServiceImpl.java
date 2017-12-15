@@ -50,8 +50,8 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public void updateCustomer(Customer customer) throws CustomerNotValidException {
-        if(!validateCustomer(customer)){
-        throw new CustomerNotValidException("Customer was not valid!"); }
+       // if(!validateCustomer(customer)){
+       // throw new CustomerNotValidException("Customer was not valid!"); }
         customerRepository.save(customer);
     }
 
