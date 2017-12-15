@@ -1,13 +1,14 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.repository;
 
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface EventRepository {
+public interface EventRepository extends JpaRepository<Event, Long> {
 
     /**
      * Find a single event entry by id.
@@ -22,5 +23,5 @@ public interface EventRepository {
      *
      * @return list of all event entries
      */
-    List<Event> findAllOrderByStartOfEventDesc();
+    List<Event> findAllByOrderByStartOfEventDesc();
 }

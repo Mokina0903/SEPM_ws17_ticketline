@@ -6,9 +6,12 @@ import at.ac.tuwien.inso.sepm.ticketline.server.repository.Location.HallReposito
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.Location.LocationRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.Location.SeatRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.LocationService;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class SimpleLocationService implements LocationService{
 
     private final LocationRepository locationRepository;

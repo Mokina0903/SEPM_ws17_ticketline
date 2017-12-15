@@ -40,7 +40,7 @@ public class Event {
     @Column(nullable = false)
     private LocalDateTime endOfEvent;
 
-    @Column(nullable = false)
+    @ManyToOne
     private Hall hall;
 
 
