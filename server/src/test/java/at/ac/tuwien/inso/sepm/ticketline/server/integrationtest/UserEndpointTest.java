@@ -1,6 +1,7 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.integrationtest;
 
 
+import at.ac.tuwien.inso.sepm.ticketline.rest.user.DetailedUserDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.user.SimpleUserDTO;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.User;
 import at.ac.tuwien.inso.sepm.ticketline.server.integrationtest.base.BaseIntegrationTest;
@@ -14,6 +15,7 @@ import org.junit.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
+import javax.validation.constraints.AssertTrue;
 import java.time.LocalDateTime;
 
 import static org.hamcrest.core.Is.is;
@@ -24,6 +26,7 @@ public class UserEndpointTest extends BaseIntegrationTest {
     private static final String USER_ENDPOINT_BLOCK = "/user/block";
     private static final String USER_ENDPOINT_FIND = "/user/find/{userName}";
     private static final String USER_ENDPOINT_RESET = "/user/resetPassword";
+    private static final String USER_ENDPOINT_NEW_USER = "/user";
     private static final String SPECIFIC_USER_PATH = "/{userId}";
 
     private static final String TEST_USER_TEXT = "TestUserText";
@@ -121,13 +124,48 @@ public class UserEndpointTest extends BaseIntegrationTest {
     // TODO: (TEST) Add Test for Logout US 1
     // TODO: (TEST) Add Test Admin unlock US 1
     // TODO: (TEST) Test correct privileges at REST US 1
-    // TODO: (TEST) Show Users US 1
+    // Done: (TEST) Show Users US 1
     // TODO: (TEST) Admin can not lock himself BUS
-    // TODO: (TEST) Add New Users (Admin/Seller) (1/2) BUS
+    // DONE: (TEST) Add New Users (Admin/Seller) (1/2) BUS
     // TODO: (TEST) Block/Unblock Users BUS
-    // TODO: (TEST) SetPassword: Login with old -> reset Password -> login with new Password BUS
-    // TODO: (TEST) AddNewUser(<bereits angelegter User>) darf nicht möglich sein
+    // DONE: (TEST) SetPassword: Login with old -> reset Password -> login with new Password BUS
+    // DONE: (TEST) AddNewUser(<bereits angelegter User>) darf nicht möglich sein
 
+    @Test
+    public void resetAdminAsUser() {
+        super.setupDefaultUsers();
+        Response response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .header(HttpHeaders.AUTHORIZATION, validUserTokenWithPrefix)
+            .body(SimpleUserDTO.builder()
+                .userName(ADMIN_USERNAME)
+                .password(ADMIN_PASSWORD + "neu")
+                .build())
+            .when().post(USER_ENDPOINT_RESET)
+            .then().extract().response();
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN.value()));
+
+    }
+
+    @Test
+    public void resetUserAsAnonym() {
+        super.setupDefaultUsers();
+        Response response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .body(SimpleUserDTO.builder()
+                .userName(USER_USERNAME)
+                .password(USER_PASSWORD + "neu")
+                .build())
+            .when().post(USER_ENDPOINT_RESET)
+            .then().extract().response();
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED.value()));
+
+    }
+
+
+    //TODO BlockUserAsAdmin
     @Test
     public void blockUser(){
         super.setupDefaultUsers();
@@ -140,43 +178,182 @@ public class UserEndpointTest extends BaseIntegrationTest {
 
         Assert.assertTrue("Could not block user.",
             blockUser.isBlocked());
-
+        userService.unblockUser(blockUser);
     }
 
 
 /*
     @Test
-    public void BlockUserAsAdmin() {
-        //super.setupDefaultUsers();
+    public void ResetUserAsAdmin() {
+        super.setupDefaultUsers();
         Response response = RestAssured
             .given()
             .contentType(ContentType.JSON)
             .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
             .body(SimpleUserDTO.builder()
                 .userName(USER_USERNAME)
+                .password(USER_PASSWORD + "neu")
                 .build())
-            .when().post(USER_ENDPOINT_BLOCK)
+            .when().post(USER_ENDPOINT_RESET)
             .then().extract().response();
-
-        System.out.println(response.asString());
-
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
 
+        response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
+            .when().get(USER_ENDPOINT_FIND, USER_USERNAME)
+            .then().extract().response();
+            //Assert.assertTrue(response.asString().contains(USER_PASSWORD + "neu"));
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
+
+        response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
+            .body(SimpleUserDTO.builder()
+                .userName(USER_USERNAME)
+                .password(USER_PASSWORD)
+                .build())
+            .when().post(USER_ENDPOINT_RESET)
+            .then().extract().response();
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
     }
-
-
+    */
 
     @Test
     public void BlockUserAsAdmin() {
+        super.setupDefaultUsers();
+        Response response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .header(HttpHeaders.AUTHORIZATION, validUserTokenWithPrefix)
+            .body(SimpleUserDTO.builder()
+                .userName(ADMIN_USERNAME)
+                .build())
+            .when().post(USER_ENDPOINT_BLOCK)
+            .then().extract().response();
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN.value()));
+    }
+
+    @Test
+    public void newUserAsAdmin() {
+        super.setupDefaultUsers();
         Response response = RestAssured
             .given()
             .contentType(ContentType.JSON)
             .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
-            .when().get(USER_ENDPOINT_FIND, "Florian")
+            .body(DetailedUserDTO.builder()
+                .userName(USER_USERNAME + 1)
+                .password(encoder.encode(USER_PASSWORD))
+                //.notSeen(newsRepository.findAllByOrderByPublishedAtDesc())
+                .blocked(false)
+                .role(2)
+                .build())
+            .when().post(USER_ENDPOINT_NEW_USER)
             .then().extract().response();
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
 
+        response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
+            .when().get(USER_ENDPOINT_FIND, USER_USERNAME + 1)
+            .then().extract().response();
+        Assert.assertTrue(response.asString().contains(USER_USERNAME + 1));
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
+
     }
-*/
+
+    @Test
+    public void newAdminAsAdmin() {
+        super.setupDefaultUsers();
+        Response response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
+            .body(DetailedUserDTO.builder()
+                .userName(ADMIN_USERNAME + 1)
+                .password(encoder.encode(ADMIN_PASSWORD))
+                //.notSeen(newsRepository.findAllByOrderByPublishedAtDesc())
+                .blocked(false)
+                .role(1)
+                .build())
+            .when().post(USER_ENDPOINT_NEW_USER)
+            .then().extract().response();
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
+
+        response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
+            .when().get(USER_ENDPOINT_FIND, ADMIN_USERNAME + 1)
+            .then().extract().response();
+        Assert.assertTrue(response.asString().contains(ADMIN_USERNAME + 1));
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
+    }
+
+    @Test
+    public void newUserAsUser() {
+        super.setupDefaultUsers();
+        Response response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .header(HttpHeaders.AUTHORIZATION, validUserTokenWithPrefix)
+            .body(DetailedUserDTO.builder()
+                .userName(USER_USERNAME + 2)
+                .password(encoder.encode(USER_PASSWORD))
+                //.notSeen(newsRepository.findAllByOrderByPublishedAtDesc())
+                .blocked(false)
+                .role(2)
+                .build())
+            .when().post(USER_ENDPOINT_NEW_USER)
+            .then().extract().response();
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN.value()));
+    }
+
+    @Test
+    public void newExistingUserAsAdmin() {
+        super.setupDefaultUsers();
+        Response response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
+            .body(DetailedUserDTO.builder()
+                .userName(USER_USERNAME)
+                .password(encoder.encode(USER_PASSWORD))
+                //.notSeen(newsRepository.findAllByOrderByPublishedAtDesc())
+                .blocked(false)
+                .role(2)
+                .build())
+            .when().post(USER_ENDPOINT_NEW_USER)
+            .then().extract().response();
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.CONFLICT.value()));
+    }
+
+    @Test
+    public void showUserAsAdmin() {
+        super.setupDefaultUsers();
+        Response response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
+            .when().get(USER_ENDPOINT_NEW_USER)
+            .then().extract().response();
+        Assert.assertTrue((response.asString().contains("user")&&response.asString().contains("admin")));
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
+    }
+
+    @Test
+    public void showUserAsUser() {
+        super.setupDefaultUsers();
+        Response response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .header(HttpHeaders.AUTHORIZATION, validUserTokenWithPrefix)
+            .when().get(USER_ENDPOINT_NEW_USER)
+            .then().extract().response();
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN.value()));
+    }
 
 }

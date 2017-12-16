@@ -58,7 +58,7 @@ public abstract class BaseIntegrationTest {
     protected UserService userService;
 
     @Autowired
-    private NewsRepository newsRepository;
+    protected NewsRepository newsRepository;
 
     protected String validUserTokenWithPrefix;
     protected String validAdminTokenWithPrefix;

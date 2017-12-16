@@ -38,6 +38,7 @@ public class UserEndpoint {
     }
 
     @RequestMapping(method = RequestMethod.GET)
+    @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation(value = "Get list of simple user entries")
     public List<SimpleUserDTO> findAll() {
         return userMapper.userToSimpleUserDTO(userService.findAll());
