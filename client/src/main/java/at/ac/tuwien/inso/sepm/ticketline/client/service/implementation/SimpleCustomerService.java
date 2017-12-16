@@ -8,6 +8,8 @@ import at.ac.tuwien.inso.sepm.ticketline.client.service.CustomerService;
 import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,5 +53,23 @@ public class SimpleCustomerService implements CustomerService{
     @Override
     public void updateCustomer(CustomerDTO customer) throws DataAccessException {
         customerRestClient.updateCustomer(customer);
+    }
+
+    @Override
+    public boolean checkIfCustomerValid(CustomerDTO customer) {
+
+        if (!(customer.getEmail().contains("@") || customer.getEmail().contains("."))) {
+         return false;
+        }
+        if (customer.getName() == null || customer.getName().isEmpty() || customer.getSurname() == null || customer.getSurname().isEmpty()) {
+            return false;
+        }
+        if(customer.getBirthDate().isAfter(LocalDate.now())){
+            return false;
+        }
+        if(ChronoUnit.DAYS.between(LocalDate.now(),customer.getBirthDate())<14*365){
+            return false;
+        }
+        return true;
     }
 }

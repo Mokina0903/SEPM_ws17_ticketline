@@ -248,7 +248,6 @@ public class CustomerController extends TabElement implements LocalizationObserv
 
     @FXML
     public void openEditDialog(ActionEvent actionEvent) {
-        //todo implement me
    CustomerDTO customer = currentTableview.getSelectionModel().getSelectedItem();
 
         if (customer != null) {

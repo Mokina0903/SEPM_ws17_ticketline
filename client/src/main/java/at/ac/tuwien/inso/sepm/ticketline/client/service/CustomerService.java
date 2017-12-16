@@ -40,4 +40,6 @@ public interface CustomerService {
     void saveCustomer(CustomerDTO customer) throws DataAccessException;
 
     void updateCustomer(CustomerDTO customer) throws DataAccessException;
+
+    boolean checkIfCustomerValid(CustomerDTO customer);
 }

@@ -9,6 +9,8 @@ import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
 import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.news.DetailedNewsDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -102,19 +104,18 @@ public class CustomerDialogController implements LocalizationObserver {
     void initialize() {
         //TODO: implement pre-filling of all Textfields/Boxes + visability issues of textfields
         localizationSubject.attach(this);
-        //   lbCustomerNumber = (customer == null? "" : customer.getcustomerNumber);
-
         lbInvalidName.setVisible(false);
         lbInvalidBirthdate.setVisible(false);
         lbInvalidEmail.setVisible(false);
         lbCustomerNumber.setVisible(false);
         lbCustomerNumberText.setVisible(false);
 
-
         setButtonGraphic(btOk, "CHECK", Color.OLIVE);
         setButtonGraphic(btCancel, "TIMES", Color.CRIMSON);
 
-        isUpdate=false;
+        addListeners();
+
+        isUpdate = false;
     }
 
     private void setButtonGraphic(Button button, String glyphSymbol, Color color) {
@@ -133,16 +134,16 @@ public class CustomerDialogController implements LocalizationObserver {
                 lbCustomerNumberText.setText(String.valueOf(customer.getKnr()));
                 lbCustomerNumberText.setVisible(true);
             }
-            if(customer.getBirthDate() != null){
+            if (customer.getBirthDate() != null) {
                 dpBirthdate.setValue(customer.getBirthDate());
             }
-            if(customer.getEmail() != null){
+            if (customer.getEmail() != null) {
                 tfEmail.setText(customer.getEmail());
             }
-            if(customer.getName() != null){
+            if (customer.getName() != null) {
                 tfFirstName.setText(customer.getName());
             }
-            if(customer.getSurname()!=null){
+            if (customer.getSurname() != null) {
                 tfLname.setText(customer.getSurname());
             }
         }
@@ -151,6 +152,9 @@ public class CustomerDialogController implements LocalizationObserver {
 
     @FXML
     public void handleCancel(ActionEvent actionEvent) {
+        if (isUpdate) {
+            setUpdate(false);
+        }
         customerController.getCustomerTab().setContent(oldContent);
     }
 
@@ -161,20 +165,27 @@ public class CustomerDialogController implements LocalizationObserver {
         LocalDate birthDate = dpBirthdate.getValue();
         String firstname = tfFirstName.getText();
 
-        CustomerDTO customer = new CustomerDTO();
+
+
         CustomerDTO.CustomerDTOBuilder builder = new CustomerDTO.CustomerDTOBuilder();
         builder.birthDate(birthDate);
         builder.name(firstname);
         builder.surname(surname);
         builder.mail(mail);
-        customer = builder.build();
+        CustomerDTO customer = builder.build();
+
+        if (!customerService.checkIfCustomerValid(customer)){
+
+            return;
+        }
+
 
         try {
-            if(!isUpdate){
+            if (!isUpdate) {
                 customerService.saveCustomer(customer);
             } else {
                 customerService.updateCustomer(customer);
-                isUpdate =false;
+                isUpdate = false;
             }
 
         } catch (DataAccessException e) {
@@ -193,5 +204,36 @@ public class CustomerDialogController implements LocalizationObserver {
         lbInvalidName.setText(BundleManager.getBundle().getString("customer.invalidName"));
         lbInvalidBirthdate.setText(BundleManager.getBundle().getString("customer.invalidBirthdate"));
         lbInvalidEmail.setText(BundleManager.getBundle().getString("customer.invalidEmail"));
+    }
+
+    private void addListeners() {
+
+        lbInvalidName.textProperty().addListener(new InvalidationListener() {
+            @Override
+            public void invalidated(Observable observable) {
+                String text = tfFirstName.getText();
+                if (text == null || text.matches(".*\\d+.*") || text.isEmpty()) {
+                    btOk.setDisable(true);
+                    lbInvalidName.setVisible(true);
+                }
+                text = tfLname.getText();
+                if (text == null || text.matches(".*\\d+.*") || text.isEmpty()) {
+                    btOk.setDisable(true);
+                    lbInvalidName.setVisible(true);
+                }
+            }
+        });
+        lbInvalidEmail.textProperty().addListener(new InvalidationListener() {
+            @Override
+            public void invalidated(Observable observable) {
+                String mail = tfEmail.getText();
+                if (!(mail.contains("@")) || !mail.contains(".")) {
+                    btOk.setDisable(true);
+                    lbInvalidName.setVisible(true);
+                }
+            }
+        });
+
+
     }
 }
