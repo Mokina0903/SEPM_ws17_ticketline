@@ -14,25 +14,14 @@ public class UserSimpleProperty {
     private final SimpleLongProperty userId;
     private final SimpleStringProperty username;
     private final SimpleBooleanProperty blocked;
-    private final SimpleStringProperty role;
+    private final SimpleIntegerProperty role;
 
 
     public UserSimpleProperty(long userId,String username, boolean blocked, int role) {
         this.userId = new SimpleLongProperty(userId);
         this.username = new SimpleStringProperty(username);
         this.blocked = new SimpleBooleanProperty(blocked);
-
-        switch (role) {
-            case 1:
-                this.role = new SimpleStringProperty("Admin");
-                break;
-            case 2:
-                this.role = new SimpleStringProperty("User");
-                break;
-            default:
-                this.role = new SimpleStringProperty("not Set");
-                break;
-        }
+        this.role = new SimpleIntegerProperty(role);
     }
 
     public String getUsername() {
@@ -59,12 +48,16 @@ public class UserSimpleProperty {
         this.blocked.set(blocked);
     }
 
-    public String getRole() {
+    public int getRole() {
         return role.get();
     }
 
-    public SimpleStringProperty roleProperty() {
+    public SimpleIntegerProperty roleProperty() {
         return role;
+    }
+
+    public void setRole(int role) {
+        this.role.set(role);
     }
 
     public long getUserId() {

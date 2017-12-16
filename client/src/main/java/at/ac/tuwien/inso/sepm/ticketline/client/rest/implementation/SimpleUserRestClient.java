@@ -166,8 +166,19 @@ public class SimpleUserRestClient implements UserRestClient {
 
     @Override
     public SimpleUserDTO resetUserPassword(SimpleUserDTO simpleUserDTO) {
-        // TODO: Implement
-        return null;
+        LOGGER.debug("Publish news", restClient.getServiceURI(USER_URL+"/resetPassword"));
+        HttpEntity<SimpleUserDTO> httpEntity = new HttpEntity<>(simpleUserDTO);
+        ResponseEntity<SimpleUserDTO> user =
+            restClient.exchange(
+                restClient.getServiceURI(USER_URL+"/resetPassword"),
+                HttpMethod.POST,
+                httpEntity,
+                new ParameterizedTypeReference<SimpleUserDTO>() {
+                }
+            );
+        LOGGER.debug("Result status was {} with content {}", user.getStatusCode(), user.getBody());
+        //return news.getBody();
+        return user.getBody();
     }
 
     @Override
