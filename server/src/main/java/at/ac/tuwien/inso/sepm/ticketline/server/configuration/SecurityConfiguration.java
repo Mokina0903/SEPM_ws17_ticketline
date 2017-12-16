@@ -110,7 +110,8 @@ public class SecurityConfiguration{
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .exceptionHandling().authenticationEntryPoint((req, res, aE) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED)).and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/customer/**").hasRole("USER")
+                //todo authorized
+                .antMatchers(HttpMethod.GET, "/customer/**").permitAll()
                 .antMatchers(HttpMethod.OPTIONS).permitAll()
                 .antMatchers(HttpMethod.POST,
                     "/authentication",

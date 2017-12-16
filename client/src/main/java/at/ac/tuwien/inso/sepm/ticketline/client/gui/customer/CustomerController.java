@@ -141,7 +141,6 @@ public class CustomerController extends TabElement implements LocalizationObserv
         List<CustomerDTO> page = new ArrayList<CustomerDTO>();
 
         try {
-
             switch (searchFor) {
                 case ALL:
                     customer = customerService.findAll(0, Integer.MAX_VALUE);

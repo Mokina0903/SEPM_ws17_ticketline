@@ -5,6 +5,7 @@ import at.ac.tuwien.inso.sepm.ticketline.server.entity.News;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 
@@ -35,7 +36,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
      * @param knr of the wanted customer
      * @return the customer with the given knr
      */
-    Optional<Customer> findOneByKnr(Long knr);
+    Customer findOneByKnr(Long knr);
 
     /**
      *
@@ -43,7 +44,9 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
      * @param request  defienes how to read paged from the database
      * @return a list of customer,  though the size of the list is dependent of the pageable object
      */
+  //  @Query("Select * from customer c where c.name like %:name%")
     Page<Customer> findByName(String name, Pageable request);
+    //Page<Customer> findByNameIgnoreCaseContaining(String name, Pageable request);
 
     /**
      *

@@ -23,8 +23,9 @@ public interface CustomerService {
      * @param name of Customer entry
      * @return list of customer entries
      * @throws DataAccessException in case something went wrong
+     * @throws SearchNoMatchException if nothing is found
      */
-    List<CustomerDTO> findByName(String name, int pageIndex, int customersPerPage) throws DataAccessException;
+    List<CustomerDTO> findByName(String name, int pageIndex, int customersPerPage) throws DataAccessException, SearchNoMatchException;
 
     /**
      * Find specific customer by customerNumber
@@ -32,6 +33,7 @@ public interface CustomerService {
      * @param customerNumber of Customer entry
      * @return CustomerDTO
      * @throws DataAccessException in case something went wrong
+     * @throws SearchNoMatchException if nothing is found
      */
     List<CustomerDTO> findByNumber(Long customerNumber) throws DataAccessException, SearchNoMatchException;
 

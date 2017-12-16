@@ -8,6 +8,7 @@ import at.ac.tuwien.inso.sepm.ticketline.client.service.CustomerService;
 import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,13 +24,23 @@ public class SimpleCustomerService implements CustomerService{
     }
 
     @Override
-    public List<CustomerDTO> findByName(String name, int pageIndex, int customersPerPage) throws DataAccessException {
-        return customerRestClient.findByName(name, pageIndex, customersPerPage);
+    public List<CustomerDTO> findByName(String name, int pageIndex, int customersPerPage) throws DataAccessException, SearchNoMatchException {
+        List<CustomerDTO> customer = customerRestClient.findByName(name, pageIndex, customersPerPage);
+        if (customer.isEmpty()) {
+            throw new SearchNoMatchException();
+        }
+        return customer;
     }
 
     @Override
     public List<CustomerDTO> findByNumber(Long customerNumber) throws DataAccessException, SearchNoMatchException {
-        return customerRestClient.findByNumber(customerNumber);
+        CustomerDTO customer =  customerRestClient.findByNumber(customerNumber);
+        if (customer == null) {
+            throw new SearchNoMatchException();
+        }
+        List<CustomerDTO> list = new ArrayList<>();
+        list.add(customer);
+        return list;
     }
 
     @Override

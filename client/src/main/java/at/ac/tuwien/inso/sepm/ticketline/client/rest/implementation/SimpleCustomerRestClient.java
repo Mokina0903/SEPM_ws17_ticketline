@@ -56,7 +56,7 @@ public class SimpleCustomerRestClient implements CustomerRestClient{
             LOGGER.debug("Retrieving found by name custumers from {}", restClient.getServiceURI(CUSTOMER_URL+"/findName/"+pageIndex+"/"+costumerPerPage));
             ResponseEntity<List<CustomerDTO>> customer =
                 restClient.exchange(
-                    restClient.getServiceURI(CUSTOMER_URL+"/findName/"+pageIndex+"/"+costumerPerPage ),
+                    restClient.getServiceURI(CUSTOMER_URL+"/findName/"+pageIndex+"/"+costumerPerPage+"/"+name),
                     HttpMethod.GET,
                     null,
                     new ParameterizedTypeReference<List<CustomerDTO>>() {
@@ -71,15 +71,15 @@ public class SimpleCustomerRestClient implements CustomerRestClient{
     }
 
     @Override
-    public List<CustomerDTO> findByNumber(Long customerNumber) throws DataAccessException, SearchNoMatchException {
+    public CustomerDTO findByNumber(Long customerNumber) throws DataAccessException, SearchNoMatchException {
         try {
             LOGGER.debug("Retrieving all costumers from {}", restClient.getServiceURI(CUSTOMER_URL+"/findWithKnr/"+customerNumber));
-            ResponseEntity<List<CustomerDTO>> customer =
+            ResponseEntity<CustomerDTO> customer =
                 restClient.exchange(
                     restClient.getServiceURI(CUSTOMER_URL+"/findWithKnr/"+customerNumber),
                     HttpMethod.GET,
                     null,
-                    new ParameterizedTypeReference<List<CustomerDTO>>() {
+                    new ParameterizedTypeReference<CustomerDTO>() {
                     });
             LOGGER.debug("Result status was {} with content {}", customer.getStatusCode(), customer.getBody());
             return customer.getBody();

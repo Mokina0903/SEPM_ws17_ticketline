@@ -39,6 +39,7 @@ public class CustomerEndpoint {
         PageRequest request = new PageRequest(pageIndex, customerPerPage, Sort.Direction.ASC, "surname");
         return customerMapper.customerToCustomerDTO(customerService.findAll(request));
     }
+
     @RequestMapping(value= "/{id}",method = RequestMethod.GET)
     @ApiOperation(value = "Get one spezific customer entry by id")
     public CustomerDTO findById(@PathVariable("id") Long id){
@@ -52,11 +53,10 @@ public class CustomerEndpoint {
 
     @RequestMapping(value="/findWithKnr/{knr}", method = RequestMethod.GET)
     @ApiOperation(value = "Get one spezific customer entry by knr")
-    public List<CustomerDTO> findByKnr(@PathVariable("knr") long knr){
+    public CustomerDTO findByKnr(@PathVariable("knr") long knr){
         LOGGER.info("Finding by KNR in CustomerEndpoint");
         try {
-            List<CustomerDTO> customer = new ArrayList<CustomerDTO>();
-            customer.add(customerMapper.customerToCustomerDTO(customerService.findByKnr(knr)));
+            CustomerDTO customer = (customerMapper.customerToCustomerDTO(customerService.findByKnr(knr)));
             return customer;
         } catch (InvalidIdException | CustomerNotValidException e) {
             e.printStackTrace();

@@ -33,7 +33,7 @@ public interface CustomerRestClient {
      * @return CustomerDTO
      * @throws DataAccessException in case something went wrong
      */
-    List<CustomerDTO> findByNumber(Long customerNumber) throws DataAccessException, SearchNoMatchException;
+    CustomerDTO findByNumber(Long customerNumber) throws DataAccessException, SearchNoMatchException;
 
     void saveCustomer(CustomerDTO customerDTO) throws DataAccessException;
     void updateCustomer(CustomerDTO customer) throws DataAccessException;
