@@ -110,8 +110,7 @@ public class SecurityConfiguration{
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .exceptionHandling().authenticationEntryPoint((req, res, aE) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED)).and()
                 .authorizeRequests()
-                //todo authorized
-                .antMatchers(HttpMethod.GET, "/customer/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/customer/**").authenticated()
                 .antMatchers(HttpMethod.OPTIONS).permitAll()
                 .antMatchers(HttpMethod.POST,
                     "/authentication",
@@ -125,8 +124,6 @@ public class SecurityConfiguration{
                     "/swagger-ui.html",
                     "/user/**/getAttempts",
                     "/user/**/isBlocked"
-                    //todo only authorized users?
-
                     // add here methods that need to omit security
                 )
                 .permitAll()

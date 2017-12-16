@@ -84,15 +84,16 @@ public class CustomerServiceImpl implements CustomerService {
         return customer;
     }
 
+    //todo search both names
     @Override
     public List<Customer> findByName(String name, Pageable request) {
-        Page<Customer> p = customerRepository.findByName(name, request);
+        Page<Customer> p = customerRepository.findByNameStartingWithIgnoreCaseOrSurnameStartingWithIgnoreCase(name, name, request);
         return p.getContent();
     }
 
     @Override
     public List<Customer> findBySurname(String surname, Pageable request) {
-        Page<Customer> p = customerRepository.findBySurname(surname, request);
+        Page<Customer> p = customerRepository.readBySurnameStartingWithIgnoreCase(surname, request);
         return p.getContent();
     }
 

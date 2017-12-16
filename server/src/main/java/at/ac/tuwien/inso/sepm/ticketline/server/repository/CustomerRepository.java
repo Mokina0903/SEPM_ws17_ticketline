@@ -41,12 +41,12 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     /**
      *
      * @param name firstname of the wanted costumers
+     * @param surname surname of the wanted costumers
      * @param request  defienes how to read paged from the database
      * @return a list of customer,  though the size of the list is dependent of the pageable object
      */
-  //  @Query("Select * from customer c where c.name like %:name%")
-    Page<Customer> findByName(String name, Pageable request);
-    //Page<Customer> findByNameIgnoreCaseContaining(String name, Pageable request);
+    Page<Customer> findByNameStartingWithIgnoreCaseOrSurnameStartingWithIgnoreCase(String name, String surname, Pageable request);
+
 
     /**
      *
@@ -54,7 +54,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
      * @param request  defienes how to read paged from the database
      * @return a list of customer,  though the size of the list is dependent of the pageable object
      */
-    Page<Customer> findBySurname(String surname, Pageable request);
+    Page<Customer> readBySurnameStartingWithIgnoreCase(String surname, Pageable request);
 
 
 
