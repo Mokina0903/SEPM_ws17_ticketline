@@ -41,7 +41,7 @@ public interface CustomerService {
      * @param customer the customer to be updated
      * @throws CustomerNotValidException when the given customer is not valid
      */
-    void updateCustomer(Customer customer) throws CustomerNotValidException;
+    void updateCustomer(Customer customer) throws CustomerNotValidException, InvalidIdException;
 
     /**
      *

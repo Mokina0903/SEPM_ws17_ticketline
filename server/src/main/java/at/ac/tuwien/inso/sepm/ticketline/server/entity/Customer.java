@@ -30,7 +30,7 @@ public class Customer {
     @Size(max = 100)
     private String email;
 
-    @Column(nullable = false, name = "birthDate")
+    @Column(nullable = false, name = "birthdate")
     private LocalDate birthDate;
 
     public String getSurname() {

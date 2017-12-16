@@ -67,13 +67,13 @@ public class CustomerEndpoint {
 
     @RequestMapping(value="/create", method = RequestMethod.POST)
     @ApiOperation(value = "Create and save the given customer")
-    public CustomerDTO createCustomer(@RequestBody CustomerDTO customer){
+    public void createCustomer(@RequestBody CustomerDTO customer){
         try {
-            return customerMapper.customerToCustomerDTO(customerService.createCustomer(customerMapper.customerDTOToCustomer(customer)));
+            customerMapper.customerToCustomerDTO(customerService.createCustomer(customerMapper.customerDTOToCustomer(customer)));
         } catch (CustomerNotValidException e) {
             e.printStackTrace();
         }
-        return null;
+
     }
 
     @RequestMapping(value="/update", method = RequestMethod.POST)
@@ -81,7 +81,7 @@ public class CustomerEndpoint {
     public void updateCustomer(@RequestBody CustomerDTO customerDTO){
         try {
            customerService.updateCustomer(customerMapper.customerDTOToCustomer(customerDTO));
-        } catch (CustomerNotValidException e) {
+        } catch (CustomerNotValidException | InvalidIdException e) {
             e.printStackTrace();
         }
 

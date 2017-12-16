@@ -134,8 +134,9 @@ public class CustomerDialogController implements LocalizationObserver {
         if (customer != null) {
             if (customer.getKnr() != null) {
                 lbCustomerNumber.setVisible(true);
-                lbCustomerNumberText.setText(String.valueOf(customer.getKnr()));
                 lbCustomerNumberText.setVisible(true);
+                lbCustomerNumber.setText(String.valueOf(customer.getKnr()));
+
             }
             if (customer.getBirthDate() != null) {
                 dpBirthdate.setValue(customer.getBirthDate());
@@ -168,6 +169,7 @@ public class CustomerDialogController implements LocalizationObserver {
         LocalDate birthDate = dpBirthdate.getValue();
         String firstname = tfFirstName.getText();
 
+        Long knr = lbCustomerNumber.getText().isEmpty()? 0: Long.valueOf(lbCustomerNumber.getText());
 
 
         CustomerDTO.CustomerDTOBuilder builder = new CustomerDTO.CustomerDTOBuilder();
@@ -175,6 +177,9 @@ public class CustomerDialogController implements LocalizationObserver {
         builder.name(firstname);
         builder.surname(surname);
         builder.mail(mail);
+        if(knr != null){
+            builder.knr(knr);
+        }
         CustomerDTO customer = builder.build();
 
         if (!customerService.checkIfCustomerValid(customer)){

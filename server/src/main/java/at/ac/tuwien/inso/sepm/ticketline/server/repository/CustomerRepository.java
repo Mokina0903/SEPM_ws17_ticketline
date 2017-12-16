@@ -5,10 +5,14 @@ import at.ac.tuwien.inso.sepm.ticketline.server.entity.News;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 
+import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -56,6 +60,9 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
      */
     Page<Customer> readBySurnameStartingWithIgnoreCase(String surname, Pageable request);
 
-
+    @Modifying
+    @Transactional
+    @Query(value = "update Customer u set u.name = ?1, u.surname = ?2, u.email = ?3, u.birthdate = ?4 where u.knr = ?5", nativeQuery = true)
+    void setCustomerInfoByKnr(String name, String surname, String email, Timestamp birthDate, Long knr);
 
 }

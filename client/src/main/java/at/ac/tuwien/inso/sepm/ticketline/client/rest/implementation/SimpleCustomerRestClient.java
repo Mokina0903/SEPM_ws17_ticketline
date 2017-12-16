@@ -102,8 +102,7 @@ public class SimpleCustomerRestClient implements CustomerRestClient{
                     restClient.getServiceURI(CUSTOMER_URL+"/create"),
                     HttpMethod.POST,
                     entity,
-                    new ParameterizedTypeReference<List<CustomerDTO>>() {
-                    });
+                    Void.class);
         } catch (HttpStatusCodeException e) {
             throw new DataAccessException("Failed retrieve customer with status code " + e.getStatusCode().toString());
         } catch (RestClientException e) {
@@ -114,14 +113,13 @@ public class SimpleCustomerRestClient implements CustomerRestClient{
     @Override
     public void updateCustomer(CustomerDTO customer) throws DataAccessException {
         try {
-            LOGGER.debug("Save customer");
+            LOGGER.debug("Update customer");
             HttpEntity<CustomerDTO> entity = new HttpEntity<>(customer);
             restClient.exchange(
                 restClient.getServiceURI(CUSTOMER_URL+"/update"),
                 HttpMethod.POST,
                 entity,
-                new ParameterizedTypeReference<List<CustomerDTO>>() {
-                });
+                Void.class);
         } catch (HttpStatusCodeException e) {
             throw new DataAccessException("Failed retrieve customer with status code " + e.getStatusCode().toString());
         } catch (RestClientException e) {

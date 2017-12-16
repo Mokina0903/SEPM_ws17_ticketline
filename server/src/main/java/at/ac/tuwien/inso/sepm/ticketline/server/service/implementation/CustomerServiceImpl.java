@@ -12,12 +12,14 @@ import org.springframework.stereotype.Service;
 
 
 import javax.swing.*;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.OffsetTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.logging.Logger;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
@@ -68,11 +70,11 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public void updateCustomer(Customer customer) throws CustomerNotValidException {
+    public void updateCustomer(Customer customer) throws CustomerNotValidException, InvalidIdException {
         if(!validateCustomer(customer)){
         throw new CustomerNotValidException("Customer was not valid!"); }
 
-        customerRepository.save(customer);
+        customerRepository.setCustomerInfoByKnr(customer.getName(), customer.getSurname(), customer.getEmail(), Timestamp.valueOf(customer.getBirthDate().atStartOfDay()), customer.getKnr());
     }
 
     @Override
@@ -106,7 +108,7 @@ public class CustomerServiceImpl implements CustomerService {
         if(customer.getBirthDate().isAfter(LocalDate.now())){
             return false;
         }
-        if(ChronoUnit.DAYS.between(LocalDate.now(),customer.getBirthDate())<14*365){
+        if(ChronoUnit.DAYS.between(customer.getBirthDate(),LocalDate.now())<14*365){
             return false;
         }
         if(customer.getKnr()!= null && customer.getKnr()<0){
