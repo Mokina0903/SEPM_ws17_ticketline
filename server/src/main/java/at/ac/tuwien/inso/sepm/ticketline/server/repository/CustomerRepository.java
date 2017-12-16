@@ -40,8 +40,8 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
     /**
      *
-     * @param name firstname of the wanted costumers
-     * @param surname surname of the wanted costumers
+     * @param name substring of firstname of the wanted costumers
+     * @param surname substring of surname of the wanted costumers
      * @param request  defienes how to read paged from the database
      * @return a list of customer,  though the size of the list is dependent of the pageable object
      */
