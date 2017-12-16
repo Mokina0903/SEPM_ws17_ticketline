@@ -44,6 +44,8 @@ public class CustomerDialogController implements LocalizationObserver {
     public TextField tfEmail;
     @FXML
     public TextField tfFirstName;
+    @FXML
+    public Label lbInvalidCustomer;
 
 
     @FXML
@@ -109,6 +111,7 @@ public class CustomerDialogController implements LocalizationObserver {
         lbInvalidEmail.setVisible(false);
         lbCustomerNumber.setVisible(false);
         lbCustomerNumberText.setVisible(false);
+        lbInvalidCustomer.setVisible(false);
 
         setButtonGraphic(btOk, "CHECK", Color.OLIVE);
         setButtonGraphic(btCancel, "TIMES", Color.CRIMSON);
@@ -175,9 +178,10 @@ public class CustomerDialogController implements LocalizationObserver {
         CustomerDTO customer = builder.build();
 
         if (!customerService.checkIfCustomerValid(customer)){
-
+            lbInvalidCustomer.setVisible(true);
             return;
         }
+        lbInvalidCustomer.setVisible(false);
 
 
         try {
