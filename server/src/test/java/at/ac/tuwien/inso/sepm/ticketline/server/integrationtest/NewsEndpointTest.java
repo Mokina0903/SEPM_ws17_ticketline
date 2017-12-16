@@ -236,4 +236,17 @@ public class NewsEndpointTest extends BaseIntegrationTest {
                 .build())));
     }
 
+    @Test
+    public void findOldNewsByUserAsUser(){
+        setupDefaultNews();
+        Response response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .header(HttpHeaders.AUTHORIZATION, validUserTokenWithPrefix)
+            .when().get(NEWS_ENDPOINT+"/old/{userId}",1)
+            .then().extract().response();
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
+        Assert.assertThat(Arrays.asList(response.as(SimpleNewsDTO[].class)), is(Collections.emptyList()));
+    }
+
 }
