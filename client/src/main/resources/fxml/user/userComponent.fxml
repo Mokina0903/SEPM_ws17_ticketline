@@ -16,17 +16,20 @@
             fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.user.UserController">
 
     <top>
-        <fx:include source="/fxml/tabHeader.fxml" fx:id="tabHeader"/>
+        <fx:include source="/fxml/tabHeader.fxml" fx:id="tabHeader" />
     </top>
 
     <center>
 
         <TableView fx:id="userTableView">
             <columns>
-                <TableColumn fx:id="usernameCol" text="Name"/>
-                <TableColumn fx:id="blockedCol" text="blocked"/>
-                <TableColumn fx:id="roleCol" text="Role"/>
+                <TableColumn fx:id="usernameCol" prefWidth="300.0" text="Name"/>
+                <TableColumn fx:id="roleCol" prefWidth="50.0" text="Role"/>
+                <TableColumn fx:id="blockedCol" prefWidth="50.0" text="blocked"/>
             </columns>
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+            </columnResizePolicy>
         </TableView>
     </center>
     <right>
@@ -34,10 +37,10 @@
             <BorderPane.margin>
                 <Insets left="10" top="10" bottom="10" right="10" />
             </BorderPane.margin>
-            <Button fx:id="addUser" onAction="#openAddUserDialog" text="Add User" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-            <Button fx:id="unlock" onAction="#unlockUser" text="Unlock" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-            <Button fx:id="lock" onAction="#lockUser" text="Lock" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-            <Button fx:id="resetPwd" onAction="#openEditUserDialog" text="Reset Password" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+            <Button fx:id="addUser" onAction="#openAddUserDialog" text="Add User" prefWidth="170.0" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <Button fx:id="unlock" onAction="#unlockUser" text="Unlock" prefWidth="170.0" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+            <Button fx:id="lock" onAction="#lockUser" text="Lock" prefWidth="170.0" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+            <Button fx:id="resetPwd" onAction="#openEditUserDialog" prefWidth="170.0" text="Reset Password" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
         </GridPane>
 
     </right>
