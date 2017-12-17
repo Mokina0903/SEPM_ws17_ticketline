@@ -2,8 +2,10 @@ package at.ac.tuwien.inso.sepm.ticketline.server.entity;
 
 
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.Objects;
 
 
 @Entity
@@ -23,10 +25,14 @@ public class Customer {
     @Column(nullable = false, name ="surname")
     private String surname;
 
-    @Column(nullable = false, name ="knr")
+    @Column(nullable = false, name ="knr", unique = true)
     private Long knr;
 
     @Column( name = "email")
+  /*  @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\."
+        +"[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@"
+        +"(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?",
+        message="{invalid.email}")*/
     @Size(max = 100)
     private String email;
 
@@ -88,6 +94,44 @@ public class Customer {
 
     public int compareTo(Customer customer) {
         return this.getId().compareTo(customer.getId());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Customer customer = (Customer) o;
+
+        if (id != null ? !id.equals(customer.id) : customer.id != null) return false;
+        if (knr != null ? !knr.equals(customer.knr) : customer.knr != null) return false;
+        if (name != null ? !name.equals(customer.name) : customer.name != null) return false;
+        if (surname != null ? !surname.equals(customer.surname) : customer.surname != null) return false;
+        if (email != null ? !email.equals(customer.email) : customer.email != null) return false;
+        return birthDate != null ? birthDate.equals(customer.birthDate) : customer.birthDate == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 30 * result + (knr != null ? knr.hashCode() : 0);
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (surname != null ? surname.hashCode() : 0);
+        result = 31 * result + (email != null ? email.hashCode() : 0);
+        result = 31 * result + (birthDate != null ? birthDate.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+            "id=" + id +
+            ", name='" + name + '\'' +
+            ", surname='" + surname + '\'' +
+            ", knr=" + knr +
+            ", email='" + email + '\'' +
+            ", birthDate=" + birthDate +
+            '}';
     }
 
     public static final class CustomerBuilder {

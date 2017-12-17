@@ -113,8 +113,6 @@ public class NewsEndpointTest extends BaseIntegrationTest {
             .when().get(NEWS_ENDPOINT + SPECIFIC_NEWS_PATH, TEST_NEWS_ID)
             .then().extract().response();
 
-        System.out.println(response.getStatusLine());
-
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
         Assert.assertThat(response.as(DetailedNewsDTO.class), is(DetailedNewsDTO.builder()
             .id(TEST_NEWS_ID)

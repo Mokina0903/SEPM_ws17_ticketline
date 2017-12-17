@@ -173,6 +173,7 @@ public class CustomerController extends TabElement implements LocalizationObserv
 
         TableView<CustomerDTO> tvCustomer = new TableView<>();
 
+        tvCustomer.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         tvCustomer.setFixedCellSize(25);
         tvCustomer.prefHeightProperty().bind(Bindings.size(tvCustomer.getItems()).multiply(tvCustomer.getFixedCellSize()).add(30));
 
@@ -230,8 +231,6 @@ public class CustomerController extends TabElement implements LocalizationObserv
     private void noMatchFound() {
         LOGGER.info("no search match");
         lbNoMatch.setVisible(true);
-
-        //set empty tv
     }
 
     @FXML
