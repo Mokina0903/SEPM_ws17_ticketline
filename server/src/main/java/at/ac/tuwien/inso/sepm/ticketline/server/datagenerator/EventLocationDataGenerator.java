@@ -18,6 +18,7 @@ import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -111,7 +112,7 @@ public class EventLocationDataGenerator {
 
                 LocalDateTime start=LocalDateTime.ofInstant(
                     faker.date()
-                        .past(365 * 3, TimeUnit.DAYS).
+                        .between(faker.date().past(365, TimeUnit.DAYS),faker.date().future(365, TimeUnit.DAYS)).
                         toInstant(),
                     ZoneId.systemDefault()
                 );
