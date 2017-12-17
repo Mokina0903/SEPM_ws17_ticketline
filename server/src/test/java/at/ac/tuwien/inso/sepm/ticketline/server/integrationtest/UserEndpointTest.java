@@ -27,7 +27,7 @@ public class UserEndpointTest extends BaseIntegrationTest {
     private static final String USER_ENDPOINT_UNBLOCK = "/user/unblock";
     private static final String USER_ENDPOINT_FIND = "/user/find/{userName}";
     private static final String USER_ENDPOINT_RESET = "/user/resetPassword";
-    private static final String USER_ENDPOINT_IS_BLOCKED = "/user/isBlocked/{userName}";
+    private static final String USER_ENDPOINT_IS_BLOCKED = "/user/isBlocked/{username}";
     private static final String USER_ENDPOINT_NEW_USER = "/user";
     private static final String SPECIFIC_USER_PATH = "/{userId}";
 
@@ -124,12 +124,12 @@ public class UserEndpointTest extends BaseIntegrationTest {
     }
 
     // NOT Possible: (TEST) Add Test for Logout US 1
-    // TODO: (TEST) Add Test Admin unlock US 1
+    // DONE: (TEST) Add Test Admin unlock US 1
     // TODO: (TEST) Test correct privileges at REST US 1
     // Done: (TEST) Show Users US 1
-    // TODO: (TEST) Admin can not lock himself BUS
+    // DONE: (TEST) Admin can not lock himself BUS
     // DONE: (TEST) Add New Users (Admin/Seller) (1/2) BUS
-    // TODO: (TEST) Block/Unblock Users BUS
+    // DONE: (TEST) Block/Unblock Users BUS
     // DONE: (TEST) SetPassword: Login with old -> reset Password -> login with new Password BUS
     // DONE: (TEST) AddNewUser(<bereits angelegter User>) darf nicht möglich sein
 
@@ -166,7 +166,7 @@ public class UserEndpointTest extends BaseIntegrationTest {
     }
 
 
-    //TODO BlockUserAsAdmin
+
     @Test
     public void blockUser(){
         super.setupDefaultUsers();
@@ -225,9 +225,9 @@ public class UserEndpointTest extends BaseIntegrationTest {
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN.value()));
     }
 
-/*
+
     @Test
-    public void BlockAndUnblockUserAsAdmin() {
+    public void BlockUserAsAdmin() {
         super.setupDefaultUsers();
         Response response = RestAssured
             .given()
@@ -242,12 +242,70 @@ public class UserEndpointTest extends BaseIntegrationTest {
             .given()
             .contentType(ContentType.JSON)
             .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
-            .when().get(USER_ENDPOINT_IS_BLOCKED, USER_USERNAME)
+            .when().get("/user/user/isBlocked")
             .then().extract().response();
+        System.out.println(response.asString());
         Assert.assertTrue(response.asString().equals("true"));
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
+    }
+
+    @Test
+    public void BlockAdminAsSameAdmin() {
+        super.setupDefaultUsers();
+        Response response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
+            .body(ADMIN_USERNAME)
+            .when().post(USER_ENDPOINT_BLOCK)
+            .then().extract().response();
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.NOT_ACCEPTABLE.value()));
+
+    }
+
+    @Test
+    public void BlockAdminAsOtherAdmin() {
+        super.setupDefaultUsers();
+        Response response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
+            .body(ADMIN_USERNAME + "test")
+            .when().post(USER_ENDPOINT_BLOCK)
+            .then().extract().response();
+        System.out.println(response.asString());
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
 
         response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
+            .when().get("/user/admintest/isBlocked")
+            .then().extract().response();
+        System.out.println(response.asString());
+        Assert.assertTrue(response.asString().equals("true"));
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
+    }
+
+
+    @Test
+    public void BlockAllAsAdmin() {
+        super.setupDefaultUsers();
+        Response response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
+            .body("f' or 'ha' = 'ha")
+            .when().post(USER_ENDPOINT_BLOCK)
+            .then().extract().response();
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.NOT_FOUND.value()));
+    }
+
+    @Test
+    public void UnblockUserAsAdmin() {
+        super.setupDefaultUsers();
+        userRepository.findOneByUserName(USER_USERNAME).setBlocked(true);
+        Response response = RestAssured
             .given()
             .contentType(ContentType.JSON)
             .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
@@ -255,11 +313,40 @@ public class UserEndpointTest extends BaseIntegrationTest {
             .when().post(USER_ENDPOINT_UNBLOCK)
             .then().extract().response();
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
+
+        response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
+            .when().get("/user/user/isBlocked")
+            .then().extract().response();
+        System.out.println(response.asString());
+        Assert.assertTrue(response.asString().equals("false"));
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
     }
 
-*/
+    @Test
+    public void UnblockUnblockedUserAsAdmin() {
+        super.setupDefaultUsers();
+        Response response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
+            .body(USER_USERNAME)
+            .when().post(USER_ENDPOINT_UNBLOCK)
+            .then().extract().response();
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
 
-
+        response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
+            .when().get("/user/user/isBlocked")
+            .then().extract().response();
+        System.out.println(response.asString());
+        Assert.assertTrue(response.asString().equals("false"));
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
+    }
 
 
 

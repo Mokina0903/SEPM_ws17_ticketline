@@ -105,12 +105,20 @@ public abstract class BaseIntegrationTest {
             .role(2)
             .build();
 
+        User admin2 = User.builder()
+            .userName(ADMIN_USERNAME + "test")
+            .password(encoder.encode(ADMIN_PASSWORD))
+            .notSeen(newsRepository.findAllByOrderByPublishedAtDesc())
+            .blocked(false)
+            .role(1)
+            .build();
 
         if (userRepository == null || userRepository.findAll().size() == 0) {
             userRepository.save(admin);
             userRepository.save(user);
+            userRepository.save(admin2);
         } else {
-            for (int i = 1; i <= 2; i++) {
+            for (int i = 1; i <= 3; i++) {
                 User tUser = userRepository.findOne((long) i);
                 tUser.resetAttempts();
                 tUser.setPassword(encoder.encode(USER_PASSWORD));
