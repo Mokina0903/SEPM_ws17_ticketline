@@ -2,19 +2,11 @@ package at.ac.tuwien.inso.sepm.ticketline.client.gui.user;
 
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.*;
-import at.ac.tuwien.inso.sepm.ticketline.client.gui.news.NewsAddFormularController;
-import at.ac.tuwien.inso.sepm.ticketline.client.gui.news.NewsController;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.UserService;
-import at.ac.tuwien.inso.sepm.ticketline.client.service.implementation.SimpleUserService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
-import at.ac.tuwien.inso.sepm.ticketline.rest.news.DetailedNewsDTO;
-import at.ac.tuwien.inso.sepm.ticketline.rest.news.SimpleNewsDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.user.DetailedUserDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.user.SimpleUserDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
-import javafx.application.Platform;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -23,14 +15,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -93,33 +83,33 @@ public class UserController extends TabElement implements LocalizationObserver{
         update();
         localizationSubject.attach(this);
 
+        // TODO: (David) Wie habt ihr das gelöst?
         usernameCol.setCellValueFactory(new PropertyValueFactory<>("username"));
         blockedCol.setCellValueFactory(new PropertyValueFactory<>("blocked"));
-        roleCol.setCellValueFactory(new PropertyValueFactory<>("role"));
+        roleCol.setCellValueFactory(new PropertyValueFactory<>("role")); // TODO: (David) Translate int to String
         disableUI();
     }
 
     public void loadUsers(){
-        // TODO: Wait for status, privileges
+        // TODO: (David) Wait for status, privileges
 
+        /*
         int i = 10;
 
-        //while (i > 0 && mainController.getUser() == null) {
+        while (i > 0 && mainController.getUser() == null) {
             try {
                 Thread.sleep(100);
                 i--;
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-        //}
+        }
 
         // Takes more than 1 Second
         if (i <= 0)
             return;
 
         // No privileges
-
-        /*
         DetailedUserDTO detailedUserDTO = mainController.getUser();
 
         System.out.println(detailedUserDTO.toString());
@@ -128,16 +118,12 @@ public class UserController extends TabElement implements LocalizationObserver{
             return;
         */
 
+
         Task<List<SimpleUserDTO>> taskloadUsers = new Task<>() {
             @Override
             protected List<SimpleUserDTO> call() throws DataAccessException {
                 userTableView.getItems().clear();
                 disableUI();
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
                 List<SimpleUserDTO> users = userService.findAll();
                 userList = users;
                 return users;
@@ -157,6 +143,7 @@ public class UserController extends TabElement implements LocalizationObserver{
             @Override
             protected void failed() {
                 super.failed();
+                // TODO: (David) Alert?
                 LOGGER.warn("Could not load userlist");
             }
         };
@@ -173,38 +160,88 @@ public class UserController extends TabElement implements LocalizationObserver{
     public void unlockUser(ActionEvent actionEvent) {
         UserSimpleProperty userSimpleProperty = userTableView.getSelectionModel().getSelectedItem();
 
-        DetailedUserDTO detailedUserDTO = mainController.getUser();
-
-        if (userSimpleProperty.getUsername().equals(detailedUserDTO.getUserName())) {
-            // TODO: Allert: is not allowed
+        if (userSimpleProperty == null) {
+            // TODO: (David) Alert
             return;
         }
 
-        try {
-            userService.unblockUser(userSimpleProperty.getUsername());
-            loadUsers();
-        } catch (DataAccessException e) {
-            e.printStackTrace();
+        if (userSimpleProperty.getUsername().equals(mainController.getUser().getUserName())) {
+            // TODO: (David) Alert: is not allowed
+            return;
         }
+
+        Task<Void> workerTask = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                userService.unblockUser(userSimpleProperty.getUsername());
+                return null;
+            }
+
+            @Override
+            protected void succeeded() {
+                super.succeeded();
+                loadUsers();
+
+            }
+
+            @Override
+            protected void failed() {
+                super.failed();
+                loadUsers();
+                // TODO: (David) Alert
+            }
+        };
+
+        workerTask.runningProperty().addListener((observable, oldValue, running) ->
+            mainController.setProgressbarProgress(
+                running ? ProgressBar.INDETERMINATE_PROGRESS : 0)
+        );
+
+        new Thread(workerTask).start();
     }
 
     @FXML
     public void lockUser(ActionEvent actionEvent) {
         UserSimpleProperty userSimpleProperty = userTableView.getSelectionModel().getSelectedItem();
 
-        DetailedUserDTO detailedUserDTO = mainController.getUser();
-
-        if (userSimpleProperty.getUsername().equals(detailedUserDTO.getUserName())) {
-            // TODO: Allert: is not allowed
+        if (userSimpleProperty == null) {
+            // TODO: (David) Alert
             return;
         }
 
-        try {
-            userService.blockUser(userSimpleProperty.getUsername());
-            loadUsers();
-        } catch (DataAccessException e) {
-            e.printStackTrace();
+        if (userSimpleProperty.getUsername().equals(mainController.getUser().getUserName())) {
+            // TODO: (David) Alert: is not allowed
+            return;
         }
+
+        Task<Void> workerTask = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                userService.blockUser(userSimpleProperty.getUsername());
+                return null;
+            }
+
+            @Override
+            protected void succeeded() {
+                super.succeeded();
+                loadUsers();
+
+            }
+
+            @Override
+            protected void failed() {
+                super.failed();
+                loadUsers();
+                // TODO: (David) Alert
+            }
+        };
+
+        workerTask.runningProperty().addListener((observable, oldValue, running) ->
+            mainController.setProgressbarProgress(
+                running ? ProgressBar.INDETERMINATE_PROGRESS : 0)
+        );
+
+        new Thread(workerTask).start();
     }
 
     @FXML

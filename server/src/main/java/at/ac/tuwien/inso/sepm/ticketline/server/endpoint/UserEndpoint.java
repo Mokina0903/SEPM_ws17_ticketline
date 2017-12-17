@@ -113,28 +113,6 @@ public class UserEndpoint {
        // userService.save(user);
     }
 
-    /*
-    @RequestMapping(value = "/decreaseAttempts", method = RequestMethod.POST)
-    @ApiOperation(value = "Decrease login attempts of a specific user entry")
-    public void decreaseLoginAttemptsOfUser(@RequestBody String username) {
-
-        User user = userService.findByUsername(username);
-        user.setAttempts(user.getAttempts()-1);
-        userService.save(user);
-    }
-    */
-
-    /*
-    @RequestMapping(value = "/resetAttempts", method = RequestMethod.POST)
-    @ApiOperation(value = "Decrease login attempts of a specific user entry")
-    public void resetAttempts(@RequestBody String username) {
-
-        User user = userService.findByUsername(username);
-        user.setAttempts(LOGIN_ATTEMPTS);
-        userService.save(user);
-    }
-    */
-
     @RequestMapping(value = "/resetPassword", method = RequestMethod.POST)
     @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation(value = "Reset a specific users password")
@@ -175,5 +153,27 @@ public class UserEndpoint {
         User user = userService.findByUsername(username);
         return user.isBlocked();
     }
+
+    /*
+    @RequestMapping(value = "/decreaseAttempts", method = RequestMethod.POST)
+    @ApiOperation(value = "Decrease login attempts of a specific user entry")
+    public void decreaseLoginAttemptsOfUser(@RequestBody String username) {
+
+        User user = userService.findByUsername(username);
+        user.setAttempts(user.getAttempts()-1);
+        userService.save(user);
+    }
+    */
+
+    /*
+    @RequestMapping(value = "/resetAttempts", method = RequestMethod.POST)
+    @ApiOperation(value = "Decrease login attempts of a specific user entry")
+    public void resetAttempts(@RequestBody String username) {
+
+        User user = userService.findByUsername(username);
+        user.setAttempts(LOGIN_ATTEMPTS);
+        userService.save(user);
+    }
+    */
 
 }
