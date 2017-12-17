@@ -24,8 +24,10 @@ public class UserEndpointTest extends BaseIntegrationTest {
 
     private static final String USER_ENDPOINT = "/user";
     private static final String USER_ENDPOINT_BLOCK = "/user/block";
+    private static final String USER_ENDPOINT_UNBLOCK = "/user/unblock";
     private static final String USER_ENDPOINT_FIND = "/user/find/{userName}";
     private static final String USER_ENDPOINT_RESET = "/user/resetPassword";
+    private static final String USER_ENDPOINT_IS_BLOCKED = "/user/isBlocked/{userName}";
     private static final String USER_ENDPOINT_NEW_USER = "/user";
     private static final String SPECIFIC_USER_PATH = "/{userId}";
 
@@ -121,7 +123,7 @@ public class UserEndpointTest extends BaseIntegrationTest {
 
     }
 
-    // TODO: (TEST) Add Test for Logout US 1
+    // NOT Possible: (TEST) Add Test for Logout US 1
     // TODO: (TEST) Add Test Admin unlock US 1
     // TODO: (TEST) Test correct privileges at REST US 1
     // Done: (TEST) Show Users US 1
@@ -145,7 +147,6 @@ public class UserEndpointTest extends BaseIntegrationTest {
             .when().post(USER_ENDPOINT_RESET)
             .then().extract().response();
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN.value()));
-
     }
 
     @Test
@@ -182,7 +183,7 @@ public class UserEndpointTest extends BaseIntegrationTest {
     }
 
 
-/*
+
     @Test
     public void ResetUserAsAdmin() {
         super.setupDefaultUsers();
@@ -206,23 +207,11 @@ public class UserEndpointTest extends BaseIntegrationTest {
             .then().extract().response();
             //Assert.assertTrue(response.asString().contains(USER_PASSWORD + "neu"));
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
-
-        response = RestAssured
-            .given()
-            .contentType(ContentType.JSON)
-            .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
-            .body(SimpleUserDTO.builder()
-                .userName(USER_USERNAME)
-                .password(USER_PASSWORD)
-                .build())
-            .when().post(USER_ENDPOINT_RESET)
-            .then().extract().response();
-        Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
     }
-    */
+
 
     @Test
-    public void BlockUserAsAdmin() {
+    public void BlockAdminAsUser() {
         super.setupDefaultUsers();
         Response response = RestAssured
             .given()
@@ -235,6 +224,44 @@ public class UserEndpointTest extends BaseIntegrationTest {
             .then().extract().response();
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN.value()));
     }
+
+/*
+    @Test
+    public void BlockAndUnblockUserAsAdmin() {
+        super.setupDefaultUsers();
+        Response response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
+            .body(USER_USERNAME)
+            .when().post(USER_ENDPOINT_BLOCK)
+            .then().extract().response();
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
+
+        response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
+            .when().get(USER_ENDPOINT_IS_BLOCKED, USER_USERNAME)
+            .then().extract().response();
+        Assert.assertTrue(response.asString().equals("true"));
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
+
+        response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
+            .body(USER_USERNAME)
+            .when().post(USER_ENDPOINT_UNBLOCK)
+            .then().extract().response();
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
+    }
+
+*/
+
+
+
+
 
     @Test
     public void newUserAsAdmin() {
@@ -355,5 +382,7 @@ public class UserEndpointTest extends BaseIntegrationTest {
             .then().extract().response();
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN.value()));
     }
+
+
 
 }

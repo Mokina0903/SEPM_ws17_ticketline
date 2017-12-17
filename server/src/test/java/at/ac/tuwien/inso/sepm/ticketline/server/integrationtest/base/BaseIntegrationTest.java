@@ -113,6 +113,7 @@ public abstract class BaseIntegrationTest {
             for (int i = 1; i <= 2; i++) {
                 User tUser = userRepository.findOne((long) i);
                 tUser.resetAttempts();
+                tUser.setPassword(encoder.encode(USER_PASSWORD));
                 tUser.setBlocked(false);
                 tUser.setNotSeen(newsRepository.findAllByOrderByPublishedAtDesc());
                 userRepository.save(tUser);
