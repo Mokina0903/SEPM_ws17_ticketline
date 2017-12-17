@@ -155,6 +155,7 @@ public class MainController implements LocalizationObserver{
             }
             //initNewsTabPane();
             newsController.loadNews();
+            eventController.loadEvents();
             initMenue();
         } else {
             if (!spMainContent.getChildren().contains(login)) {

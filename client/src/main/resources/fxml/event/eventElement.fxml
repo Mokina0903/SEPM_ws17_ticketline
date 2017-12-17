@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+<?import java.net.URL?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.RowConstraints?>
+<VBox fx:id="vbEventElement"
+      xmlns="http://javafx.com/javafx/8.0.92"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.event.EventElementController"
+      spacing="5.0"
+      onMouseClicked="#detailedEventInfo">
+    <stylesheets>
+        <URL value="@/css/eventElement.css"/>
+    </stylesheets>
+    <padding>
+        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+    </padding>
+    <GridPane>
+        <Label fx:id="lblTitle" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="eventTitle" text="&lt;EventTitle&gt;"/>
+        <Label fx:id="lblStartDate"  GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="eventDate" text="&lt;DD.MM.YYYY | hh:mm&gt;"/>
+        <Label fx:id="lblEndDate"  GridPane.rowIndex="1" GridPane.columnIndex="1" styleClass="eventDate" text="&lt;DD.MM.YYYY | hh:mm&gt;"/>
+        <Label fx:id="lblArtistFirstName" GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="eventText" text="&lt;EventText&gt;"/>
+        <Label fx:id="lblArtistLastName" GridPane.rowIndex="2" GridPane.columnIndex="1" styleClass="eventText" text="&lt;EventText&gt;"/>
+        <Label fx:id="lblPriceText" GridPane.rowIndex="3" GridPane.columnIndex="0" styleClass="eventPrice" text="&lt;EventPrice&gt;"/>
+        <Label fx:id="lblPrice" GridPane.rowIndex="3" GridPane.columnIndex="1" styleClass="eventPrice" text="&lt;EventPrice&gt;"/>
+        <Label fx:id="lblText" GridPane.rowIndex="4" GridPane.columnIndex="0" styleClass="eventText" wrapText="true" text="&lt;EventText&gt;"/>
+        <Button fx:id="backButton" GridPane.rowIndex="5" GridPane.columnIndex="0" onAction="#backToSimpleEventView" text="%detailedNews.backButton"/>
+        <ImageView fx:id="eventImageView" GridPane.rowIndex="5" GridPane.columnIndex="1" />
+        <columnConstraints>
+            <ColumnConstraints hgrow="ALWAYS"/>
+            <ColumnConstraints hgrow="ALWAYS"/>
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints/>
+            <RowConstraints/>
+            <RowConstraints/>
+            <RowConstraints/>
+        </rowConstraints>
+    </GridPane>
+
+</VBox>
