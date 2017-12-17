@@ -24,4 +24,14 @@ public interface EventService {
      * @throws DataAccessException in case something went wrong
      */
     DetailedEventDTO findById( Long id) throws DataAccessException;
+
+    /**
+     * Find all upcoming events(that has not yet ended) ordered by Date ascending
+     *
+     * @param pageIndex page to load
+     * @param eventsPerPage number of events per page
+     * @return list of upcoming events
+     * @throws DataAccessException in case something went wrong
+     */
+    List<SimpleEventDTO> findAllUpcoming(int pageIndex, int eventsPerPage) throws DataAccessException;
 }

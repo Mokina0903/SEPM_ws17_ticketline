@@ -31,4 +31,9 @@ public class SimpleEventService implements EventService {
     public DetailedEventDTO findById( Long id ) throws DataAccessException {
         return eventRestClient.findById(id);
     }
+
+    @Override
+    public List<SimpleEventDTO> findAllUpcoming( int pageIndex, int eventsPerPage ) throws DataAccessException {
+        return eventRestClient.findAllUpcoming(pageIndex,eventsPerPage);
+    }
 }
