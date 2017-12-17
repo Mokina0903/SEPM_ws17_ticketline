@@ -131,7 +131,7 @@ public abstract class BaseIntegrationTest {
 
     // TODO: (Tutorin) Is this correct?
     public void setupDefaultNews(){
-        // TODO: David Start at 1 sequenc
+        // TODO: (David) Start at 1 sequenc
         String TEST_NEWS_TEXT = "TestNewsText";
         String TEST_NEWS_TITLE = "title";
         LocalDateTime TEST_NEWS_PUBLISHED_AT =

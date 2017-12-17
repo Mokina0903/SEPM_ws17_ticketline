@@ -13,8 +13,6 @@ import java.util.regex.Pattern;
 @Component
 public class UserSummaryMapper {
 
-
-    // TODO: what todo here?
     private static final int NUMBER_OF_ALLOWED_CHARACTERS = 50;
     private static final Pattern PATTERN = Pattern.compile("^(.{0," + NUMBER_OF_ALLOWED_CHARACTERS + "})(\\s|$)|.*$");
 
