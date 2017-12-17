@@ -1,4 +1,4 @@
-package at.ac.tuwien.inso.sepm.ticketline.server.service.implementation;
+package at.ac.tuwien.inso.sepm.ticketline.server.serviencryptedntation;
 
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.User;
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.AlreadyExistsException;
@@ -103,8 +103,7 @@ public class SimpleUserService implements UserService {
 
     @Override
     public User resetPassword(User user) {
-        user.setPassword(user.getPassword());
-        //user.setPassword((new BCryptPasswordEncoder(10)).encode(user.getPassword()));
+        user.setPassword((new BCryptPasswordEncoder(10)).encode(user.getPassword()));
         userRepository.save(user);
         return null;
     }
