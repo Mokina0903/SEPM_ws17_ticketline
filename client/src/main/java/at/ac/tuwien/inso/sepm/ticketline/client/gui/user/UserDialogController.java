@@ -6,9 +6,11 @@ import at.ac.tuwien.inso.sepm.ticketline.client.gui.MainController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.news.NewsController;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.UserService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
+import at.ac.tuwien.inso.sepm.ticketline.client.util.JavaFXUtils;
 import at.ac.tuwien.inso.sepm.ticketline.rest.user.DetailedUserDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.user.SimpleUserDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -83,8 +85,6 @@ public class UserDialogController {
             usernameTF.setText(userSimpleProperty.getUsername());
             passwordPF.setDisable(false);
             passwordConfirmPF.setDisable(false);
-
-
         }
     }
 
@@ -101,7 +101,6 @@ public class UserDialogController {
             return;
         }
 
-
         if (passwordPF.getText().trim().isEmpty() || !passwordPF.getText().equals(passwordConfirmPF.getText())) {
             System.out.println("Fehler"); // TODO: Alert
             return;
@@ -112,41 +111,56 @@ public class UserDialogController {
             System.out.println("Fehler"); // TODO: Alert
         }
 
-        if (userSimpleProperty == null) {
-            // Add new User
-            SimpleUserDTO simpleUserDTO = SimpleUserDTO.builder()
-                .userName(usernameTF.getText())
-                .password(passwordPF.getText())
-                .role(role + 1)
-                .build();
+        SimpleUserDTO simpleUserDTO = SimpleUserDTO.builder()
+            .userName(usernameTF.getText())
+            .password(passwordPF.getText())
+            .role(role + 1)
+            .build();
 
-            try {
-                userService.addNewUser(simpleUserDTO);
-            } catch (DataAccessException e) {
-                e.printStackTrace();
+        Task<Void> workerTask = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                if (userSimpleProperty == null) {
+                    // Add new User
+                    userService.addNewUser(simpleUserDTO);
+                } else {
+                    // Reset Password
+                    userService.resetUserPassword(simpleUserDTO);
+                }
+                return null;
             }
 
-        } else {
-            // TODO: Implement here
-            // Reset Password
-            // userSimpleProperty
-        }
+            @Override
+            protected void succeeded() {
+                super.succeeded();
+                userController.loadUsers();
+                userController.getUserTab().setContent(oldContent);
+            }
 
-        // TODO: Only when it was correct
-        userController.loadUsers();
-        userController.getUserTab().setContent(oldContent);
+            @Override
+            protected void failed() {
+                // TODO: (David) Alert
+                //getException().toString()
+            }
+        };
+
+        workerTask.runningProperty().addListener((observable, oldValue, running) ->
+            mainController.setProgressbarProgress(
+                running ? ProgressBar.INDETERMINATE_PROGRESS : 0)
+        );
+
+        new Thread(workerTask).start();
+
     }
 
     @FXML
     public void goBackWithoutSave(ActionEvent actionEvent) {
-        //TODO: save the manipulated DTO to the Database. It should not make a difference either an new user or an exsisting user is updated
-
         userController.loadUsers();
         userController.getUserTab().setContent(oldContent);
     }
 
     public void update() {
-        // TODO: Question How to update also this fields?
+        // TODO: (David) Question How to update also this fields?
 
         usernameLb.setText(BundleManager.getBundle().getString("authenticate.userName"));
         passwordLb.setText(BundleManager.getBundle().getString("authenticate.password"));
