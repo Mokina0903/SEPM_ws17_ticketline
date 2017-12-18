@@ -16,6 +16,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import org.controlsfx.glyphfont.FontAwesome;
+import org.controlsfx.glyphfont.GlyphFont;
+import org.controlsfx.glyphfont.GlyphFontRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +57,9 @@ public class UserController extends TabElement implements LocalizationObserver{
     private final MainController mainController;
     private final SpringFxmlLoader springFxmlLoader;
 
+    private GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
+    private final int FONT_SIZE = 16;
+
     @Autowired
     private LocalizationSubject localizationSubject;
 
@@ -82,6 +87,12 @@ public class UserController extends TabElement implements LocalizationObserver{
         tabHeaderController.setIcon(FontAwesome.Glyph.USER);
         update();
         localizationSubject.attach(this);
+
+        addUser.setGraphic(fontAwesome.create("USER_PLUS").size(FONT_SIZE));
+        lock.setGraphic(fontAwesome.create("LOCK").size(FONT_SIZE));
+        unlock.setGraphic(fontAwesome.create("UNLOCK").size(FONT_SIZE));
+
+
 
         // TODO: (David) Wie habt ihr das gelöst?
         usernameCol.setCellValueFactory(new PropertyValueFactory<>("username"));
@@ -266,10 +277,7 @@ public class UserController extends TabElement implements LocalizationObserver{
     @Override
     public void update() {
         tabHeaderController.setTitle(BundleManager.getBundle().getString("user.title"));
-        lock.setText(BundleManager.getBundle().getString("user.lock"));
-        unlock.setText(BundleManager.getBundle().getString("user.unlock"));
         resetPwd.setText(BundleManager.getBundle().getString("user.resetPassoword"));
-        addUser.setText(BundleManager.getBundle().getString("user.addUser"));
 
         usernameCol.setText(BundleManager.getBundle().getString("authenticate.userName"));
         blockedCol.setText(BundleManager.getBundle().getString("user.locked"));
