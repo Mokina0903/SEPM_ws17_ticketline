@@ -174,7 +174,7 @@ public class NewsController extends TabElement implements LocalizationObserver{
                             springFxmlLoader.loadAndWrap("/fxml/news/newsElement.fxml");
                         wrapper.getController().initializeData(newsDTO, newsService, mainController, NewsController.this, userService);
                         Label title = wrapper.getController().getLblTitle();
-                        title.setText("(NEW)" + title.getText());
+                        title.setText("("+BundleManager.getBundle().getString("news.new")+")" + title.getText());
                         wrapper.getLoadedObject().setStyle("-fx-background-color:rgba(220, 229, 244, .7)");
 
                         vbNewsBoxChildren.add(wrapper.getController().vbNewsElement);
@@ -229,7 +229,7 @@ public class NewsController extends TabElement implements LocalizationObserver{
     public void update() {
 
         tabHeaderController.setTitle(BundleManager.getBundle().getString("news.news"));
-
+        loadNews();
     }
 
     @Override
