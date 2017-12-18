@@ -119,6 +119,7 @@ public class NewsAddFormularController implements LocalizationObserver {
 
     @FXML
     public void saveNewNews(ActionEvent actionEvent) {
+        mainController.setGeneralErrorUnvisable();
 
         DetailedNewsDTO.NewsDTOBuilder builder = new DetailedNewsDTO.NewsDTOBuilder();
         lblInvalidTitle.setVisible(false);
@@ -152,6 +153,7 @@ public class NewsAddFormularController implements LocalizationObserver {
     }
 
     public void addImage(ActionEvent actionEvent) {
+        mainController.setGeneralErrorUnvisable();
 
         String home = System.getProperty("user.home");
         FileChooser fc = new FileChooser();
