@@ -194,5 +194,7 @@ public class NewsAddFormularController implements LocalizationObserver {
     public void update() {
         lblAddImage.setText(BundleManager.getBundle().getString("news.addimage"));
         lblTitle.setText(BundleManager.getBundle().getString("news.title"));
+        lblInvalidText.setText(BundleManager.getBundle().getString("news.text.tooLong"));
+        lblInvalidTitle.setText(BundleManager.getBundle().getString("news.title.tooLong"));
     }
 }
