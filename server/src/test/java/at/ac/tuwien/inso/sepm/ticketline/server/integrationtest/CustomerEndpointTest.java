@@ -3,25 +3,25 @@ package at.ac.tuwien.inso.sepm.ticketline.server.integrationtest;
 import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Customer;
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.CustomerNotValidException;
+import at.ac.tuwien.inso.sepm.ticketline.server.exception.InvalidIdException;
 import at.ac.tuwien.inso.sepm.ticketline.server.integrationtest.base.BaseIntegrationTest;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.CustomerRepository;
+import at.ac.tuwien.inso.sepm.ticketline.server.service.CustomerService;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.client.HttpStatusCodeException;
 
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
 
+import static junit.framework.TestCase.fail;
 import static org.hamcrest.core.Is.is;
 
 public class CustomerEndpointTest extends BaseIntegrationTest{
@@ -46,6 +46,8 @@ public class CustomerEndpointTest extends BaseIntegrationTest{
 
     @Autowired
     private CustomerRepository customerRepository;
+    @Autowired
+    private CustomerService customerService;
 
     @Before
     public void addCustomer() {
@@ -176,11 +178,8 @@ public class CustomerEndpointTest extends BaseIntegrationTest{
 
     //todo Validation Tests fail
 
-  /*  @Rule
-    public ExpectedException thrown = ExpectedException.none();
-
     @Test(expected = CustomerNotValidException.class)
-    public void createCustomerWithInvalidName() {
+    public void createCustomerWithInvalidName() throws CustomerNotValidException {
         Customer customer = Customer.builder()
             .id(TEST_CUSTOMER_ID)
             .knr(TEST_CUSTOMER_NUMBER)
@@ -189,28 +188,106 @@ public class CustomerEndpointTest extends BaseIntegrationTest{
             .mail(TEST_CUSTOMER_MAIL)
             .birthDate(TEST_CUSTOMER_BIRTHDATE)
             .build();
-        customerRepository.save(customer);
-        thrown.expect(CustomerNotValidException.class);
+            customerService.createCustomer(customer);
+            fail("CustomerNotValidException expected.");
     }
 
     @Test(expected = CustomerNotValidException.class)
-    public void createCustomerWithInvalidEmail() {
+    public void createCustomerWithInvalidSurname() throws CustomerNotValidException {
+        Customer customer = Customer.builder()
+            .id(TEST_CUSTOMER_ID)
+            .knr(TEST_CUSTOMER_NUMBER)
+            .name(TEST_CUSTOMER_NAME)
+            .surname("")
+            .mail(TEST_CUSTOMER_MAIL)
+            .birthDate(TEST_CUSTOMER_BIRTHDATE)
+            .build();
+        customerService.createCustomer(customer);
+        fail("CustomerNotValidException expected.");
     }
 
     @Test(expected = CustomerNotValidException.class)
-    public void createCustomerWithInvalidBirthdate() {
+    public void createCustomerWithInvalidEmail() throws CustomerNotValidException {
+        Customer customer = Customer.builder()
+            .id(TEST_CUSTOMER_ID)
+            .knr(TEST_CUSTOMER_NUMBER)
+            .name(TEST_CUSTOMER_NAME)
+            .surname(TEST_CUSTOMER_SURNAME)
+            .mail("invalid.Email")
+            .birthDate(TEST_CUSTOMER_BIRTHDATE)
+            .build();
+        customerService.createCustomer(customer);
+        fail("CustomerNotValidException expected.");
     }
 
     @Test(expected = CustomerNotValidException.class)
-    public void updateCustomerWithInvalidName() {
+    public void createCustomerWithInvalidBirthdate() throws CustomerNotValidException {
+        Customer customer = Customer.builder()
+            .id(TEST_CUSTOMER_ID)
+            .knr(TEST_CUSTOMER_NUMBER)
+            .name(TEST_CUSTOMER_NAME)
+            .surname(TEST_CUSTOMER_SURNAME)
+            .mail(TEST_CUSTOMER_MAIL)
+            .birthDate(LocalDate.now())
+            .build();
+        customerService.createCustomer(customer);
+        fail("CustomerNotValidException expected.");
     }
 
     @Test(expected = CustomerNotValidException.class)
-    public void updateCustomerWithInvalidEmail() {
+    public void updateCustomerWithInvalidName() throws InvalidIdException, CustomerNotValidException {
+        Customer customer = Customer.builder()
+            .id(TEST_CUSTOMER_ID)
+            .knr(TEST_CUSTOMER_NUMBER)
+            .name("")
+            .surname(TEST_CUSTOMER_SURNAME)
+            .mail(TEST_CUSTOMER_MAIL)
+            .birthDate(TEST_CUSTOMER_BIRTHDATE)
+            .build();
+        customerService.updateCustomer(customer);
+        fail("CustomerNotValidException expected.");
     }
 
     @Test(expected = CustomerNotValidException.class)
-    public void updateCustomerWithInvalidBirthdate() {
+    public void updateCustomerWithInvalidSurname() throws InvalidIdException, CustomerNotValidException {
+        Customer customer = Customer.builder()
+            .id(TEST_CUSTOMER_ID)
+            .knr(TEST_CUSTOMER_NUMBER)
+            .name(TEST_CUSTOMER_NAME)
+            .surname("")
+            .mail(TEST_CUSTOMER_MAIL)
+            .birthDate(TEST_CUSTOMER_BIRTHDATE)
+            .build();
+        customerService.updateCustomer(customer);
+        fail("CustomerNotValidException expected.");
     }
-*/
+
+    @Test(expected = CustomerNotValidException.class)
+    public void updateCustomerWithInvalidEmail() throws InvalidIdException, CustomerNotValidException {
+        Customer customer = Customer.builder()
+            .id(TEST_CUSTOMER_ID)
+            .knr(TEST_CUSTOMER_NUMBER)
+            .name(TEST_CUSTOMER_NAME)
+            .surname(TEST_CUSTOMER_SURNAME)
+            .mail("invalid.Email")
+            .birthDate(TEST_CUSTOMER_BIRTHDATE)
+            .build();
+        customerService.updateCustomer(customer);
+        fail("CustomerNotValidException expected.");
+    }
+
+    @Test(expected = CustomerNotValidException.class)
+    public void updateCustomerWithInvalidBirthdate() throws InvalidIdException, CustomerNotValidException {
+        Customer customer = Customer.builder()
+            .id(TEST_CUSTOMER_ID)
+            .knr(TEST_CUSTOMER_NUMBER)
+            .name(TEST_CUSTOMER_NAME)
+            .surname(TEST_CUSTOMER_SURNAME)
+            .mail(TEST_CUSTOMER_MAIL)
+            .birthDate(LocalDate.now())
+            .build();
+        customerService.updateCustomer(customer);
+        fail("CustomerNotValidException expected.");
+    }
+
 }
