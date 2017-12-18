@@ -166,9 +166,14 @@ public class MainController implements LocalizationObserver{
     public void loadDetailedUserDTO(String name) {
         try {
             this.detailedUserDTO = userService.findByName(name);
-
-            loadTabController();
-
+            customerController.preparePagination();
+            if(detailedUserDTO.getRole() == 2){
+                newsController.addNewNews.setDisable(true);
+                newsController.addNewNews.setVisible(false);
+            } else {
+                newsController.addNewNews.setDisable(false);
+                newsController.addNewNews.setVisible(true);
+            }
         } catch (DataAccessException e) {
             JavaFXUtils.createExceptionDialog(e, spMainContent.getScene().getWindow()).showAndWait();
             // e.printStackTrace();

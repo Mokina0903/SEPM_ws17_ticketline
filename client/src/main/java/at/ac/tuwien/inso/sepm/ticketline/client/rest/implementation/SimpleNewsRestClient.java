@@ -135,5 +135,11 @@ public class SimpleNewsRestClient implements NewsRestClient {
         }
     }
 
+    @Override
+    public List<SimpleNewsDTO> findAllNewsById(long id, int pageIndex, int newsPerPage) throws DataAccessException {
+        //todo
+        return null;
+    }
+
 
 }

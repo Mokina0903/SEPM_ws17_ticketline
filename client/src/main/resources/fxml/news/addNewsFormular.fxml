@@ -25,7 +25,7 @@
                 </BorderPane.margin>
 
                 <HBox spacing="8" GridPane.rowIndex="0" GridPane.columnIndex="0">
-                    <Label text="Title: "/>
+                    <Label fx:id="lblTitle" text="%news.title"/>
                     <TextField fx:id="TitleTF"/>
                     <Label fx:id="lblInvalidTitle" text="%news.title.tooLong" textFill="crimson"/>
                 </HBox>
@@ -49,7 +49,7 @@
                 </HBox>
                 <VBox GridPane.rowIndex="0" GridPane.columnIndex="1">
                     <HBox spacing="8">
-                        <Label text="Add Image: "/>
+                        <Label fx:id="lblAddImage" text="%news.addimage"/>
                         <Button fx:id="addImgBtn" onAction="#addImage" text="+" minWidth="30"/>
                     </HBox>
 
@@ -70,8 +70,8 @@
                     <Insets left="20" top="10" bottom="10" right="20"/>
                 </BorderPane.margin>
                 <HBox alignment="CENTER_RIGHT" spacing="8" GridPane.rowIndex="0" GridPane.columnIndex="0">
-                    <Button fx:id="backWithoutSaveBtn" text="Back" onAction="#goBackWithoutSave"/>
-                    <Button fx:id="saveBtn" text="Save" onAction="#saveNewNews"/>
+                    <Button fx:id="backWithoutSaveBtn" text="%detailedNews.backButton" onAction="#goBackWithoutSave"/>
+                    <Button fx:id="saveBtn" text="%news.save" onAction="#saveNewNews"/>
                 </HBox>
                 <columnConstraints>
                     <ColumnConstraints hgrow="ALWAYS"/>

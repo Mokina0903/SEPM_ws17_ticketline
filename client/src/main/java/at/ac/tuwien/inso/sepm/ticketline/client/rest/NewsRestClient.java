@@ -4,6 +4,7 @@ import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.rest.news.DetailedNewsDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.news.SimpleNewsDTO;
 
+
 import java.util.List;
 
 public interface NewsRestClient {
@@ -52,4 +53,6 @@ public interface NewsRestClient {
      * @throws DataAccessException
      */
     DetailedNewsDTO publishNews(DetailedNewsDTO newNews) throws DataAccessException;
+
+    List<SimpleNewsDTO> findAllNewsById(long id, int pageIndex, int newsPerPage) throws DataAccessException;
 }
