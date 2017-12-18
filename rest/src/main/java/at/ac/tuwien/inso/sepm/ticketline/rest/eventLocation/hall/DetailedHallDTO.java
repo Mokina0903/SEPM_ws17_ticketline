@@ -57,15 +57,7 @@ public class DetailedHallDTO {
         this.seats = seats;
     }
 
-    @Override
-    public String toString() {
-        return "DetailedHallDTO{" +
-            "id=" + id +
-            ", description='" + description + '\'' +
-            ", location=" + location +
-            ", seats=" + seats +
-            '}';
-    }
+
 
     @Override
     public boolean equals( Object o ) {
@@ -84,10 +76,14 @@ public class DetailedHallDTO {
     public int hashCode() {
         int result = getId().hashCode();
         result = 31 * result + getDescription().hashCode();
-        result = 31 * result + getLocation().hashCode();
         result = 31 * result + (getSeats() != null ? getSeats().hashCode() : 0);
         return result;
     }
+
+    public static DetailedHallDTOBuilder builder() {
+        return new DetailedHallDTOBuilder();
+    }
+
 
     public static final class DetailedHallDTOBuilder{
         private Long id;

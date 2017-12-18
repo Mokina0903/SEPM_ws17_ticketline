@@ -82,7 +82,6 @@ public class Seat {
         result = 31 * result + getNr();
         result = 31 * result + getRow();
         result = 31 * result + (int) getSector();
-        result = 31 * result + getHall().hashCode();
         return result;
     }
 
@@ -93,7 +92,6 @@ public class Seat {
             ", nr=" + nr +
             ", row=" + row +
             ", sector=" + sector +
-            ", hall=" + hall +
             '}';
     }
 

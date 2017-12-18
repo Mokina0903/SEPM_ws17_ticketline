@@ -1,6 +1,7 @@
 package at.ac.tuwien.inso.sepm.ticketline.client.service.implementation;
 
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
+import at.ac.tuwien.inso.sepm.ticketline.client.exception.SearchNoMatchException;
 import at.ac.tuwien.inso.sepm.ticketline.client.rest.EventRestClient;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.EventService;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.DetailedEventDTO;
@@ -30,5 +31,11 @@ public class SimpleEventService implements EventService {
     @Override
     public DetailedEventDTO findById( Long id ) throws DataAccessException {
         return eventRestClient.findById(id);
+    }
+
+    @Override
+    public List<SimpleEventDTO> findAllUpcoming( int pageIndex, int eventsPerPage ) throws DataAccessException,SearchNoMatchException {
+
+        return eventRestClient.findAllUpcoming(pageIndex,eventsPerPage);
     }
 }

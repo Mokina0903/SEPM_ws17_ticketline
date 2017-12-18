@@ -4,7 +4,9 @@ import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.NotFoundException;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.EventRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.EventService;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -25,5 +27,11 @@ public class SimpleEventService implements EventService {
     @Override
     public Event findOne( Long id ) {
         return eventRepository.findOneById(id).orElseThrow(NotFoundException::new);
+    }
+
+    @Override
+    public List<Event> findAllUpcomingAsc( Pageable request ) {
+        Page<Event> page = eventRepository.findAllUpcoming(request);
+        return page.getContent();
     }
 }

@@ -57,15 +57,6 @@ public class Hall {
 
     public static HallBuilder builder(){return new HallBuilder();}
 
-    @Override
-    public String toString() {
-        return "Hall{" +
-            "id=" + id +
-            ", description='" + description + '\'' +
-            ", location=" + location +
-            ", seats=" + seats +
-            '}';
-    }
 
     @Override
     public boolean equals( Object o ) {
@@ -85,7 +76,6 @@ public class Hall {
     public int hashCode() {
         int result = getId().hashCode();
         result = 31 * result + (getDescription() != null ? getDescription().hashCode() : 0);
-        result = 31 * result + getLocation().hashCode();
         result = 31 * result + (seats != null ? seats.hashCode() : 0);
         return result;
     }

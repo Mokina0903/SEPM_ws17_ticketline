@@ -110,7 +110,6 @@ public class Location {
             ", zip=" + zip +
             ", street='" + street + '\'' +
             ", houseNr=" + houseNr +
-            ", eventHalls=" + eventHalls +
             '}';
     }
 

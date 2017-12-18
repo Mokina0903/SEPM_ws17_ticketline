@@ -140,6 +140,12 @@ public class DetailedLocationDTO {
             ", eventHalls=" + eventHalls +
             '}';
     }
+
+    public static DetailedLocationDTOBuilder builder() {
+        return new DetailedLocationDTOBuilder();
+    }
+
+
     public static final class DetailedLocationDTOBuilder {
         private Long id;
         private String description;

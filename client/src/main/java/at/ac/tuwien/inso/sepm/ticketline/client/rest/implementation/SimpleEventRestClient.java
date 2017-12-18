@@ -67,4 +67,24 @@ public class SimpleEventRestClient implements EventRestClient{
             throw new DataAccessException(e.getMessage(), e);
         }
     }
+
+    @Override
+    public List<SimpleEventDTO> findAllUpcoming( int pageIndex, int eventsPerPage ) throws DataAccessException {
+        try {
+            LOGGER.debug("Retrieving all upcoming events from {}", restClient.getServiceURI(EVENT_URL));
+            ResponseEntity<List<SimpleEventDTO>> events =
+                restClient.exchange(
+                    restClient.getServiceURI(EVENT_URL + "/"+pageIndex+"/"+eventsPerPage),
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<List<SimpleEventDTO>>() {
+                    });
+            LOGGER.debug("Result status was {} with content {}", events.getStatusCode(), events.getBody());
+            return events.getBody();
+        } catch (HttpStatusCodeException e) {
+            throw new DataAccessException("Failed retrieve events with status code " + e.getStatusCode().toString());
+        } catch (RestClientException e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+    }
 }

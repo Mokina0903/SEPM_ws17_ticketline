@@ -50,15 +50,7 @@ public class SeatDTO {
         this.sector = sector;
     }
 
-    @Override
-    public String toString() {
-        return "SeatDTO{" +
-            "id=" + id +
-            ", nr=" + nr +
-            ", row=" + row +
-            ", sector=" + sector +
-            '}';
-    }
+
 
     @Override
     public boolean equals( Object o ) {
