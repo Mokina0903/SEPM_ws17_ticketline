@@ -28,7 +28,7 @@
                 <PasswordField fx:id="passwordPF" promptText="%authenticate.password" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <Label fx:id="lblInvalidPassword" textFill="crimson" text="%user.invalidpasswort" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
 
-                <Label fx:id="passwordConfirmLb" text="%authenticate.password" GridPane.rowIndex="2" />
+                <Label fx:id="passwordConfirmLb" text="%user.confirm" GridPane.rowIndex="2" prefWidth="200.0"/>
                 <PasswordField fx:id="passwordConfirmPF" promptText="%authenticate.password" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
 
