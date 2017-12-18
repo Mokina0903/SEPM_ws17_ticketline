@@ -20,8 +20,8 @@
         <GridPane hgap="10" vgap="20">
 
                 <Label fx:id="usernameLb" text="%authenticate.userName" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                <TextField fx:id="usernameTF" prefHeight="26.0" prefWidth="226.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-            <Label fx:id="lblInvalidUsername" textFill="crimson" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                <TextField fx:id="usernameTF" prefHeight="26.0" prefWidth="202.0" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+            <Label fx:id="lblInvalidUsername" prefHeight="16.0" prefWidth="0.0" textFill="crimson" GridPane.columnIndex="2" GridPane.rowIndex="0" />
 
 
                 <Label fx:id="passwordLb" text="%authenticate.password" GridPane.rowIndex="1" />
@@ -47,8 +47,8 @@
                 <Button fx:id="backBtn" maxWidth="-Infinity" onAction="#goBackWithoutSave" prefWidth="40.0" GridPane.rowIndex="4" />
 
             <columnConstraints>
-                <ColumnConstraints maxWidth="235.0" minWidth="172.0" prefWidth="208.0" />
-                <ColumnConstraints maxWidth="165.0" minWidth="102.0" prefWidth="129.0" />
+                <ColumnConstraints maxWidth="-Infinity" minWidth="135.0" prefWidth="135.0" />
+                <ColumnConstraints maxWidth="198.0" minWidth="6.0" prefWidth="198.0" />
             <ColumnConstraints maxWidth="0.0" minWidth="0.0" prefWidth="0.0" />
             </columnConstraints>
             <rowConstraints>

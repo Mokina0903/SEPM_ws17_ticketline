@@ -17,6 +17,11 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.paint.Color;
+import org.controlsfx.glyphfont.FontAwesome;
+import org.controlsfx.glyphfont.Glyph;
+import org.controlsfx.glyphfont.GlyphFont;
+import org.controlsfx.glyphfont.GlyphFontRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +70,9 @@ public class UserDialogController implements LocalizationObserver {
     @Autowired
     private LocalizationSubject localizationSubject;
 
+    private GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
+    private final int FONT_SIZE = 16;
+
 
     public UserDialogController(MainController mainController, SpringFxmlLoader springFxmlLoader, UserController userController, UserService userService) {
         this.mainController = mainController;
@@ -107,6 +115,16 @@ public class UserDialogController implements LocalizationObserver {
     @FXML
     void initialize(){
         localizationSubject.attach(this);
+        setButtonGraphic(saveBtn, "CHECK", Color.OLIVE);
+        setButtonGraphic(backBtn, "TIMES", Color.CRIMSON);
+
+    }
+
+    private void setButtonGraphic(Button button, String glyphSymbol, Color color) {
+        Glyph glyph = fontAwesome.create(FontAwesome.Glyph.valueOf(glyphSymbol));
+        glyph.setColor(color);
+        glyph.setFontSize(FONT_SIZE);
+        button.setGraphic(glyph);
     }
 
     @FXML
@@ -199,7 +217,5 @@ public class UserDialogController implements LocalizationObserver {
         passwordPF.setPromptText("authenticate.password");
         passwordConfirmPF.setPromptText("authenticate.password");
 
-        saveBtn.setText(BundleManager.getBundle().getString("general.save"));
-        backBtn.setText(BundleManager.getBundle().getString("general.back"));
     }
 }
