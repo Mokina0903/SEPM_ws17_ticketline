@@ -142,7 +142,6 @@ public class UserDialogController implements LocalizationObserver {
         update();
         if (usernameTF.getText().trim().isEmpty())
         {
-            System.out.println(lblInvalidUsername.getText());
             lblInvalidUsername.setVisible(true);
             return;
         }
