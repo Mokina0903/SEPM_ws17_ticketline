@@ -156,6 +156,11 @@ public class DetailedEventDTO{
             '}';
     }
 
+    public static DetailedEventDTOBuilder builder() {
+        return new DetailedEventDTOBuilder();
+    }
+
+
     public static final class DetailedEventDTOBuilder{
         private Long id;
         private String artistFirstName;
@@ -166,6 +171,7 @@ public class DetailedEventDTO{
         private LocalDateTime startOfEvent;
         private LocalDateTime endOfEvent;
         private DetailedHallDTO hall;
+
 
         public DetailedEventDTOBuilder id(Long id){
             this.id = id;
