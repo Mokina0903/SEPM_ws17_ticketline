@@ -227,7 +227,9 @@ public class NewsController extends TabElement implements LocalizationObserver{
 
     @Override
     public void update() {
+
         tabHeaderController.setTitle(BundleManager.getBundle().getString("news.news"));
+
     }
 
     @Override
