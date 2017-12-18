@@ -120,7 +120,7 @@ public class UserEndpointTest extends BaseIntegrationTest {
 
         int afterLogin = userRepository.findOneByUserName(ADMIN_USERNAME).getAttempts();
 
-        System.out.println(beforeLogin + "David" + afterLogin);
+        //System.out.println(beforeLogin + "David" + afterLogin);
         Assert.assertTrue("Attemptreset does not work correct",beforeLogin < afterLogin);
 
     }
@@ -246,26 +246,8 @@ public class UserEndpointTest extends BaseIntegrationTest {
             .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
             .when().get("/user/user/isBlocked")
             .then().extract().response();
-        System.out.println(response.asString());
         Assert.assertTrue(response.asString().equals("true"));
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
-    }
-
-    @Test
-    public void AccessUserWithTooLongUsername(){
-        String path = "/user/";
-        for(int i = 0; i < 400; i++){
-        //for(int i = 0; i < 500; i++){
-            path = path +  "Let_me_in_please";
-        }
-        path = path + "/isBlocked";
-        Response response = RestAssured
-            .given()
-            .contentType(ContentType.JSON)
-            .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
-            .when().get(path)
-            .then().extract().response();
-        Assert.assertThat(response.getStatusCode(), is(HttpStatus.NOT_FOUND.value()));
     }
 
 
@@ -306,7 +288,6 @@ public class UserEndpointTest extends BaseIntegrationTest {
             .body(ADMIN_USERNAME + "test")
             .when().post(USER_ENDPOINT_BLOCK)
             .then().extract().response();
-        System.out.println(response.asString());
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
 
         response = RestAssured
@@ -315,7 +296,6 @@ public class UserEndpointTest extends BaseIntegrationTest {
             .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
             .when().get("/user/admintest/isBlocked")
             .then().extract().response();
-        System.out.println(response.asString());
         Assert.assertTrue(response.asString().equals("true"));
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
     }
@@ -353,7 +333,6 @@ public class UserEndpointTest extends BaseIntegrationTest {
             .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
             .when().get("/user/user/isBlocked")
             .then().extract().response();
-        System.out.println(response.asString());
         Assert.assertTrue(response.asString().equals("false"));
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
     }
@@ -376,7 +355,6 @@ public class UserEndpointTest extends BaseIntegrationTest {
             .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
             .when().get("/user/user/isBlocked")
             .then().extract().response();
-        System.out.println(response.asString());
         Assert.assertTrue(response.asString().equals("false"));
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
     }
