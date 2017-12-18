@@ -46,6 +46,8 @@ public class CustomerDialogController implements LocalizationObserver {
     public TextField tfFirstName;
     @FXML
     public Label lbInvalidCustomer;
+    @FXML
+    public Label lbFirstName;
 
 
     @FXML
@@ -209,6 +211,7 @@ public class CustomerDialogController implements LocalizationObserver {
         lbCustomerNumberText.setText(BundleManager.getBundle().getString("customer.number"));
         lbCustomerName.setText(BundleManager.getBundle().getString("customer.lname"));
         lbCustomerBirthdate.setText(BundleManager.getBundle().getString("customer.birthdate"));
+        lbFirstName.setText(BundleManager.getBundle().getString("customer.fname"));
 
         lbInvalidName.setText(BundleManager.getBundle().getString("customer.invalidName"));
         lbInvalidBirthdate.setText(BundleManager.getBundle().getString("customer.invalidBirthdate"));
