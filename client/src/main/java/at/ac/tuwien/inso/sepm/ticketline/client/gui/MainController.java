@@ -153,7 +153,6 @@ public class MainController implements LocalizationObserver{
             if (spMainContent.getChildren().contains(login)) {
                 spMainContent.getChildren().remove(login);
             }
-            //initNewsTabPane();
             newsController.loadNews();
             initMenue();
         } else {
@@ -172,6 +171,13 @@ public class MainController implements LocalizationObserver{
         try {
             this.detailedUserDTO = userService.findByName(name);
             customerController.preparePagination();
+            if(detailedUserDTO.getRole() == 2){
+                newsController.addNewNews.setDisable(true);
+                newsController.addNewNews.setVisible(false);
+            } else {
+                newsController.addNewNews.setDisable(false);
+                newsController.addNewNews.setVisible(true);
+            }
         } catch (DataAccessException e) {
             JavaFXUtils.createExceptionDialog(e, spMainContent.getScene().getWindow()).showAndWait();
             // e.printStackTrace();
