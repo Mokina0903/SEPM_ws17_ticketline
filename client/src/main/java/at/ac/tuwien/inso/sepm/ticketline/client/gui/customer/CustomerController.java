@@ -118,16 +118,10 @@ public class CustomerController extends TabElement implements LocalizationObserv
 
     public void preparePagination(List<CustomerDTO> customer) {
 
-/*        if (customer == null || customer.isEmpty()) {
-            noMatchFound();
-        } else {*/
         LOGGER.info("search matches");
 
         lbNoMatch.setVisible(false);
-     //   int numOfCustomers = customer.size();
-    //    pagination.setPageCount(numOfCustomers / CUSTOMER_PER_PAGE + 1);
         pagination.setCurrentPageIndex(0);
-        //      }
         pagination.setPageFactory(new Callback<Integer, Node>() {
 
             @Override
