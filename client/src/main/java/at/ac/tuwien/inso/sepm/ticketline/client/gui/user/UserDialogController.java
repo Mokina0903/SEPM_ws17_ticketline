@@ -139,9 +139,10 @@ public class UserDialogController implements LocalizationObserver {
         lblInvalidPassword.setText("");
         lblInvalidRole.setText("");
 
-
+        update();
         if (usernameTF.getText().trim().isEmpty())
         {
+            System.out.println(lblInvalidUsername.getText());
             lblInvalidUsername.setVisible(true);
             return;
         }
@@ -154,6 +155,7 @@ public class UserDialogController implements LocalizationObserver {
         int role = roleCombo.getSelectionModel().getSelectedIndex();
         if (role == -1) {
             lblInvalidRole.setVisible(true);
+            return;
         }
 
         SimpleUserDTO simpleUserDTO = SimpleUserDTO.builder()
@@ -194,7 +196,6 @@ public class UserDialogController implements LocalizationObserver {
         );
 
         new Thread(workerTask).start();
-
     }
 
     @FXML
@@ -205,10 +206,6 @@ public class UserDialogController implements LocalizationObserver {
 
     @Override
     public void update() {
-        // TODO: (David) Question How to update also this fields?
-
-        System.out.println(usernameLb.getText());
-
         usernameLb.setText(BundleManager.getBundle().getString("authenticate.userName"));
         passwordLb.setText(BundleManager.getBundle().getString("authenticate.password"));
         passwordConfirmLb.setText(BundleManager.getBundle().getString("user.confirm"));
@@ -217,5 +214,11 @@ public class UserDialogController implements LocalizationObserver {
         passwordPF.setPromptText("authenticate.password");
         passwordConfirmPF.setPromptText("authenticate.password");
 
+        lblInvalidUsername.setText(BundleManager.getBundle().getString("user.invalidusername"));
+        lblInvalidPassword.setText(BundleManager.getBundle().getString("user.invalidpasswort"));
+        lblInvalidRole.setText(BundleManager.getBundle().getString("user.invalidrole"));
+
+        saveBtn.setText(BundleManager.getBundle().getString("general.save"));
+        backBtn.setText(BundleManager.getBundle().getString("general.back"));
     }
 }
