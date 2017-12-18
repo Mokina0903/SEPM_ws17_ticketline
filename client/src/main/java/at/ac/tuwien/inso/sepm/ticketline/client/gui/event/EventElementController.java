@@ -1,5 +1,7 @@
 package at.ac.tuwien.inso.sepm.ticketline.client.gui.event;
 
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationObserver;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationSubject;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.EventService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
@@ -10,6 +12,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -19,7 +22,7 @@ import java.time.format.FormatStyle;
 
 @Component
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
-public class EventElementController {
+public class EventElementController implements LocalizationObserver {
 
     private static final DateTimeFormatter EVENT_DTF =
         DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG, FormatStyle.SHORT);
@@ -50,6 +53,14 @@ public class EventElementController {
     private EventService eventService;
     private SimpleEventDTO simpleEventDTO;
 
+    @Autowired
+    private LocalizationSubject localizationSubject;
+
+    @FXML
+    private void initialize() {
+        localizationSubject.attach(this);
+    }
+
     public void initializeData( EventService eventService, SimpleEventDTO simpleEventDTO) {
 
         this.simpleEventDTO = simpleEventDTO;
@@ -69,9 +80,16 @@ public class EventElementController {
         eventImageView.setVisible(false);
     }
 
+
     public void detailedEventInfo( MouseEvent mouseEvent ) {
     }
 
     public void ticketReservationForEvent( ActionEvent actionEvent ) {
+    }
+
+    @Override
+    public void update() {
+        lblArtist.setText(BundleManager.getBundle().getString("events.artist"));
+        lblPriceText.setText(BundleManager.getBundle().getString("events.price")+": ");
     }
 }
