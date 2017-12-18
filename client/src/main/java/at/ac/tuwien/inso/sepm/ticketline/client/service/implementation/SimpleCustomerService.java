@@ -58,7 +58,7 @@ public class SimpleCustomerService implements CustomerService{
     @Override
     public boolean checkIfCustomerValid(CustomerDTO customer) {
 
-        if (!customer.getEmail().contains("@") || !customer.getEmail().contains(".")) {
+        if (!customer.getEmail().contains("@") || !customer.getEmail().contains(".") || customer.getEmail().length()>100) {
          return false;
         }
         if (customer.getName() == null || customer.getName().length() >50 || customer.getSurname().length() >50 || customer.getName().isEmpty() || customer.getSurname() == null || customer.getSurname().isEmpty()) {

@@ -117,7 +117,7 @@ public class CustomerServiceImpl implements CustomerService {
             return false;
         }
         if(customer.getEmail()!= null && !customer.getEmail().isEmpty()){
-            if(!customer.getEmail().contains("@") || !customer.getEmail().contains(".")){
+            if(!customer.getEmail().contains("@") || !customer.getEmail().contains(".")|| customer.getEmail().length()>100){
                 return false;
             }
         }
