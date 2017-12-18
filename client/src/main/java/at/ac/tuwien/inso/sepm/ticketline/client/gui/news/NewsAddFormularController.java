@@ -14,6 +14,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -49,6 +50,10 @@ public class NewsAddFormularController {
     public VBox VBroot;
     @FXML
     public Button backWithoutSaveBtn;
+    @FXML
+    public Label lblInvalidTitle;
+    @FXML
+    public Label lblInvalidText;
 
     private DetailedNewsDTO newNews;
 
