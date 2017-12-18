@@ -41,15 +41,15 @@
                         </FXCollections>
                     </items>
                 </ComboBox>
-            <Label fx:id="lblInvalidRole" textFill="crimson" text="%user.invalidrole" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+            <Label fx:id="lblInvalidRole" textFill="crimson" text="%user.invalidrole" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
 
                 <Button fx:id="saveBtn" maxWidth="-Infinity" onAction="#saveUserData" prefWidth="40.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                 <Button fx:id="backBtn" maxWidth="-Infinity" onAction="#goBackWithoutSave" prefWidth="40.0" GridPane.rowIndex="4" />
 
             <columnConstraints>
-                <ColumnConstraints maxWidth="-Infinity" minWidth="135.0" prefWidth="135.0" />
-                <ColumnConstraints maxWidth="198.0" minWidth="6.0" prefWidth="198.0" />
-            <ColumnConstraints maxWidth="0.0" minWidth="0.0" prefWidth="0.0" />
+                <ColumnConstraints />
+                <ColumnConstraints />
+            <ColumnConstraints />
             </columnConstraints>
             <rowConstraints>
                 <RowConstraints />
