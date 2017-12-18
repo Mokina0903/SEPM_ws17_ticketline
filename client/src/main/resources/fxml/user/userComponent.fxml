@@ -10,6 +10,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
+<?import javafx.scene.control.Label?>
 <BorderPane fx:id="userOverviewRoot" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.user.UserController">
 
     <top>
@@ -39,6 +40,7 @@
                 <Insets bottom="10" left="10" right="10" top="10" />
             </BorderPane.margin>
             <Button fx:id="resetPwd" onAction="#openEditUserDialog" prefWidth="170.0" text="Reset Password" GridPane.rowIndex="1" />
+            <Label fx:id="lblinvalidAction" textFill="crimson" text="%user.invalidUser" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
          <HBox alignment="CENTER" prefHeight="100.0" prefWidth="170.0" spacing="15.0">
             <children>
                   <Button fx:id="addUser" maxWidth="-Infinity" onAction="#openAddUserDialog" prefWidth="40.0" />
