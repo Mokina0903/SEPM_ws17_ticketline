@@ -37,6 +37,8 @@ public class MainController implements LocalizationObserver{
 
 
     private static final int TAB_ICON_FONT_SIZE = 20;
+    @FXML
+    public Label generalErrors;
 
     @FXML
     private StackPane spMainContent;
