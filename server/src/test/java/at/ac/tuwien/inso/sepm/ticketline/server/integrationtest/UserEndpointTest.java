@@ -250,6 +250,37 @@ public class UserEndpointTest extends BaseIntegrationTest {
     }
 
     @Test
+    public void AccessUserWithTooLongUsername(){
+        String path = "/user/";
+        for(int i = 0; i < 400; i++){
+        //for(int i = 0; i < 500; i++){
+            path = path +  "Let_me_in_please";
+        }
+        path = path + "/isBlocked";
+        Response response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
+            .when().get(path)
+            .then().extract().response();
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.NOT_FOUND.value()));
+    }
+
+
+    @Test
+    public void AccessUserWithSQLInjection(){
+        String path = "/user/h' or 1=1/isBlocked";
+        Response response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
+            .when().get(path)
+            .then().extract().response();
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.NOT_FOUND.value()));
+    }
+
+
+    @Test
     public void BlockAdminAsSameAdmin() {
         super.setupDefaultUsers();
         Response response = RestAssured
