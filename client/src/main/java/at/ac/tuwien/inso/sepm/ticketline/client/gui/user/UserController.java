@@ -47,6 +47,9 @@ public class UserController extends TabElement implements LocalizationObserver{
     public Button addUser;
     @FXML
     public BorderPane userOverviewRoot;
+    @FXML
+    private Label lblinvalidAction;
+
 
 
     @FXML
@@ -96,6 +99,7 @@ public class UserController extends TabElement implements LocalizationObserver{
         blockedCol.setCellValueFactory(new PropertyValueFactory<>("blocked"));
         // TODO: (David) Translate int to String
         roleCol.setCellValueFactory(new PropertyValueFactory<>("role"));
+        lblinvalidAction.setVisible(false);
         disableUI();
     }
 
@@ -139,15 +143,18 @@ public class UserController extends TabElement implements LocalizationObserver{
 
     @FXML
     public void unlockUser(ActionEvent actionEvent) {
+        mainController.setGeneralErrorUnvisable();
+        lblinvalidAction.setVisible(false);
+
         UserSimpleProperty userSimpleProperty = userTableView.getSelectionModel().getSelectedItem();
 
         if (userSimpleProperty == null) {
-            // TODO: (David) Alert
+            // No User selected
             return;
         }
 
         if (userSimpleProperty.getUsername().equals(mainController.getUser().getUserName())) {
-            // TODO: (David) Alert: is not allowed
+            lblinvalidAction.setVisible(true);
             return;
         }
 
@@ -169,7 +176,7 @@ public class UserController extends TabElement implements LocalizationObserver{
             protected void failed() {
                 super.failed();
                 loadUsers();
-                // TODO: (David) Alert
+                mainController.showGeneralError("Failure at loadUser: " + getException().getMessage());
             }
         };
 
@@ -183,15 +190,18 @@ public class UserController extends TabElement implements LocalizationObserver{
 
     @FXML
     public void lockUser(ActionEvent actionEvent) {
+        mainController.setGeneralErrorUnvisable();
+        lblinvalidAction.setVisible(false);
+
         UserSimpleProperty userSimpleProperty = userTableView.getSelectionModel().getSelectedItem();
 
         if (userSimpleProperty == null) {
-            // TODO: (David) Alert
+            // No User selected
             return;
         }
 
         if (userSimpleProperty.getUsername().equals(mainController.getUser().getUserName())) {
-            // TODO: (David) Alert: is not allowed
+            lblinvalidAction.setVisible(true);
             return;
         }
 
@@ -206,14 +216,13 @@ public class UserController extends TabElement implements LocalizationObserver{
             protected void succeeded() {
                 super.succeeded();
                 loadUsers();
-
             }
 
             @Override
             protected void failed() {
                 super.failed();
                 loadUsers();
-                // TODO: (David) Alert
+                mainController.showGeneralError("Failure at loadUser: " + getException().getMessage());
             }
         };
 
@@ -246,6 +255,8 @@ public class UserController extends TabElement implements LocalizationObserver{
 
     @Override
     public void update() {
+        lblinvalidAction.setText(BundleManager.getBundle().getString("user.invalidUser"));
+
         tabHeaderController.setTitle(BundleManager.getBundle().getString("user.title"));
         resetPwd.setText(BundleManager.getBundle().getString("user.resetPassoword"));
 
