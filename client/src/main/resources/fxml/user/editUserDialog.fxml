@@ -20,11 +20,12 @@
 
                 <Label text="Username: " GridPane.columnIndex="0" GridPane.rowIndex="0"/>
                 <TextField fx:id="usernameTF" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+            <Label fx:id="lblInvalidUsername" textFill="crimson" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
 
 
                 <Label text="Password: " GridPane.columnIndex="0" GridPane.rowIndex="1"/>
                 <PasswordField fx:id="passwordPF" promptText="%authenticate.password" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-
+            <Label fx:id="lblInvalidPassword" textFill="crimson" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
 
                 <Label text="Confirm: " GridPane.columnIndex="0" GridPane.rowIndex="2"/>
                 <PasswordField fx:id="passwordConfirmPF" promptText="%authenticate.password" GridPane.columnIndex="1" GridPane.rowIndex="2" />
@@ -39,6 +40,7 @@
                         </FXCollections>
                     </items>
                 </ComboBox>
+            <Label fx:id="lblInvalidRole" textFill="crimson" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
 
                 <Button fx:id="saveBtn" onAction="#saveUserData" text="Save" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
                 <Button fx:id="backBtn" onAction="#goBackWithoutSave" text="Back" GridPane.columnIndex="1" GridPane.rowIndex="5"/>

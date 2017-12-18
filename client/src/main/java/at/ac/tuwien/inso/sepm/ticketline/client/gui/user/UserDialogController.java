@@ -44,6 +44,12 @@ public class UserDialogController {
     public Label passwordConfirmLb;
     @FXML
     public Label roleLb;
+    @FXML
+    public Label lblInvalidUsername;
+    @FXML
+    public Label lblInvalidPassword;
+    @FXML
+    public Label lblInvalidRole;
 
 
     private MainController mainController;
