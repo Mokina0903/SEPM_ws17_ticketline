@@ -19,7 +19,7 @@
         <URL value="@/css/eventElement.css"/>
     </stylesheets>
     <padding>
-        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+        <Insets bottom="5.0" left="10.0" right="10.0" top="10.0"/>
     </padding>
     <GridPane>
         <Label fx:id="lblTitle" GridPane.rowIndex="0" GridPane.columnIndex="0" styleClass="eventTitle" text="&lt;EventTitle&gt;"/>

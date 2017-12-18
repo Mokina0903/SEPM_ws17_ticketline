@@ -7,6 +7,8 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.Pagination?>
 <VBox maxHeight="1.7976931348623157E308"
       maxWidth="1.7976931348623157E308"
       xmlns="http://javafx.com/javafx/9"
@@ -14,18 +16,18 @@
       fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.event.EventController">
     <children>
         <fx:include source="/fxml/tabHeader.fxml" fx:id="tabHeader"/>
-        <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" VBox.vgrow="ALWAYS"
-                    style="-fx-background-color: transparent;">
 
-            <ListView fx:id="lvEventElements" maxHeight="1.7976931348623157E308"
-                      maxWidth="1.7976931348623157E308"
-                      style="-fx-background-color: transparent;">
-                <padding>
-                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
-                </padding>
-            </ListView>
-        </ScrollPane>
-    </children>
+        <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="600.0">
+
+        <Pagination fx:id="pagination" maxHeight="-Infinity" prefHeight="600.0" prefWidth="600">
+            <VBox.margin>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+            </VBox.margin>
+            <padding>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+            </padding></Pagination>
+        </VBox>
+</children>
     <padding>
         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
     </padding>

@@ -1,6 +1,7 @@
 package at.ac.tuwien.inso.sepm.ticketline.client.service;
 
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
+import at.ac.tuwien.inso.sepm.ticketline.client.exception.SearchNoMatchException;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.DetailedEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
 
@@ -33,5 +34,5 @@ public interface EventService {
      * @return list of upcoming events
      * @throws DataAccessException in case something went wrong
      */
-    List<SimpleEventDTO> findAllUpcoming(int pageIndex, int eventsPerPage) throws DataAccessException;
+    List<SimpleEventDTO> findAllUpcoming(int pageIndex, int eventsPerPage) throws DataAccessException,SearchNoMatchException;
 }
