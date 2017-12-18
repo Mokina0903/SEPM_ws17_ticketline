@@ -5,6 +5,8 @@ import at.ac.tuwien.inso.sepm.ticketline.rest.user.SimpleUserDTO;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.rest.user.DetailedUserDTO;
 
+import java.util.List;
+
 public interface UserService {
 
     /**
@@ -51,7 +53,7 @@ public interface UserService {
      * @return UserDTO
      * @throws DataAccessException in case something went wrong
      */
-    SimpleUserDTO blockUser(String userName) throws DataAccessException;
+    void blockUser(String userName) throws DataAccessException;
 
     /**
      * unblock user by name
@@ -60,25 +62,25 @@ public interface UserService {
      * @return UserDTO
      * @throws DataAccessException in case something went wrong
      */
-    SimpleUserDTO unblockUser(String userName) throws DataAccessException;
+    void unblockUser(String userName) throws DataAccessException;
 
     /**
      * reset password by username
      *
-     * @param detailedUserDTO of userAttemps entry
+     * @param simpleUserDTO
      * @return UserDTO
      * @throws DataAccessException in case something went wrong
      */
-    SimpleUserDTO resetUserPassword(DetailedUserDTO detailedUserDTO) throws DataAccessException;
+    SimpleUserDTO resetUserPassword(SimpleUserDTO simpleUserDTO) throws DataAccessException;
 
     /**
      * add new User
      *
-     * @param detailedUserDTO of userAttemps entry
+     * @param simpleUserDTO of userAttemps entry
      * @return UserDTO
      * @throws DataAccessException in case something went wrong
      */
-    SimpleUserDTO addNewUser(DetailedUserDTO detailedUserDTO) throws DataAccessException;
+    SimpleUserDTO addNewUser(SimpleUserDTO simpleUserDTO) throws DataAccessException;
 
     /**
      * check if user is blocked
@@ -107,5 +109,13 @@ public interface UserService {
      * @throws DataAccessException
      */
     void removeFromUserNotSeen(Long userId,Long newsId) throws DataAccessException;
+
+    /**
+     * Find all user entries.
+     *
+     * @return list of news entries
+     * @throws DataAccessException in case something went wrong
+     */
+    List<SimpleUserDTO> findAll() throws DataAccessException;
 
 }

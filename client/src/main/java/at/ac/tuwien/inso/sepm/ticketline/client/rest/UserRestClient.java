@@ -4,6 +4,8 @@ import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.rest.user.SimpleUserDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.user.DetailedUserDTO;
 
+import java.util.List;
+
 public interface  UserRestClient {
 /**
  * Find user by username
@@ -45,7 +47,7 @@ public interface  UserRestClient {
      * @param username
      * @return Integer attempts
      */
-    SimpleUserDTO blockUser(String username) throws DataAccessException;
+    void blockUser(String username) throws DataAccessException;
 
     /**
      * unblock user by username
@@ -53,7 +55,7 @@ public interface  UserRestClient {
      * @param username
      * @return Integer attempts
      */
-     SimpleUserDTO unblockUser(String username) throws DataAccessException;
+     void unblockUser(String username) throws DataAccessException;
 
 
     /**
@@ -86,16 +88,25 @@ public interface  UserRestClient {
     /**
      * Reset Password of User
      *
-     * @param detailedUserDTO
+     * @param simpleUserDTO
      * @return SimpleUserDTO
      */
-    SimpleUserDTO resetUserPassword(DetailedUserDTO detailedUserDTO);
+    SimpleUserDTO resetUserPassword(SimpleUserDTO simpleUserDTO);
 
     /**
      * add new User
      *
-     * @param detailedUserDTO
+     * @param simpleUserDTO
      * @return SimpleUserDTO
      */
-    SimpleUserDTO addNewUser(DetailedUserDTO detailedUserDTO);
+    SimpleUserDTO addNewUser(SimpleUserDTO simpleUserDTO);
+
+    /**
+     * Find all user entries.
+     *
+     * @return list of news entries
+     * @throws DataAccessException in case something went wrong
+     */
+    List<SimpleUserDTO> findAll() throws DataAccessException;
+
 }

@@ -6,14 +6,19 @@ import at.ac.tuwien.inso.sepm.ticketline.server.entity.News;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.User;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.news.NewsMapper;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.user.UserMapper;
+import at.ac.tuwien.inso.sepm.ticketline.server.exception.EmptyFieldException;
+import at.ac.tuwien.inso.sepm.ticketline.server.exception.IllegalValueException;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.UserRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import javax.lang.model.element.AnnotationValue;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,6 +42,7 @@ public class UserEndpoint {
     }
 
     @RequestMapping(method = RequestMethod.GET)
+    @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation(value = "Get list of simple user entries")
     public List<SimpleUserDTO> findAll() {
         return userMapper.userToSimpleUserDTO(userService.findAll());
@@ -57,13 +63,18 @@ public class UserEndpoint {
         return userDTO;
     }
 
-    @RequestMapping(value = "/createUser", method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST)
     @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation(value = "Create a new user entry")
-    public DetailedUserDTO createUser(@RequestBody DetailedUserDTO detailedUserDTO) {
-        User user = userMapper.detailedUserDTOToUser(detailedUserDTO);
+    public SimpleUserDTO createUser(@RequestBody SimpleUserDTO simpleUserDTO) {
+        User user = null;
+        try {
+            user = userMapper.simpleUserDTOToUser(simpleUserDTO);
+        } catch (NullPointerException e) {
+            throw new EmptyFieldException("");
+        }
         user = userService.createUser(user);
-        return userMapper.userToDetailedUserDTO(user);
+        return userMapper.userToSimpleUserDTO(user);
     }
 
     @RequestMapping(value = "/{userName}", method = RequestMethod.GET)
@@ -102,6 +113,47 @@ public class UserEndpoint {
        // userService.save(user);
     }
 
+    @RequestMapping(value = "/resetPassword", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('ADMIN')")
+    @ApiOperation(value = "Reset a specific users password")
+    public DetailedUserDTO resetUserPassword(@RequestBody SimpleUserDTO simpleUserDTO) {
+        User user = userService.findByUsername(simpleUserDTO.getUserName());
+        user.setPassword(simpleUserDTO.getPassword());
+        user = userService.resetPassword(user);
+        return userMapper.userToDetailedUserDTO(user);
+    }
+
+    @RequestMapping(value = "/block", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('ADMIN')")
+    @ApiOperation(value = "Block a specific user entry")
+    public void blockUser(@RequestBody String username) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String asked = ((UserDetails)principal).getUsername();
+
+        if (asked.trim().toUpperCase().equals(username.trim().toUpperCase())) {
+            throw new IllegalValueException("querist == username");
+        }
+
+        User user = userService.findByUsername(username);
+        userService.blockUser(user);
+    }
+
+
+    @RequestMapping(value = "/unblock", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('ADMIN')")
+    @ApiOperation(value = "Unblock a specific user entry")
+    public void unblockUser(@RequestBody String username) {
+        User user = userService.findByUsername(username);
+        userService.unblockUser(user);
+    }
+
+    @RequestMapping(value = "/{username}/isBlocked", method = RequestMethod.GET)
+    @ApiOperation(value = "Get left login attempts of a specific user entry")
+    public boolean isBlocked(@PathVariable("username") String username) {
+        User user = userService.findByUsername(username);
+        return user.isBlocked();
+    }
+
     /*
     @RequestMapping(value = "/decreaseAttempts", method = RequestMethod.POST)
     @ApiOperation(value = "Decrease login attempts of a specific user entry")
@@ -123,38 +175,5 @@ public class UserEndpoint {
         userService.save(user);
     }
     */
-
-    @RequestMapping(value = "/resetPassword", method = RequestMethod.POST)
-    @PreAuthorize("hasRole('ADMIN')")
-    @ApiOperation(value = "Reset a specific users password")
-    public DetailedUserDTO resetUserPassword(@RequestBody DetailedUserDTO detailedUserDTO) {
-        User user = userMapper.detailedUserDTOToUser(detailedUserDTO);
-        user = userService.resetPassword(user);
-        return userMapper.userToDetailedUserDTO(user);
-    }
-
-    @RequestMapping(value = "/block", method = RequestMethod.POST)
-    @PreAuthorize("hasRole('ADMIN')")
-    @ApiOperation(value = "Block a specific user entry")
-    public void blockUser(@RequestBody String username) {
-        User user = userService.findByUsername(username);
-        userService.blockUser(user);
-    }
-
-
-    @RequestMapping(value = "/unblock", method = RequestMethod.POST)
-    @PreAuthorize("hasRole('ADMIN')")
-    @ApiOperation(value = "Unblock a specific user entry")
-    public void unblockUser(@RequestBody String username) {
-        User user = userService.findByUsername(username);
-        userService.unblockUser(user);
-    }
-
-    @RequestMapping(value = "/{username}/isBlocked", method = RequestMethod.GET)
-    @ApiOperation(value = "Get left login attempts of a specific user entry")
-    public boolean isBlocked(@PathVariable String username) {
-        User user = userService.findByUsername(username);
-        return user.isBlocked();
-    }
 
 }

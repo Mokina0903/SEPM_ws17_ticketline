@@ -98,15 +98,12 @@ public class MainController implements LocalizationObserver{
         login = springFxmlLoader.load("/fxml/authenticationComponent.fxml");
         spMainContent.getChildren().add(login);
 
-        //todo tutorin fragen
-
-        newsController = (NewsController) initTabPane(newsController, "news/newsComponent.fxml", newsTab, "NEWSPAPER_ALT");
+       /* newsController = (NewsController) initTabPane(newsController, "news/newsComponent.fxml", newsTab, "NEWSPAPER_ALT");
         eventController = (EventController) initTabPane(eventController, "event/eventComponent.fxml", eventTab, "FILM");
         ticketController = (TicketController) initTabPane(ticketController, "ticket/ticketComponent.fxml", ticketTab, "TICKET");
         customerController = (CustomerController) initTabPane(customerController, "customer/customerComponent.fxml", customerTab, "USERS");
         userController = (UserController) initTabPane(userController, "user/userComponent.fxml", userTab, "USER");
-        System.out.println("asdf");
-    }
+   */ }
 
     @FXML
     private void initMenue() {
@@ -153,9 +150,7 @@ public class MainController implements LocalizationObserver{
             if (spMainContent.getChildren().contains(login)) {
                 spMainContent.getChildren().remove(login);
             }
-           // initNewsTabPane();
-            newsController.loadNews();
-            initMenue();
+
         } else {
             if (!spMainContent.getChildren().contains(login)) {
                 spMainContent.getChildren().add(login);
@@ -171,11 +166,29 @@ public class MainController implements LocalizationObserver{
     public void loadDetailedUserDTO(String name) {
         try {
             this.detailedUserDTO = userService.findByName(name);
+
+            loadTabController();
+
         } catch (DataAccessException e) {
             JavaFXUtils.createExceptionDialog(e, spMainContent.getScene().getWindow()).showAndWait();
             // e.printStackTrace();
         }
     }
+
+    private void loadTabController() {
+        tpContent.getTabs().clear();
+        newsController = (NewsController) initTabPane(newsController, "news/newsComponent.fxml", newsTab, "NEWSPAPER_ALT");
+        eventController = (EventController) initTabPane(eventController, "event/eventComponent.fxml", eventTab, "FILM");
+        ticketController = (TicketController) initTabPane(ticketController, "ticket/ticketComponent.fxml", ticketTab, "TICKET");
+        customerController = (CustomerController) initTabPane(customerController, "customer/customerComponent.fxml", customerTab, "USERS");
+        if (detailedUserDTO.getRole() == 1) {
+            userController = (UserController) initTabPane(userController, "user/userComponent.fxml", userTab, "USER");
+            userController.loadUsers();
+        }
+        newsController.loadNews();
+        initMenue();
+    }
+
 
     public DetailedUserDTO getUser() {
         return this.detailedUserDTO;
