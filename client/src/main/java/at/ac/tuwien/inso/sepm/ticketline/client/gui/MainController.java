@@ -206,6 +206,7 @@ public class MainController implements LocalizationObserver{
     public void showGeneralError(String text){
         generalErrors.setText(text);
         generalErrors.setVisible(true);
+        LOGGER.info(text);
     }
 
     public void setGeneralErrorUnvisable(){
