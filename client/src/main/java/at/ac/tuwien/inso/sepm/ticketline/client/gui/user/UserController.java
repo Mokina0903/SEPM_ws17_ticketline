@@ -92,44 +92,15 @@ public class UserController extends TabElement implements LocalizationObserver{
         lock.setGraphic(fontAwesome.create("LOCK").size(FONT_SIZE));
         unlock.setGraphic(fontAwesome.create("UNLOCK").size(FONT_SIZE));
 
-
-
-        // TODO: (David) Wie habt ihr das gelöst?
         usernameCol.setCellValueFactory(new PropertyValueFactory<>("username"));
         blockedCol.setCellValueFactory(new PropertyValueFactory<>("blocked"));
-        roleCol.setCellValueFactory(new PropertyValueFactory<>("role")); // TODO: (David) Translate int to String
+        // TODO: (David) Translate int to String
+        roleCol.setCellValueFactory(new PropertyValueFactory<>("role"));
         disableUI();
     }
 
     public void loadUsers(){
-        // TODO: (David) Wait for status, privileges
-
-        /*
-        int i = 10;
-
-        while (i > 0 && mainController.getUser() == null) {
-            try {
-                Thread.sleep(100);
-                i--;
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
-        // Takes more than 1 Second
-        if (i <= 0)
-            return;
-
-        // No privileges
-        DetailedUserDTO detailedUserDTO = mainController.getUser();
-
-        System.out.println(detailedUserDTO.toString());
-
-        if (mainController.getUser().getRole() != 1)
-            return;
-        */
-
-
+        mainController.setGeneralErrorUnvisable();
         Task<List<SimpleUserDTO>> taskloadUsers = new Task<>() {
             @Override
             protected List<SimpleUserDTO> call() throws DataAccessException {
@@ -154,8 +125,7 @@ public class UserController extends TabElement implements LocalizationObserver{
             @Override
             protected void failed() {
                 super.failed();
-                // TODO: (David) Alert?
-                LOGGER.warn("Could not load userlist");
+                mainController.showGeneralError("Failure at loadUser: " + getException().getMessage());
             }
         };
 
