@@ -5,6 +5,10 @@
     -fx-padding: 0.0em 0.0em 0.0em 0.0em;
 }
 
+.errorLabel{
+ -fx-background-color: #3c3f41;
+}
+
 .context-menu {
     -fx-background-color: #3c3f41;
 }

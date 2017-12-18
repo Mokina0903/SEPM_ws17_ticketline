@@ -8,6 +8,8 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
 <VBox fx:id="vBoxMain" prefHeight="768.0" prefWidth="1024.0" stylesheets="@/css/main.css" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.MainController">
     <children>
         <ProgressBar fx:id="pbLoadingProgress" maxWidth="1.7976931348623157E308" progress="0.4" style="-fx-border-insets: 0; -fx-border-radius: 0; -fx-border-style: none;" />
@@ -33,4 +35,8 @@
             </children>
         </StackPane>
     </children>
+    <HBox styleClass="errorLabel">
+        <Label styleClass="errorLabel" fx:id="generalErrors" text="ERRRROOOOOORRRRRR" textFill="crimson"/>
+    </HBox>
+
 </VBox>
