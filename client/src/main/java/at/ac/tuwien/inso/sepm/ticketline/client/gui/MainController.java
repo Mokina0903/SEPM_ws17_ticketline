@@ -112,6 +112,7 @@ public class MainController implements LocalizationObserver{
         Pane menuePane = null;
         menuePane = springFxmlLoader.load("/fxml/menuePane.fxml");
         spMenue.getChildren().add(menuePane);
+        generalErrors.setVisible(false);
     }
 
     @FXML
@@ -202,6 +203,14 @@ public class MainController implements LocalizationObserver{
         initMenue();
     }
 
+    public void showGeneralError(String text){
+        generalErrors.setText(text);
+        generalErrors.setVisible(true);
+    }
+
+    public void setGeneralErrorUnvisable(){
+        generalErrors.setVisible(false);
+    }
 
     public DetailedUserDTO getUser() {
         return this.detailedUserDTO;
