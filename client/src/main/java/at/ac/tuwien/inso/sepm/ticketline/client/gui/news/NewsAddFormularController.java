@@ -3,13 +3,18 @@ package at.ac.tuwien.inso.sepm.ticketline.client.gui.news;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.TabHeaderController;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.NewsService;
+import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
+import at.ac.tuwien.inso.sepm.ticketline.client.util.JavaFXUtils;
 import at.ac.tuwien.inso.sepm.ticketline.rest.news.DetailedNewsDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
@@ -45,6 +50,10 @@ public class NewsAddFormularController {
     public VBox VBroot;
     @FXML
     public Button backWithoutSaveBtn;
+    @FXML
+    public Label lblInvalidTitle;
+    @FXML
+    public Label lblInvalidText;
 
     private DetailedNewsDTO newNews;
 
@@ -56,11 +65,15 @@ public class NewsAddFormularController {
     private Node oldContent;
 
     private String picPath;
-
-
     private NewsController c;
     private TabHeaderController tabHeaderController;
 
+
+    @FXML
+    void initialize(){
+        lblInvalidTitle.setVisible(false);
+        lblInvalidText.setVisible(false);
+    }
 
     void initializeData(SpringFxmlLoader loader, NewsService service, NewsController controller, Node oldContent){
         springFxmlLoader = loader;
@@ -68,6 +81,25 @@ public class NewsAddFormularController {
         c = controller;
         this.oldContent = oldContent;
         picPath = null;
+
+
+        /*TitleTF.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed( ObservableValue<? extends String> observable, String oldValue, String newValue ) {
+                if(newValue.length()>200){
+                    TitleTF.setText(oldValue);
+                }
+            }
+        });
+        TextArea.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed( ObservableValue<? extends String> observable, String oldValue, String newValue ) {
+                if(newValue.length()>10000){
+                    TextArea.setText(oldValue);
+                }
+            }
+        });
+        */
     }
 
 
@@ -75,10 +107,24 @@ public class NewsAddFormularController {
     public void saveNewNews(ActionEvent actionEvent) {
 
         DetailedNewsDTO.NewsDTOBuilder builder = new DetailedNewsDTO.NewsDTOBuilder();
+        lblInvalidTitle.setVisible(false);
+
+        if(!newsService.validateTextField(TitleTF)){
+            lblInvalidTitle.setVisible(true);
+            return;
+        }
+        lblInvalidText.setVisible(false);
+        if(!newsService.validateTextArea(TextArea)){
+            lblInvalidText.setVisible(true);
+            return;
+        }
+
+
         builder.title(TitleTF.getText());
         if(picPath!= null){
             builder.picture(picPath);
         }
+
         builder.text(TextArea.getText());
         newNews = builder.build();
         try {
@@ -86,7 +132,8 @@ public class NewsAddFormularController {
             c.loadNews();
             c.getNewsTab().setContent(oldContent);
         } catch (DataAccessException e) {
-            e.printStackTrace();
+            JavaFXUtils.createExceptionDialog(e,
+                VBroot.getScene().getWindow()).showAndWait();
         }
     }
 

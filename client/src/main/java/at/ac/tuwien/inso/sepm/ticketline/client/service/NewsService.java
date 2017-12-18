@@ -4,7 +4,9 @@ import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.rest.news.DetailedNewsDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.news.SimpleNewsDTO;
 
-
+import javafx.scene.control.TextField;
+import  javafx.scene.control.TextArea;
+import java.awt.*;
 import java.util.List;
 
 public interface NewsService {
@@ -51,4 +53,8 @@ public interface NewsService {
      * @throws DataAccessException in case something went wrong
      */
     DetailedNewsDTO publishNews(DetailedNewsDTO newNews) throws DataAccessException;
+
+    boolean validateTextField(TextField text);
+
+    boolean validateTextArea(TextArea text);
 }
