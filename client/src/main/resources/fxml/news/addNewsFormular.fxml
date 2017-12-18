@@ -27,7 +27,7 @@
                 <HBox spacing="8" GridPane.rowIndex="0" GridPane.columnIndex="0">
                     <Label text="Title: "/>
                     <TextField fx:id="TitleTF"/>
-                    <Label fx:id="lblInvalidTitle" text="%news.title.toolong" textFill="crimson"/>
+                    <Label fx:id="lblInvalidTitle" text="%news.title.tooLong" textFill="crimson"/>
                 </HBox>
                 <columnConstraints>
                     <ColumnConstraints hgrow="ALWAYS"/>
@@ -45,7 +45,7 @@
                 <HBox spacing="8" GridPane.rowIndex="0" GridPane.columnIndex="0">
                     <Label text="Text: "/>
                     <TextArea fx:id="TextArea"/>
-                    <Label fx:id="lblInvalidText" text="%news.text.toolong" textFill="crimson"/>
+                    <Label fx:id="lblInvalidText" text="%news.text.tooLong" textFill="crimson"/>
                 </HBox>
                 <VBox GridPane.rowIndex="0" GridPane.columnIndex="1">
                     <HBox spacing="8">

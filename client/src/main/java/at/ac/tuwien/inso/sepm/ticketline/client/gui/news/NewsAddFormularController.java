@@ -65,11 +65,15 @@ public class NewsAddFormularController {
     private Node oldContent;
 
     private String picPath;
-
-
     private NewsController c;
     private TabHeaderController tabHeaderController;
 
+
+    @FXML
+    void initialize(){
+        lblInvalidTitle.setVisible(false);
+        lblInvalidText.setVisible(false);
+    }
 
     void initializeData(SpringFxmlLoader loader, NewsService service, NewsController controller, Node oldContent){
         springFxmlLoader = loader;
@@ -77,6 +81,7 @@ public class NewsAddFormularController {
         c = controller;
         this.oldContent = oldContent;
         picPath = null;
+
 
         /*TitleTF.textProperty().addListener(new ChangeListener<String>() {
             @Override
@@ -102,17 +107,18 @@ public class NewsAddFormularController {
     public void saveNewNews(ActionEvent actionEvent) {
 
         DetailedNewsDTO.NewsDTOBuilder builder = new DetailedNewsDTO.NewsDTOBuilder();
+        lblInvalidTitle.setVisible(false);
 
-        if(TitleTF.getText().length()>100){
-            JavaFXUtils.createErrorDialog(BundleManager.getBundle().getString("news.title.tooLong"),
-                VBroot.getScene().getWindow()).showAndWait();
+        if(!newsService.validateTextField(TitleTF)){
+            lblInvalidTitle.setVisible(true);
             return;
         }
-        if(TextArea.getText().length()>10000){
-            JavaFXUtils.createErrorDialog(BundleManager.getBundle().getString("news.text.tooLong"),
-                VBroot.getScene().getWindow()).showAndWait();
+        lblInvalidText.setVisible(false);
+        if(!newsService.validateTextArea(TextArea)){
+            lblInvalidText.setVisible(true);
             return;
         }
+
 
         builder.title(TitleTF.getText());
         if(picPath!= null){

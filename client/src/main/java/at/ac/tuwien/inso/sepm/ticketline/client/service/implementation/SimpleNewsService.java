@@ -8,8 +8,10 @@ import at.ac.tuwien.inso.sepm.ticketline.rest.news.SimpleNewsDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
+import javafx.scene.control.TextField;
+import java.awt.*;
 import java.util.List;
+import  javafx.scene.control.TextArea;
 
 @Service
 public class SimpleNewsService implements NewsService {
@@ -45,6 +47,30 @@ public class SimpleNewsService implements NewsService {
     @Override
     public DetailedNewsDTO publishNews(DetailedNewsDTO newNews) throws DataAccessException {
        return newsRestClient.publishNews(newNews);
+    }
+
+    @Override
+    public boolean validateTextField(TextField text) {
+        if(text.getText().length()>100)
+            return false;
+        if(text.getText().isEmpty())
+            return false;
+        if(text.getText().equals(""))
+            return false;
+
+        return true;
+    }
+
+    @Override
+    public boolean validateTextArea(TextArea text) {
+        if(text.getText().length()>1000)
+            return false;
+        if(text.getText().isEmpty())
+            return false;
+        if(text.getText().equals(""))
+            return false;
+
+        return true;
     }
 
 }
