@@ -2,6 +2,7 @@ package at.ac.tuwien.inso.sepm.ticketline.client.gui.user;
 
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationObserver;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationSubject;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.MainController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.news.NewsController;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.UserService;
@@ -18,10 +19,11 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UserDialogController {
+public class UserDialogController implements LocalizationObserver {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
     @FXML
@@ -60,6 +62,10 @@ public class UserDialogController {
     private Node oldContent;
     private UserSimpleProperty userSimpleProperty;
 
+    @Autowired
+    private LocalizationSubject localizationSubject;
+
+
     public UserDialogController(MainController mainController, SpringFxmlLoader springFxmlLoader, UserController userController, UserService userService) {
         this.mainController = mainController;
         this.springFxmlLoader = springFxmlLoader;
@@ -70,6 +76,10 @@ public class UserDialogController {
     void initializeData(Node oldContent, UserSimpleProperty userSimpleProperty){
         this.oldContent = oldContent;
         this.userSimpleProperty = userSimpleProperty;
+
+        lblInvalidUsername.setVisible(false);
+        lblInvalidPassword.setVisible(false);
+        lblInvalidRole.setVisible(false);
 
         usernameTF.clear();
         passwordPF.clear();
@@ -96,25 +106,36 @@ public class UserDialogController {
 
     @FXML
     void initialize(){
-
+        localizationSubject.attach(this);
     }
 
     @FXML
     public void saveUserData(ActionEvent actionEvent) {
+        mainController.setGeneralErrorUnvisable();
+
+        lblInvalidUsername.setVisible(false);
+        lblInvalidPassword.setVisible(false);
+        lblInvalidRole.setVisible(false);
+
+        lblInvalidUsername.setText("");
+        lblInvalidPassword.setText("");
+        lblInvalidRole.setText("");
+
+
         if (usernameTF.getText().trim().isEmpty())
         {
-            System.out.println("Fehler"); // TODO: Alert
+            lblInvalidUsername.setVisible(true);
             return;
         }
 
         if (passwordPF.getText().trim().isEmpty() || !passwordPF.getText().equals(passwordConfirmPF.getText())) {
-            System.out.println("Fehler"); // TODO: Alert
+            lblInvalidPassword.setVisible(true);
             return;
         }
 
         int role = roleCombo.getSelectionModel().getSelectedIndex();
         if (role == -1) {
-            System.out.println("Fehler"); // TODO: Alert
+            lblInvalidRole.setVisible(true);
         }
 
         SimpleUserDTO simpleUserDTO = SimpleUserDTO.builder()
@@ -145,8 +166,7 @@ public class UserDialogController {
 
             @Override
             protected void failed() {
-                // TODO: (David) Alert
-                //getException().toString()
+                mainController.showGeneralError(getException().toString());
             }
         };
 
@@ -165,8 +185,11 @@ public class UserDialogController {
         userController.getUserTab().setContent(oldContent);
     }
 
+    @Override
     public void update() {
         // TODO: (David) Question How to update also this fields?
+
+        System.out.println(usernameLb.getText());
 
         usernameLb.setText(BundleManager.getBundle().getString("authenticate.userName"));
         passwordLb.setText(BundleManager.getBundle().getString("authenticate.password"));
