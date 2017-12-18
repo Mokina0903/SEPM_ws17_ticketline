@@ -146,5 +146,20 @@ public abstract class BaseIntegrationTest {
                 .publishedAt(TEST_NEWS_PUBLISHED_AT)
                 .build());
         }
+        TEST_NEWS_TEXT = "TestNewsText1";
+        TEST_NEWS_TITLE = "title1";
+        TEST_NEWS_PUBLISHED_AT =
+            LocalDateTime.of(2017, 11, 29, 12, 15, 0, 0);
+        TEST_NEWS_ID = 2L;
+
+        if (newsRepository.findAll().size() == 1) {
+            newsRepository.save(News.builder()
+                .id(TEST_NEWS_ID)
+                .title(TEST_NEWS_TITLE)
+                .text(TEST_NEWS_TEXT)
+                .publishedAt(TEST_NEWS_PUBLISHED_AT)
+                .build());
+
+        }
     }
 }

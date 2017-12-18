@@ -3,6 +3,7 @@ package at.ac.tuwien.inso.sepm.ticketline.server.integrationtest;
 
 import at.ac.tuwien.inso.sepm.ticketline.rest.user.DetailedUserDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.user.SimpleUserDTO;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.News;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.User;
 import at.ac.tuwien.inso.sepm.ticketline.server.integrationtest.base.BaseIntegrationTest;
 import at.ac.tuwien.inso.sepm.ticketline.server.security.AuthenticationConstants;
@@ -17,6 +18,7 @@ import org.springframework.http.HttpStatus;
 
 import javax.validation.constraints.AssertTrue;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.hamcrest.core.Is.is;
 
@@ -391,7 +393,6 @@ public class UserEndpointTest extends BaseIntegrationTest {
             .body(DetailedUserDTO.builder()
                 .userName(USER_USERNAME + 1)
                 .password(encoder.encode(USER_PASSWORD))
-                //.notSeen(newsRepository.findAllByOrderByPublishedAtDesc())
                 .blocked(false)
                 .role(2)
                 .build())
@@ -474,6 +475,31 @@ public class UserEndpointTest extends BaseIntegrationTest {
             .when().post(USER_ENDPOINT_NEW_USER)
             .then().extract().response();
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.CONFLICT.value()));
+    }
+
+
+    @Test
+    public void newNewsForNewUserAsAdmin() {
+        super.setupDefaultUsers();
+        Response response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
+            .body(DetailedUserDTO.builder()
+                .userName(USER_USERNAME + 2)
+                .password(encoder.encode(USER_PASSWORD))
+                .blocked(false)
+                .role(2)
+                .build())
+            .when().post(USER_ENDPOINT_NEW_USER)
+            .then().extract().response();
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
+
+        List<News> news = newsRepository.findNotSeenByUser(userRepository.findOneByUserName(USER_USERNAME + 2).getId());
+        Assert.assertTrue(news != null);
+        if(news != null){
+            Assert.assertTrue(news.size() > 0);
+        }
     }
 
     @Test

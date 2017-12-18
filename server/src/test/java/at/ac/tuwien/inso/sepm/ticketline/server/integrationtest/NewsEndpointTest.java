@@ -70,13 +70,15 @@ public class NewsEndpointTest extends BaseIntegrationTest {
             .when().get(NEWS_ENDPOINT)
             .then().extract().response();
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
-        Assert.assertThat(Arrays.asList(response.as(SimpleNewsDTO[].class)), is(Collections.singletonList(
+
+        Assert.assertThat((response.as(SimpleNewsDTO[].class))[1], is(
             SimpleNewsDTO.builder()
                 .id(TEST_NEWS_ID)
                 .title(TEST_NEWS_TITLE)
                 .summary(TEST_NEWS_TEXT)
                 .publishedAt(TEST_NEWS_PUBLISHED_AT)
-                .build())));
+                .build()));
+
     }
 
     @Test
@@ -206,11 +208,13 @@ public class NewsEndpointTest extends BaseIntegrationTest {
 
 
         Assert.assertThat(detailedNewsDTO, is(DetailedNewsDTO.builder()
-            .id(TEST_NEWS_ID+1)
+            .id(TEST_NEWS_ID+2)
             .title(TEST_NEWS_TITLE)
             .text(TEST_NEWS_TEXT)
             .publishedAt(null)
             .build()));
+
+
     }
 
     // TODO: (TEST) for findNotSeenByUser, findOldNewsByUser,
