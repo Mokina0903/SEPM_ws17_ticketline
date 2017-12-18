@@ -36,7 +36,7 @@
         </StackPane>
     </children>
     <HBox styleClass="errorLabel">
-        <Label styleClass="errorLabel" fx:id="generalErrors" text="ERRRROOOOOORRRRRR" textFill="crimson"/>
+        <Label styleClass="errorLabel" fx:id="generalErrors" textFill="crimson"/>
     </HBox>
 
 </VBox>
