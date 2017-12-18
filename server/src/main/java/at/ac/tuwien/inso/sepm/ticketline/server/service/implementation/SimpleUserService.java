@@ -1,10 +1,11 @@
-package at.ac.tuwien.inso.sepm.ticketline.server.serviencryptedntation;
+package at.ac.tuwien.inso.sepm.ticketline.server.service.implementation;
 
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.User;
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.AlreadyExistsException;
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.EmptyFieldException;
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.IllegalValueException;
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.NotFoundException;
+import at.ac.tuwien.inso.sepm.ticketline.server.repository.NewsRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.UserRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.UserService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -17,9 +18,11 @@ import java.util.Optional;
 public class SimpleUserService implements UserService {
 
     private final UserRepository userRepository;
+    private final NewsRepository newsRepository;
 
-    public SimpleUserService(UserRepository userRepository) {
+    public SimpleUserService(UserRepository userRepository, NewsRepository newsRepository) {
         this.userRepository = userRepository;
+        this.newsRepository = newsRepository;
     }
 
     @Override
@@ -67,7 +70,7 @@ public class SimpleUserService implements UserService {
         User newUser = User.builder()
             .userName(username)
             .password((new BCryptPasswordEncoder(10)).encode(password))
-            //.notSeen() TODO: (Ask Stefan) Add NewNews not seen
+            .notSeen(newsRepository.findNewsforNewUser())
             .role(role)
             .build();
 
