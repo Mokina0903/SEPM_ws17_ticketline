@@ -33,19 +33,19 @@ public class EventElementController {
     @FXML
     public Label lblText;
     @FXML
-    public Button backButton;
+    public Button ticketReservationButton;
     @FXML
     public ImageView eventImageView;
-    @FXML
-    public Label lblArtistFirstName;
-    @FXML
-    public Label lblArtistLastName;
     @FXML
     public Label lblPrice;
     @FXML
     public VBox vbEventElement;
     @FXML
     public Label lblPriceText;
+    @FXML
+    public Label lblArtistName;
+    @FXML
+    public Label lblArtist;
 
     private EventService eventService;
     private SimpleEventDTO simpleEventDTO;
@@ -58,21 +58,20 @@ public class EventElementController {
         lblStartDate.setText(EVENT_DTF.format(simpleEventDTO.getStartOfEvent()));
         lblEndDate.setText(EVENT_DTF.format(simpleEventDTO.getEndOfEvent()));
         lblTitle.setText(simpleEventDTO.getTitle());
-        lblArtistFirstName.setText(simpleEventDTO.getArtistFirstName());
-        lblArtistLastName.setText(simpleEventDTO.getArtistLastName());
+        lblArtistName.setText(simpleEventDTO.getArtistFirstName()+" "+simpleEventDTO.getArtistLastName());
+        lblArtist.setText(BundleManager.getBundle().getString("events.artist"));
         lblPrice.setText(String.valueOf(simpleEventDTO.getPrice()));
         lblText.setMaxWidth(500);
         lblText.setText(simpleEventDTO.getDescriptionSummary());
 
         lblPriceText.setText(BundleManager.getBundle().getString("events.price")+": ");
 
-        backButton.setVisible(false);
         eventImageView.setVisible(false);
     }
 
     public void detailedEventInfo( MouseEvent mouseEvent ) {
     }
 
-    public void backToSimpleEventView( ActionEvent actionEvent ) {
+    public void ticketReservationForEvent( ActionEvent actionEvent ) {
     }
 }
