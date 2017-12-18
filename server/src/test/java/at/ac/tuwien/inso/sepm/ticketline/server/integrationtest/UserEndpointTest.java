@@ -127,7 +127,7 @@ public class UserEndpointTest extends BaseIntegrationTest {
 
     // NOT Possible: (TEST) Add Test for Logout US 1
     // DONE: (TEST) Add Test Admin unlock US 1
-    // TODO: (TEST) Test correct privileges at REST US 1
+    // DONE: (TEST) Test correct privileges at REST US 1
     // Done: (TEST) Show Users US 1
     // DONE: (TEST) Admin can not lock himself BUS
     // DONE: (TEST) Add New Users (Admin/Seller) (1/2) BUS
