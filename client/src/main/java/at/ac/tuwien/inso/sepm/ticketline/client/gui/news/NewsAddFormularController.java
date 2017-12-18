@@ -3,6 +3,7 @@ package at.ac.tuwien.inso.sepm.ticketline.client.gui.news;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationObserver;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationSubject;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.MainController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.TabHeaderController;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.NewsService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
@@ -79,6 +80,9 @@ public class NewsAddFormularController implements LocalizationObserver {
     private String picPath;
     private NewsController c;
     private TabHeaderController tabHeaderController;
+
+    @Autowired
+    private MainController mainController;
 
     private GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
     private final int FONT_SIZE = 16;
@@ -158,11 +162,11 @@ public class NewsAddFormularController implements LocalizationObserver {
 
 
         if (file == null) {
-            //TODO: add alert
+            mainController.showGeneralError("File was empty. Choose a file before upload.");
             return;
         }
         if (file.length() > 5 * 1024 * 1024) {
-            //TODO: add alert
+            mainController.showGeneralError("Image was too large! Image has to be smaler than 5MB.");
             return;
         }
 
@@ -176,8 +180,8 @@ public class NewsAddFormularController implements LocalizationObserver {
             Files.copy(file.toPath(),destination.toPath());
 
         } catch (IOException e) {
-            //TODO: add alert
-            e.printStackTrace();
+            mainController.showGeneralError("Loading image failed because of technical issues.");
+           // e.printStackTrace();
         }
 
 
