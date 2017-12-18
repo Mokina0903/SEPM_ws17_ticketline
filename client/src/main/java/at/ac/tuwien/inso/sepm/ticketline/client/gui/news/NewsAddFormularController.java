@@ -119,16 +119,18 @@ public class NewsAddFormularController implements LocalizationObserver {
 
     @FXML
     public void saveNewNews(ActionEvent actionEvent) {
+
         mainController.setGeneralErrorUnvisable();
+        lblInvalidTitle.setVisible(false);
+        lblInvalidText.setVisible(false);
 
         DetailedNewsDTO.NewsDTOBuilder builder = new DetailedNewsDTO.NewsDTOBuilder();
-        lblInvalidTitle.setVisible(false);
 
         if(!newsService.validateTextField(TitleTF)){
             lblInvalidTitle.setVisible(true);
             return;
         }
-        lblInvalidText.setVisible(false);
+
         if(!newsService.validateTextArea(TextArea)){
             lblInvalidText.setVisible(true);
             return;
