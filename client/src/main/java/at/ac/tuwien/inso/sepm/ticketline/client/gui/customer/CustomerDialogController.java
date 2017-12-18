@@ -91,6 +91,7 @@ public class CustomerDialogController implements LocalizationObserver {
     }
 
     private GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
+    private final int FONT_SIZE = 16;
 
 
     private CustomerDTO customer;
@@ -126,6 +127,7 @@ public class CustomerDialogController implements LocalizationObserver {
     private void setButtonGraphic(Button button, String glyphSymbol, Color color) {
         Glyph glyph = fontAwesome.create(FontAwesome.Glyph.valueOf(glyphSymbol));
         glyph.setColor(color);
+        glyph.setFontSize(FONT_SIZE);
         button.setGraphic(glyph);
     }
 

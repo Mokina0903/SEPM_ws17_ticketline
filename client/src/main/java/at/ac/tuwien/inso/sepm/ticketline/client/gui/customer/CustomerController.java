@@ -71,6 +71,8 @@ public class CustomerController extends TabElement implements LocalizationObserv
     private final SpringFxmlLoader springFxmlLoader;
     private final CustomerService customerService;
     private GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
+    private final int FONT_SIZE = 16;
+
 
     private List<CustomerDTO> customer;
 
@@ -97,9 +99,9 @@ public class CustomerController extends TabElement implements LocalizationObserv
         tabHeaderController.setIcon(FontAwesome.Glyph.USERS);
         tabHeaderController.setTitle(BundleManager.getBundle().getString("customer.customer"));
         localizationSubject.attach(this);
-        btNew.setGraphic(fontAwesome.create("USER_PLUS"));
-        btEdit.setGraphic(fontAwesome.create("PENCIL_SQUARE_ALT"));
-        btTickets.setGraphic(fontAwesome.create("TICKET"));
+        btNew.setGraphic(fontAwesome.create("USER_PLUS").size(FONT_SIZE));
+        btEdit.setGraphic(fontAwesome.create("PENCIL_SQUARE_ALT").size(FONT_SIZE));
+        btTickets.setGraphic(fontAwesome.create("TICKET").size(FONT_SIZE));
 
         lbNoMatch.setVisible(false);
     }

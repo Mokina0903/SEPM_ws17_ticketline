@@ -22,8 +22,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import org.controlsfx.glyphfont.FontAwesome;
+import org.controlsfx.glyphfont.Glyph;
+import org.controlsfx.glyphfont.GlyphFont;
+import org.controlsfx.glyphfont.GlyphFontRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,13 +80,22 @@ public class NewsAddFormularController implements LocalizationObserver {
     private NewsController c;
     private TabHeaderController tabHeaderController;
 
+    private GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
+    private final int FONT_SIZE = 16;
+
+
     @Autowired
     private LocalizationSubject localizationSubject;
 
     @FXML
     void initialize(){
+        localizationSubject.attach(this);
+
         lblInvalidTitle.setVisible(false);
         lblInvalidText.setVisible(false);
+
+        setButtonGraphic(saveBtn, "CHECK", Color.OLIVE);
+        setButtonGraphic(backWithoutSaveBtn, "TIMES", Color.CRIMSON);
     }
 
     void initializeData(SpringFxmlLoader loader, NewsService service, NewsController controller, Node oldContent){
@@ -91,10 +104,14 @@ public class NewsAddFormularController implements LocalizationObserver {
         c = controller;
         this.oldContent = oldContent;
         picPath = null;
-
-        localizationSubject.attach(this);
     }
 
+    private void setButtonGraphic(Button button, String glyphSymbol, Color color) {
+        Glyph glyph = fontAwesome.create(FontAwesome.Glyph.valueOf(glyphSymbol));
+        glyph.setColor(color);
+        glyph.setFontSize(FONT_SIZE);
+        button.setGraphic(glyph);
+    }
 
     @FXML
     public void saveNewNews(ActionEvent actionEvent) {
@@ -177,7 +194,5 @@ public class NewsAddFormularController implements LocalizationObserver {
     public void update() {
         lblAddImage.setText(BundleManager.getBundle().getString("news.addimage"));
         lblTitle.setText(BundleManager.getBundle().getString("news.title"));
-        saveBtn.setText(BundleManager.getBundle().getString("news.save"));
-        backWithoutSaveBtn.setText(BundleManager.getBundle().getString("detailedNews.backButton"));
     }
 }
