@@ -185,6 +185,12 @@ public class UserDialogController implements LocalizationObserver {
 
             @Override
             protected void failed() {
+                if (getException().getMessage().trim().equals("409")) {
+                    // Username already exists
+                    lblInvalidUsername.setVisible(true);
+                    return;
+                }
+
                 mainController.showGeneralError(getException().toString());
             }
         };
