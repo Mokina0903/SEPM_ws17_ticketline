@@ -56,7 +56,7 @@ public class UserDataGenerator {
             User florian = User.builder()
                 .userName("Florian")
                 .password(encoder.encode("Florian"))
-                //.notSeen(newsRepository.findAllByOrderByPublishedAtDesc())
+                .notSeen(newsRepository.findAllByOrderByPublishedAtDesc())
                 .role(2)
                 .blocked(false)
                 .build();
