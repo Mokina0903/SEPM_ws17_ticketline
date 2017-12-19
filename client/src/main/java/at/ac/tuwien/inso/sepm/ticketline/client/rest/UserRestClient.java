@@ -7,53 +7,26 @@ import at.ac.tuwien.inso.sepm.ticketline.rest.user.DetailedUserDTO;
 import java.util.List;
 
 public interface  UserRestClient {
-/**
- * Find user by username
- *
- * @param userName of the user searched for
- * @return SimpleUserDTO
- * @throws DataAccessException in case something went wrong
- */
-    SimpleUserDTO findByUsername(String userName) throws DataAccessException;
-
 
     /**
      * get left login Attempts by username
      *
      * @param username of the user searched for
-     * @return Integer attempts
+     * @return Integer login attempts
      */
     Integer getLoginAttemptsLeft(String username) throws DataAccessException;
 
     /**
-     * decrease login Attempts by username by 1
-     *
-     * @param username of the user searched for
-     * @return Integer attempts
-     */
- //   SimpleUserDTO decreaseLoginAttempts(String username) throws DataAccessException;
-
-    /**
-     * reset login Attempts by username
-     *
-     * @param username
-     * @return Integer attempts
-     */
- //   SimpleUserDTO resetLoginAttempts(String username) throws DataAccessException;
-
-    /**
      * block user by username
      *
-     * @param username
-     * @return Integer attempts
+     * @param username of user entry
      */
     void blockUser(String username) throws DataAccessException;
 
     /**
      * unblock user by username
      *
-     * @param username
-     * @return Integer attempts
+     * @param username of user entry
      */
      void unblockUser(String username) throws DataAccessException;
 
@@ -61,8 +34,8 @@ public interface  UserRestClient {
     /**
      * check if user is blocked
      *
-     * @param username
-     * @return boolean isBlocked
+     * @param username of user entry
+     * @return boolean if user is blocked
      */
     boolean isBlocked(String username) throws DataAccessException;
 
@@ -88,7 +61,7 @@ public interface  UserRestClient {
     /**
      * Reset Password of User
      *
-     * @param simpleUserDTO
+     * @param simpleUserDTO of userDTO entry whose password should be reset
      * @return SimpleUserDTO
      */
     SimpleUserDTO resetUserPassword(SimpleUserDTO simpleUserDTO);
@@ -96,7 +69,7 @@ public interface  UserRestClient {
     /**
      * add new User
      *
-     * @param simpleUserDTO
+     * @param simpleUserDTO that should be created
      * @return SimpleUserDTO
      */
     SimpleUserDTO addNewUser(SimpleUserDTO simpleUserDTO);
@@ -104,7 +77,7 @@ public interface  UserRestClient {
     /**
      * Find all user entries.
      *
-     * @return list of news entries
+     * @return list of user entries
      * @throws DataAccessException in case something went wrong
      */
     List<SimpleUserDTO> findAll() throws DataAccessException;

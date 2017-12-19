@@ -29,29 +29,12 @@ public class SimpleUserService implements UserService {
         this.userRestClient = userRestClient;
     }
 
-    @Override
-    public SimpleUserDTO findByUsername(String userName) throws DataAccessException {
-        return userRestClient.findByUsername(userName);
-    }
 
     @Override
     public Integer getLoginAttemptsLeft(String userName) throws DataAccessException {
         return userRestClient.getLoginAttemptsLeft(userName);
     }
 
-    /*
-    @Override
-    public SimpleUserDTO decreaseLoginAttempts(String userName) throws DataAccessException {
-        return userRestClient.decreaseLoginAttempts(userName);
-    }
-    */
-
-    /*
-    @Override
-    public SimpleUserDTO resetLoginAttempts(String userName) throws DataAccessException {
-        return userRestClient.resetLoginAttempts(userName);
-    }
-    */
 
     @Override
     public SimpleUserDTO resetUserPassword(SimpleUserDTO simpleUserDTO) throws DataAccessException {

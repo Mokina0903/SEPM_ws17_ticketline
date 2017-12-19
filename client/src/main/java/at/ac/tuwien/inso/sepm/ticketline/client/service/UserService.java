@@ -9,48 +9,20 @@ import java.util.List;
 
 public interface UserService {
 
-    /**
-     * Find specific user entry by name
-     *
-     * @param userName of userAttemps entry
-     * @return SimpleUserDTO
-     * @throws DataAccessException in case something went wrong
-     */
-    SimpleUserDTO findByUsername(String userName) throws DataAccessException;
 
     /**
      * get left login attempts by name
      *
-     * @param userName of userAttemps entry
+     * @param userName of user entry
      * @return userAttempts
      * @throws DataAccessException in case something went wrong
      */
     Integer getLoginAttemptsLeft(String userName) throws DataAccessException;
 
     /**
-     * decrease login attempts by name by 1
-     *
-     * @param userName of userAttemps entry
-     * @return UserDTO
-     * @throws DataAccessException in case something went wrong
-     */
-//    SimpleUserDTO decreaseLoginAttempts(String userName) throws DataAccessException;
-
-    /**
-     * reset login attempts by name
-     *
-     * @param userName of userAttemps entry
-     * @return UserDTO
-     * @throws DataAccessException in case something went wrong
-     */
-//    SimpleUserDTO resetLoginAttempts(String userName) throws DataAccessException;
-
-
-    /**
      * block user by name
      *
-     * @param userName of userAttemps entry
-     * @return UserDTO
+     * @param userName of user entry
      * @throws DataAccessException in case something went wrong
      */
     void blockUser(String userName) throws DataAccessException;
@@ -58,16 +30,15 @@ public interface UserService {
     /**
      * unblock user by name
      *
-     * @param userName of userAttemps entry
-     * @return UserDTO
+     * @param userName of user entry
      * @throws DataAccessException in case something went wrong
      */
     void unblockUser(String userName) throws DataAccessException;
 
     /**
-     * reset password by username
+     * reset password of username
      *
-     * @param simpleUserDTO
+     * @param simpleUserDTO of userDTO entry whose password should be reset
      * @return UserDTO
      * @throws DataAccessException in case something went wrong
      */
@@ -76,7 +47,7 @@ public interface UserService {
     /**
      * add new User
      *
-     * @param simpleUserDTO of userAttemps entry
+     * @param simpleUserDTO of user entry
      * @return UserDTO
      * @throws DataAccessException in case something went wrong
      */
@@ -85,8 +56,8 @@ public interface UserService {
     /**
      * check if user is blocked
      *
-     * @param userName of userAttemps entry
-     * @return UserDTO
+     * @param userName of user entry
+     * @return boolean if user is blocked
      * @throws DataAccessException in case something went wrong
      */
     boolean isBlocked(String userName) throws DataAccessException;
