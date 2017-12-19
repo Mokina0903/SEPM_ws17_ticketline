@@ -107,7 +107,6 @@ public class CustomerDialogController implements LocalizationObserver {
 
     @FXML
     void initialize() {
-        //TODO: implement pre-filling of all Textfields/Boxes + visability issues of textfields
         localizationSubject.attach(this);
         lbInvalidName.setVisible(false);
         lbInvalidBirthdate.setVisible(false);
@@ -159,6 +158,9 @@ public class CustomerDialogController implements LocalizationObserver {
 
     @FXML
     public void handleCancel(ActionEvent actionEvent) {
+        mainController.setGeneralErrorUnvisable();
+        LOGGER.info("Canceled action.");
+
         if (isUpdate) {
             setUpdate(false);
         }
@@ -167,6 +169,9 @@ public class CustomerDialogController implements LocalizationObserver {
 
     @FXML
     public void handleOk(ActionEvent actionEvent) {
+        LOGGER.info("Creating or saving customer.");
+        mainController.setGeneralErrorUnvisable();
+
         String mail = tfEmail.getText();
         String surname = tfLname.getText();
         LocalDate birthDate = dpBirthdate.getValue();
@@ -186,6 +191,7 @@ public class CustomerDialogController implements LocalizationObserver {
         CustomerDTO customer = builder.build();
 
         if (!customerService.checkIfCustomerValid(customer)){
+            LOGGER.error("Cutomer to be saved was invalid!");
             lbInvalidCustomer.setVisible(true);
             return;
         }
@@ -194,20 +200,27 @@ public class CustomerDialogController implements LocalizationObserver {
 
         try {
             if (!isUpdate) {
+                LOGGER.info("customer will be created");
+
                 customerService.saveCustomer(customer);
             } else {
+                LOGGER.info("customer will be edited");
+
                 customerService.updateCustomer(customer);
                 isUpdate = false;
             }
 
         } catch (DataAccessException e) {
-            e.printStackTrace();
+            LOGGER.warn("Customer could not have been saved because of technical issues");
+            mainController.showGeneralError("Not able to save Customer!");
+           // e.printStackTrace();
         }
         customerController.getCustomerTab().setContent(oldContent);
     }
 
     @Override
     public void update() {
+
         lbCustomerNumberText.setText(BundleManager.getBundle().getString("customer.number"));
         lbCustomerName.setText(BundleManager.getBundle().getString("customer.lname"));
         lbCustomerBirthdate.setText(BundleManager.getBundle().getString("customer.birthdate"));

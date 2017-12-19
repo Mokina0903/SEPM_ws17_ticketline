@@ -119,6 +119,7 @@ public class NewsAddFormularController implements LocalizationObserver {
 
     @FXML
     public void saveNewNews(ActionEvent actionEvent) {
+        LOGGER.info("Saving new news.");
 
         mainController.setGeneralErrorUnvisable();
         lblInvalidTitle.setVisible(false);
@@ -127,11 +128,13 @@ public class NewsAddFormularController implements LocalizationObserver {
         DetailedNewsDTO.NewsDTOBuilder builder = new DetailedNewsDTO.NewsDTOBuilder();
 
         if(!newsService.validateTextField(TitleTF)){
+            LOGGER.warn("Invalid title was typed in!");
             lblInvalidTitle.setVisible(true);
             return;
         }
 
         if(!newsService.validateTextArea(TextArea)){
+            LOGGER.warn("Invalid text was typed in!");
             lblInvalidText.setVisible(true);
             return;
         }
@@ -149,12 +152,13 @@ public class NewsAddFormularController implements LocalizationObserver {
             c.loadNews();
             c.getNewsTab().setContent(oldContent);
         } catch (DataAccessException e) {
-            JavaFXUtils.createExceptionDialog(e,
-                VBroot.getScene().getWindow()).showAndWait();
+            LOGGER.warn("Could not save news. Data AccessException");
+            mainController.showGeneralError("Not able to save the News because of technical issues.");
         }
     }
 
     public void addImage(ActionEvent actionEvent) {
+        LOGGER.info("Adding Image to new news.");
         mainController.setGeneralErrorUnvisable();
 
         String home = System.getProperty("user.home");
@@ -166,10 +170,12 @@ public class NewsAddFormularController implements LocalizationObserver {
 
 
         if (file == null) {
+            LOGGER.warn("Tried to upload empty image.");
             mainController.showGeneralError("File was empty. Choose a file before upload.");
             return;
         }
         if (file.length() > 5 * 1024 * 1024) {
+            LOGGER.warn("Tried to upload image bigger than 5MB.");
             mainController.showGeneralError("Image was too large! Image has to be smaler than 5MB.");
             return;
         }
@@ -184,6 +190,7 @@ public class NewsAddFormularController implements LocalizationObserver {
             Files.copy(file.toPath(),destination.toPath());
 
         } catch (IOException e) {
+            LOGGER.warn("Loading image failed.");
             mainController.showGeneralError("Loading image failed because of technical issues.");
            // e.printStackTrace();
         }

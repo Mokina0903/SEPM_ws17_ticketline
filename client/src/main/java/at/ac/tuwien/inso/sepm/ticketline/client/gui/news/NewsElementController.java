@@ -19,6 +19,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -31,6 +33,7 @@ import java.util.List;
 @Component
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
 public class NewsElementController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(NewsController.class);
 
     private static final DateTimeFormatter NEWS_DTF =
         DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG, FormatStyle.SHORT);
@@ -80,6 +83,8 @@ public class NewsElementController {
     }
 
     public void backToSimpleNewsView(ActionEvent actionEvent) {
+        LOGGER.info("Closing the detailed view of the news element.");
+        mainController.setGeneralErrorUnvisable();
         lblText.setText(simpleNewsDTO.getSummary());
         newsImageView.setImage(null);
         backButton.setVisible(false);
@@ -88,15 +93,16 @@ public class NewsElementController {
         try {
             userService.removeFromUserNotSeen(mainController.getUser().getId(),simpleNewsDTO.getId());
         } catch (DataAccessException e) {
-            JavaFXUtils.createExceptionDialog(e,
-                vbNewsElement.getScene().getWindow()).showAndWait();
-            e.printStackTrace();
+            LOGGER.debug("Not possible to load the simple news!");
+            mainController.showGeneralError("Can not close the detailed view of this news.");
+            //e.printStackTrace();
         }
         vbNewsElement.setStyle("-fx-background-color:rgba(245, 245, 245,0)");
     }
 
     public void detailedNews(MouseEvent mouseEvent) {
-
+        LOGGER.info("Loading the detail view of this news element");
+        mainController.setGeneralErrorUnvisable();
         Task<DetailedNewsDTO> task = new Task<>() {
             @Override
             protected DetailedNewsDTO call() throws DataAccessException {
@@ -122,6 +128,7 @@ public class NewsElementController {
 
             @Override
             protected void failed() {
+                LOGGER.debug("failed to load detailed news.");
                 super.failed();
                 JavaFXUtils.createExceptionDialog(getException(),
                     vbNewsElement.getScene().getWindow()).showAndWait();

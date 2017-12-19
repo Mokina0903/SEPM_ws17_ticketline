@@ -95,6 +95,7 @@ public class NewsController extends TabElement implements LocalizationObserver{
 
 
     public void loadNews() {
+       LOGGER.info("Loading News");
         ObservableList<VBox> vbNewsBoxChildren = vbNewsElements.getItems();
         vbNewsBoxChildren.clear();
 
@@ -197,6 +198,7 @@ public class NewsController extends TabElement implements LocalizationObserver{
 
             @Override
             protected void failed() {
+                LOGGER.debug("Loading news failed.");
                 if(getValue()==null || getValue().isEmpty()) {
                     super.failed();
                     JavaFXUtils.createExceptionDialog(getException(),
@@ -216,6 +218,7 @@ public class NewsController extends TabElement implements LocalizationObserver{
 
 
     public void addNewNews(ActionEvent actionEvent) {
+        LOGGER.info("Opening new dialog to add news.");
 
         SpringFxmlLoader.Wrapper<NewsAddFormularController> wrapper =
             springFxmlLoader.loadAndWrap("/fxml/news/addNewsFormular.fxml");

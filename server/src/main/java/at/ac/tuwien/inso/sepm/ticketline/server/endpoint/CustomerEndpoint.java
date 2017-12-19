@@ -59,7 +59,7 @@ public class CustomerEndpoint {
             CustomerDTO customer = (customerMapper.customerToCustomerDTO(customerService.findByKnr(knr)));
             return customer;
         } catch (InvalidIdException | CustomerNotValidException e) {
-            e.printStackTrace();
+          //  e.printStackTrace();
         }
         return null;
     }
@@ -71,7 +71,7 @@ public class CustomerEndpoint {
         try {
             customerMapper.customerToCustomerDTO(customerService.createCustomer(customerMapper.customerDTOToCustomer(customer)));
         } catch (CustomerNotValidException e) {
-            e.printStackTrace();
+          //  e.printStackTrace();
         }
 
     }
@@ -82,7 +82,7 @@ public class CustomerEndpoint {
         try {
            customerService.updateCustomer(customerMapper.customerDTOToCustomer(customerDTO));
         } catch (CustomerNotValidException | InvalidIdException e) {
-            e.printStackTrace();
+          // e.printStackTrace();
         }
 
     }

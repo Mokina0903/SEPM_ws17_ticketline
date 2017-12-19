@@ -60,6 +60,14 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
      */
     Page<Customer> readBySurnameStartingWithIgnoreCase(String surname, Pageable request);
 
+    /**
+     *
+     * @param name to be updated
+     * @param surname to be updated
+     * @param email to be updated
+     * @param birthDate to be upated
+     * @param knr of the customer, wohms data needs to be edited
+     */
     @Modifying
     @Transactional
     @Query(value = "update Customer u set u.name = ?1, u.surname = ?2, u.email = ?3, u.birthdate = ?4 where u.knr = ?5", nativeQuery = true)

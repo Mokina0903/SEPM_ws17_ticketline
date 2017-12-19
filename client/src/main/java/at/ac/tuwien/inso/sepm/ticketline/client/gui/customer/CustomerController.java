@@ -109,6 +109,7 @@ public class CustomerController extends TabElement implements LocalizationObserv
 
     public void preparePagination() {
         //all customer at start or searchfield is empty
+        LOGGER.info("prepareing Pagination for the customer overview");
         try {
             customer = customerService.findAll(0, Integer.MAX_VALUE);
             pagination.setPageCount(customer.size() / CUSTOMER_PER_PAGE + 1);
@@ -160,6 +161,7 @@ public class CustomerController extends TabElement implements LocalizationObserv
             }
 
         } catch (SearchNoMatchException e) {
+            LOGGER.info("No match found");
             noMatchFound();
         } catch (DataAccessException e) {
             LOGGER.warn("Could not access find customers");
@@ -236,6 +238,7 @@ public class CustomerController extends TabElement implements LocalizationObserv
 
     @FXML
     public void openNewDialog(ActionEvent actionEvent) {
+        LOGGER.info("opening the create customer dialog.");
 
         SpringFxmlLoader.Wrapper<CustomerDialogController> wrapper =
 
@@ -248,7 +251,9 @@ public class CustomerController extends TabElement implements LocalizationObserv
 
     @FXML
     public void openEditDialog(ActionEvent actionEvent) {
-   CustomerDTO customer = currentTableview.getSelectionModel().getSelectedItem();
+        LOGGER.info("opening the edit customer dialog.");
+
+        CustomerDTO customer = currentTableview.getSelectionModel().getSelectedItem();
 
         if (customer != null) {
             SpringFxmlLoader.Wrapper<CustomerDialogController> wrapper =
@@ -262,6 +267,7 @@ public class CustomerController extends TabElement implements LocalizationObserv
 
     @Override
     public void update() {
+
         tabHeaderController.setTitle(BundleManager.getBundle().getString("customer.customer"));
         btSearch.setText(BundleManager.getBundle().getString("menu.search"));
         lbSearch.setText(BundleManager.getBundle().getString("menu.search"));
