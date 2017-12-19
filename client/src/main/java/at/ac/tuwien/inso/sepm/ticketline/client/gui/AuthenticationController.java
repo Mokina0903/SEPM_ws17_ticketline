@@ -92,6 +92,10 @@ public class AuthenticationController {
 
                     @Override
                     protected void succeeded() {
+                        lblLoginAttempts.setVisible(false);
+                        lblLoginFailed.setVisible(false);
+                        lblNumberFreeAttempts.setText("");
+
                         mainController.loadDetailedUserDTO(getValue().getUsername());
                     }
 
