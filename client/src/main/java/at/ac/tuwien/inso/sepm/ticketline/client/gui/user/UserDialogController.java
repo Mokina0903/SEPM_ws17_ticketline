@@ -153,8 +153,13 @@ public class UserDialogController implements LocalizationObserver {
 
         int role = roleCombo.getSelectionModel().getSelectedIndex();
         if (role == -1) {
-            lblInvalidRole.setVisible(true);
-            return;
+            if((userSimpleProperty.getRole() == 1) || userSimpleProperty.getRole() == 2){
+                role = userSimpleProperty.getRole();
+            }
+            else {
+                lblInvalidRole.setVisible(true);
+                return;
+            }
         }
 
         SimpleUserDTO simpleUserDTO = SimpleUserDTO.builder()
