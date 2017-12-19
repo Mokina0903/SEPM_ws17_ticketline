@@ -29,6 +29,12 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     List<Event> findAllByOrderByStartOfEventDesc();
 
 
+    /**
+     * find page of future events
+     *
+     * @param request for the page containing a page number and sort type
+     * @return page of events
+     */
     @Query(value = "Select * from event where end_of_event > now() /*#pageable*/",  nativeQuery = true)
     Page<Event> findAllUpcoming( Pageable request);
 }

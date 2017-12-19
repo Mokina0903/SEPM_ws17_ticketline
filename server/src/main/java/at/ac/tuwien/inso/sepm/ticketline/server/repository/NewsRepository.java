@@ -60,10 +60,6 @@ public interface NewsRepository extends JpaRepository<News, Long> {
      * @return list news
      */
     @Query(value = "SELECT * FROM news WHERE published_at > NOW()-100",nativeQuery = true)
-
-    /**
-     * Finds all News for a user newly created
-     */
     List<News> findNewsforNewUser();
 
 }
