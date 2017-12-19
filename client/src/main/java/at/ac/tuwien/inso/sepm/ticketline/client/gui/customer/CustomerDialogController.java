@@ -119,7 +119,6 @@ public class CustomerDialogController implements LocalizationObserver {
         setButtonGraphic(btOk, "CHECK", Color.OLIVE);
         setButtonGraphic(btCancel, "TIMES", Color.CRIMSON);
 
-        addListeners();
 
         isUpdate = false;
     }
@@ -202,7 +201,6 @@ public class CustomerDialogController implements LocalizationObserver {
             }
 
         } catch (DataAccessException e) {
-            //TODO: add alert
             e.printStackTrace();
         }
         customerController.getCustomerTab().setContent(oldContent);
@@ -218,8 +216,9 @@ public class CustomerDialogController implements LocalizationObserver {
         lbInvalidName.setText(BundleManager.getBundle().getString("customer.invalidName"));
         lbInvalidBirthdate.setText(BundleManager.getBundle().getString("customer.invalidBirthdate"));
         lbInvalidEmail.setText(BundleManager.getBundle().getString("customer.invalidEmail"));
+        lbInvalidCustomer.setText(BundleManager.getBundle().getString("customer.invalidCustomer"));
     }
-
+/*
     private void addListeners() {
 
         lbInvalidName.textProperty().addListener(new InvalidationListener() {
@@ -250,4 +249,5 @@ public class CustomerDialogController implements LocalizationObserver {
 
 
     }
+    */
 }
