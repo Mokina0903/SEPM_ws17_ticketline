@@ -136,6 +136,10 @@ public class CustomerController extends TabElement implements LocalizationObserv
     private List<CustomerDTO> loadPage(int pageIndex) {
         List<CustomerDTO> page = new ArrayList<CustomerDTO>();
 
+        if (tfSearch.getText().isEmpty() || tfSearch.getText().equals("")) {
+            searchFor = CustomerSearchFor.ALL;
+        }
+
         try {
             switch (searchFor) {
                 case ALL:
@@ -201,11 +205,10 @@ public class CustomerController extends TabElement implements LocalizationObserv
 
 
     @FXML
-    private void search(ActionEvent actionEvent) throws DataAccessException {
-
+    private void search(ActionEvent actionEvent) {
         String searchText = tfSearch.getText();
 
-        if (searchText.isEmpty()) {
+        if (searchText.isEmpty() || searchText.equals("")) {
             LOGGER.info("Empty search");
             searchFor = CustomerSearchFor.ALL;
             preparePagination();
@@ -222,12 +225,14 @@ public class CustomerController extends TabElement implements LocalizationObserv
                 preparePagination(customer);
             }
         }
+
     }
 
     private void noMatchFound() {
         LOGGER.info("no search match");
         lbNoMatch.setVisible(true);
     }
+
 
     @FXML
     public void openNewDialog(ActionEvent actionEvent) {
