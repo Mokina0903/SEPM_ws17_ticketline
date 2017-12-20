@@ -63,7 +63,7 @@ public class SimpleNewsService implements NewsService {
 
     @Override
     public boolean validateTextArea(TextArea text) {
-        if(text.getText().length()>1000)
+        if(text.getText().length()>10000)
             return false;
         if(text.getText().isEmpty())
             return false;
