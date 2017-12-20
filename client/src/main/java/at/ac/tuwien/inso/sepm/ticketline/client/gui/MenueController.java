@@ -33,7 +33,6 @@ public class MenueController implements LocalizationObserver {
     @Autowired
     private LocalizationSubject localizationSubject;
 
-    //todo change languages on runtime! remove test.language label
 
     @FXML
     private void initialize(){
