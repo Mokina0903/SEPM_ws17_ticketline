@@ -11,7 +11,7 @@ server:
 spring:
   application:
     name: Ticketline Server
-    version: @project.version@
+
   jpa:
     hibernate:
       ddl-auto: validate

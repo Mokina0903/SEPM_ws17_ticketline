@@ -1,0 +1,17 @@
+.eventDate {
+    -fx-font-size: 12px;
+    -fx-font-style: italic;
+}
+
+.eventTitle {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.eventText {
+    -fx-font-size: 12px;
+}
+.eventPrice {
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}

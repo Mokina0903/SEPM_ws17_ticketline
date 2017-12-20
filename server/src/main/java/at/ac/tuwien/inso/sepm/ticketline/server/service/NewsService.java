@@ -1,6 +1,7 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.service;
 
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.News;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.User;
 
 import java.util.List;
 
@@ -21,6 +22,22 @@ public interface NewsService {
      * @return the news entry
      */
     News findOne(Long id);
+
+    /**
+     * find list of all news not seen by the user
+     *
+     * @param userId of the user
+     * @return list of new news
+     */
+    List<News> findNotSeenByUser(Long userId);
+
+    /**
+     * find list of all news already seen by the user
+     *
+     * @param userId of the user
+     * @return list of old news
+     */
+    List<News> findOldNewsByUser(Long userId);
 
     /**
      * Publish a single news entry

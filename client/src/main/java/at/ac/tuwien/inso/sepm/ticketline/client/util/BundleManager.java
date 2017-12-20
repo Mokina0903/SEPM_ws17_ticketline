@@ -1,5 +1,9 @@
 package at.ac.tuwien.inso.sepm.ticketline.client.util;
 
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationSubject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -14,6 +18,7 @@ import static java.util.Locale.GERMAN;
 /**
  * This class can be used to access resource bundles.
  */
+@Component
 public class BundleManager {
 
     private static final List<Locale> SUPPORTED_LOCALES = Arrays.asList(GERMAN, ENGLISH);
@@ -26,6 +31,9 @@ public class BundleManager {
 
     private static Locale locale = Locale.getDefault();
 
+    private static LocalizationSubject localizationSubject;
+
+
     static {
         SUPPORTED_LOCALES.forEach(locale -> {
             BUNDLES.put(locale.getLanguage(), ResourceBundle.getBundle(BASENAME, locale, new UTF8Control()));
@@ -34,11 +42,14 @@ public class BundleManager {
     }
 
     /**
-     * An empty private constructor to prevent the creation of an BundleManager Instance.
+     * An private constructor to prevent the creation of an BundleManager Instance.
+     * Autowired to instantiate static field localizationSubject
      */
-    private BundleManager() {
-
+    @Autowired
+    private BundleManager(LocalizationSubject localizationSubject) {
+        BundleManager.localizationSubject = localizationSubject;
     }
+
 
     /**
      * Gets the bundle for the current locale or if not set the default locale.
@@ -68,6 +79,7 @@ public class BundleManager {
             throw new IllegalArgumentException("Locale not supported");
         }
         BundleManager.locale = locale;
+        localizationSubject.notifyAllObservers();
     }
 
     /**

@@ -3,6 +3,7 @@ package at.ac.tuwien.inso.sepm.ticketline.server.configuration;
 import at.ac.tuwien.inso.sepm.ticketline.server.configuration.properties.H2ConsoleConfigurationProperties;
 import at.ac.tuwien.inso.sepm.ticketline.server.security.HeaderTokenAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.tomcat.jdbc.pool.DataSource;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.boot.autoconfigure.web.DefaultErrorAttributes;
 import org.springframework.boot.autoconfigure.web.ErrorAttributes;
@@ -16,6 +17,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.authentication.configurers.provisioning.InMemoryUserDetailsManagerConfigurer;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -34,13 +36,17 @@ import java.util.Map;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
-public class SecurityConfiguration {
+public class SecurityConfiguration{
 
     private final PasswordEncoder passwordEncoder;
 
     public SecurityConfiguration(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
     }
+
+    @Autowired
+    DataSource dataSource;
+
 
     @Bean
     public static PasswordEncoder configureDefaultPasswordEncoder() {
@@ -61,13 +67,17 @@ public class SecurityConfiguration {
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth, List<AuthenticationProvider> providerList) throws Exception {
-        new InMemoryUserDetailsManagerConfigurer<AuthenticationManagerBuilder>()
-            .withUser("user").password(passwordEncoder.encode("password")).authorities("USER").and()
-            .withUser("admin").password(passwordEncoder.encode("password")).authorities("ADMIN", "USER").and()
-            .passwordEncoder(passwordEncoder)
-            .configure(auth);
+        auth.jdbcAuthentication()
+            .dataSource(dataSource)
+            .usersByUsernameQuery(
+                "SELECT user_name, password, (not blocked) as enabled from users where user_name=?")
+        .authoritiesByUsernameQuery("SELECT user_name as username, (CASE WHEN Role = 1 THEN 'ADMIN' ELSE 'USER' END) as authority FROM USERS where user_name=?")
+        .passwordEncoder(passwordEncoder);
         providerList.forEach(auth::authenticationProvider);
     }
+
+
+
 
     @Configuration
     @Order(SecurityProperties.BASIC_AUTH_ORDER)
@@ -86,21 +96,36 @@ public class SecurityConfiguration {
             h2AccessMatcher = h2ConsoleConfigurationProperties.getAccessMatcher();
         }
 
+/*        @Override
+        public void configure(WebSecurity web) throws Exception {
+            web.ignoring().antMatchers(HttpMethod.POST, "/authentication/**");
+        }*/
+
         @Override
         protected void configure(HttpSecurity http) throws Exception {
+
             http
                 .csrf().disable()
                 .headers().frameOptions().sameOrigin().and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .exceptionHandling().authenticationEntryPoint((req, res, aE) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED)).and()
                 .authorizeRequests()
+                .antMatchers(HttpMethod.GET, "/customer/**").authenticated()
                 .antMatchers(HttpMethod.OPTIONS).permitAll()
-                .antMatchers(HttpMethod.POST, "/authentication").permitAll()
+                .antMatchers(HttpMethod.POST,
+                    "/authentication",
+                    "/user/decreaseAttempts",
+                    "/user/resetAttempts",
+                    "/user/block").permitAll()
                 .antMatchers(HttpMethod.GET,
                     "/v2/api-docs",
                     "/swagger-resources/**",
                     "/webjars/springfox-swagger-ui/**",
-                    "/swagger-ui.html")
+                    "/swagger-ui.html",
+                    "/user/**/getAttempts",
+                    "/user/**/isBlocked"
+                    // add here methods that need to omit security
+                )
                 .permitAll()
             ;
             if (h2ConsolePath != null && h2AccessMatcher != null) {

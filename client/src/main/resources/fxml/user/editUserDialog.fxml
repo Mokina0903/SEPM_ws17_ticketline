@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.user.UserDialogController">
+
+    <center>
+
+        <GridPane hgap="10" vgap="20">
+
+                <Label fx:id="usernameLb" text="%authenticate.userName" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                <TextField fx:id="usernameTF" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+            <Label fx:id="lblInvalidUsername" textFill="crimson" text="%user.invalidusername" GridPane.columnIndex="2" GridPane.rowIndex="0"/>
+
+
+                <Label fx:id="passwordLb" text="%authenticate.password" GridPane.rowIndex="1" />
+                <PasswordField fx:id="passwordPF" promptText="%authenticate.password" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Label fx:id="lblInvalidPassword" textFill="crimson" text="%user.invalidpasswort" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
+
+                <Label fx:id="passwordConfirmLb" text="%user.confirm" GridPane.rowIndex="2" prefWidth="200.0"/>
+                <PasswordField fx:id="passwordConfirmPF" promptText="%authenticate.password" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+
+                <Label fx:id="roleLb" text="%user.role" GridPane.rowIndex="3" />
+                <ComboBox fx:id="roleCombo" promptText="choose" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                    <items>
+                        <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="Admin" />
+                            <String fx:value="User" />
+                        </FXCollections>
+                    </items>
+                </ComboBox>
+            <Label fx:id="lblInvalidRole" textFill="crimson" text="%user.invalidrole" GridPane.columnIndex="2" GridPane.rowIndex="3"/>
+
+                <Button fx:id="saveBtn" maxWidth="-Infinity" onAction="#saveUserData" prefWidth="40.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                <Button fx:id="backBtn" maxWidth="-Infinity" onAction="#goBackWithoutSave" prefWidth="40.0" GridPane.rowIndex="4" />
+
+            <columnConstraints>
+                <ColumnConstraints />
+                <ColumnConstraints />
+            <ColumnConstraints />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+                <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            </rowConstraints>
+        </GridPane>
+
+    </center>
+    <padding>
+        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+    </padding>
+
+
+</BorderPane>

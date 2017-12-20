@@ -1,8 +1,12 @@
 package at.ac.tuwien.inso.sepm.ticketline.client.service;
 
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
+import at.ac.tuwien.inso.sepm.ticketline.rest.news.DetailedNewsDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.news.SimpleNewsDTO;
 
+import javafx.scene.control.TextField;
+import  javafx.scene.control.TextArea;
+import java.awt.*;
 import java.util.List;
 
 public interface NewsService {
@@ -15,4 +19,42 @@ public interface NewsService {
      */
     List<SimpleNewsDTO> findAll() throws DataAccessException;
 
+    /**
+     * Find specific news entry by id
+     *
+     * @param id of news entry
+     * @return detailed news
+     * @throws DataAccessException in case something went wrong
+     */
+    DetailedNewsDTO findById(long id) throws DataAccessException;
+
+    /**
+     * find not seen news for user
+     *
+     * @param userId of the user
+     * @return list of new news
+     * @throws DataAccessException
+     */
+    List<SimpleNewsDTO> findNotSeenByUser(long userId) throws DataAccessException;
+
+    /**
+     * find old news for user
+     *
+     * @param userId of the user
+     * @return list of old news
+     * @throws DataAccessException
+     */
+    List<SimpleNewsDTO> findOldNewsByUser(long userId) throws DataAccessException;
+
+    /**
+     * publishes new added News
+     *
+     * @param newNews to be published
+     * @throws DataAccessException in case something went wrong
+     */
+    DetailedNewsDTO publishNews(DetailedNewsDTO newNews) throws DataAccessException;
+
+    boolean validateTextField(TextField text);
+
+    boolean validateTextArea(TextArea text);
 }
