@@ -123,8 +123,8 @@ public class EventLocationDataGenerator {
                     .artistFirstname(faker.name().firstName())
                     .artistLastName(faker.name().lastName())
                     .price(faker.number().numberBetween(5L,100L))
-                    .description(faker.lorem().paragraph())
-                    .title(faker.lorem().characters(20,100))
+                    .description(faker.gameOfThrones().quote())
+                    .title(faker.music().instrument() + " concert")
                     .hall(hallRepository.findAll().get(faker.number().numberBetween(0,(int)hallRepository.count())))
                     .build();
                 LOGGER.debug("saving event {}", event);
