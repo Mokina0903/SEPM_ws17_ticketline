@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 public class NewsDataGenerator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NewsDataGenerator.class);
-    private static final int NUMBER_OF_NEWS_TO_GENERATE = 25;
+    private static final int NUMBER_OF_NEWS_TO_GENERATE = 10;
 
     private final NewsRepository newsRepository;
     private final Faker faker;
@@ -36,8 +36,8 @@ public class NewsDataGenerator {
             LOGGER.info("generating {} news entries", NUMBER_OF_NEWS_TO_GENERATE);
             for (int i = 0; i < NUMBER_OF_NEWS_TO_GENERATE; i++) {
                 News news = News.builder()
-                    .title(faker.lorem().characters(25, 100))
-                    .text(faker.lorem().paragraph(faker.number().numberBetween(5, 10)))
+                    .title(faker.book().title())
+                    .text(faker.chuckNorris().fact())
                     .publishedAt(
                         LocalDateTime.ofInstant(
                             faker.date()
