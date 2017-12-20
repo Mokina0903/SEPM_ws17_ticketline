@@ -221,8 +221,8 @@ public class UserDialogController implements LocalizationObserver {
         passwordConfirmLb.setText(BundleManager.getBundle().getString("user.confirm"));
         roleLb.setText(BundleManager.getBundle().getString("user.role"));
 
-        passwordPF.setPromptText("authenticate.password");
-        passwordConfirmPF.setPromptText("authenticate.password");
+        passwordPF.setPromptText(BundleManager.getBundle().getString("authenticate.password"));
+        passwordConfirmPF.setPromptText(BundleManager.getBundle().getString("authenticate.password"));
 
         lblInvalidUsername.setText(BundleManager.getBundle().getString("user.invalidusername"));
         lblInvalidPassword.setText(BundleManager.getBundle().getString("user.invalidpasswort"));
