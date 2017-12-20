@@ -114,6 +114,7 @@ public class CustomerDialogController implements LocalizationObserver {
         lbCustomerNumber.setVisible(false);
         lbCustomerNumberText.setVisible(false);
         lbInvalidCustomer.setVisible(false);
+        dpBirthdate.setEditable(false);
 
         setButtonGraphic(btOk, "CHECK", Color.OLIVE);
         setButtonGraphic(btCancel, "TIMES", Color.CRIMSON);

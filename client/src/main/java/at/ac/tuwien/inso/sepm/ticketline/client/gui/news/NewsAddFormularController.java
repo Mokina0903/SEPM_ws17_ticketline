@@ -38,6 +38,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.channels.SelectionKey;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 
 @Component
@@ -189,12 +190,15 @@ public class NewsAddFormularController implements LocalizationObserver {
 
             Files.copy(file.toPath(),destination.toPath());
 
+        } catch (FileAlreadyExistsException e) {
+            LOGGER.warn("File already exists");
+
+           // e.printStackTrace();
         } catch (IOException e) {
             LOGGER.warn("Loading image failed.");
-            mainController.showGeneralError("Loading image failed because of technical issues.");
            // e.printStackTrace();
+            mainController.showGeneralError("Loading image failed because of technical issues.");
         }
-
 
 
     }
