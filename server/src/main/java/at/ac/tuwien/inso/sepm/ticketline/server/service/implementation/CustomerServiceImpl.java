@@ -116,6 +116,7 @@ public class CustomerServiceImpl implements CustomerService {
         if(customer.getId() != null && customer.getId()<0){
             return false;
         }
+        //todo regex like in client
         if(customer.getEmail()!= null && !customer.getEmail().isEmpty()){
             if(!customer.getEmail().contains("@") || !customer.getEmail().contains(".")|| customer.getEmail().length()>100){
                 return false;

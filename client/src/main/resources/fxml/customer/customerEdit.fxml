@@ -3,34 +3,35 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<?import javafx.scene.control.DatePicker?>
+<?import java.net.URL?>
+<?import javafx.scene.control.TextField?>
 <BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.customer.CustomerDialogController">
+    <stylesheets>
+        <URL value="@/css/validation.css"/>
+    </stylesheets>
     <center>
         <GridPane hgap="10" vgap="20">
 
             <Label fx:id="lbCustomerNumberText" text="%customer.number" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-            <Label fx:id="lbCustomerNumber" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+            <Label fx:id="lbCustomerNumber" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
-            <Label fx:id="lbCustomerName" text="%customer.lname"  GridPane.columnIndex="0" GridPane.rowIndex="1" />
-            <TextField fx:id="tfLname" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Label fx:id="lbCustomerName" text="%customer.lname" GridPane.columnIndex="0" GridPane.rowIndex="1" />
 
-            <Label fx:id="lbFirstName" text="%customer.fname" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-            <TextField fx:id="tfFirstName"  GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+            <Label fx:id="lbFirstName" text="%customer.fname" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+            <TextField fx:id="tfFirstName" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 
             <Label fx:id="lbCustomerBirthdate" text="%customer.birthdate" GridPane.rowIndex="3" />
             <DatePicker fx:id="dpBirthdate" GridPane.columnIndex="1" GridPane.rowIndex="3" />
 
-            <Label fx:id="lbCustomerEmail" text="Email" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+            <Label fx:id="lbCustomerEmail" text="Email*" GridPane.columnIndex="0" GridPane.rowIndex="5" />
             <TextField fx:id="tfEmail" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-
-
 
 
             <Label fx:id="lbInvalidName" text="%customer.invalidName" textFill="#cc1d1d" GridPane.columnIndex="2" GridPane.rowIndex="1" />
@@ -44,10 +45,12 @@
                     <Button fx:id="btOk" maxWidth="-Infinity" onAction="#handleOk" prefWidth="40.0" ButtonBar.buttonData="LEFT" />
                 </buttons>
             </ButtonBar>
+         <TextField fx:id="tfLname" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
             <columnConstraints>
                 <ColumnConstraints maxWidth="-Infinity" prefWidth="120.0" />
                 <ColumnConstraints maxWidth="-Infinity" prefWidth="300.0" />
+            <ColumnConstraints />
             </columnConstraints>
             <rowConstraints>
                 <RowConstraints />
