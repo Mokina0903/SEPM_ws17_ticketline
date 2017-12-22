@@ -94,6 +94,7 @@ public class AuthenticationController {
                         lblNumberFreeAttempts.setText("");
 
                         mainController.loadDetailedUserDTO(getValue().getUsername());
+                        mainController.loadGuiComponentsOfUser();
                     }
 
                     @Override
