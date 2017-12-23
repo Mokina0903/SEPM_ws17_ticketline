@@ -4,6 +4,7 @@ import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationObserver;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationSubject;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.MainController;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.TabHeaderController;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.CustomerService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
 import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
@@ -32,6 +33,10 @@ import java.time.LocalDate;
 public class CustomerDialogController implements LocalizationObserver {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CustomerDialogController.class);
+
+    @FXML
+    private TabHeaderController tabHeaderController;
+
 
     @FXML
     public TextField tfLname;
@@ -106,6 +111,9 @@ public class CustomerDialogController implements LocalizationObserver {
 
     @FXML
     void initialize() {
+        tabHeaderController.setIcon(FontAwesome.Glyph.USERS);
+        tabHeaderController.setTitle(BundleManager.getBundle().getString("customer.customer"));
+
         localizationSubject.attach(this);
         lbInvalidName.setVisible(false);
         lbInvalidBirthdate.setVisible(false);

@@ -4,6 +4,7 @@ import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationObserver;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationSubject;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.MainController;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.TabHeaderController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.news.NewsController;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.UserService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
@@ -30,6 +31,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserDialogController implements LocalizationObserver {
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+
+    @FXML
+    private TabHeaderController tabHeaderController;
 
     @FXML
     public TextField usernameTF;
@@ -114,6 +118,9 @@ public class UserDialogController implements LocalizationObserver {
 
     @FXML
     void initialize(){
+        tabHeaderController.setIcon(FontAwesome.Glyph.USER);
+        tabHeaderController.setTitle(BundleManager.getBundle().getString("user.user"));
+
         localizationSubject.attach(this);
         setButtonGraphic(saveBtn, "CHECK", Color.OLIVE);
         setButtonGraphic(backBtn, "TIMES", Color.CRIMSON);

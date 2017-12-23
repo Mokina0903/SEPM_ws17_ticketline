@@ -88,6 +88,8 @@ public class UserController extends TabElement implements LocalizationObserver{
     @FXML
     private void initialize() {
         tabHeaderController.setIcon(FontAwesome.Glyph.USER);
+        tabHeaderController.setTitle(BundleManager.getBundle().getString("user.user"));
+
         update();
         localizationSubject.attach(this);
 
