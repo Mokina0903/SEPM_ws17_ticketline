@@ -207,7 +207,7 @@ public class MainController implements LocalizationObserver {
                 if (eventController == null) {
                     eventController = (EventController) setTabContent(eventController, "event/eventComponent.fxml", eventTab);
                     eventController.loadEvents();
-                    eventController.preparePagination();
+                    // eventController.preparePagination();
                 }
             } else if (newValue.equals(ticketTab)) {
                 if (ticketController == null) {
@@ -216,7 +216,8 @@ public class MainController implements LocalizationObserver {
             } else if (newValue.equals(customerTab)) {
                 if (customerController == null) {
                     customerController = (CustomerController) setTabContent(customerController, "customer/customerComponent.fxml", customerTab);
-                    customerController.preparePagination();
+                    customerController.loadCustomer();
+                    // customerController.preparePagination();
                 }
             } else {
                 if (userController == null) {

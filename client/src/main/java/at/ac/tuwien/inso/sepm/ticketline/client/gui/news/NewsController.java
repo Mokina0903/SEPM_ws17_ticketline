@@ -22,6 +22,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
 import org.controlsfx.glyphfont.FontAwesome;
+import org.controlsfx.glyphfont.GlyphFont;
+import org.controlsfx.glyphfont.GlyphFontRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +52,9 @@ public class NewsController extends TabElement implements LocalizationObserver{
     private TabHeaderController tabHeaderController;
 
     private Tab newsTab;
+
+    private GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
+    private final int FONT_SIZE = 16;
 
     @Autowired
     private LocalizationSubject localizationSubject;
@@ -82,6 +87,8 @@ public class NewsController extends TabElement implements LocalizationObserver{
         tabHeaderController.setIcon(FontAwesome.Glyph.NEWSPAPER_ALT);
         tabHeaderController.setTitle(BundleManager.getBundle().getString("news.news"));
         localizationSubject.attach(this);
+
+        addNewNews.setGraphic(fontAwesome.create("PLUS").size(FONT_SIZE));
         vbNewsElements.getSelectionModel()
             .selectedIndexProperty()
             .addListener((observable, oldvalue, newValue) -> {

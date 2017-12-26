@@ -5,9 +5,12 @@ import at.ac.tuwien.inso.sepm.ticketline.client.exception.SearchNoMatchException
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.*;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.CustomerService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
+import at.ac.tuwien.inso.sepm.ticketline.client.util.JavaFXUtils;
 import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
 import javafx.beans.binding.Bindings;
+import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -178,6 +181,9 @@ public class CustomerController extends TabElement implements LocalizationObserv
         tvCustomer.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         tvCustomer.setFixedCellSize(25);
         tvCustomer.prefHeightProperty().bind(Bindings.size(tvCustomer.getItems()).multiply(tvCustomer.getFixedCellSize()).add(30));
+        tvCustomer.getStylesheets().addAll(getClass().getResource("/css/customerComponent.css").toExternalForm());
+
+
 
         tcName = new TableColumn<>();
         tcSurname = new TableColumn<>();
@@ -284,5 +290,40 @@ public class CustomerController extends TabElement implements LocalizationObserv
     @Override
     protected void setTab(Tab tab) {
         customerTab = tab;
+    }
+
+    public void loadCustomer() {
+
+        searchFor = CustomerSearchFor.ALL;
+        Task<List<CustomerDTO>> taskLoadCustomer = new Task<>() {
+            @Override
+            protected List<CustomerDTO> call() throws DataAccessException, InterruptedException {
+
+                return customerService.findAll(0, CUSTOMER_PER_PAGE);
+            }
+
+            @Override
+            protected void succeeded() {
+                super.succeeded();
+                preparePagination();
+                //todo
+            }
+
+            @Override
+            protected void failed() {
+                if (getValue() == null || getValue().isEmpty()) {
+                    super.failed();
+                    mainController.showGeneralError("Failure at load customer: " + getException().getMessage());
+                }
+            }
+        };
+        taskLoadCustomer.runningProperty().addListener((observable, oldValue, running) ->
+            mainController.setProgressbarProgress(
+                running ? ProgressBar.INDETERMINATE_PROGRESS : 0)
+        );
+
+
+        new Thread(taskLoadCustomer).start();
+
     }
 }
