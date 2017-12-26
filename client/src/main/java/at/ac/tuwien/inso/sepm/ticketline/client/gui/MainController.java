@@ -168,6 +168,7 @@ public class MainController implements LocalizationObserver {
     }
 
     private void initTabs() {
+        tpContent.getTabs().clear();
         initTab(newsTab, "NEWSPAPER_ALT");
         initTab(eventTab, "FILM");
         initTab(ticketTab, "TICKET");
