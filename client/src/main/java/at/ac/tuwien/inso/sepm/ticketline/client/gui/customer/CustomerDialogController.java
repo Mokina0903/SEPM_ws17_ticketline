@@ -150,7 +150,7 @@ public class CustomerDialogController implements LocalizationObserver {
         });
     }
 
-    private void validate(TextField validationField) {
+    private boolean validate(TextField validationField) {
 
         ObservableList<String> styleClass = validationField.getStyleClass();
 
@@ -158,37 +158,47 @@ public class CustomerDialogController implements LocalizationObserver {
             if (!customerService.checkIfCustomerNameValid(tfFirstName.getText())) {
                 if (!styleClass.contains("error")) {
                     styleClass.add("error");
+                    return false;
                 }
             } else {
                 styleClass.remove("error");
+                return true;
             }
         }
         if (validationField.equals(tfLname)) {
             if (!customerService.checkIfCustomerNameValid(tfLname.getText())) {
                 if (!styleClass.contains("error")) {
                     styleClass.add("error");
+                    return false;
                 }
             } else {
                 styleClass.remove("error");
+                return true;
             }
         }
         if (validationField.equals(tfEmail))
             if (!customerService.checkIfCustomerEmailValid(tfEmail.getText())) {
                 if (!styleClass.contains("error")) {
                     styleClass.add("error");
+                    return false;
                 }
             } else {
                 styleClass.remove("error");
+                return true;
             }
         if (validationField.equals(dpBirthdate.getEditor())) {
-            if (!customerService.checkIfCustomerBirthdateValid(dpBirthdate.getValue())) {
+            if (dpBirthdate.getEditor().getText().trim().isEmpty()
+                || !customerService.checkIfCustomerBirthdateValid(dpBirthdate.getValue())) {
                 if (!styleClass.contains("error")) {
                     styleClass.add("error");
+                    return false;
                 }
             } else {
                 styleClass.remove("error");
+                return true;
             }
         }
+        return false;
     }
 
 
@@ -223,7 +233,6 @@ public class CustomerDialogController implements LocalizationObserver {
                 tfLname.setText(customer.getSurname());
             }
         }
-
     }
 
     @FXML
@@ -249,6 +258,24 @@ public class CustomerDialogController implements LocalizationObserver {
 
         Long knr = lbCustomerNumber.getText().isEmpty()? 0: Long.valueOf(lbCustomerNumber.getText());
 
+        boolean validInput = true;
+
+        if (!validate(tfFirstName)) {
+            validInput = false;
+        }
+        if(!validate(tfLname)) {
+            validInput = false;
+        }
+        if (!validate(tfEmail)) {
+            validInput = false;
+        }
+        if (!validate(dpBirthdate.getEditor())) {
+            validInput = false;
+        }
+
+        if (!validInput) {
+            return;
+        }
 
         CustomerDTO.CustomerDTOBuilder builder = new CustomerDTO.CustomerDTOBuilder();
         builder.birthDate(birthDate);
@@ -264,7 +291,7 @@ public class CustomerDialogController implements LocalizationObserver {
             LOGGER.error("Cutomer to be saved was invalid!");
 
             //todo: check if email already in use if new customer
-            lbInvalidCustomer.setVisible(true);
+    //        lbInvalidCustomer.setVisible(true);
             return;
         }
         lbInvalidCustomer.setVisible(false);

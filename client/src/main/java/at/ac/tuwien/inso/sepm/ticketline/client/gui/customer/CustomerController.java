@@ -297,7 +297,7 @@ public class CustomerController extends TabElement implements LocalizationObserv
         searchFor = CustomerSearchFor.ALL;
         Task<List<CustomerDTO>> taskLoadCustomer = new Task<>() {
             @Override
-            protected List<CustomerDTO> call() throws DataAccessException, InterruptedException {
+            protected List<CustomerDTO> call() throws DataAccessException {
 
                 return customerService.findAll(0, CUSTOMER_PER_PAGE);
             }
@@ -306,7 +306,6 @@ public class CustomerController extends TabElement implements LocalizationObserv
             protected void succeeded() {
                 super.succeeded();
                 preparePagination();
-                //todo
             }
 
             @Override

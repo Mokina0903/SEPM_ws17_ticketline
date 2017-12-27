@@ -156,6 +156,7 @@ public class EventController extends TabElement implements LocalizationObserver 
         pagination.setCurrentPageIndex(pageIndex);
         List<SimpleEventDTO> events = loadPage(pageIndex);
         ListView<VBox> lvEventElements = new ListView<>();
+        lvEventElements.setStyle("-fx-background-color: transparent;");
 
         if(!events.isEmpty()){
             for(SimpleEventDTO event : events) {
@@ -166,7 +167,6 @@ public class EventController extends TabElement implements LocalizationObserver 
                 lvEventElements.getItems().add(wrapper.getController().vbEventElement);
             }
         }
-
         return lvEventElements;
     }
 
