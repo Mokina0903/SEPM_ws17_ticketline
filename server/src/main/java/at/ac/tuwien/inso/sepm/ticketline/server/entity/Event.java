@@ -5,6 +5,8 @@ import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Hall;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "event")
@@ -15,13 +17,13 @@ public class Event {
     @SequenceGenerator(name = "seq_event_id", sequenceName = "seq_event_id")
     private Long id;
 
-    @Column(nullable = false)
+/*    @Column(nullable = false)
     @Size(max = 15)
     private String artistFirstName;
 
     @Column(nullable = false)
     @Size(max = 20)
-    private String artistLastName;
+    private String artistLastName;*/
 
     @Column(nullable = false)
     @Size(max = 100)
@@ -43,6 +45,12 @@ public class Event {
     @ManyToOne
     private Hall hall;
 
+    @ManyToMany()
+    @JoinTable(
+        name = "artistsOfEvent",
+        joinColumns = @JoinColumn(name = "event_id"),
+        inverseJoinColumns = @JoinColumn(name = "artist_id")) //toDo: make unique
+    private List<Artist> artists = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -52,7 +60,7 @@ public class Event {
         this.id = id;
     }
 
-    public String getArtistFirstName() {
+    /*public String getArtistFirstName() {
         return artistFirstName;
     }
 
@@ -67,7 +75,7 @@ public class Event {
     public void setArtistLastName( String artistLastName ) {
         this.artistLastName = artistLastName;
     }
-
+*/
     public String getTitle() {
         return title;
     }
@@ -116,6 +124,14 @@ public class Event {
         this.hall = hall;
     }
 
+    public List<Artist> getArtists() {
+        return artists;
+    }
+
+    public void setArtists(List<Artist> artists) {
+        this.artists = artists;
+    }
+
     public static EventBuilder builder(){return new EventBuilder();}
 
     @Override
@@ -127,8 +143,8 @@ public class Event {
 
         if (getPrice() != event.getPrice()) return false;
         if (!getId().equals(event.getId())) return false;
-        if (!getArtistFirstName().equals(event.getArtistFirstName())) return false;
-        if (!getArtistLastName().equals(event.getArtistLastName())) return false;
+/*        if (!getArtistFirstName().equals(event.getArtistFirstName())) return false;
+        if (!getArtistLastName().equals(event.getArtistLastName())) return false;*/
         if (!getTitle().equals(event.getTitle())) return false;
         if (!getDescription().equals(event.getDescription())) return false;
         if (!getStartOfEvent().equals(event.getStartOfEvent())) return false;
@@ -139,8 +155,8 @@ public class Event {
     @Override
     public int hashCode() {
         int result = getId().hashCode();
-        result = 31 * result + getArtistFirstName().hashCode();
-        result = 31 * result + getArtistLastName().hashCode();
+        /*result = 31 * result + getArtistFirstName().hashCode();
+        result = 31 * result + getArtistLastName().hashCode();*/
         result = 31 * result + getTitle().hashCode();
         result = 31 * result + getDescription().hashCode();
         result = 31 * result + (int) (getPrice() ^ (getPrice() >>> 32));
@@ -154,8 +170,8 @@ public class Event {
     public String toString() {
         return "Event{" +
             "id=" + id +
-            ", artistFirstName='" + artistFirstName + '\'' +
-            ", artistLastName='" + artistLastName + '\'' +
+          /*  ", artistFirstName='" + artistFirstName + '\'' +
+            ", artistLastName='" + artistLastName + '\'' +*/
             ", title='" + title + '\'' +
             ", description='" + description + '\'' +
             ", price=" + price +
@@ -167,21 +183,22 @@ public class Event {
 
     public static final class EventBuilder{
         private Long id;
-        private String artistFirstName;
-        private String artistLastName;
+       /* private String artistFirstName;
+        private String artistLastName;*/
         private String title;
         private String description;
         private Long price;
         private LocalDateTime startOfEvent;
         private LocalDateTime endOfEvent;
         private Hall hall;
+        private List<Artist> artists;
 
         public EventBuilder id(Long id){
             this.id = id;
             return this;
         }
 
-        public EventBuilder artistFirstname(String artistFirstName){
+       /* public EventBuilder artistFirstname(String artistFirstName){
             this.artistFirstName = artistFirstName;
             return this;
         }
@@ -189,7 +206,7 @@ public class Event {
         public EventBuilder artistLastName(String artistLastName){
             this.artistLastName = artistLastName;
             return this;
-        }
+        }*/
 
         public EventBuilder title(String title){
             this.title = title;
@@ -221,17 +238,23 @@ public class Event {
             return this;
         }
 
+        public EventBuilder artists(List<Artist> artists) {
+            this.artists = artists;
+            return this;
+        }
+
         public Event build(){
             Event event = new Event();
             event.setId(id);
             event.setTitle(title);
-            event.setArtistFirstName(artistFirstName);
-            event.setArtistLastName(artistLastName);
+          /*  event.setArtistFirstName(artistFirstName);
+            event.setArtistLastName(artistLastName);*/
             event.setDescription(description);
             event.setPrice(price);
             event.setStartOfEvent(startOfEvent);
             event.setEndOfEvent(endOfEvent);
             event.setHall(hall);
+            event.setArtists(artists);
 
             return event;
         }
