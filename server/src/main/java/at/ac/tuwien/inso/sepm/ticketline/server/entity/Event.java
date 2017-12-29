@@ -17,14 +17,6 @@ public class Event {
     @SequenceGenerator(name = "seq_event_id", sequenceName = "seq_event_id")
     private Long id;
 
-/*    @Column(nullable = false)
-    @Size(max = 15)
-    private String artistFirstName;
-
-    @Column(nullable = false)
-    @Size(max = 20)
-    private String artistLastName;*/
-
     @Column(nullable = false)
     @Size(max = 100)
     private String title;
@@ -60,22 +52,6 @@ public class Event {
         this.id = id;
     }
 
-    /*public String getArtistFirstName() {
-        return artistFirstName;
-    }
-
-    public void setArtistFirstName( String artistFirstName ) {
-        this.artistFirstName = artistFirstName;
-    }
-
-    public String getArtistLastName() {
-        return artistLastName;
-    }
-
-    public void setArtistLastName( String artistLastName ) {
-        this.artistLastName = artistLastName;
-    }
-*/
     public String getTitle() {
         return title;
     }
@@ -143,8 +119,6 @@ public class Event {
 
         if (getPrice() != event.getPrice()) return false;
         if (!getId().equals(event.getId())) return false;
-/*        if (!getArtistFirstName().equals(event.getArtistFirstName())) return false;
-        if (!getArtistLastName().equals(event.getArtistLastName())) return false;*/
         if (!getTitle().equals(event.getTitle())) return false;
         if (!getDescription().equals(event.getDescription())) return false;
         if (!getStartOfEvent().equals(event.getStartOfEvent())) return false;
@@ -155,8 +129,6 @@ public class Event {
     @Override
     public int hashCode() {
         int result = getId().hashCode();
-        /*result = 31 * result + getArtistFirstName().hashCode();
-        result = 31 * result + getArtistLastName().hashCode();*/
         result = 31 * result + getTitle().hashCode();
         result = 31 * result + getDescription().hashCode();
         result = 31 * result + (int) (getPrice() ^ (getPrice() >>> 32));
@@ -170,8 +142,6 @@ public class Event {
     public String toString() {
         return "Event{" +
             "id=" + id +
-          /*  ", artistFirstName='" + artistFirstName + '\'' +
-            ", artistLastName='" + artistLastName + '\'' +*/
             ", title='" + title + '\'' +
             ", description='" + description + '\'' +
             ", price=" + price +
@@ -183,8 +153,6 @@ public class Event {
 
     public static final class EventBuilder{
         private Long id;
-       /* private String artistFirstName;
-        private String artistLastName;*/
         private String title;
         private String description;
         private Long price;
@@ -197,16 +165,6 @@ public class Event {
             this.id = id;
             return this;
         }
-
-       /* public EventBuilder artistFirstname(String artistFirstName){
-            this.artistFirstName = artistFirstName;
-            return this;
-        }
-
-        public EventBuilder artistLastName(String artistLastName){
-            this.artistLastName = artistLastName;
-            return this;
-        }*/
 
         public EventBuilder title(String title){
             this.title = title;
@@ -247,8 +205,6 @@ public class Event {
             Event event = new Event();
             event.setId(id);
             event.setTitle(title);
-          /*  event.setArtistFirstName(artistFirstName);
-            event.setArtistLastName(artistLastName);*/
             event.setDescription(description);
             event.setPrice(price);
             event.setStartOfEvent(startOfEvent);

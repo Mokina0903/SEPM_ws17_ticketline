@@ -20,13 +20,6 @@ public class Artist {
     @Size(max = 50)
     private String artistLastName;
 
-/*    @ManyToMany()
-    @JoinTable(
-        name = "eventsOfArtist",
-        joinColumns = @JoinColumn(name = "artist_id"),
-        inverseJoinColumns = @JoinColumn(name = "event_id")) //toDo: make unique
-    private List<Event> eventsOfArtist = new ArrayList<>();*/
-
     public Long getId() {
         return id;
     }
@@ -51,13 +44,6 @@ public class Artist {
         this.artistLastName = artistLastName;
     }
 
-/*    public List<Event> getEventsOfArtist() {
-        return eventsOfArtist;
-    }
-
-    public void setEventsOfArtist(List<Event> eventsOfArtist) {
-        this.eventsOfArtist = eventsOfArtist;
-    }*/
 
     public static ArtistBuilder builder(){
         return new ArtistBuilder();

@@ -10,11 +10,11 @@ public class SimpleEventDTO {
     @ApiModelProperty(readOnly = true, name = "The automatically generated database id")
     private Long id;
 
-    @ApiModelProperty(required = true, name = "The first name of the artist")
+/*    @ApiModelProperty(required = true, name = "The first name of the artist")
     private String artistFirstName;
 
     @ApiModelProperty(required = true, name = "The last name of the artist")
-    private String artistLastName;
+    private String artistLastName;*/
 
 
     @ApiModelProperty(required = true, name = "The title of the event")
@@ -40,7 +40,7 @@ public class SimpleEventDTO {
         this.id = id;
     }
 
-    public String getArtistFirstName() {
+/*    public String getArtistFirstName() {
         return artistFirstName;
     }
 
@@ -54,7 +54,7 @@ public class SimpleEventDTO {
 
     public void setArtistLastName( String artistLastName ) {
         this.artistLastName = artistLastName;
-    }
+    }*/
 
     public String getTitle() {
         return title;
@@ -96,6 +96,8 @@ public class SimpleEventDTO {
         this.endOfEvent = endOfEvent;
     }
 
+    //todo artists
+
     @Override
     public boolean equals( Object o ) {
         if (this == o) return true;
@@ -104,8 +106,8 @@ public class SimpleEventDTO {
         SimpleEventDTO that = (SimpleEventDTO) o;
 
         if (!getId().equals(that.getId())) return false;
-        if (!getArtistFirstName().equals(that.getArtistFirstName())) return false;
-        if (!getArtistLastName().equals(that.getArtistLastName())) return false;
+/*        if (!getArtistFirstName().equals(that.getArtistFirstName())) return false;
+        if (!getArtistLastName().equals(that.getArtistLastName())) return false;*/
         if (!getTitle().equals(that.getTitle())) return false;
         if (!getDescriptionSummary().equals(that.getDescriptionSummary())) return false;
         if (!getPrice().equals(that.getPrice())) return false;
@@ -116,8 +118,8 @@ public class SimpleEventDTO {
     @Override
     public int hashCode() {
         int result = getId().hashCode();
-        result = 31 * result + getArtistFirstName().hashCode();
-        result = 31 * result + getArtistLastName().hashCode();
+/*        result = 31 * result + getArtistFirstName().hashCode();
+        result = 31 * result + getArtistLastName().hashCode();*/
         result = 31 * result + getTitle().hashCode();
         result = 31 * result + getDescriptionSummary().hashCode();
         result = 31 * result + getPrice().hashCode();
@@ -130,8 +132,8 @@ public class SimpleEventDTO {
     public String toString() {
         return "SimpleEventDTO{" +
             "id=" + id +
-            ", artistFirstName='" + artistFirstName + '\'' +
-            ", artistLastName='" + artistLastName + '\'' +
+/*            ", artistFirstName='" + artistFirstName + '\'' +
+            ", artistLastName='" + artistLastName + '\'' +*/
             ", title='" + title + '\'' +
             ", descriptionSummary='" + descriptionSummary + '\'' +
             ", price=" + price +
@@ -194,8 +196,8 @@ public class SimpleEventDTO {
             SimpleEventDTO event = new SimpleEventDTO();
             event.setId(id);
             event.setTitle(title);
-            event.setArtistFirstName(artistFirstName);
-            event.setArtistLastName(artistLastName);
+/*            event.setArtistFirstName(artistFirstName);
+            event.setArtistLastName(artistLastName);*/
             event.setDescriptionSummary(descriptionSummary);
             event.setPrice(price);
             event.setStartOfEvent(startOfEvent);

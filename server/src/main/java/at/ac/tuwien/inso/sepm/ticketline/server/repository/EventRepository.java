@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -32,9 +33,19 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     /**
      * find page of future events
      *
+     * * @return page of events
+     */
+    @Query(value = "Select * from event where end_of_event > now()",  nativeQuery = true)
+    List<Event> findAllUpcoming();
+
+    /**
+     * find page of future events by title
+     *
      * @param request for the page containing a page number and sort type
+     * @param title of the event
      * @return page of events
      */
-    @Query(value = "Select * from event where end_of_event > now() /*#pageable*/",  nativeQuery = true)
-    Page<Event> findAllUpcoming( Pageable request);
+    @Query(value = "Select * from event e where e.end_of_event > now() and e.title = :title/*#pageable*/",  nativeQuery = true)
+    Page<Event> findAllUpcomingByTitle(Pageable request, @Param("title") String title);
+
 }
