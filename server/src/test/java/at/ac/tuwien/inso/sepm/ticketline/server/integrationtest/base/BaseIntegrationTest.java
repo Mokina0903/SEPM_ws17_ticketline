@@ -3,6 +3,10 @@ package at.ac.tuwien.inso.sepm.ticketline.server.integrationtest.base;
 import at.ac.tuwien.inso.sepm.ticketline.server.configuration.JacksonConfiguration;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.News;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.User;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Hall;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Location;
+import at.ac.tuwien.inso.sepm.ticketline.server.repository.Location.HallRepository;
+import at.ac.tuwien.inso.sepm.ticketline.server.repository.Location.LocationRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.NewsRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.UserRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.security.AuthenticationConstants;
@@ -59,6 +63,12 @@ public abstract class BaseIntegrationTest {
 
     @Autowired
     protected NewsRepository newsRepository;
+
+    @Autowired
+    protected LocationRepository locationRepository;
+
+    @Autowired
+    protected HallRepository hallRepository;
 
     protected String validUserTokenWithPrefix;
     protected String validAdminTokenWithPrefix;
@@ -161,5 +171,25 @@ public abstract class BaseIntegrationTest {
                 .build());
 
         }
+    }
+
+    public void setupDefaultLocation(){
+
+        Location location = Location.builder()
+            .description("Test 1")
+            .city("TestCity")
+            .country("TestCountry")
+            .houseNr(1)
+            .street("TestStreet")
+            .zip(1234)
+            .build();
+
+        location = locationRepository.save(location);
+
+        Hall hall = Hall.builder()
+            .description("Hall1")
+            .location(location)
+            .build();
+        hall = hallRepository.save(hall);
     }
 }
