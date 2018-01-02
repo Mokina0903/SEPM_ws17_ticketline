@@ -53,12 +53,9 @@ public class EventEndpoint {
     @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation(value = "Publish a new Event entry")
     public DetailedEventDTO publishEvent(@RequestBody DetailedEventDTO detailedEventDTO) {
-        // TODO: David Implement here
-        System.out.println("Hallo Event");
-        //Event event = eventMapper.detailedEventDTOToEvent(detailedEventDTO);
-        //event = eventService.publishEvent(event);
-        //return eventMapper.eventToDetailedEventDTO(event);
-        return null;
+        Event event = eventMapper.detailedEventDTOToEvent(detailedEventDTO);
+        event = eventService.publishEvent(event);
+        return eventMapper.eventToDetailedEventDTO(event);
     }
 
 }
