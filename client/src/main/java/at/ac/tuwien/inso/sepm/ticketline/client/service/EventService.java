@@ -35,4 +35,7 @@ public interface EventService {
      * @throws DataAccessException in case something went wrong
      */
     List<SimpleEventDTO> findAllUpcoming(int pageIndex, int eventsPerPage) throws DataAccessException,SearchNoMatchException;
+
+    // TODO: (David) Javadoc
+    List<DetailedEventDTO> publishEventCSV(String filePath) throws DataAccessException;
 }

@@ -242,4 +242,13 @@ public class EventController extends TabElement implements LocalizationObserver 
         new Thread(taskNewNews).start();
         */
     }
+
+    private void publishEvents() {
+        // TODO: (David) implement here
+        try {
+            eventService.publishEventCSV(null);
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+        }
+    }
 }

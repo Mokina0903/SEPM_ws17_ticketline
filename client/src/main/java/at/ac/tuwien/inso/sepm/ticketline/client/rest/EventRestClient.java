@@ -33,4 +33,7 @@ public interface EventRestClient {
      * @throws DataAccessException in case something went wrong
      */
     List<SimpleEventDTO> findAllUpcoming(int pageIndex, int eventsPerPage) throws DataAccessException;
+
+    // TODO: (David) Javadoc
+    DetailedEventDTO publishEvent(DetailedEventDTO detailedEventDTO) throws DataAccessException;
 }

@@ -38,4 +38,13 @@ public class SimpleEventService implements EventService {
 
         return eventRestClient.findAllUpcoming(pageIndex,eventsPerPage);
     }
+
+    @Override
+    public List<DetailedEventDTO> publishEventCSV(String filePath) throws DataAccessException {
+        // TODO: David Implement here
+        DetailedEventDTO detailedEventDTO = null;
+
+        detailedEventDTO = eventRestClient.publishEvent(detailedEventDTO);
+        return null;
+    }
 }

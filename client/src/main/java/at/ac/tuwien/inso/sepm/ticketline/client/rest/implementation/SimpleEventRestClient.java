@@ -87,4 +87,10 @@ public class SimpleEventRestClient implements EventRestClient{
             throw new DataAccessException(e.getMessage(), e);
         }
     }
+
+    @Override
+    public DetailedEventDTO publishEvent(DetailedEventDTO detailedEventDTO) throws DataAccessException {
+        // TODO: (David) Implement here
+        return null;
+    }
 }
