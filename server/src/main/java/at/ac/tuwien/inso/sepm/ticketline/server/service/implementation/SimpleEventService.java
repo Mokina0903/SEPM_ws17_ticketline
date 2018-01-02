@@ -3,6 +3,8 @@ package at.ac.tuwien.inso.sepm.ticketline.server.service.implementation;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.NotFoundException;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.EventRepository;
+import at.ac.tuwien.inso.sepm.ticketline.server.repository.Location.HallRepository;
+import at.ac.tuwien.inso.sepm.ticketline.server.repository.Location.LocationRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.EventService;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -14,9 +16,13 @@ import java.util.List;
 public class SimpleEventService implements EventService {
 
     private final EventRepository eventRepository;
+    private final LocationRepository locationRepository;
+    private final HallRepository hallRepository;
 
-    public SimpleEventService( EventRepository eventRepository ) {
+    public SimpleEventService(EventRepository eventRepository, LocationRepository locationRepository, HallRepository hallRepository) {
         this.eventRepository = eventRepository;
+        this.locationRepository = locationRepository;
+        this.hallRepository = hallRepository;
     }
 
     @Override
@@ -37,8 +43,16 @@ public class SimpleEventService implements EventService {
 
     @Override
     public Event publishEvent(Event event) {
-        // TODO: David Implement here
-        return null;
+        System.out.println(event.getHall().getId());
+
+        if (hallRepository.findOne(event.getHall().getId()) == null)
+            throw new NotFoundException();
+
+        // TODO: Implement here verification if necessary (two events same Time)
+
+        Event rEvent = eventRepository.save(event);
+
+        return rEvent;
     }
 
 }
