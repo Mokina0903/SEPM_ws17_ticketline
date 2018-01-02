@@ -34,4 +34,11 @@ public class SimpleEventService implements EventService {
         Page<Event> page = eventRepository.findAllUpcoming(request);
         return page.getContent();
     }
+
+    @Override
+    public Event publishEvent(Event event) {
+        // TODO: David Implement here
+        return null;
+    }
+
 }

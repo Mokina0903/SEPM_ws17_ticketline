@@ -30,4 +30,7 @@ public interface EventService {
      * @return List of events
      */
     List<Event> findAllUpcomingAsc( Pageable request);
+
+    // TODO: David Javadoc here
+    Event publishEvent(Event event);
 }

@@ -2,6 +2,7 @@ package at.ac.tuwien.inso.sepm.ticketline.server.endpoint;
 
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.DetailedEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.event.EventMapper;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.EventService;
 import io.swagger.annotations.Api;
@@ -9,10 +10,8 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -49,4 +48,17 @@ public class EventEndpoint {
     public DetailedEventDTO findOneById( @PathVariable Long id) {
         return eventMapper.eventToDetailedEventDTO(eventService.findOne(id));
     }
+
+    @RequestMapping(method = RequestMethod.POST)
+    @PreAuthorize("hasRole('ADMIN')")
+    @ApiOperation(value = "Publish a new Event entry")
+    public DetailedEventDTO publishEvent(@RequestBody DetailedEventDTO detailedEventDTO) {
+        // TODO: David Implement here
+        System.out.println("Hallo Event");
+        //Event event = eventMapper.detailedEventDTOToEvent(detailedEventDTO);
+        //event = eventService.publishEvent(event);
+        //return eventMapper.eventToDetailedEventDTO(event);
+        return null;
+    }
+
 }
