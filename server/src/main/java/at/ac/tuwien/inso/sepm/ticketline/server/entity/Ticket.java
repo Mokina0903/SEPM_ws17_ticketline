@@ -14,15 +14,12 @@ public class Ticket {
     private Long id;
 
     @ManyToOne
-    @Column(nullable = false)
     private Event event;
 
     @ManyToOne
-    @Column(nullable = false)
     private Customer customer;
 
     @ManyToOne
-    @Column(nullable = false)
     private Seat seat;
 
     @Column(nullable = false)
