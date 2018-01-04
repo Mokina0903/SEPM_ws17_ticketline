@@ -21,7 +21,6 @@
         </stylesheets>
 
         <top>
-
             <GridPane hgap="5" vgap="25">
                 <BorderPane.margin>
                     <Insets bottom="10" left="20" right="20" top="10" />
