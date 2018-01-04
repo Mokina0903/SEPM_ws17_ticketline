@@ -80,6 +80,7 @@ public class NewsAddFormularController implements LocalizationObserver {
 
     private String picPath;
     private NewsController c;
+    @FXML
     private TabHeaderController tabHeaderController;
 
     @Autowired
@@ -98,6 +99,8 @@ public class NewsAddFormularController implements LocalizationObserver {
 
         lblInvalidTitle.setVisible(false);
         lblInvalidText.setVisible(false);
+        tabHeaderController.setIcon(FontAwesome.Glyph.NEWSPAPER_ALT);
+        tabHeaderController.setTitle(BundleManager.getBundle().getString("news.addNews"));
 
         setButtonGraphic(saveBtn, "CHECK", Color.OLIVE);
         setButtonGraphic(backWithoutSaveBtn, "TIMES", Color.CRIMSON);
@@ -215,5 +218,6 @@ public class NewsAddFormularController implements LocalizationObserver {
         lblTitle.setText(BundleManager.getBundle().getString("news.title"));
         lblInvalidText.setText(BundleManager.getBundle().getString("news.text.tooLong"));
         lblInvalidTitle.setText(BundleManager.getBundle().getString("news.title.tooLong"));
+        tabHeaderController.setTitle(BundleManager.getBundle().getString("news.addNews"));
     }
 }
