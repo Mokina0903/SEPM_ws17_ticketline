@@ -42,9 +42,15 @@ public class NewsController extends TabElement implements LocalizationObserver{
     public Button addNewNews;
     @FXML
     public VBox vBContainer;
+    @FXML
+    public Tab newNewsTab;
+    @FXML
+    public Tab oldNewsTab;
+    @FXML
+    public ListView vbNewsElementsNew;
 
     @FXML
-    private ListView<VBox> vbNewsElements;
+    private ListView<VBox> vbNewsElementsOld;
 
     @FXML
     private TabHeaderController tabHeaderController;
@@ -82,12 +88,12 @@ public class NewsController extends TabElement implements LocalizationObserver{
         tabHeaderController.setIcon(FontAwesome.Glyph.NEWSPAPER_ALT);
         tabHeaderController.setTitle(BundleManager.getBundle().getString("news.news"));
         localizationSubject.attach(this);
-        vbNewsElements.getSelectionModel()
+        vbNewsElementsNew.getSelectionModel()
             .selectedIndexProperty()
             .addListener((observable, oldvalue, newValue) -> {
 
                 Platform.runLater(() -> {
-                    vbNewsElements.getSelectionModel().clearSelection();
+                    vbNewsElementsNew.getSelectionModel().clearSelection();
                 });
 
             });
@@ -96,7 +102,7 @@ public class NewsController extends TabElement implements LocalizationObserver{
 
     public void loadNews() {
        LOGGER.info("Loading News");
-        ObservableList<VBox> vbNewsBoxChildren = vbNewsElements.getItems();
+        ObservableList<VBox> vbNewsBoxChildren = vbNewsElementsNew.getItems();
         vbNewsBoxChildren.clear();
 
         /*
@@ -202,7 +208,7 @@ public class NewsController extends TabElement implements LocalizationObserver{
                 if(getValue()==null || getValue().isEmpty()) {
                     super.failed();
                     JavaFXUtils.createExceptionDialog(getException(),
-                        vbNewsElements.getScene().getWindow()).showAndWait();
+                        vbNewsElementsNew.getScene().getWindow()).showAndWait();
                 }
             }
         };
