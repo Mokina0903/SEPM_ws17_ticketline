@@ -253,72 +253,97 @@ public class EventController extends TabElement implements LocalizationObserver 
     }
 
     public void publishEvent(ActionEvent actionEvent) {
-        try {
-            // TODO: (David) csvFile == Textbox
-            String csvFile = "import.csv";
-            String cvsSplitBy = ";";
-            BufferedReader br = null;
-            try {
-                String line = "";
-                br =  new BufferedReader(new FileReader(csvFile));
-                int cnt = 1;
-                while ((line = br.readLine()) != null) {
-                    // TITLE;ARTIST_FIRST_NAME;ARTIST_LAST_NAME;DESCRIPTION;START_OF_EVENT;END_OF_EVENT;PRICE;HALL_ID
-                    String[] column = line.split(cvsSplitBy);
 
-                    // Column size = 8
+        Task<Void> workerTask = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
 
-                    /*
-                    System.out.println("---- " + cnt++ + " ----");
-                    for (String s : column) {
-                        System.out.print(s+ "\t");
+                // TODO: (David) csvFile == Textbox
+                String csvFile = "import.csv";
+                String cvsSplitBy = ";";
+                BufferedReader br = null;
+                try {
+                    String line = "";
+                    br = new BufferedReader(new FileReader(csvFile));
+                    int cnt = 1;
+                    while ((line = br.readLine()) != null) {
+                        // TITLE;ARTIST_FIRST_NAME;ARTIST_LAST_NAME;DESCRIPTION;START_OF_EVENT;END_OF_EVENT;PRICE;HALL_ID
+                        String[] column = line.split(cvsSplitBy);
+
+                        // Column size = 8
+
+                        /*
+                        System.out.println("---- " + cnt++ + " ----");
+                        for (String s : column) {
+                            System.out.print(s+ "\t");
+                        }
+                        System.out.println();
+                        */
+
+
+                        // TODO: (David) Check input, duplicates?, end before begin?
+
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+                        String title = column[0];
+                        String firstName = column[1];
+                        String lastName = column[2];
+                        String description = column[3];
+                        LocalDateTime start = LocalDateTime.parse(column[4], formatter);
+                        LocalDateTime end = LocalDateTime.parse(column[5], formatter);
+                        Long price = Long.valueOf(column[6]);
+                        DetailedHallDTO hall = DetailedHallDTO.builder().id(Long.valueOf(column[7])).description("desc").build();
+
+                        DetailedEventDTO detailedEventDTO = DetailedEventDTO.builder()
+                            .title(title)
+                            .artistFirstname(firstName)
+                            .artistLastName(lastName)
+                            .description(description)
+                            .startOfEvent(start)
+                            .endOfEvent(end)
+                            .price(price)
+                            .hall(hall)
+                            .build();
+
+                        detailedEventDTO = eventService.publishEvent(detailedEventDTO);
+                        //System.out.println("---- " + detailedEventDTO.getId() + " ----");
                     }
-                    System.out.println();
-                    */
-
-                    // TODO: (David) Check input
-
-                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-
-                    String title         = column[0];
-                    String firstName     = column[1];
-                    String lastName      = column[2];
-                    String description   = column[3];
-                    LocalDateTime start  = LocalDateTime.parse(column[4], formatter);
-                    LocalDateTime end    = LocalDateTime.parse(column[5], formatter);
-                    Long price           = Long.valueOf(column[6]);
-                    DetailedHallDTO hall = DetailedHallDTO.builder().id(Long.valueOf(column[7])).description("desc").build();
-
-                    DetailedEventDTO detailedEventDTO = DetailedEventDTO.builder()
-                        .title(title)
-                        .artistFirstname(firstName)
-                        .artistLastName(lastName)
-                        .description(description)
-                        .startOfEvent(start)
-                        .endOfEvent(end)
-                        .price(price)
-                        .hall(hall)
-                        .build();
-
-                    detailedEventDTO = eventService.publishEvent(detailedEventDTO);
-                    //System.out.println("---- " + detailedEventDTO.getId() + " ----");
-                }
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } finally {
-                if (br != null) {
-                    try {
-                        br.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    if (br != null) {
+                        try {
+                            br.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
+                return null;
             }
-        } catch (DataAccessException e) {
-            e.printStackTrace();
-        }
+
+            @Override
+            protected void succeeded() {
+                super.succeeded();
+                loadEvents();
+            }
+
+            @Override
+            protected void failed() {
+                super.failed();
+                loadEvents();
+                mainController.showGeneralError("Failure at PublishEvents: " + getException().getMessage());
+            }
+        };
+
+        workerTask.runningProperty().addListener((observable, oldValue, running) ->
+            mainController.setProgressbarProgress(
+                running ? ProgressBar.INDETERMINATE_PROGRESS : 0)
+        );
+
+        new Thread(workerTask).start();
     }
 
 }
