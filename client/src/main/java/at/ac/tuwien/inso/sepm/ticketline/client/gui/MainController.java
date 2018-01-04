@@ -148,7 +148,7 @@ public class MainController implements LocalizationObserver{
         return controller;
     }
 
-    private void setAuthenticated(boolean authenticated) {
+    protected void setAuthenticated(boolean authenticated) {
         if (authenticated) {
             if (spMainContent.getChildren().contains(login)) {
                 spMainContent.getChildren().remove(login);
