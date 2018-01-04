@@ -102,8 +102,10 @@ public class NewsController extends TabElement implements LocalizationObserver{
 
     public void loadNews() {
        LOGGER.info("Loading News");
-        ObservableList<VBox> vbNewsBoxChildren = vbNewsElementsNew.getItems();
-        vbNewsBoxChildren.clear();
+        ObservableList<VBox> vbNewsBoxChildrenNew = vbNewsElementsNew.getItems();
+        ObservableList<VBox> vbNewsBoxChildrenOld = vbNewsElementsOld.getItems();
+        vbNewsBoxChildrenNew.clear();
+        vbNewsBoxChildrenOld.clear();
 
         /*
         try {
@@ -184,7 +186,7 @@ public class NewsController extends TabElement implements LocalizationObserver{
                         //title.setText("("+BundleManager.getBundle().getString("news.new")+")" + title.getText());
                         wrapper.getLoadedObject().setStyle("-fx-background-color:rgba(220, 229, 244, .7)");
 
-                        vbNewsBoxChildren.add(wrapper.getController().vbNewsElement);
+                        vbNewsBoxChildrenNew.add(wrapper.getController().vbNewsElement);
                     }
 
                 }
@@ -195,7 +197,7 @@ public class NewsController extends TabElement implements LocalizationObserver{
                             springFxmlLoader.loadAndWrap("/fxml/news/newsElement.fxml");
                         wrapper.getController().initializeData(oldNewsDTO, newsService, mainController, NewsController.this, userService);
 
-                        vbNewsBoxChildren.add(wrapper.getController().vbNewsElement);
+                        vbNewsBoxChildrenOld.add(wrapper.getController().vbNewsElement);
                     }
 
                 }
@@ -238,6 +240,8 @@ public class NewsController extends TabElement implements LocalizationObserver{
     public void update() {
 
         tabHeaderController.setTitle(BundleManager.getBundle().getString("news.news"));
+        newNewsTab.setText(BundleManager.getBundle().getString("news.newnews"));
+        oldNewsTab.setText(BundleManager.getBundle().getString("news.oldnews"));
        // loadNews();
     }
 
