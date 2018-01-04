@@ -7,6 +7,7 @@ import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -90,7 +91,22 @@ public class SimpleEventRestClient implements EventRestClient{
 
     @Override
     public DetailedEventDTO publishEvent(DetailedEventDTO detailedEventDTO) throws DataAccessException {
-        // TODO: (David) Implement here
-        return null;
+        try {
+            LOGGER.debug("Publish Event", restClient.getServiceURI(EVENT_URL));
+            HttpEntity<DetailedEventDTO> httpEntity = new HttpEntity<>(detailedEventDTO);
+            ResponseEntity<DetailedEventDTO> event =
+                restClient.exchange(
+                    restClient.getServiceURI(EVENT_URL),
+                HttpMethod.POST,
+                httpEntity,
+                new ParameterizedTypeReference<DetailedEventDTO>() {}
+                );
+            LOGGER.debug("Result status was {} with content {}", event.getStatusCode(), event.getBody());
+            return event.getBody();
+        } catch (HttpStatusCodeException e) {
+            throw new DataAccessException("Failed retrieve Event with status code " + e.getStatusCode().toString());
+        } catch (RestClientException e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
     }
 }
