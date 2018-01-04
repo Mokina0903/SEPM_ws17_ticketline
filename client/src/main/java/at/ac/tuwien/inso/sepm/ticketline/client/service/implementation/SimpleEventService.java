@@ -40,11 +40,7 @@ public class SimpleEventService implements EventService {
     }
 
     @Override
-    public List<DetailedEventDTO> publishEventCSV(String filePath) throws DataAccessException {
-        // TODO: David Implement here
-        DetailedEventDTO detailedEventDTO = null;
-
-        detailedEventDTO = eventRestClient.publishEvent(detailedEventDTO);
-        return null;
+    public DetailedEventDTO publishEvent(DetailedEventDTO detailedEventDTO) throws DataAccessException {
+        return eventRestClient.publishEvent(detailedEventDTO);
     }
 }
