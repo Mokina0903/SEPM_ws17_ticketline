@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.shape.Arc?>
+<?import org.controlsfx.control.GridView?>
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket.HallplanController"
+            prefHeight="400.0" prefWidth="600.0">
+
+<top>
+    <fx:include source="/fxml/tabHeader.fxml" fx:id="tabHeader"/>
+
+</top>
+    <center>
+       <GridView fx:id="seatsContainerGV">
+
+       </GridView>
+    </center>
+
+
+</BorderPane>

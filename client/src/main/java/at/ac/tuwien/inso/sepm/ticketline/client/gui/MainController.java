@@ -4,6 +4,7 @@ import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.customer.CustomerController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.event.EventController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.news.NewsController;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket.HallplanController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket.TicketController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.user.UserController;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.AuthenticationInformationService;
@@ -65,6 +66,7 @@ public class MainController implements LocalizationObserver{
     private UserController userController;
     private EventController eventController;
     private TicketController ticketController;
+    private HallplanController hallplanController;
 
     private UserService userService;
     private DetailedUserDTO detailedUserDTO;
@@ -74,6 +76,7 @@ public class MainController implements LocalizationObserver{
     private Tab ticketTab;
     private Tab userTab;
     private Tab customerTab;
+    private Tab hallplanTab;
 
     public Tab getNewsTab() {
         return newsTab;
@@ -194,6 +197,7 @@ public class MainController implements LocalizationObserver{
         eventController = (EventController) initTabPane(eventController, "event/eventComponent.fxml", eventTab, "FILM");
         ticketController = (TicketController) initTabPane(ticketController, "ticket/ticketComponent.fxml", ticketTab, "TICKET");
         customerController = (CustomerController) initTabPane(customerController, "customer/customerComponent.fxml", customerTab, "USERS");
+        hallplanController = (HallplanController) initTabPane(hallplanController, "ticket/hallplan.fxml", hallplanTab, "TICKET");
         if (detailedUserDTO.getRole() == 1) {
             userController = (UserController) initTabPane(userController, "user/userComponent.fxml", userTab, "USER");
             userController.loadUsers();
