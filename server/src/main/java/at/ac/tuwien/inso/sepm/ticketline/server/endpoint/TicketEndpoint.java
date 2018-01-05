@@ -34,7 +34,7 @@ public class TicketEndpoint {
     @RequestMapping(value = "/{eventId}", method = RequestMethod.GET)
     @ApiOperation(value = "Get information about a specific ticket entry")
     public List<TicketDTO> findByEvent( @PathVariable Long eventId) {
-        return ticketMapper.ticketToTicketDTO(ticketService.findByEvent(eventId));
+        return ticketMapper.ticketToTicketDTO(ticketService.findByEventId(eventId));
     }
 
 }

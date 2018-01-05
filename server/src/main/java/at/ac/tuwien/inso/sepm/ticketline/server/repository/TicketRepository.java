@@ -34,18 +34,18 @@ public interface TicketRepository extends JpaRepository<Ticket,Long>{
     /**
      * find all tickets for an event
      *
-     * @param event to find tickets for
+     * @param eventId of the event to find tickets for
      * @return list of tickets
      */
-    List<Ticket> findByEvent(Event event);
+    List<Ticket> findByEvent_Id(Long eventId); //todo: check if name is correct
 
     /**
      * find all tickets of specific customer
      *
-     * @param customer to find tickets for
+     * @param customerId of the customer to find tickets for
      * @return list of tickets
      */
-    List<Ticket> findByCustomer(Customer customer);
+    List<Ticket> findByCustomer_Id(Long customerId);
 
 
 }

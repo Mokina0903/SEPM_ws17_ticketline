@@ -32,12 +32,12 @@ public class SimpleTicketService implements TicketService {
     }
 
     @Override
-    public List<Ticket> findByEvent( Event event ) {
-        return ticketRepository.findByEvent(event);
+    public List<Ticket> findByEventId( Long eventId ) {
+        return ticketRepository.findByEvent_Id(eventId);
     }
 
     @Override
-    public List<Ticket> findByCustomer( Customer customer ) {
-        return ticketRepository.findByCustomer(customer);
+    public List<Ticket> findByCustomerId( Long customerId ) {
+        return ticketRepository.findByCustomer_Id(customerId);
     }
 }

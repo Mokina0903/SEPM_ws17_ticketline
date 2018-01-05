@@ -31,17 +31,17 @@ public interface TicketService {
     /**
      * find all tickets for an event
      *
-     * @param event to find tickets for
+     * @param eventId of the event to find tickets for
      * @return list of tickets
      */
-    List<Ticket> findByEvent( Event event);
+    List<Ticket> findByEventId( Long eventId);
 
     /**
      * find all tickets of specific customer
      *
-     * @param customer to find tickets for
+     * @param customerId of the customer to find tickets for
      * @return list of tickets
      */
-    List<Ticket> findByCustomer(Customer customer);
+    List<Ticket> findByCustomerId(Long customerId);
 
 }
