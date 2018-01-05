@@ -31,10 +31,15 @@ public class TicketEndpoint {
         return ticketMapper.ticketToTicketDTO(ticketService.findOneById(ticketId));
     }
 
-    @RequestMapping(value = "/{eventId}", method = RequestMethod.GET)
-    @ApiOperation(value = "Get information about a specific ticket entry")
-    public List<TicketDTO> findByEvent( @PathVariable Long eventId) {
+    @RequestMapping(value = "/event/{eventId}", method = RequestMethod.GET)
+    @ApiOperation(value = "Get information about ticket entries by event")
+    public List<TicketDTO> findByEventId( @PathVariable Long eventId) {
         return ticketMapper.ticketToTicketDTO(ticketService.findByEventId(eventId));
     }
 
+    @RequestMapping(value = "/customer/{customerId}", method = RequestMethod.GET)
+    @ApiOperation(value = "Get information about ticket entries by customer")
+    public List<TicketDTO> findByCustomerId( @PathVariable Long customerId) {
+        return ticketMapper.ticketToTicketDTO(ticketService.findByCustomerId(customerId));
+    }
 }
