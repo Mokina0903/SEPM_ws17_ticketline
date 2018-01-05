@@ -12,6 +12,8 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class SimpleCustomerService implements CustomerService{
@@ -58,18 +60,25 @@ public class SimpleCustomerService implements CustomerService{
     @Override
     public boolean checkIfCustomerValid(CustomerDTO customer) {
 
-        if (!customer.getEmail().contains("@") || !customer.getEmail().contains(".") || customer.getEmail().length()>100) {
-         return false;
-        }
-        if (customer.getName() == null || customer.getName().length() >50 || customer.getSurname().length() >50 || customer.getName().isEmpty() || customer.getSurname() == null || customer.getSurname().isEmpty()) {
-            return false;
-        }
-        if(customer.getBirthDate() == null || customer.getBirthDate().isAfter(LocalDate.now())){
-            return false;
-        }
-        if(ChronoUnit.DAYS.between(customer.getBirthDate(),LocalDate.now())<14*365){
-            return false;
-        }
-        return true;
+        return (checkIfCustomerNameValid(customer.getName()) && checkIfCustomerNameValid(customer.getSurname())
+        && checkIfCustomerEmailValid(customer.getEmail()) && checkIfCustomerBirthdateValid(customer.getBirthDate()));
+    }
+
+    @Override
+    public boolean checkIfCustomerNameValid(String name) {
+        return !(name.equals("") || name.length() > 50 || name.isEmpty());
+    }
+
+    @Override
+    public boolean checkIfCustomerEmailValid(String email) {
+        Pattern pattern = Pattern.compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+            + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
+
+    @Override
+    public boolean checkIfCustomerBirthdateValid(LocalDate birthdate) {
+        return (ChronoUnit.DAYS.between(birthdate, LocalDate.now()) >= 14*365);
     }
 }

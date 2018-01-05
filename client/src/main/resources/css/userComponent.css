@@ -1,5 +1,5 @@
 .table-row-cell:empty {
-    -fx-background-color: transparent;
+    -fx-background-color: #f4f4f4;
 }
 
 .table-row-cell:empty .table-cell {
@@ -10,6 +10,8 @@
 .table-view .column-header .filler,
 .table-view .column-header-background .filler {
     -fx-background-color:rgba(220, 229, 244, .7);
+    -fx-border-color: transparent;
+
 }
 
 .table-view .column-header, .table-view .filler {

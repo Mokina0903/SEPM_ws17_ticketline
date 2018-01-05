@@ -15,6 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 
 <VBox fx:id="VBroot" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.news.NewsAddFormularController">
+    <fx:include source="/fxml/tabHeader.fxml" fx:id="tabHeader"/>
     <BorderPane>
         <stylesheets>
             <URL value="@/css/newsElement.css" />
@@ -46,7 +47,7 @@
                 </BorderPane.margin>
                 <HBox spacing="8" GridPane.columnIndex="0" GridPane.rowIndex="0">
                     <Label text="Text: " />
-                    <TextArea fx:id="TextArea" />
+                    <TextArea fx:id="textArea" />
                     <Label fx:id="lblInvalidText" text="%news.text.tooLong" textFill="crimson" />
                 </HBox>
                 <VBox GridPane.columnIndex="1" GridPane.rowIndex="0">
@@ -85,5 +86,7 @@
             </GridPane>
         </bottom>
     </BorderPane>
-
+    <padding>
+        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+    </padding>
 </VBox>

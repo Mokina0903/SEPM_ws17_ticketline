@@ -75,4 +75,12 @@ public class SimpleUserService implements UserService {
     public List<SimpleUserDTO> findAll() throws DataAccessException {
         return userRestClient.findAll();
     }
+
+    @Override
+    public boolean confirmPasswordIsOk(String password, String confirmPassword) {
+        if (password.trim().isEmpty() || !password.equals(confirmPassword)) {
+            return false;
+        }
+        return true;
+    }
 }

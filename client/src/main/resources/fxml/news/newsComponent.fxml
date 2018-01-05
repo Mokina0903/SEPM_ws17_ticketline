@@ -15,7 +15,7 @@
     <children>
         <fx:include source="/fxml/tabHeader.fxml" fx:id="tabHeader"/>
         <VBox spacing="10" alignment="TOP_RIGHT">
-            <Button fx:id="addNewNews" minWidth="30" onAction="#addNewNews" text="+"/>
+            <Button fx:id="addNewNews" minWidth="30" onAction="#addNewNews"/>
         </VBox>
 
         <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" vbarPolicy="AS_NEEDED" VBox.vgrow="ALWAYS"
