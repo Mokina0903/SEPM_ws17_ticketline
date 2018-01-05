@@ -9,6 +9,7 @@ import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Hall;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Location;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Seat;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.artist.ArtistMapper;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.event.EventMapper;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,6 +36,9 @@ public class EventMapperTest {
 
     @Autowired
     private EventMapper eventMapper;
+
+    @Autowired
+    private ArtistMapper artistMapper;
 
     private static final long EVENT_ID = 1L;
     private static final String EVENT_ARTIST_FIRSTNAME = "Firstname";
@@ -151,8 +155,9 @@ public class EventMapperTest {
     public void shouldMapDetailedEventsDTOToEvents() {
         DetailedEventDTO detailedEventDTO = DetailedEventDTO.builder()
             .id(EVENT_ID)
-            .artistFirstname(EVENT_ARTIST_FIRSTNAME)
-            .artistLastName(EVENT_ARTIST_LASTNAME)
+            //TODO: Solve this
+            //.artistFirstname(EVENT_ARTIST_FIRSTNAME)
+             //.artistLastName(EVENT_ARTIST_LASTNAME)
             .title(EVENT_TITLE)
             .description(EVENT_DESCRIPTION)
             .price(EVENT_PRICE)
@@ -215,8 +220,9 @@ public class EventMapperTest {
     public void shouldMapSimpleEventsDTOToEvents() {
         DetailedEventDTO detailedEventDTO = DetailedEventDTO.builder()
             .id(EVENT_ID)
-            .artistFirstname(EVENT_ARTIST_FIRSTNAME)
-            .artistLastName(EVENT_ARTIST_LASTNAME)
+            // TODO: Solve this
+            //.artistFirstname(EVENT_ARTIST_FIRSTNAME)
+            //.artistLastName(EVENT_ARTIST_LASTNAME)
             .title(EVENT_TITLE)
             .description(EVENT_DESCRIPTION)
             .price(EVENT_PRICE)
