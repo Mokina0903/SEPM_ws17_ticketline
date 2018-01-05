@@ -1,14 +1,13 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.endpoint;
 
 import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketDTO;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.Ticket;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.ticket.TicketMapper;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.TicketService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -41,5 +40,14 @@ public class TicketEndpoint {
     @ApiOperation(value = "Get information about ticket entries by customer")
     public List<TicketDTO> findByCustomerId( @PathVariable Long customerId) {
         return ticketMapper.ticketToTicketDTO(ticketService.findByCustomerId(customerId));
+    }
+
+    @RequestMapping(method = RequestMethod.POST)
+    @PreAuthorize("hasRole('USER')")
+    @ApiOperation(value = "create ticket entry")
+    public TicketDTO create(@RequestBody TicketDTO ticketDTO) {
+        Ticket ticket = ticketMapper.ticketDTOtoTicket(ticketDTO);
+        ticket = ticketService.save(ticket);
+        return ticketMapper.ticketToTicketDTO(ticket);
     }
 }
