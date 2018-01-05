@@ -246,6 +246,10 @@ public class MainController implements LocalizationObserver {
         return controller;
     }
 
+    public void openEventTab(){
+        tpContent.getSelectionModel().select(eventTab);
+    }
+
     public void showGeneralError(String text) {
         generalErrors.setText(text);
         generalErrors.setVisible(true);

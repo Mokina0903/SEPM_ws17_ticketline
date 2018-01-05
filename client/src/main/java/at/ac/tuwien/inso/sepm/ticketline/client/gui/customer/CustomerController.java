@@ -270,6 +270,13 @@ public class CustomerController extends TabElement implements LocalizationObserv
         }
     }
 
+    @FXML
+    private void openEventTab(ActionEvent event) {
+        if (currentTableview.getSelectionModel().getSelectedItem() != null) {
+            mainController.openEventTab();
+        }
+    }
+
 
     @Override
     public void update() {

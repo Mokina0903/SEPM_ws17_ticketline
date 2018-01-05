@@ -60,7 +60,7 @@
             </BorderPane.margin>
             <Button fx:id="btNew" onAction="#openNewDialog" prefWidth="40.0" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="1" />
             <Button fx:id="btEdit" onAction="#openEditDialog" prefWidth="40.0" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-            <Button fx:id="btTickets" prefWidth="40.0" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+            <Button fx:id="btTickets" onAction="#openEventTab" prefWidth="40.0" GridPane.columnIndex="0" GridPane.rowIndex="3" />
             <columnConstraints>
                 <ColumnConstraints />
             </columnConstraints>
