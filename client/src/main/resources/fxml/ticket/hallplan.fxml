@@ -8,10 +8,14 @@
 
 <?import javafx.scene.shape.Arc?>
 <?import org.controlsfx.control.GridView?>
+<?import java.net.URL?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket.HallplanController"
             prefHeight="400.0" prefWidth="600.0">
+    <stylesheets>
+        <URL value="@/css/hallplan.css" />
+    </stylesheets>
 
     <top>
         <fx:include source="/fxml/tabHeader.fxml" fx:id="tabHeader"/>

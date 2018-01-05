@@ -11,13 +11,10 @@
 <VBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket.SeatElementController"
-      prefHeight="400.0" prefWidth="600.0" fx:id="vBseat">
+      prefHeight="400.0" prefWidth="600.0" fx:id="vBseat" styleClass="seatVbox">
 
 
-    <Rectangle width="50" height="75" >
-
-    </Rectangle>
-    <Label fx:id="seatNrLbl"/>
+    <Label styleClass="seatLbl" fx:id="seatNrLbl"/>
 
 
 </VBox>
