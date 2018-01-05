@@ -44,4 +44,20 @@ public interface TicketService {
      */
     List<Ticket> findByCustomerId(Long customerId);
 
+    /**
+     * check if seat is already sold
+     *
+     * @param eventId of the event
+     * @param seatId of the seat
+     * @return true if seat is already booked/sold
+     */
+    Boolean isBooked(Long eventId,Long seatId);
+
+    /**
+     * save ticket if seat is free
+     *
+     * @param ticket to save
+     * @return saved ticket with id, or throw AlreadyExistsException if ticket is already booked
+     */
+    Ticket save(Ticket ticket);
 }

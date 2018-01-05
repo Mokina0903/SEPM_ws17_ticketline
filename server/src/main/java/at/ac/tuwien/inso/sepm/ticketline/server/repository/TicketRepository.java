@@ -34,18 +34,25 @@ public interface TicketRepository extends JpaRepository<Ticket,Long>{
     /**
      * find all tickets for an event
      *
-     * @param eventId of the event to find tickets for
+     * @param event_Id of the event to find tickets for
      * @return list of tickets
      */
-    List<Ticket> findByEvent_Id(Long eventId); //todo: check if name is correct
+    List<Ticket> findByEvent_Id(Long event_Id); //todo: check if name is correct
 
     /**
      * find all tickets of specific customer
      *
-     * @param customerId of the customer to find tickets for
+     * @param customer_Id of the customer to find tickets for
      * @return list of tickets
      */
-    List<Ticket> findByCustomer_Id(Long customerId);
+    List<Ticket> findByCustomer_Id(Long customer_Id);
+
+    /**
+     * @param event_Id of the event the ticket is for
+     * @param seat_id of the seat the ticket is for
+     * @return optional containing ticket, if ticket is found the seat is sold, if no ticket found the seat is free
+     */
+    Optional<Ticket> findByEvent_idAndSeat_id(Long event_Id, Long seat_id);
 
 
 }
