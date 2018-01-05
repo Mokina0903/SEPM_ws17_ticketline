@@ -6,9 +6,15 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import javafx.scene.shape.Rectangle?>
+<?import com.sun.javafx.charts.Legend?>
 <VBox xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="fxml.ticket.SeatElement"
-            prefHeight="400.0" prefWidth="600.0">
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket.SeatElementController"
+      prefHeight="400.0" prefWidth="600.0" fx:id="vBseat">
+    <Rectangle width="10" height="15" fill="darkcyan">
+
+    </Rectangle>
+
 
 </VBox>

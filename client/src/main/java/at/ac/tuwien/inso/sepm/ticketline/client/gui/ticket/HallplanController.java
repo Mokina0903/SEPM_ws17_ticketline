@@ -6,8 +6,14 @@ import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.hall.DetailedHallDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.seat.SeatDTO;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
+import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Arc;
+import javafx.scene.shape.Rectangle;
 import net.bytebuddy.asm.Advice;
 import org.controlsfx.control.GridView;
 import org.controlsfx.glyphfont.FontAwesome;
@@ -16,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -23,7 +30,13 @@ public class HallplanController extends TabElement {
     private static final Logger LOGGER = LoggerFactory.getLogger(at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket.TicketController.class);
 
     @FXML
-    public GridView seatsContainerGV;
+    public GridPane seatsContainerGV;
+    @FXML
+    public Label ticketAmountLb;
+    @FXML
+    public Button reserveBut;
+    @FXML
+    public Button buyBut;
 
     @FXML
     private TabHeaderController tabHeaderController;
@@ -32,7 +45,7 @@ public class HallplanController extends TabElement {
 
     private Tab ticketTab;
 
-    private DetailedHallDTO hall;
+  //  private DetailedHallDTO hall;
 
     @FXML
     void initialize(){
@@ -43,12 +56,36 @@ public class HallplanController extends TabElement {
 
    void initializeSeats(){
 
+     //*************** Preperation for testing ***************
+        DetailedHallDTO hall = new DetailedHallDTO();
+        ArrayList<SeatDTO> seatsToAdd = new ArrayList<>();
+        int row = 1;
+        int nr = 1;
+       for (int i = 0; i < 50 ; i++) {
+           SeatDTO seat = new SeatDTO();
+           seat.setNr(nr);
+           seat.setRow(row);
+           seat.setSector('a');
+           seatsToAdd.add(seat);
+           if(nr == 10){
+               nr = 0;
+               row ++;
+           }
+           nr++;
+       }
+        hall.setSeats(seatsToAdd);
+       //*************** END  ***************
+
         List<SeatDTO> seats = hall.getSeats();
         int rowCount = seats.get(seats.size()-1).getRow();
         int seatsPerRow = seats.size()%2==0?(seats.size()/rowCount):(seats.size()/rowCount)+1;
-       for (SeatDTO seat :
-           seats) {
+
+       for (SeatDTO seat : seats) {
            //Stelle seats dar
+           Rectangle r = new Rectangle(100, 150);
+           r.setFill(Color.GRAY);
+           seatsContainerGV.add(r, seat.getNr(), seat.getRow());
+
        }
     }
 
