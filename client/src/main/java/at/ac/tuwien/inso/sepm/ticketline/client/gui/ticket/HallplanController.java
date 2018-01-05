@@ -10,6 +10,8 @@ import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.hall.DetailedHallDTO
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.seat.SeatDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
@@ -18,6 +20,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import net.bytebuddy.asm.Advice;
 import org.controlsfx.control.GridView;
 import org.controlsfx.glyphfont.FontAwesome;
@@ -72,7 +75,7 @@ public class HallplanController extends TabElement {
         ArrayList<SeatDTO> seatsToAdd = new ArrayList<>();
         int row = 1;
         int nr = 1;
-       for (int i = 0; i < 50 ; i++) {
+       for (int i = 0; i < 74 ; i++) {
            SeatDTO seat = new SeatDTO();
            seat.setNr(nr);
            seat.setRow(row);
@@ -90,6 +93,7 @@ public class HallplanController extends TabElement {
         List<SeatDTO> seats = hall.getSeats();
         int rowCount = seats.get(seats.size()-1).getRow();
         int seatsPerRow = seats.size()%2==0?(seats.size()/rowCount):(seats.size()/rowCount)+1;
+        seatsPerRow =10;
 
        for (SeatDTO seat : seats) {
            //show seats
@@ -99,6 +103,14 @@ public class HallplanController extends TabElement {
            wrapper.getController().initializeData(seat);
            r.setFill(Color.GRAY);
            seatsContainerGV.add(wrapper.getLoadedObject(), seat.getNr(), seat.getRow());
+           if(seat.getNr() == 1){
+               Label label = new Label();
+               label.setText(String.valueOf(seat.getRow()));
+               label.setFont(Font.font(16));
+               label.setAlignment(Pos.CENTER);
+               label.setPadding(new Insets(0,0,0,5));
+               seatsContainerGV.add(label, 0, seat.getRow());
+           }
 
        }
     }
