@@ -12,10 +12,9 @@
 
 <BorderPane xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.location.LocationController">
     <top>
-
         <fx:include source="/fxml/tabHeader.fxml" fx:id="tabHeader"/>
-
     </top>
+
     <center>
         <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
             <children>
@@ -42,7 +41,7 @@
                                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                             </padding></Pagination>
                         <GridPane hgap="10.0" maxWidth="-Infinity" prefWidth="77.0" vgap="20">
-                            <Button text="search" GridPane.columnIndex="0" />
+                            <Button text="search" defaultButton="true" GridPane.columnIndex="0" />
                             <columnConstraints>
                                 <ColumnConstraints />
                             </columnConstraints>

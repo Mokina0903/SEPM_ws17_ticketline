@@ -14,11 +14,7 @@
 <BorderPane fx:id="customerOverviewRoot" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.customer.CustomerController">
 
     <top>
-
-
         <fx:include source="/fxml/tabHeader.fxml" fx:id="tabHeader"/>
-
-
     </top>
 
     <center>
@@ -35,8 +31,8 @@
                     </rowConstraints>
                     <children>
                         <Label fx:id="lbSearch" text="%menu.search" />
-                        <TextField fx:id="tfSearch" prefHeight="26.0" prefWidth="343.0" promptText="%customer.searchField" GridPane.columnIndex="1" />
-                        <Button fx:id="btSearch" mnemonicParsing="false" onAction="#search" text="%menu.search" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <TextField fx:id="tfSearch"  prefHeight="26.0" prefWidth="343.0" promptText="%customer.searchField" GridPane.columnIndex="1" />
+                        <Button fx:id="btSearch" defaultButton="true" mnemonicParsing="false" onAction="#search" text="%menu.search" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <Label fx:id="lbNoMatch" text="%customer.noMatches" textFill="#cc1d1d" GridPane.rowIndex="1" />
                     </children>
                     <VBox.margin>
@@ -56,6 +52,7 @@
             </children>
         </VBox>
     </center>
+
     <right>
         <GridPane hgap="10" prefWidth="77.0" vgap="20" BorderPane.alignment="CENTER">
             <BorderPane.margin>
@@ -75,7 +72,6 @@
                 <RowConstraints />
             </rowConstraints>
         </GridPane>
-
     </right>
 
     <padding>
