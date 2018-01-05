@@ -1,10 +1,14 @@
 package at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket;
 
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.MainController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.TabElement;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.TabHeaderController;
+import at.ac.tuwien.inso.sepm.ticketline.client.service.NewsService;
+import at.ac.tuwien.inso.sepm.ticketline.client.service.UserService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.hall.DetailedHallDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.seat.SeatDTO;
+import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -28,6 +32,8 @@ import java.util.List;
 @Component
 public class HallplanController extends TabElement {
     private static final Logger LOGGER = LoggerFactory.getLogger(at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket.TicketController.class);
+    private final MainController mainController;
+    private final SpringFxmlLoader springFxmlLoader;
 
     @FXML
     public GridPane seatsContainerGV;
@@ -46,6 +52,11 @@ public class HallplanController extends TabElement {
     private Tab ticketTab;
 
   //  private DetailedHallDTO hall;
+
+    public HallplanController(MainController mainController, SpringFxmlLoader springFxmlLoader) {
+        this.mainController = mainController;
+        this.springFxmlLoader = springFxmlLoader;
+    }
 
     @FXML
     void initialize(){
@@ -81,10 +92,13 @@ public class HallplanController extends TabElement {
         int seatsPerRow = seats.size()%2==0?(seats.size()/rowCount):(seats.size()/rowCount)+1;
 
        for (SeatDTO seat : seats) {
-           //Stelle seats dar
+           //show seats
            Rectangle r = new Rectangle(100, 150);
+           SpringFxmlLoader.Wrapper<SeatElementController> wrapper =
+               springFxmlLoader.loadAndWrap("/fxml/ticket/seatElement.fxml");
+           wrapper.getController().initializeData(seat);
            r.setFill(Color.GRAY);
-           seatsContainerGV.add(r, seat.getNr(), seat.getRow());
+           seatsContainerGV.add(wrapper.getLoadedObject(), seat.getNr(), seat.getRow());
 
        }
     }
