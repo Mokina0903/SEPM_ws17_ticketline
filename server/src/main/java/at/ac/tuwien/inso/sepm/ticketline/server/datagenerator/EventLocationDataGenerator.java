@@ -1,9 +1,11 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.datagenerator;
 
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.Artist;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Hall;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Location;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Seat;
+import at.ac.tuwien.inso.sepm.ticketline.server.repository.ArtistRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.EventRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.Location.HallRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.Location.LocationRepository;
@@ -29,18 +31,21 @@ public class EventLocationDataGenerator {
     private static final Logger LOGGER = LoggerFactory.getLogger(EventLocationDataGenerator.class);
     private static final int NUMBER_OF_LOCATIONS_TO_GENERATE = 10;
     private static final int NUMBER_OF_EVENTS_TO_GENERATE = 50;
+    private static final int NUMBER_OF_ARTISTS_PER_EVENT = 3;
 
     private final LocationRepository locationRepository;
     private final SeatRepository seatRepository;
     private final HallRepository hallRepository;
+    private final ArtistRepository artistRepository;
     private final EventRepository eventRepository;
     private final Faker faker;
 
-    public EventLocationDataGenerator( LocationRepository locationRepository, SeatRepository seatRepository,
-                                       HallRepository hallRepository, EventRepository eventRepository) {
+    public EventLocationDataGenerator(LocationRepository locationRepository, SeatRepository seatRepository,
+                                      HallRepository hallRepository, ArtistRepository artistRepository, EventRepository eventRepository) {
         this.locationRepository = locationRepository;
         this.seatRepository = seatRepository;
         this.hallRepository = hallRepository;
+        this.artistRepository = artistRepository;
         this.eventRepository = eventRepository;
         faker = new Faker();
     }
@@ -117,15 +122,28 @@ public class EventLocationDataGenerator {
                     ZoneId.systemDefault()
                 );
 
+                List<Artist> artists = new ArrayList<>();
+
+                for (int j = 0; j < NUMBER_OF_ARTISTS_PER_EVENT; j++) {
+
+                    Artist artist = Artist.builder()
+                        .artistFirstname(faker.name().firstName())
+                        .artistLastName(faker.name().lastName())
+                        .build();
+                    artistRepository.save(artist);
+                    artists.add(artist);
+                }
+
                 Event event = Event.builder()
                     .startOfEvent(start)
                     .endOfEvent(start.plusHours(2))
-                    .artistFirstname(faker.name().firstName())
-                    .artistLastName(faker.name().lastName())
+                    /*.artistFirstname(faker.name().firstName())
+                    .artistLastName(faker.name().lastName())*/
                     .price(faker.number().numberBetween(5L,100L))
                     .description(faker.gameOfThrones().quote())
                     .title(faker.music().instrument() + " concert")
                     .hall(hallRepository.findAll().get(faker.number().numberBetween(0,(int)hallRepository.count())))
+                    .artists(artists)
                     .build();
                 LOGGER.debug("saving event {}", event);
                 eventRepository.save(event);

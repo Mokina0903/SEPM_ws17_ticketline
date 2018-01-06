@@ -75,6 +75,7 @@ public class SimpleAuthenticationService implements AuthenticationService, Dispo
         return authenticationTokenInfo;
     }
 
+
     private void scheduleReAuthenticationTask(LocalDateTime runAt) {
         schedule = taskScheduler.schedule(
             () -> {

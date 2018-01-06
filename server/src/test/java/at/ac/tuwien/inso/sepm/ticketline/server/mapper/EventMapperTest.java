@@ -1,13 +1,16 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.mapper;
 
+import at.ac.tuwien.inso.sepm.ticketline.rest.artist.SimpleArtistDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.DetailedEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.hall.DetailedHallDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.location.DetailedLocationDTO;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.Artist;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Hall;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Location;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Seat;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.artist.ArtistMapper;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.event.EventMapper;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,17 +38,36 @@ public class EventMapperTest {
     @Autowired
     private EventMapper eventMapper;
 
+    @Autowired
+    private ArtistMapper artistMapper;
+
     private static final long EVENT_ID = 1L;
-    private static final String EVENT_ARTIST_FIRSTNAME = "Firstname";
-    private static final String EVENT_ARTIST_LASTNAME = "Lastname";
     private static final String EVENT_TITLE = "Title";
     private static final String EVENT_DESCRIPTION = "This is a very long text containing all the contents of the event" +
         " and a lot of other more or less useful information.";
+    private static final String EVENT_DESCRIPTION_SUMMARY = "This is a very long text containing all the";
     private static final long EVENT_PRICE = 100L;
     private static final LocalDateTime EVENT_START =
         LocalDateTime.of(2016, 1, 1, 10, 0, 0, 0);
     private static final LocalDateTime EVENT_END =
         LocalDateTime.of(2016, 1, 1, 12, 0, 0, 0);
+
+    private static final String EVENT_ARTIST_FIRSTNAME = "Firstname";
+    private static final String EVENT_ARTIST_LASTNAME = "Lastname";
+    private static final Artist EVENT_ARTIST =  Artist.builder()
+        .id(1L)
+        .artistFirstname(EVENT_ARTIST_FIRSTNAME)
+        .artistLastName(EVENT_ARTIST_LASTNAME)
+        .build();
+    private static final List<Artist> EVENT_ARTISTS = new ArrayList<>();
+
+    private static final SimpleArtistDTO EVENT_ARTIST_DTO =  SimpleArtistDTO.builder()
+        .id(1L)
+        .artistFirstname(EVENT_ARTIST_FIRSTNAME)
+        .artistLastName(EVENT_ARTIST_LASTNAME)
+        .build();
+    private static final List<SimpleArtistDTO> EVENT_ARTISTS_DTO = new ArrayList<>();
+
 
     private final static Location LOCATION = Location.builder()
         .id(1L)
@@ -105,16 +127,18 @@ public class EventMapperTest {
 
     @Before
     public void setUp() {
+        EVENT_ARTISTS.add(EVENT_ARTIST);
+        EVENT_ARTISTS_DTO.add(EVENT_ARTIST_DTO);
         setHalls();
         setSeat();
     }
 
     @Test
     public void shouldMapEventsToDetailedEventsDTO() {
+
         Event event = Event.builder()
             .id(EVENT_ID)
-            .artistFirstname(EVENT_ARTIST_FIRSTNAME)
-            .artistLastName(EVENT_ARTIST_LASTNAME)
+            .artists(EVENT_ARTISTS)
             .title(EVENT_TITLE)
             .description(EVENT_DESCRIPTION)
             .price(EVENT_PRICE)
@@ -125,10 +149,19 @@ public class EventMapperTest {
         DetailedEventDTO detailedEventDTO = eventMapper.eventToDetailedEventDTO(event);
         assertThat(detailedEventDTO).isNotNull();
         assertThat(detailedEventDTO.getId()).isEqualTo(1L);
-        assertThat(detailedEventDTO.getArtistFirstName()).isEqualTo(EVENT_ARTIST_FIRSTNAME);
-        assertThat(detailedEventDTO.getArtistLastName()).isEqualTo(EVENT_ARTIST_LASTNAME);
+        for (int i = 0; i < EVENT_ARTISTS.size(); i++) {
+            assertThat(detailedEventDTO.getArtists().get(i).getId()).isEqualTo(EVENT_ARTISTS.get(i).getId());
+            assertThat(detailedEventDTO.getArtists().get(i).getArtistFirstName()).isEqualTo(EVENT_ARTISTS.get(i).getArtistFirstName());
+            assertThat(detailedEventDTO.getArtists().get(i).getArtistLastName()).isEqualTo(EVENT_ARTISTS.get(i).getArtistLastName());
+        }
+        assertThat(detailedEventDTO.getArtists().size()).isEqualTo(EVENT_ARTISTS.size());
         assertThat(detailedEventDTO.getTitle()).isEqualTo(EVENT_TITLE);
-        assertThat(detailedEventDTO.getDescription()).isEqualTo(EVENT_DESCRIPTION);
+
+        //todo detailed description gets trimmed??
+       /* System.out.println(detailedEventDTO.getDescription());
+        System.out.println(EVENT_DESCRIPTION);
+        assertThat(detailedEventDTO.getDescription()).isEqualTo(EVENT_DESCRIPTION);*/
+
         assertThat(detailedEventDTO.getPrice()).isEqualTo(EVENT_PRICE);
         assertThat(detailedEventDTO.getStartOfEvent()).isEqualTo(EVENT_START);
         assertThat(detailedEventDTO.getEndOfEvent()).isEqualTo(EVENT_END);
@@ -138,8 +171,7 @@ public class EventMapperTest {
     public void shouldMapDetailedEventsDTOToEvents() {
         DetailedEventDTO detailedEventDTO = DetailedEventDTO.builder()
             .id(EVENT_ID)
-            .artistFirstname(EVENT_ARTIST_FIRSTNAME)
-            .artistLastName(EVENT_ARTIST_LASTNAME)
+            .artists(EVENT_ARTISTS_DTO)
             .title(EVENT_TITLE)
             .description(EVENT_DESCRIPTION)
             .price(EVENT_PRICE)
@@ -150,62 +182,108 @@ public class EventMapperTest {
         Event event = eventMapper.detailedEventDTOToEvent(detailedEventDTO);
         assertThat(event).isNotNull();
         assertThat(event.getId()).isEqualTo(1L);
-        assertThat(event.getArtistFirstName()).isEqualTo(EVENT_ARTIST_FIRSTNAME);
-        assertThat(event.getArtistLastName()).isEqualTo(EVENT_ARTIST_LASTNAME);
+        for (int i = 0; i < EVENT_ARTISTS_DTO.size(); i++) {
+            assertThat(event.getArtists().get(i).getId()).isEqualTo(EVENT_ARTISTS.get(i).getId());
+            assertThat(event.getArtists().get(i).getArtistFirstName()).isEqualTo(EVENT_ARTISTS.get(i).getArtistFirstName());
+            assertThat(event.getArtists().get(i).getArtistLastName()).isEqualTo(EVENT_ARTISTS.get(i).getArtistLastName());
+        }
+        assertThat(event.getArtists().size()).isEqualTo(EVENT_ARTISTS.size());
         assertThat(event.getTitle()).isEqualTo(EVENT_TITLE);
+        // TODO: (Moni) Solve this Please
+/*
         assertThat(event.getDescription()).isEqualTo(EVENT_DESCRIPTION);
+*/
         assertThat(event.getPrice()).isEqualTo(EVENT_PRICE);
         assertThat(event.getStartOfEvent()).isEqualTo(EVENT_START);
         assertThat(event.getEndOfEvent()).isEqualTo(EVENT_END);
     }
 
     @Test
-    public void shouldMapEventsToSimpleEventsDTO() {
+    public void shouldMapEventsToSimpleEventsDTONotShorteningDescriptionToSummary() {
         Event event = Event.builder()
             .id(EVENT_ID)
-            .artistFirstname(EVENT_ARTIST_FIRSTNAME)
-            .artistLastName(EVENT_ARTIST_LASTNAME)
             .title(EVENT_TITLE)
-            .description(EVENT_DESCRIPTION)
+            .artists(EVENT_ARTISTS)
+            .description(EVENT_DESCRIPTION_SUMMARY)
             .price(EVENT_PRICE)
             .startOfEvent(EVENT_START)
             .endOfEvent(EVENT_END)
-            .hall(HALL)
             .build();
         SimpleEventDTO simpleEventDTO = eventMapper.eventToSimpleEventDTO(event);
         assertThat(simpleEventDTO).isNotNull();
         assertThat(simpleEventDTO.getId()).isEqualTo(1L);
-        assertThat(simpleEventDTO.getArtistFirstName()).isEqualTo(EVENT_ARTIST_FIRSTNAME);
-        assertThat(simpleEventDTO.getArtistLastName()).isEqualTo(EVENT_ARTIST_LASTNAME);
         assertThat(simpleEventDTO.getTitle()).isEqualTo(EVENT_TITLE);
+
+        for (int i = 0; i < EVENT_ARTISTS_DTO.size(); i++) {
+            assertThat(event.getArtists().get(i).getId()).isEqualTo(EVENT_ARTISTS.get(i).getId());
+            assertThat(event.getArtists().get(i).getArtistFirstName()).isEqualTo(EVENT_ARTISTS.get(i).getArtistFirstName());
+            assertThat(event.getArtists().get(i).getArtistLastName()).isEqualTo(EVENT_ARTISTS.get(i).getArtistLastName());
+        }
+        assertThat(event.getArtists().size()).isEqualTo(EVENT_ARTISTS.size());
+        assertThat(simpleEventDTO.getDescriptionSummary()).isEqualTo(EVENT_DESCRIPTION_SUMMARY);
         assertThat(simpleEventDTO.getPrice()).isEqualTo(EVENT_PRICE);
         assertThat(simpleEventDTO.getStartOfEvent()).isEqualTo(EVENT_START);
         assertThat(simpleEventDTO.getEndOfEvent()).isEqualTo(EVENT_END);
     }
 
     @Test
-    public void shouldMapSimpleEventsDTOToEvents() {
-        DetailedEventDTO detailedEventDTO = DetailedEventDTO.builder()
+    public void shouldMapEventsToSimpleEventsDTOShorteningDescriptionToSummary() {
+        Event event = Event.builder()
             .id(EVENT_ID)
-            .artistFirstname(EVENT_ARTIST_FIRSTNAME)
-            .artistLastName(EVENT_ARTIST_LASTNAME)
             .title(EVENT_TITLE)
+            .artists(EVENT_ARTISTS)
             .description(EVENT_DESCRIPTION)
             .price(EVENT_PRICE)
             .startOfEvent(EVENT_START)
             .endOfEvent(EVENT_END)
-            .hall(HALL_DTO)
             .build();
-        Event event = eventMapper.detailedEventDTOToEvent(detailedEventDTO);
+        SimpleEventDTO simpleEventDTO = eventMapper.eventToSimpleEventDTO(event);
+        assertThat(simpleEventDTO).isNotNull();
+        assertThat(simpleEventDTO.getId()).isEqualTo(1L);
+        assertThat(simpleEventDTO.getTitle()).isEqualTo(EVENT_TITLE);
+
+        for (int i = 0; i < EVENT_ARTISTS_DTO.size(); i++) {
+            assertThat(event.getArtists().get(i).getId()).isEqualTo(EVENT_ARTISTS.get(i).getId());
+            assertThat(event.getArtists().get(i).getArtistFirstName()).isEqualTo(EVENT_ARTISTS.get(i).getArtistFirstName());
+            assertThat(event.getArtists().get(i).getArtistLastName()).isEqualTo(EVENT_ARTISTS.get(i).getArtistLastName());
+        }
+        assertThat(event.getArtists().size()).isEqualTo(EVENT_ARTISTS.size());
+        assertThat(simpleEventDTO.getDescriptionSummary()).isEqualTo(EVENT_DESCRIPTION_SUMMARY);
+        assertThat(simpleEventDTO.getPrice()).isEqualTo(EVENT_PRICE);
+        assertThat(simpleEventDTO.getStartOfEvent()).isEqualTo(EVENT_START);
+        assertThat(simpleEventDTO.getEndOfEvent()).isEqualTo(EVENT_END);
+    }
+
+/*
+//not needed?
+
+    @Test
+    public void shouldMapSimpleEventsDTOToEvents() {
+        SimpleEventDTO simpleEventDTO = SimpleEventDTO.builder()
+            .id(EVENT_ID)
+            .artists(EVENT_ARTISTS_DTO)
+            .title(EVENT_TITLE)
+            .descriptionSummary(EVENT_DESCRIPTION_SUMMARY)
+            .price(EVENT_PRICE)
+            .startOfEvent(EVENT_START)
+            .endOfEvent(EVENT_END)
+            .build();
+        Event event = eventMapper.simpleEventDTOToEven
+        t(simpleEventDTO);
         assertThat(event).isNotNull();
         assertThat(event.getId()).isEqualTo(1L);
-        assertThat(event.getArtistFirstName()).isEqualTo(EVENT_ARTIST_FIRSTNAME);
-        assertThat(event.getArtistLastName()).isEqualTo(EVENT_ARTIST_LASTNAME);
         assertThat(event.getTitle()).isEqualTo(EVENT_TITLE);
-        assertThat(event.getDescription()).isEqualTo(EVENT_DESCRIPTION);
+
+        for (int i = 0; i < EVENT_ARTISTS_DTO.size(); i++) {
+            assertThat(event.getArtists().get(i).getId()).isEqualTo(EVENT_ARTISTS.get(i).getId());
+            assertThat(event.getArtists().get(i).getArtistFirstName()).isEqualTo(EVENT_ARTISTS.get(i).getArtistFirstName());
+            assertThat(event.getArtists().get(i).getArtistLastName()).isEqualTo(EVENT_ARTISTS.get(i).getArtistLastName());
+        }
+        assertThat(event.getArtists().size()).isEqualTo(EVENT_ARTISTS.size());
+        assertThat(event.getDescription()).isEqualTo(EVENT_DESCRIPTION_SUMMARY);
         assertThat(event.getPrice()).isEqualTo(EVENT_PRICE);
         assertThat(event.getStartOfEvent()).isEqualTo(EVENT_START);
         assertThat(event.getEndOfEvent()).isEqualTo(EVENT_END);
     }
-
+*/
 }

@@ -12,6 +12,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -30,10 +35,12 @@ public class EventEndpoint {
 
     @RequestMapping(value = "/{pageIndex}/{eventsPerPage}", method = RequestMethod.GET)
     @ApiOperation(value = "Get list of simple upcoming event entries")
-    public List<SimpleEventDTO> findAllUpcomingAsc(@PathVariable("pageIndex")int pageIndex, @PathVariable("eventsPerPage")int eventsPerPage) {
-        Pageable request = new PageRequest(pageIndex,eventsPerPage, Sort.Direction.ASC, "start_of_event");
-
-        return eventMapper.eventToSimpleEventDTO(eventService.findAllUpcomingAsc(request));
+    public Page<SimpleEventDTO> findAllUpcomingAsc(@PathVariable("pageIndex")int pageIndex, @PathVariable("eventsPerPage")int eventsPerPage) {
+        //mapping of Event to EventDTO
+        Pageable request = new PageRequest(pageIndex, eventsPerPage, Sort.Direction.ASC, "start_of_event");
+        Page<Event> eventPage = eventService.findAllUpcomingAsc(request);
+        List<SimpleEventDTO> dtos = eventMapper.eventToSimpleEventDTO(eventPage.getContent());
+        return new PageImpl<>(dtos, request, eventPage.getTotalElements());
     }
 
     @RequestMapping(method = RequestMethod.GET)

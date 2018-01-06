@@ -4,6 +4,8 @@ import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.SearchNoMatchException;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.DetailedEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -29,12 +31,11 @@ public interface EventService {
     /**
      * Find all upcoming events(that has not yet ended) ordered by Date ascending
      *
-     * @param pageIndex page to load
-     * @param eventsPerPage number of events per page
+     * @param request page to load
      * @return list of upcoming events
      * @throws DataAccessException in case something went wrong
      */
-    List<SimpleEventDTO> findAllUpcoming(int pageIndex, int eventsPerPage) throws DataAccessException,SearchNoMatchException;
+    Page<SimpleEventDTO> findAllUpcoming(Pageable request) throws DataAccessException,SearchNoMatchException;
 
     // TODO: (David) Javadoc
     DetailedEventDTO publishEvent(DetailedEventDTO detailedEventDTO) throws DataAccessException;
