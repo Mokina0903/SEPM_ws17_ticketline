@@ -2,6 +2,7 @@ package at.ac.tuwien.inso.sepm.ticketline.server.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.util.Objects;
 
 @Entity
 @Table(name = "artist")
@@ -44,6 +45,33 @@ public class Artist {
         this.artistLastName = artistLastName;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Artist artist = (Artist) o;
+        return Objects.equals(id, artist.id) &&
+            Objects.equals(artistFirstName, artist.artistFirstName) &&
+            Objects.equals(artistLastName, artist.artistLastName);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getId().hashCode();
+        result = 31 * result + getArtistFirstName().hashCode();
+        result = 31 * result + getArtistLastName().hashCode();
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Artist{" +
+            "id=" + id +
+            ", artistFirstName='" + artistFirstName + '\'' +
+            ", artistLastName='" + artistLastName + '\'' +
+            ", hash='" + hashCode() + '\'' +
+            '}';
+    }
 
     public static ArtistBuilder builder(){
         return new ArtistBuilder();
@@ -69,6 +97,8 @@ public class Artist {
             this.artistLastName = artistLastName;
             return this;
         }
+
+
 
         public Artist build() {
             Artist artist = new Artist();

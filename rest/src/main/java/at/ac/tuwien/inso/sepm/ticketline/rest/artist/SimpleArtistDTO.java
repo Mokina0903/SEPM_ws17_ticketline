@@ -44,22 +44,17 @@ public class SimpleArtistDTO {
         int result = getId().hashCode();
         result = 31 * result + getArtistFirstName().hashCode();
         result = 31 * result + getArtistLastName().hashCode();
-
         return result;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-
-        SimpleArtistDTO that = (SimpleArtistDTO) obj;
-
-        if (!getId().equals(that.getId())) return false;
-        if (!getArtistFirstName().equals(that.getArtistFirstName())) return false;
-        if (!getArtistLastName().equals(that.getArtistLastName())) return false;
-
-        return true;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SimpleArtistDTO artist = (SimpleArtistDTO) o;
+        return Objects.equals(id, artist.id) &&
+            Objects.equals(artistFirstName, artist.artistFirstName) &&
+            Objects.equals(artistLastName, artist.artistLastName);
     }
 
     @Override
@@ -68,8 +63,14 @@ public class SimpleArtistDTO {
             "id=" + id +
             ", artistFirstName='" + artistFirstName + '\'' +
             ", artistLastName='" + artistLastName + '\'' +
+            ", hash='" + hashCode() + '\'' +
             '}';
     }
+
+    public static SimpleArtistDTOBuilder builder() {
+        return new SimpleArtistDTOBuilder();
+    }
+
 
     public static final class SimpleArtistDTOBuilder {
         private Long id;
@@ -96,7 +97,6 @@ public class SimpleArtistDTO {
             artist.setId(id);
             artist.setArtistFirstName(artistFirstName);
             artist.setArtistLastName(artistLastName);
-
             return artist;
         }
 

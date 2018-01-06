@@ -1,24 +1,23 @@
 package at.ac.tuwien.inso.sepm.ticketline.rest.event;
 
+import at.ac.tuwien.inso.sepm.ticketline.rest.artist.SimpleArtistDTO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Objects;
 
 @ApiModel(value = "SimpleEventDTO", description = "A simple DTO for event entries via rest")
 public class SimpleEventDTO {
     @ApiModelProperty(readOnly = true, name = "The automatically generated database id")
     private Long id;
 
-/*    @ApiModelProperty(required = true, name = "The first name of the artist")
-    private String artistFirstName;
-
-    @ApiModelProperty(required = true, name = "The last name of the artist")
-    private String artistLastName;*/
-
-
     @ApiModelProperty(required = true, name = "The title of the event")
     private String title;
+
+    @ApiModelProperty(required = true, name = "List of artists")
+    private List<SimpleArtistDTO> artists;
 
     @ApiModelProperty(required = true, name = "The description of the event")
     private String descriptionSummary;
@@ -40,28 +39,20 @@ public class SimpleEventDTO {
         this.id = id;
     }
 
-/*    public String getArtistFirstName() {
-        return artistFirstName;
-    }
-
-    public void setArtistFirstName( String artistFirstName ) {
-        this.artistFirstName = artistFirstName;
-    }
-
-    public String getArtistLastName() {
-        return artistLastName;
-    }
-
-    public void setArtistLastName( String artistLastName ) {
-        this.artistLastName = artistLastName;
-    }*/
-
     public String getTitle() {
         return title;
     }
 
     public void setTitle( String title ) {
         this.title = title;
+    }
+
+    public List<SimpleArtistDTO> getArtists() {
+        return artists;
+    }
+
+    public void setArtists(List<SimpleArtistDTO> artists) {
+        this.artists = artists;
     }
 
     public String getDescriptionSummary() {
@@ -96,30 +87,27 @@ public class SimpleEventDTO {
         this.endOfEvent = endOfEvent;
     }
 
-    //todo artists
 
     @Override
     public boolean equals( Object o ) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        SimpleEventDTO that = (SimpleEventDTO) o;
+        DetailedEventDTO that = (DetailedEventDTO) o;
 
         if (!getId().equals(that.getId())) return false;
-/*        if (!getArtistFirstName().equals(that.getArtistFirstName())) return false;
-        if (!getArtistLastName().equals(that.getArtistLastName())) return false;*/
+        if (!getArtists().equals(that.getArtists())) return false;
         if (!getTitle().equals(that.getTitle())) return false;
-        if (!getDescriptionSummary().equals(that.getDescriptionSummary())) return false;
+        if (!getDescriptionSummary().equals(that.getDescription())) return false;
         if (!getPrice().equals(that.getPrice())) return false;
         if (!getStartOfEvent().equals(that.getStartOfEvent())) return false;
-        return getEndOfEvent().equals(that.getEndOfEvent());
+        return  (!getEndOfEvent().equals(that.getEndOfEvent()));
     }
 
     @Override
     public int hashCode() {
         int result = getId().hashCode();
-/*        result = 31 * result + getArtistFirstName().hashCode();
-        result = 31 * result + getArtistLastName().hashCode();*/
+        result = 31 * result + getArtists().hashCode();
         result = 31 * result + getTitle().hashCode();
         result = 31 * result + getDescriptionSummary().hashCode();
         result = 31 * result + getPrice().hashCode();
@@ -132,8 +120,6 @@ public class SimpleEventDTO {
     public String toString() {
         return "SimpleEventDTO{" +
             "id=" + id +
-/*            ", artistFirstName='" + artistFirstName + '\'' +
-            ", artistLastName='" + artistLastName + '\'' +*/
             ", title='" + title + '\'' +
             ", descriptionSummary='" + descriptionSummary + '\'' +
             ", price=" + price +
@@ -142,11 +128,14 @@ public class SimpleEventDTO {
             '}';
     }
 
+    public static SimpleEventDTOBuilder builder() {
+        return new SimpleEventDTOBuilder();
+    }
+
     public static final class SimpleEventDTOBuilder{
         private Long id;
-        private String artistFirstName;
-        private String artistLastName;
         private String title;
+        private List<SimpleArtistDTO> artists;
         private String descriptionSummary;
         private Long price;
         private LocalDateTime startOfEvent;
@@ -157,18 +146,13 @@ public class SimpleEventDTO {
             return this;
         }
 
-        public SimpleEventDTOBuilder artistFirstname(String artistFirstName){
-            this.artistFirstName = artistFirstName;
-            return this;
-        }
-
-        public SimpleEventDTOBuilder artistLastName(String artistLastName){
-            this.artistLastName = artistLastName;
-            return this;
-        }
-
         public SimpleEventDTOBuilder title(String title){
             this.title = title;
+            return this;
+        }
+
+        public SimpleEventDTOBuilder artists(List<SimpleArtistDTO> artists) {
+            this.artists = artists;
             return this;
         }
 
@@ -196,13 +180,11 @@ public class SimpleEventDTO {
             SimpleEventDTO event = new SimpleEventDTO();
             event.setId(id);
             event.setTitle(title);
-/*            event.setArtistFirstName(artistFirstName);
-            event.setArtistLastName(artistLastName);*/
+            event.setArtists(artists);
             event.setDescriptionSummary(descriptionSummary);
             event.setPrice(price);
             event.setStartOfEvent(startOfEvent);
             event.setEndOfEvent(endOfEvent);
-
             return event;
         }
     }

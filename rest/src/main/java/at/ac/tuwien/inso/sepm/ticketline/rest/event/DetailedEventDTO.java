@@ -164,12 +164,9 @@ public class DetailedEventDTO{
             return this;
         }
 
-        public List<SimpleArtistDTO> getArtists() {
-            return artists;
-        }
-
-        public void setArtists(List<SimpleArtistDTO> artists) {
+        public DetailedEventDTOBuilder artists(List<SimpleArtistDTO> artists) {
             this.artists = artists;
+            return this;
         }
 
         public DetailedEventDTOBuilder title(String title){

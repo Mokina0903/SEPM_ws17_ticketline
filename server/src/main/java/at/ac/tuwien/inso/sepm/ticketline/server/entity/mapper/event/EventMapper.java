@@ -11,7 +11,7 @@ import java.util.List;
 @Mapper(componentModel = "spring", uses = EventSummaryMapper.class)
 public interface EventMapper {
 
-    Event detailedEventDTOToEvent( DetailedEventDTO detailedEventDTO);
+    Event detailedEventDTOToEvent(DetailedEventDTO detailedEventDTO);
 
     DetailedEventDTO eventToDetailedEventDTO(Event one);
 
@@ -19,4 +19,5 @@ public interface EventMapper {
 
     @Mapping(source = "description", target = "descriptionSummary", qualifiedBy = EventSummaryMapper.EventSummary.class)
     SimpleEventDTO eventToSimpleEventDTO(Event one);
+
 }
