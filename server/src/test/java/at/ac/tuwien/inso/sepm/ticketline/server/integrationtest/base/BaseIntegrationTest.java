@@ -1,10 +1,13 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.integrationtest.base;
 
+import at.ac.tuwien.inso.sepm.ticketline.rest.artist.SimpleArtistDTO;
 import at.ac.tuwien.inso.sepm.ticketline.server.configuration.JacksonConfiguration;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.Artist;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.News;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.User;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Hall;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Location;
+import at.ac.tuwien.inso.sepm.ticketline.server.repository.ArtistRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.Location.HallRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.Location.LocationRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.NewsRepository;
@@ -69,6 +72,9 @@ public abstract class BaseIntegrationTest {
 
     @Autowired
     protected HallRepository hallRepository;
+
+    @Autowired
+    protected ArtistRepository artistRepository;
 
     protected String validUserTokenWithPrefix;
     protected String validAdminTokenWithPrefix;
@@ -191,5 +197,12 @@ public abstract class BaseIntegrationTest {
             .location(location)
             .build();
         hall = hallRepository.save(hall);
+
+        Artist artist = Artist.builder()
+            .artistFirstname("artistFirstName")
+            .artistLastName("artistLastName")
+            .build();
+
+        artist = artistRepository.save(artist);
     }
 }

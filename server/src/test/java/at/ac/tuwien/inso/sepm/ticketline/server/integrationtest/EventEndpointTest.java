@@ -1,5 +1,6 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.integrationtest;
 
+import at.ac.tuwien.inso.sepm.ticketline.rest.artist.SimpleArtistDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.DetailedEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.hall.DetailedHallDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.news.DetailedNewsDTO;
@@ -15,6 +16,8 @@ import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.core.Is.is;
@@ -32,12 +35,16 @@ public class EventEndpointTest extends BaseIntegrationTest {
             .id(1L)
             .build();
 
+        List<SimpleArtistDTO> artists = new ArrayList<>();
+
+        artists.add(SimpleArtistDTO.builder()
+            .id(1L)
+            .build());
 
         DetailedEventDTO detailedEventDTO = DetailedEventDTO.builder()
             .startOfEvent(start)
             .endOfEvent(start.plusHours(2))
-            .artistFirstname("artistFirstName")
-            .artistLastName("artistLastName")
+            .artists(artists)
             .price(123L)
             .description("Description")
             .title("Title")
@@ -66,11 +73,16 @@ public class EventEndpointTest extends BaseIntegrationTest {
             .build();
 
 
+        List<SimpleArtistDTO> artists = new ArrayList<>();
+
+        artists.add(SimpleArtistDTO.builder()
+            .id(1L)
+            .build());
+
         DetailedEventDTO detailedEventDTO = DetailedEventDTO.builder()
             .startOfEvent(start)
             .endOfEvent(start.plusHours(2))
-            .artistFirstname("artistFirstName")
-            .artistLastName("artistLastName")
+            .artists(artists)
             .price(123L)
             .description("Description")
             .title("Title")

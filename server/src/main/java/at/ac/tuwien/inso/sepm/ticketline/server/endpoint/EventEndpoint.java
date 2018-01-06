@@ -61,6 +61,7 @@ public class EventEndpoint {
     @ApiOperation(value = "Publish a new Event entry")
     public DetailedEventDTO publishEvent(@RequestBody DetailedEventDTO detailedEventDTO) {
         Event event = eventMapper.detailedEventDTOToEvent(detailedEventDTO);
+        // TODO: (Moni) Whats the Problem here?
         event = eventService.publishEvent(event);
         return eventMapper.eventToDetailedEventDTO(event);
     }

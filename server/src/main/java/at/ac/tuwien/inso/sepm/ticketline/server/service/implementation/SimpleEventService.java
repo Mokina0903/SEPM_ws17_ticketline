@@ -2,6 +2,7 @@ package at.ac.tuwien.inso.sepm.ticketline.server.service.implementation;
 
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.NotFoundException;
+import at.ac.tuwien.inso.sepm.ticketline.server.repository.ArtistRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.EventRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.Location.HallRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.Location.LocationRepository;
@@ -19,11 +20,13 @@ public class SimpleEventService implements EventService {
     private final EventRepository eventRepository;
     private final LocationRepository locationRepository;
     private final HallRepository hallRepository;
+    private final ArtistRepository artistRepository;
 
-    public SimpleEventService(EventRepository eventRepository, LocationRepository locationRepository, HallRepository hallRepository) {
+    public SimpleEventService(EventRepository eventRepository, LocationRepository locationRepository, HallRepository hallRepository, ArtistRepository artistRepository) {
         this.eventRepository = eventRepository;
         this.locationRepository = locationRepository;
         this.hallRepository = hallRepository;
+        this.artistRepository = artistRepository;
     }
 
     @Override
@@ -54,10 +57,16 @@ public class SimpleEventService implements EventService {
 
     @Override
     public Event publishEvent(Event event) {
+        // TODO; David Implent here
         System.out.println(event.getHall().getId());
 
         if (hallRepository.findOne(event.getHall().getId()) == null)
             throw new NotFoundException();
+
+        if (artistRepository.findOne(event.getArtists().get(1).getId()) == null)
+        {
+            throw new NotFoundException();
+        }
 
         // TODO: Implement here verification if necessary (two events same Time)
 
