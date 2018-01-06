@@ -97,12 +97,11 @@ public class HallplanController extends TabElement {
 
        for (SeatDTO seat : seats) {
            //show seats
-           Rectangle r = new Rectangle(100, 150);
+
            SpringFxmlLoader.Wrapper<SeatElementController> wrapper =
                springFxmlLoader.loadAndWrap("/fxml/ticket/seatElement.fxml");
            wrapper.getController().initializeData(seat);
-           r.setFill(Color.GRAY);
-           seatsContainerGV.add(wrapper.getLoadedObject(), seat.getNr(), seat.getRow());
+           seatsContainerGV.add(wrapper.getController().vBseat, seat.getNr(), seat.getRow());
            if(seat.getNr() == 1){
                Label label = new Label();
                label.setText(String.valueOf(seat.getRow()));

@@ -17,6 +17,12 @@
 -fx-spacing: 10px;
 }
 
+
+.selected{
+-fx-background-color: #dcdcdc;
+
+}
+
 .seatVbox:hover{
 -fx-background-color: #dcdcdc;
 }
