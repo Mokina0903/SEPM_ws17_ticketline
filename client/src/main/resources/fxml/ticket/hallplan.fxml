@@ -25,10 +25,9 @@
     </top>
     <center>
         <GridPane fx:id="seatsContainerGV" hgap="10" vgap="10"/>
-
-
     </center>
     <right>
+
         <GridPane hgap="10" vgap="10">
             <Label text="%hallplan.amountOfTickets" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
             <Label fx:id="ticketAmountLb" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
@@ -44,15 +43,16 @@
                 <RowConstraints/>
             </rowConstraints>
         </GridPane>
-
     </right>
-
     <bottom>
         <HBox>
+            <BorderPane.margin>
+                <Insets bottom="5.0" top="15.0"/>
+            </BorderPane.margin>
             <padding>
                 <Insets bottom="5.0" left="200.0" right="5.0" top="5.0"/>
             </padding>
-            <Rectangle fill="slategrey" width="200" height="50" />
+            <Rectangle styleClass="scene" width="200" height="50"/>
         </HBox>
     </bottom>
 

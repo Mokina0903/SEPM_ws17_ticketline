@@ -49,8 +49,6 @@ public class HallplanController extends TabElement {
 
     @FXML
     private TabHeaderController tabHeaderController;
-    @FXML
-    public Arc sceneArc;
 
     private Tab ticketTab;
 
