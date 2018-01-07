@@ -42,6 +42,21 @@
 .sectorA.selected{
 -fx-background-color: derive(cadetblue, -20%);
 }
+.sectorA.selected:hover{
+-fx-background-color: #dcdcdc;
+}
+.sectorB.selected{
+-fx-background-color: derive(CRIMSON, -20%);
+}
+.sectorC.selected{
+-fx-background-color: derive(DARKMAGENTA, -20%);
+}
+.sectorD.selected{
+-fx-background-color: derive(GREEN, -20%);
+}
+.sectorE.selected{
+-fx-background-color: derive(GREENYELLOW, -20%);
+}
 
 
 .seatVbox:hover{
