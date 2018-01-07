@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.event.EventCSVImportController"
+            prefHeight="400.0" prefWidth="600.0">
+
+    <fx:include source="/fxml/tabHeader.fxml" fx:id="tabHeader"/>
+
+    <top>
+        <HBox>
+            <Label text="%event.chooseYourInputFile"/>
+            <Button fx:id="btnAddFile" text="+" prefWidth="50" prefHeight="20"/>
+            <Button fx:id="btnImport" text="%event.import"/>
+        </HBox>
+    </top>
+    <center>
+        <ScrollPane>
+            <TextArea fx:id="TAlogOutput"/>
+        </ScrollPane>
+    </center>
+
+</BorderPane>
