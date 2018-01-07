@@ -9,9 +9,11 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextArea;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.Glyph;
 import org.slf4j.Logger;
@@ -31,6 +33,8 @@ public class EventCSVImportController implements LocalizationObserver {
     public TextArea TAlogOutput;
     @FXML
     public Button btnFinish;
+    @FXML
+    public Label lblChooseFile;
 
     @FXML
     private TabHeaderController tabHeaderController;
@@ -46,6 +50,7 @@ public class EventCSVImportController implements LocalizationObserver {
         tabHeaderController.setIcon(FontAwesome.Glyph.FILM);
         tabHeaderController.setTitle(BundleManager.getBundle().getString("event.addEvent"));
         localizationSubject.attach(this);
+        lblChooseFile.setFont(Font.font(16));
 
 
     }
@@ -58,7 +63,7 @@ public class EventCSVImportController implements LocalizationObserver {
     @Override
     public void update() {
         tabHeaderController.setTitle(BundleManager.getBundle().getString("event.addEvent"));
-        btnAddFile.setText(BundleManager.getBundle().getString(" event.chooseYourInputFile"));
+        btnAddFile.setText(BundleManager.getBundle().getString("event.chooseYourInputFile"));
         btnImport.setText(BundleManager.getBundle().getString("event.import"));
         btnFinish.setText(BundleManager.getBundle().getString("event.finish"));
 
