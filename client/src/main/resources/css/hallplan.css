@@ -23,6 +23,27 @@
 
 }
 
+.sectorA{
+ -fx-effect: dropshadow(three-pass-box, derive(cadetblue, -20%), 10, 0, 4, 4);
+}
+.sectorB{
+ -fx-effect: dropshadow(three-pass-box, derive(	CRIMSON, -20%), 10, 0, 4, 4);
+}
+.sectorC{
+ -fx-effect: dropshadow(three-pass-box, derive(DARKMAGENTA, -20%), 10, 0, 4, 4);
+}
+.sectorD{
+ -fx-effect: dropshadow(three-pass-box, derive(GREEN, -20%), 10, 0, 4, 4);
+}
+.sectorE{
+ -fx-effect: dropshadow(three-pass-box, derive(GREENYELLOW, -20%), 10, 0, 4, 4);
+}
+
+.sectorA.selected{
+-fx-background-color: derive(cadetblue, -20%);
+}
+
+
 .seatVbox:hover{
 -fx-background-color: #dcdcdc;
 }

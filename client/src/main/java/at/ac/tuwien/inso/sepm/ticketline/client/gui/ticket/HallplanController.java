@@ -75,15 +75,20 @@ public class HallplanController extends TabElement {
         ArrayList<SeatDTO> seatsToAdd = new ArrayList<>();
         int row = 1;
         int nr = 1;
+        char sector = 'a';
        for (int i = 0; i < 74 ; i++){
            SeatDTO seat = new SeatDTO();
            seat.setNr(nr);
            seat.setRow(row);
-           seat.setSector('a');
+           seat.setSector(sector);
            seatsToAdd.add(seat);
            if(nr == 10){
                nr = 0;
                row ++;
+               if(row%2==0){
+                   sector++;
+               }
+
            }
            nr++;
        }
@@ -109,6 +114,20 @@ public class HallplanController extends TabElement {
                label.setAlignment(Pos.CENTER);
                label.setPadding(new Insets(0,0,0,5));
                seatsContainerGV.add(label, 0, seat.getRow());
+           }
+
+           char seatSector = seat.getSector();
+           switch (seatSector){
+               case 'a': wrapper.getController().vBseat.getStyleClass().add("sectorA");
+               break;
+               case 'b': wrapper.getController().vBseat.getStyleClass().add("sectorB");
+               break;
+               case 'c': wrapper.getController().vBseat.getStyleClass().add("sectorC");
+               break;
+               case 'd': wrapper.getController().vBseat.getStyleClass().add("sectorD");
+               break;
+               case 'e': wrapper.getController().vBseat.getStyleClass().add("sectorE");
+
            }
 
        }
