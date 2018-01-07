@@ -20,7 +20,7 @@ import java.util.List;
 public class SimpleTicketRestClient implements TicketRestClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SimpleTicketRestClient.class);
-    private static final String TICKET_URL = "/ticket";
+    private static final String TICKET_URL = "/tickets";
 
     private final RestClient restClient;
 
