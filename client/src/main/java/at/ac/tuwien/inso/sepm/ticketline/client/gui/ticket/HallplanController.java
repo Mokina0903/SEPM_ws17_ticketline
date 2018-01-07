@@ -75,7 +75,7 @@ public class HallplanController extends TabElement {
         ArrayList<SeatDTO> seatsToAdd = new ArrayList<>();
         int row = 1;
         int nr = 1;
-       for (int i = 0; i < 74 ; i++) {
+       for (int i = 0; i < 74 ; i++){
            SeatDTO seat = new SeatDTO();
            seat.setNr(nr);
            seat.setRow(row);

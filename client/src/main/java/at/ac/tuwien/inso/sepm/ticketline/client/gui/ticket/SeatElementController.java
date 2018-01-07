@@ -29,15 +29,12 @@ public class SeatElementController {
     @FXML
     public void swichSelectedState(MouseEvent mouseEvent) {
 
-       // if(seat.isReserved()){
         if(vBseat.getStyleClass().contains("selected")){
             vBseat.getStyleClass().remove("selected");
-            System.out.println("***********i was theeere ************");
+
         } else {
             vBseat.getStyleClass().add("selected");
-            System.out.println("***********i was here ************" + seatNrLbl);
         }
 
-       // }
     }
 }

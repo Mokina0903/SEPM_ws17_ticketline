@@ -9,12 +9,14 @@
 <?import javafx.scene.shape.Arc?>
 <?import org.controlsfx.control.GridView?>
 <?import java.net.URL?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.geometry.Insets?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket.HallplanController"
             prefHeight="400.0" prefWidth="600.0">
     <stylesheets>
-        <URL value="@/css/hallplan.css" />
+        <URL value="@/css/hallplan.css"/>
     </stylesheets>
 
     <top>
@@ -27,7 +29,7 @@
 
     </center>
     <right>
-        <GridPane  hgap="10" vgap="10">
+        <GridPane hgap="10" vgap="10">
             <Label text="%hallplan.amountOfTickets" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
             <Label fx:id="ticketAmountLb" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
             <Button fx:id="reserveBut" text="%hallplan.reserveTickets" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
@@ -46,8 +48,14 @@
     </right>
 
     <bottom>
-        <Arc fill="slategrey" radiusX="20" radiusY="20"/>
+        <HBox>
+            <padding>
+                <Insets bottom="5.0" left="200.0" right="5.0" top="5.0"/>
+            </padding>
+            <Rectangle fill="slategrey" width="200" height="50" />
+        </HBox>
     </bottom>
 
-
 </BorderPane>
+
+
