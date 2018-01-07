@@ -25,5 +25,10 @@
             <TextArea fx:id="TAlogOutput"/>
         </ScrollPane>
     </center>
+    <bottom>
+        <HBox>
+            <Button fx:id="btnFinish" text="%event.finish"/>
+        </HBox>
+    </bottom>
 
 </BorderPane>

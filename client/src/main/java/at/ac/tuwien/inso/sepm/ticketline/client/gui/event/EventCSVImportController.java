@@ -9,7 +9,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextArea;
+import javafx.scene.paint.Color;
 import org.controlsfx.glyphfont.FontAwesome;
+import org.controlsfx.glyphfont.Glyph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,8 @@ public class EventCSVImportController implements LocalizationObserver {
     public Button btnImport;
     @FXML
     public TextArea TAlogOutput;
+    @FXML
+    public Button btnFinish;
 
     @FXML
     private TabHeaderController tabHeaderController;
@@ -37,6 +41,8 @@ public class EventCSVImportController implements LocalizationObserver {
         tabHeaderController.setIcon(FontAwesome.Glyph.FILM);
         tabHeaderController.setTitle(BundleManager.getBundle().getString("event.addEvent"));
         localizationSubject.attach(this);
+
+
     }
 
    void EventCSVImportController(){
@@ -48,7 +54,9 @@ public class EventCSVImportController implements LocalizationObserver {
         tabHeaderController.setTitle(BundleManager.getBundle().getString("event.addEvent"));
         btnAddFile.setText(BundleManager.getBundle().getString(" event.chooseYourInputFile"));
         btnImport.setText(BundleManager.getBundle().getString("event.import"));
+        btnFinish.setText(BundleManager.getBundle().getString("event.finish"));
 
     }
+
 
 }
