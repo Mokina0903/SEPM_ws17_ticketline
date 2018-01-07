@@ -15,9 +15,11 @@ import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 import org.controlsfx.glyphfont.FontAwesome;
@@ -29,7 +31,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
-import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -52,6 +53,8 @@ public class EventController extends TabElement implements LocalizationObserver 
     public Pagination pagination;
     @FXML
     public Button btnAddEvent;
+    @FXML
+    public BorderPane eventRootContainer;
     @FXML
     private TabHeaderController tabHeaderController;
 
@@ -137,6 +140,15 @@ public class EventController extends TabElement implements LocalizationObserver 
                 return createPage(pageIndex);
             }
         });
+    }
+
+    @FXML
+    public void openCSVImportWindow(ActionEvent actionEvent) {
+        SpringFxmlLoader.Wrapper<EventCSVImportController> wrapper =
+            springFxmlLoader.loadAndWrap("/fxml/event/addEventPerCSV.fxml");
+        wrapper.getController().initializeData(EventController.this, eventRootContainer);
+        BorderPane root = springFxmlLoader.load("/fxml/event/addEventPerCSV.fxml");
+        eventTab.setContent(root);
     }
 
     private Page<SimpleEventDTO> loadPage(int pageIndex) {
@@ -259,10 +271,7 @@ public class EventController extends TabElement implements LocalizationObserver 
         */
     }
 
-    @FXML
-    public void openCSVImportWindow(ActionEvent actionEvent) {
 
-    }
 
     public void publishEvent(ActionEvent actionEvent) {
 
@@ -357,6 +366,5 @@ public class EventController extends TabElement implements LocalizationObserver 
 
         new Thread(workerTask).start();
     }
-
 
 }

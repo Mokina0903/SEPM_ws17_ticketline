@@ -5,7 +5,9 @@ import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationSubject;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.TabElement;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.TabHeaderController;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextArea;
@@ -36,6 +38,9 @@ public class EventCSVImportController implements LocalizationObserver {
     @Autowired
     private LocalizationSubject localizationSubject;
 
+    private Node oldContent;
+    private EventController c;
+
     @FXML
     void initialize(){
         tabHeaderController.setIcon(FontAwesome.Glyph.FILM);
@@ -45,8 +50,9 @@ public class EventCSVImportController implements LocalizationObserver {
 
     }
 
-   void EventCSVImportController(){
-
+   void initializeData(EventController c, Node oldContent){
+        this.oldContent = oldContent;
+       this.c = c;
    }
 
     @Override
@@ -59,4 +65,16 @@ public class EventCSVImportController implements LocalizationObserver {
     }
 
 
+    @FXML
+    public void goBack(ActionEvent actionEvent) {
+       c.getEventTab().setContent(oldContent);
+    }
+
+    public void chooseFile(ActionEvent actionEvent) {
+       //TODO: open Filepicker and save file
+    }
+
+    public void importCSVFile(ActionEvent actionEvent) {
+       //TODO: import the file if already choosen
+    }
 }

@@ -16,8 +16,8 @@
     <top>
         <HBox>
             <Label text="%event.chooseYourInputFile"/>
-            <Button fx:id="btnAddFile" text="+" prefWidth="50" prefHeight="20"/>
-            <Button fx:id="btnImport" text="%event.import"/>
+            <Button fx:id="btnAddFile" onAction="#chooseFile" text="+" prefWidth="50" prefHeight="20"/>
+            <Button fx:id="btnImport" onAction="#importCSVFile" text="%event.import"/>
         </HBox>
     </top>
     <center>
@@ -27,7 +27,7 @@
     </center>
     <bottom>
         <HBox>
-            <Button fx:id="btnFinish" text="%event.finish"/>
+            <Button fx:id="btnFinish" onAction="#goBack" text="%event.finish"/>
         </HBox>
     </bottom>
 
