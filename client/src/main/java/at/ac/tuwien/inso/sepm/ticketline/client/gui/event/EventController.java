@@ -51,6 +51,8 @@ public class EventController extends TabElement implements LocalizationObserver 
     @FXML
     public Pagination pagination;
     @FXML
+    public Button btnAddEvent;
+    @FXML
     private TabHeaderController tabHeaderController;
 
     private Tab eventTab;
@@ -257,6 +259,11 @@ public class EventController extends TabElement implements LocalizationObserver 
         */
     }
 
+    @FXML
+    public void openCSVImportWindow(ActionEvent actionEvent) {
+
+    }
+
     public void publishEvent(ActionEvent actionEvent) {
 
         Task<Void> workerTask = new Task<Void>() {
@@ -350,5 +357,6 @@ public class EventController extends TabElement implements LocalizationObserver 
 
         new Thread(workerTask).start();
     }
+
 
 }
