@@ -50,4 +50,10 @@ public class TicketEndpoint {
         ticket = ticketService.save(ticket);
         return ticketMapper.ticketToTicketDTO(ticket);
     }
+
+    @RequestMapping(value = "/isBooked/{eventId}/{seatId}", method = RequestMethod.GET)
+    @ApiOperation(value = "Check if seat is booked for the event")
+    public Boolean isBooked( @PathVariable Long eventId, @PathVariable Long seatId) {
+        return ticketService.isBooked(eventId,seatId);
+    }
 }
