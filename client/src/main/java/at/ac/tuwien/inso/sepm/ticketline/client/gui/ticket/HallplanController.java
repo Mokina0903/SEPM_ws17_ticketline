@@ -1,5 +1,6 @@
 package at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket;
 
+import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.MainController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.TabElement;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.TabHeaderController;
@@ -11,8 +12,10 @@ import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.DetailedEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.hall.DetailedHallDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.seat.SeatDTO;
+import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
 import javafx.event.ActionEvent;
+import javafx.event.EventTarget;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -70,6 +73,8 @@ public class HallplanController {
     private GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
     private final int FONT_SIZE = 16;
 
+    private int ticketCount;
+
     @FXML
     private TabHeaderController tabHeaderController;
 
@@ -87,11 +92,21 @@ public class HallplanController {
         this.ticketService = ticketService;
     }
 
+
+    public int getTicketCount() {
+        return ticketCount;
+    }
+
+    public void setTicketCount(int ticketCount) {
+        this.ticketCount = ticketCount;
+    }
+
     @FXML
     void initialize(){
         tabHeaderController.setIcon(FontAwesome.Glyph.TICKET);
         tabHeaderController.setTitle(BundleManager.getBundle().getString("hallplan.chooseYourTickets"));
-        initializeSeats();
+        ticketCount = 0;
+
     }
 
     public void initializeData(DetailedEventDTO event, CustomerDTO customer, Node oldContent){
@@ -100,7 +115,9 @@ public class HallplanController {
         this.customer = customer;
         this.oldContent = oldContent;
 
-       setButtonGraphic( backbut, "TIMES", Color.DARKGRAY);
+        initializeSeats();
+
+        setButtonGraphic( backbut, "TIMES", Color.DARKGRAY);
 
         lbEventNameHeader.setText(event.getTitle());
         lbKnr.setText(String.valueOf(customer.getKnr()));
@@ -115,7 +132,7 @@ public class HallplanController {
 
    void initializeSeats(){
 
-     //*************** Preperation for testing ***************
+     //* ************** Preperation for testing ***************
         DetailedHallDTO hall = new DetailedHallDTO();
         ArrayList<SeatDTO> seatsToAdd = new ArrayList<>();
         int row = 1;
@@ -137,19 +154,29 @@ public class HallplanController {
            nr++;
        }
         hall.setSeats(seatsToAdd);
-       //*************** END  ***************
+       //*************** END  *************** */
 
         List<SeatDTO> seats = hall.getSeats();
-        int rowCount = seats.get(seats.size()-1).getRow();
-        int seatsPerRow = seats.size()%2==0?(seats.size()/rowCount):(seats.size()/rowCount)+1;
-        seatsPerRow =10;
+       List<TicketDTO> occupiedTickets = null;
+       try {
+           occupiedTickets = ticketService.findByEventId(event.getId());
+       } catch (DataAccessException e) {
+         //TODO: add ticktes already reserverd lbl/warning
+           e.printStackTrace();
+       }
+       List<SeatDTO> occupiedSeats = new ArrayList<>();
+       if(occupiedTickets != null){
+           for (TicketDTO ticket : occupiedTickets) {
+               occupiedSeats.add(ticket.getSeat());
+           }
+       }
 
        for (SeatDTO seat : seats) {
            //show seats
 
            SpringFxmlLoader.Wrapper<SeatElementController> wrapper =
                springFxmlLoader.loadAndWrap("/fxml/ticket/seatElement.fxml");
-           wrapper.getController().initializeData(seat);
+           wrapper.getController().initializeData(seat, HallplanController.this);
            seatsContainerGV.add(wrapper.getController().vBseat, seat.getNr(), seat.getRow());
            if(seat.getNr() == 1){
                Label label = new Label();
@@ -159,6 +186,18 @@ public class HallplanController {
                label.setPadding(new Insets(0,0,0,5));
                seatsContainerGV.add(label, 0, seat.getRow());
            }
+           //******* for testting ************
+           if(seat.getNr() == 1){
+               wrapper.getController().vBseat.getStyleClass().add("occupied");
+           }
+           //********* end ******************
+
+/*
+           if(!occupiedSeats.isEmpty()) {
+               if (occupiedSeats.contains(seat)) {
+                   wrapper.getController().vBseat.getStyleClass().add("occupied");
+               }
+           } */
 
            char seatSector = seat.getSector();
            switch (seatSector){

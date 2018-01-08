@@ -19,11 +19,12 @@ public class SeatElementController {
     public Label seatNrLbl;
 
     private SeatDTO seat;
+    private HallplanController hallplanController;
 
-    void initializeData(SeatDTO seat){
+    void initializeData(SeatDTO seat, HallplanController hallplanController){
         seatNrLbl.setText(String.valueOf(seat.getNr()));
         this.seat = seat;
-
+        this.hallplanController = hallplanController;
     }
 
     @FXML
@@ -31,9 +32,10 @@ public class SeatElementController {
 
         if(vBseat.getStyleClass().contains("selected")){
             vBseat.getStyleClass().remove("selected");
-
+            hallplanController.setTicketCount(hallplanController.getTicketCount()-1);
         } else {
             vBseat.getStyleClass().add("selected");
+            hallplanController.setTicketCount(hallplanController.getTicketCount()+1);
         }
 
     }

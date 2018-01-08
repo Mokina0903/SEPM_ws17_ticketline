@@ -41,20 +41,26 @@
 .sectorA.selected{
 -fx-background-color: derive(cadetblue, -20%);
 }
+
 .sectorB.selected{
 -fx-background-color: derive(CRIMSON, -20%);
 }
+
 .sectorC.selected{
 -fx-background-color: derive(DARKMAGENTA, -20%);
 }
+
 .sectorD.selected{
 -fx-background-color: derive(GREEN, -20%);
 }
+
 .sectorE.selected{
 -fx-background-color: derive(GREENYELLOW, -20%);
 }
 
-
+.sectorA.occupied, .sectorA.occupied.selected, .sectorB.occupied.selected, .sectorB.occupied, .sectorC.occupied.selected, .sectorC.occupied, .sectorD.occupied.selected, .sectorD.occupied,  .sectorE.occupied, .sectorE.occupied.selected{
+ -fx-background-color: DARKGREY;
+ }
 .seatVbox:hover, .sectorA.selected:hover, .sectorB.selected:hover, .sectorC.selected:hover, .sectorD.selected:hover, .sectorE.selected:hover{
 -fx-background-color: #dcdcdc;
 }
