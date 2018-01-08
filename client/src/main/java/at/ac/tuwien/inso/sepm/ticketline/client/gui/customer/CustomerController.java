@@ -72,6 +72,7 @@ public class CustomerController extends TabElement implements LocalizationObserv
     private TableColumn<CustomerDTO, String> tcNumber;
 
     private Tab customerTab;
+    private Tab currentTab;
     private final int CUSTOMER_PER_PAGE = 12;
 
     private final MainController mainController;
@@ -94,6 +95,9 @@ public class CustomerController extends TabElement implements LocalizationObserv
         return customerTab;
     }
 
+    public Tab getCurrentTab() {
+        return currentTab;
+    }
 
     public CustomerController(MainController mainController, SpringFxmlLoader springFxmlLoader, CustomerService customerService) {
         this.mainController = mainController;
@@ -101,12 +105,17 @@ public class CustomerController extends TabElement implements LocalizationObserv
         this.customerService = customerService;
     }
 
-    public void toggleTicketprozessView(){
+    public void toggleTicketprozessView(boolean fromEvent){
         btTickets.setVisible(!btTickets.isVisible());
         btTickets.setDisable(!btTickets.isDisable());
         btNext.setDisable(!btNext.isDisable());
         btNext.setVisible(!btNext.isVisible());
         tabHeaderController.setTitle(BundleManager.getBundle().getString("customer.chooseCustomer"));
+        if(fromEvent){
+            currentTab = mainController.getEventTab();
+        } else {
+           currentTab = customerTab;
+        }
     }
 
     @FXML
@@ -268,7 +277,7 @@ public class CustomerController extends TabElement implements LocalizationObserv
 
         wrapper.getController().initializeData(null, customerOverviewRoot);
 
-        customerTab.setContent(wrapper.getLoadedObject());
+        currentTab.setContent(wrapper.getLoadedObject());
     }
 
     @FXML
@@ -282,7 +291,8 @@ public class CustomerController extends TabElement implements LocalizationObserv
                 springFxmlLoader.loadAndWrap("/fxml/customer/customerEdit.fxml");
             wrapper.getController().initializeData(customer, customerOverviewRoot);
             wrapper.getController().setUpdate(true);
-            customerTab.setContent(wrapper.getLoadedObject());
+            currentTab
+                .setContent(wrapper.getLoadedObject());
         }
     }
 

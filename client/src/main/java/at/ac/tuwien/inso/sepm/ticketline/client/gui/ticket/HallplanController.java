@@ -248,6 +248,7 @@ public class HallplanController {
     @FXML
     public void reserveTickets(ActionEvent actionEvent) {
         //TODO: reserve/create Tickets from the seats within selectedSeats
+
     }
 
     @FXML

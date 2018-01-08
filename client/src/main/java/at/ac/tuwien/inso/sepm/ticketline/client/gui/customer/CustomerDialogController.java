@@ -254,7 +254,7 @@ public class CustomerDialogController implements LocalizationObserver {
         if (isUpdate) {
             setUpdate(false);
         }
-        customerController.getCustomerTab().setContent(oldContent);
+        customerController.getCurrentTab().setContent(oldContent);
     }
 
     @FXML
@@ -325,7 +325,7 @@ public class CustomerDialogController implements LocalizationObserver {
             mainController.showGeneralError("Not able to save Customer!");
            // e.printStackTrace();
         }
-        customerController.getCustomerTab().setContent(oldContent);
+        customerController.getCurrentTab().setContent(oldContent);
     }
 
     @Override
