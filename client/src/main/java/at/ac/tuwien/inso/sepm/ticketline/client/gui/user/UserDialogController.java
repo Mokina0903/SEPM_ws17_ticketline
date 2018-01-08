@@ -55,6 +55,8 @@ public class UserDialogController implements LocalizationObserver {
     @FXML
     public Label roleLb;
     @FXML
+    public Label versionLb;
+    @FXML
     public Label lblInvalidUsername;
     @FXML
     public Label lblInvalidPassword;
@@ -89,6 +91,7 @@ public class UserDialogController implements LocalizationObserver {
         this.userSimpleProperty = userSimpleProperty;
 
         lblInvalidUsername.setVisible(false);
+        versionLb.setVisible(false);
         lblInvalidPassword.setVisible(false);
         lblInvalidRole.setVisible(false);
 
@@ -222,10 +225,12 @@ public class UserDialogController implements LocalizationObserver {
         mainController.setGeneralErrorUnvisable();
 
         lblInvalidUsername.setVisible(false);
+        versionLb.setVisible(false);
         lblInvalidPassword.setVisible(false);
         lblInvalidRole.setVisible(false);
 
         lblInvalidUsername.setText("");
+        versionLb.setText("");
         lblInvalidPassword.setText("");
         lblInvalidRole.setText("");
 
@@ -233,7 +238,7 @@ public class UserDialogController implements LocalizationObserver {
 
         boolean validInput = true;
 
-        int role = roleCombo.getSelectionModel().getSelectedIndex();
+        int role = roleCombo.getSelectionModel().getSelectedIndex() + 1;
         if (userSimpleProperty != null) {
             if ((userSimpleProperty.getRole() == 1) || userSimpleProperty.getRole() == 2) {
                 role = userSimpleProperty.getRole();
@@ -260,7 +265,8 @@ public class UserDialogController implements LocalizationObserver {
         SimpleUserDTO simpleUserDTO = SimpleUserDTO.builder()
             .userName(usernameTF.getText())
             .password(passwordPF.getText())
-            .role(role + 1)
+            .version(userSimpleProperty.getVersion())
+            .role(role)
             .build();
 
         Task<Void> workerTask = new Task<Void>() {
@@ -288,6 +294,12 @@ public class UserDialogController implements LocalizationObserver {
                 if (getException().getMessage().trim().equals("409")) {
                     // Username already exists
                     lblInvalidUsername.setVisible(true);
+                    return;
+                }
+                else if(getException().getMessage().trim().equals("424")){
+                    //Version ist nicht aktuell
+                    //Todo schrift rot machen
+                    versionLb.setVisible(true);
                     return;
                 }
 
@@ -320,6 +332,7 @@ public class UserDialogController implements LocalizationObserver {
         passwordConfirmPF.setPromptText(BundleManager.getBundle().getString("authenticate.password"));
 
         lblInvalidUsername.setText(BundleManager.getBundle().getString("user.invalidusername"));
+        versionLb.setText(BundleManager.getBundle().getString("user.version"));
         lblInvalidPassword.setText(BundleManager.getBundle().getString("user.invalidpasswort"));
         lblInvalidRole.setText(BundleManager.getBundle().getString("user.invalidrole"));
 
