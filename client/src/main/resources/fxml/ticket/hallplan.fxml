@@ -20,7 +20,7 @@
     </stylesheets>
 
     <top>
-        <fx:include source="/fxml/tabHeader.fxml" fx:id="tabHeader"/>
+        <fx:include source="/fxml/tabHeader.fxml" fx:id="tabHeader" BorderPane.alignment="CENTER"/>
 
     </top>
     <center>
@@ -55,7 +55,7 @@
             <padding>
                 <Insets bottom="5.0" left="200.0" right="5.0" top="5.0"/>
             </padding>
-            <Rectangle styleClass="scene" width="200" height="50"/>
+            <Rectangle styleClass="scene" width="300" height="30"/>
         </HBox>
     </bottom>
 
