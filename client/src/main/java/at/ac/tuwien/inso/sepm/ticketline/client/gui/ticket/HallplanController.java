@@ -12,9 +12,11 @@ import at.ac.tuwien.inso.sepm.ticketline.rest.event.DetailedEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.hall.DetailedHallDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.seat.SeatDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
@@ -39,7 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class HallplanController extends TabElement {
+public class HallplanController {
     private static final Logger LOGGER = LoggerFactory.getLogger(at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket.TicketController.class);
     private final MainController mainController;
     private final SpringFxmlLoader springFxmlLoader;
@@ -70,11 +72,11 @@ public class HallplanController extends TabElement {
 
 
     private TicketService ticketService;
-    private Tab ticketTab;
     private DetailedEventDTO event;
     private CustomerDTO customer;
 
     private DetailedHallDTO hall;
+    private Node oldContent;
 
     public HallplanController(MainController mainController, SpringFxmlLoader springFxmlLoader, TicketService ticketService) {
         this.mainController = mainController;
@@ -89,10 +91,11 @@ public class HallplanController extends TabElement {
         initializeSeats();
     }
 
-    public void initializeData(DetailedEventDTO event, CustomerDTO customer){
+    public void initializeData(DetailedEventDTO event, CustomerDTO customer, Node oldContent){
         this.event = event;
         this.hall = event.getHall();
         this.customer = customer;
+        this.oldContent = oldContent;
 
        setButtonGraphic( backbut, "TIMES", Color.DARKGRAY);
 
@@ -126,7 +129,6 @@ public class HallplanController extends TabElement {
                if(row%2==0){
                    sector++;
                }
-
            }
            nr++;
        }
@@ -179,8 +181,8 @@ public class HallplanController extends TabElement {
     }
 
 
-    @Override
-    protected void setTab(Tab tab) {
-        ticketTab = tab;
+    @FXML
+    public void backToEventSelection(ActionEvent actionEvent) {
+        mainController.getEventTab().setContent(oldContent);
     }
 }

@@ -66,6 +66,8 @@ public class EventElementController implements LocalizationObserver {
     private MainController mainController;
     private SpringFxmlLoader loader;
 
+    Node myContainer;
+
 
     @Autowired
     private LocalizationSubject localizationSubject;
@@ -80,10 +82,11 @@ public class EventElementController implements LocalizationObserver {
         localizationSubject.attach(this);
     }
 
-    public void initializeData(EventService eventService, SimpleEventDTO simpleEventDTO) {
+    public void initializeData(EventService eventService, SimpleEventDTO simpleEventDTO, Node myContainer) {
 
         this.simpleEventDTO = simpleEventDTO;
         this.eventService = eventService;
+        this.myContainer = myContainer;
 
         lblStartDate.setText(EVENT_DTF.format(simpleEventDTO.getStartOfEvent()));
         lblEndDate.setText(EVENT_DTF.format(simpleEventDTO.getEndOfEvent()));
@@ -119,7 +122,7 @@ public class EventElementController implements LocalizationObserver {
             HallplanController c = wrapper.getController();
             try {
                 DetailedEventDTO event = eventService.findById(simpleEventDTO.getId());
-                c.initializeData(event, mainController.getCutsomer());
+                c.initializeData(event, mainController.getCutsomer(), myContainer );
             } catch (DataAccessException e) {
                 e.printStackTrace();
             }
