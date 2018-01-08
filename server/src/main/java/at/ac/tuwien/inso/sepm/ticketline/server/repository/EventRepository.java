@@ -5,8 +5,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,9 +34,33 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     /**
      * find page of future events
      *
-     * @param request for the page containing a page number and sort type
-     * @return page of events
+     * @return list of events
      */
-    @Query(value = "Select * from event where end_of_event > now() /*#pageable*/",  nativeQuery = true)
-    Page<Event> findAllUpcoming( Pageable request);
+    @Query(value = "Select * from event where end_of_event > now()",  nativeQuery = true)
+    List<Event> findAllUpcoming();
+
+    /**
+     * find list of events by title
+     *
+     * @param title of the event
+     * @return list of events
+     */
+    @Query
+    List<Event> findAllByTitle(@Param("title") String title);
+
+    /**
+     * find list of future events by title
+     *
+     * @param title of the event
+     * @return list of events
+     */
+    @Query(value = "Select * from event e where e.end_of_event > now() and e.title = :title",  nativeQuery = true)
+    List<Event> findAllUpcomingByTitle(@Param("title") String title);
+
+    //todo find by type, implement type in event (enum)
+    //todo find by duration (+-30 min)
+    //todo find by content
+    //todo find by date
+    //todo find by time
+    //todo find by w/o seat reservation
 }

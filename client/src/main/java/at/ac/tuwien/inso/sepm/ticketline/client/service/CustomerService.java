@@ -4,6 +4,7 @@ import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.SearchNoMatchException;
 import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface CustomerService {
@@ -42,4 +43,10 @@ public interface CustomerService {
     void updateCustomer(CustomerDTO customer) throws DataAccessException;
 
     boolean checkIfCustomerValid(CustomerDTO customer);
+
+    boolean checkIfCustomerNameValid(String name);
+
+    boolean checkIfCustomerEmailValid(String email);
+
+    boolean checkIfCustomerBirthdateValid(LocalDate birthdate);
 }

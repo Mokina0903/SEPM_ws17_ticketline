@@ -7,6 +7,8 @@ import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -68,16 +70,18 @@ public class SimpleEventRestClient implements EventRestClient{
         }
     }
 
+
     @Override
-    public List<SimpleEventDTO> findAllUpcoming( int pageIndex, int eventsPerPage ) throws DataAccessException {
+    public Page<SimpleEventDTO> findAllUpcoming(Pageable request) throws DataAccessException {
+        //use RestResponsePage instead of Page or PageImpl
         try {
             LOGGER.debug("Retrieving all upcoming events from {}", restClient.getServiceURI(EVENT_URL));
-            ResponseEntity<List<SimpleEventDTO>> events =
+            ResponseEntity<RestResponsePage<SimpleEventDTO>> events =
                 restClient.exchange(
-                    restClient.getServiceURI(EVENT_URL + "/"+pageIndex+"/"+eventsPerPage),
+                    restClient.getServiceURI(EVENT_URL + "/"+request.getPageNumber()+"/"+request.getPageSize()),
                     HttpMethod.GET,
                     null,
-                    new ParameterizedTypeReference<List<SimpleEventDTO>>() {
+                    new ParameterizedTypeReference<RestResponsePage<SimpleEventDTO>>() {
                     });
             LOGGER.debug("Result status was {} with content {}", events.getStatusCode(), events.getBody());
             return events.getBody();

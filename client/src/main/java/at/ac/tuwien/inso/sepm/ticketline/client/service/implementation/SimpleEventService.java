@@ -8,6 +8,8 @@ import at.ac.tuwien.inso.sepm.ticketline.rest.event.DetailedEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,8 +36,8 @@ public class SimpleEventService implements EventService {
     }
 
     @Override
-    public List<SimpleEventDTO> findAllUpcoming( int pageIndex, int eventsPerPage ) throws DataAccessException,SearchNoMatchException {
+    public Page<SimpleEventDTO> findAllUpcoming(Pageable request) throws DataAccessException,SearchNoMatchException {
 
-        return eventRestClient.findAllUpcoming(pageIndex,eventsPerPage);
+        return eventRestClient.findAllUpcoming(request);
     }
 }

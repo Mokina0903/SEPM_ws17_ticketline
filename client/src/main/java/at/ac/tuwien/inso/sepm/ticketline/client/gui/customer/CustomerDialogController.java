@@ -4,20 +4,18 @@ import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationObserver;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationSubject;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.MainController;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.TabHeaderController;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.CustomerService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
 import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
-import at.ac.tuwien.inso.sepm.ticketline.rest.news.DetailedNewsDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.Glyph;
@@ -35,6 +33,10 @@ import java.time.LocalDate;
 public class CustomerDialogController implements LocalizationObserver {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CustomerDialogController.class);
+
+    @FXML
+    private TabHeaderController tabHeaderController;
+
 
     @FXML
     public TextField tfLname;
@@ -96,6 +98,8 @@ public class CustomerDialogController implements LocalizationObserver {
 
     private CustomerDTO customer;
     private Node oldContent;
+    private Node invalidFieldSymbol;
+
 
     public CustomerDialogController(MainController mainController, SpringFxmlLoader springFxmlLoader, CustomerController customerController, CustomerService customerService) {
         this.mainController = mainController;
@@ -107,6 +111,9 @@ public class CustomerDialogController implements LocalizationObserver {
 
     @FXML
     void initialize() {
+        tabHeaderController.setIcon(FontAwesome.Glyph.USERS);
+        tabHeaderController.setTitle(BundleManager.getBundle().getString("customer.customer"));
+
         localizationSubject.attach(this);
         lbInvalidName.setVisible(false);
         lbInvalidBirthdate.setVisible(false);
@@ -119,9 +126,81 @@ public class CustomerDialogController implements LocalizationObserver {
         setButtonGraphic(btOk, "CHECK", Color.OLIVE);
         setButtonGraphic(btCancel, "TIMES", Color.CRIMSON);
 
+        Glyph glyph = fontAwesome.create(FontAwesome.Glyph.TIMES);
+        glyph.setColor(Color.CRIMSON);
+        invalidFieldSymbol = glyph;
 
         isUpdate = false;
+
+        setUpValidation(tfFirstName);
+        setUpValidation(tfLname);
+        setUpValidation(tfEmail);
+        setUpValidation(dpBirthdate.getEditor());
     }
+
+    private void setUpValidation(final TextField tf) {
+        tf.textProperty().addListener(new ChangeListener<String>() {
+
+            @Override
+            public void changed(ObservableValue<? extends String> observable,
+                                String oldValue, String newValue) {
+              validate(tf);
+            }
+
+        });
+    }
+
+    private boolean validate(TextField validationField) {
+
+        ObservableList<String> styleClass = validationField.getStyleClass();
+
+        if (tfFirstName.equals(validationField)) {
+            if (!customerService.checkIfCustomerNameValid(tfFirstName.getText())) {
+                if (!styleClass.contains("error")) {
+                    styleClass.add("error");
+                    return false;
+                }
+            } else {
+                styleClass.remove("error");
+                return true;
+            }
+        }
+        if (validationField.equals(tfLname)) {
+            if (!customerService.checkIfCustomerNameValid(tfLname.getText())) {
+                if (!styleClass.contains("error")) {
+                    styleClass.add("error");
+                    return false;
+                }
+            } else {
+                styleClass.remove("error");
+                return true;
+            }
+        }
+        if (validationField.equals(tfEmail))
+            if (!customerService.checkIfCustomerEmailValid(tfEmail.getText())) {
+                if (!styleClass.contains("error")) {
+                    styleClass.add("error");
+                    return false;
+                }
+            } else {
+                styleClass.remove("error");
+                return true;
+            }
+        if (validationField.equals(dpBirthdate.getEditor())) {
+            if (dpBirthdate.getEditor().getText().trim().isEmpty()
+                || !customerService.checkIfCustomerBirthdateValid(dpBirthdate.getValue())) {
+                if (!styleClass.contains("error")) {
+                    styleClass.add("error");
+                    return false;
+                }
+            } else {
+                styleClass.remove("error");
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     private void setButtonGraphic(Button button, String glyphSymbol, Color color) {
         Glyph glyph = fontAwesome.create(FontAwesome.Glyph.valueOf(glyphSymbol));
@@ -154,7 +233,6 @@ public class CustomerDialogController implements LocalizationObserver {
                 tfLname.setText(customer.getSurname());
             }
         }
-
     }
 
     @FXML
@@ -180,6 +258,24 @@ public class CustomerDialogController implements LocalizationObserver {
 
         Long knr = lbCustomerNumber.getText().isEmpty()? 0: Long.valueOf(lbCustomerNumber.getText());
 
+        boolean validInput = true;
+
+        if (!validate(tfFirstName)) {
+            validInput = false;
+        }
+        if(!validate(tfLname)) {
+            validInput = false;
+        }
+        if (!validate(tfEmail)) {
+            validInput = false;
+        }
+        if (!validate(dpBirthdate.getEditor())) {
+            validInput = false;
+        }
+
+        if (!validInput) {
+            return;
+        }
 
         CustomerDTO.CustomerDTOBuilder builder = new CustomerDTO.CustomerDTOBuilder();
         builder.birthDate(birthDate);
@@ -193,7 +289,9 @@ public class CustomerDialogController implements LocalizationObserver {
 
         if (!customerService.checkIfCustomerValid(customer)){
             LOGGER.error("Cutomer to be saved was invalid!");
-            lbInvalidCustomer.setVisible(true);
+
+            //todo: check if email already in use if new customer
+    //        lbInvalidCustomer.setVisible(true);
             return;
         }
         lbInvalidCustomer.setVisible(false);

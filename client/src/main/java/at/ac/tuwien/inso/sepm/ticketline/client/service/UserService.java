@@ -89,4 +89,14 @@ public interface UserService {
      */
     List<SimpleUserDTO> findAll() throws DataAccessException;
 
+
+    /**
+     *  Validates if new password and confirmation is Ok
+     *
+     * @param password to set
+     * @param confirmPassword confirmation of password to set
+     * @return boolean if confirmation of new password is Ok
+     */
+    boolean confirmPasswordIsOk(String password, String confirmPassword);
+
 }
