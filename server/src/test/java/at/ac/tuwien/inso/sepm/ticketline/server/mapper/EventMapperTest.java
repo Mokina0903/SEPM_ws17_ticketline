@@ -158,9 +158,9 @@ public class EventMapperTest {
         assertThat(detailedEventDTO.getTitle()).isEqualTo(EVENT_TITLE);
 
         //todo detailed description gets trimmed??
-       /* System.out.println(detailedEventDTO.getDescription());
+        System.out.println(detailedEventDTO.getDescription());
         System.out.println(EVENT_DESCRIPTION);
-        assertThat(detailedEventDTO.getDescription()).isEqualTo(EVENT_DESCRIPTION);*/
+        assertThat(detailedEventDTO.getDescription()).isEqualTo(EVENT_DESCRIPTION);
 
         assertThat(detailedEventDTO.getPrice()).isEqualTo(EVENT_PRICE);
         assertThat(detailedEventDTO.getStartOfEvent()).isEqualTo(EVENT_START);
@@ -190,9 +190,8 @@ public class EventMapperTest {
         assertThat(event.getArtists().size()).isEqualTo(EVENT_ARTISTS.size());
         assertThat(event.getTitle()).isEqualTo(EVENT_TITLE);
         // TODO: (Moni) Solve this Please
-/*
+
         assertThat(event.getDescription()).isEqualTo(EVENT_DESCRIPTION);
-*/
         assertThat(event.getPrice()).isEqualTo(EVENT_PRICE);
         assertThat(event.getStartOfEvent()).isEqualTo(EVENT_START);
         assertThat(event.getEndOfEvent()).isEqualTo(EVENT_END);
