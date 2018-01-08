@@ -73,6 +73,8 @@ public class CustomerDialogController implements LocalizationObserver {
     private Button btOk;
     @FXML
     private Button btCancel;
+    @FXML
+    private TabHeaderController tabHeaderController;
 
     @Autowired
     private LocalizationSubject localizationSubject;
@@ -90,6 +92,12 @@ public class CustomerDialogController implements LocalizationObserver {
 
     public void setUpdate(boolean update) {
         isUpdate = update;
+        if(isUpdate){
+            tabHeaderController.setTitle(BundleManager.getBundle().getString("customer.editCustomer"));
+        } else {
+            tabHeaderController.setTitle(BundleManager.getBundle().getString("customer.addCustomer"));
+        }
+
     }
 
     private GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
@@ -126,9 +134,13 @@ public class CustomerDialogController implements LocalizationObserver {
         setButtonGraphic(btOk, "CHECK", Color.OLIVE);
         setButtonGraphic(btCancel, "TIMES", Color.CRIMSON);
 
+        tabHeaderController.setIcon(FontAwesome.Glyph.USERS);
+        tabHeaderController.setTitle(BundleManager.getBundle().getString("customer.addCustomer"));
+        
         Glyph glyph = fontAwesome.create(FontAwesome.Glyph.TIMES);
         glyph.setColor(Color.CRIMSON);
         invalidFieldSymbol = glyph;
+
 
         isUpdate = false;
 
@@ -233,6 +245,7 @@ public class CustomerDialogController implements LocalizationObserver {
                 tfLname.setText(customer.getSurname());
             }
         }
+
     }
 
     @FXML
@@ -329,6 +342,13 @@ public class CustomerDialogController implements LocalizationObserver {
         lbInvalidBirthdate.setText(BundleManager.getBundle().getString("customer.invalidBirthdate"));
         lbInvalidEmail.setText(BundleManager.getBundle().getString("customer.invalidEmail"));
         lbInvalidCustomer.setText(BundleManager.getBundle().getString("customer.invalidCustomer"));
+
+        if(isUpdate){
+            tabHeaderController.setTitle(BundleManager.getBundle().getString("customer.editCustomer"));
+        } else {
+            tabHeaderController.setTitle(BundleManager.getBundle().getString("customer.addCustomer"));
+        }
+
     }
 /*
     private void addListeners() {
