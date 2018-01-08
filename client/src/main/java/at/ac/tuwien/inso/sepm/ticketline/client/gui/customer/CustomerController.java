@@ -97,6 +97,11 @@ public class CustomerController extends TabElement implements LocalizationObserv
         this.customerService = customerService;
     }
 
+    public void toggleTicketBtn(){
+        btTickets.setVisible(!btTickets.isVisible());
+        btTickets.setDisable(!btTickets.isDisable());
+    }
+
     @FXML
     private void initialize() {
         tabHeaderController.setIcon(FontAwesome.Glyph.USERS);
@@ -273,6 +278,7 @@ public class CustomerController extends TabElement implements LocalizationObserv
     @FXML
     private void openEventTab(ActionEvent event) {
         if (currentTableview.getSelectionModel().getSelectedItem() != null) {
+            mainController.setCutsomer(currentTableview.getSelectionModel().getSelectedItem());
             mainController.openEventTab();
         }
     }

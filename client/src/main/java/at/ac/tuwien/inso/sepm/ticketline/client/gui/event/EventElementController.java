@@ -1,12 +1,23 @@
 package at.ac.tuwien.inso.sepm.ticketline.client.gui.event;
 
+import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationObserver;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationSubject;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.MainController;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.customer.CustomerController;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.news.NewsAddFormularController;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.news.NewsController;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket.HallplanController;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.EventService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
+import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
+import at.ac.tuwien.inso.sepm.ticketline.rest.event.DetailedEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
+import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
@@ -52,16 +63,24 @@ public class EventElementController implements LocalizationObserver {
 
     private EventService eventService;
     private SimpleEventDTO simpleEventDTO;
+    private MainController mainController;
+    private SpringFxmlLoader loader;
+
 
     @Autowired
     private LocalizationSubject localizationSubject;
+
+    public EventElementController(MainController mainController, SpringFxmlLoader loader) {
+        this.mainController = mainController;
+        this.loader = loader;
+    }
 
     @FXML
     private void initialize() {
         localizationSubject.attach(this);
     }
 
-    public void initializeData( EventService eventService, SimpleEventDTO simpleEventDTO) {
+    public void initializeData(EventService eventService, SimpleEventDTO simpleEventDTO) {
 
         this.simpleEventDTO = simpleEventDTO;
         this.eventService = eventService;
@@ -69,27 +88,49 @@ public class EventElementController implements LocalizationObserver {
         lblStartDate.setText(EVENT_DTF.format(simpleEventDTO.getStartOfEvent()));
         lblEndDate.setText(EVENT_DTF.format(simpleEventDTO.getEndOfEvent()));
         lblTitle.setText(simpleEventDTO.getTitle());
-       // lblArtistName.setText(simpleEventDTO.getArtistFirstName()+" "+simpleEventDTO.getArtistLastName());
+        // lblArtistName.setText(simpleEventDTO.getArtistFirstName()+" "+simpleEventDTO.getArtistLastName());
         lblArtist.setText(BundleManager.getBundle().getString("events.artist"));
         lblPrice.setText(String.valueOf(simpleEventDTO.getPrice()));
         lblText.setMaxWidth(500);
         lblText.setText(simpleEventDTO.getDescriptionSummary());
 
-        lblPriceText.setText(BundleManager.getBundle().getString("events.price")+": ");
+        lblPriceText.setText(BundleManager.getBundle().getString("events.price") + ": ");
 
         eventImageView.setVisible(false);
     }
 
 
-    public void detailedEventInfo( MouseEvent mouseEvent ) {
+    public void detailedEventInfo(MouseEvent mouseEvent) {
     }
 
-    public void ticketReservationForEvent( ActionEvent actionEvent ) {
+    public void ticketReservationForEvent(ActionEvent actionEvent) {
+
+        if (mainController.getCutsomer() == null) {
+            SpringFxmlLoader.Wrapper<CustomerController> wrapper =
+                loader.loadAndWrap("/fxml/customer/customerComponent.fxml");
+            Node root = loader.load("/fxml/customer/customerComponent.fxml");
+            CustomerController c = wrapper.getController();
+            c.toggleTicketBtn();
+            mainController.getEventTab().setContent(root);
+        } else {
+            SpringFxmlLoader.Wrapper<HallplanController> wrapper =
+                loader.loadAndWrap("/fxml/ticket/hallplan.fxml");
+            Node root = loader.load("/fxml/ticket/hallplan.fxml");
+            HallplanController c = wrapper.getController();
+            try {
+                DetailedEventDTO event = eventService.findById(simpleEventDTO.getId());
+                c.initializeData(event, mainController.getCutsomer());
+            } catch (DataAccessException e) {
+                e.printStackTrace();
+            }
+
+            mainController.getEventTab().setContent(root);
+        }
     }
 
     @Override
     public void update() {
         lblArtist.setText(BundleManager.getBundle().getString("events.artist"));
-        lblPriceText.setText(BundleManager.getBundle().getString("events.price")+": ");
+        lblPriceText.setText(BundleManager.getBundle().getString("events.price") + ": ");
     }
 }

@@ -74,7 +74,7 @@ public class HallplanController extends TabElement {
         initializeSeats();
     }
 
-    void initializeData(DetailedEventDTO event, CustomerDTO customer){
+    public void initializeData(DetailedEventDTO event, CustomerDTO customer){
         this.event = event;
         this.hall = event.getHall();
         this.customer = customer;
