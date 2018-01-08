@@ -74,6 +74,7 @@ public class CustomerController extends TabElement implements LocalizationObserv
     private Tab customerTab;
     private Tab currentTab;
     private final int CUSTOMER_PER_PAGE = 12;
+    private boolean isTicketView;
 
     private final MainController mainController;
     private final SpringFxmlLoader springFxmlLoader;
@@ -118,6 +119,25 @@ public class CustomerController extends TabElement implements LocalizationObserv
         }
     }
 
+    public void setNormalTabView(){
+        btTickets.setVisible(true);
+        btTickets.setDisable(false);
+        btNext.setDisable(true);
+        btNext.setVisible(false);
+        tabHeaderController.setTitle(BundleManager.getBundle().getString("customer.customer"));
+        currentTab=customerTab;
+        isTicketView = false;
+    }
+    public void setTicketProzessView(){
+        btTickets.setVisible(false);
+        btTickets.setDisable(true);
+        btNext.setDisable(false);
+        btNext.setVisible(true);
+        tabHeaderController.setTitle(BundleManager.getBundle().getString("customer.chooseCustomer"));
+        currentTab = mainController.getEventTab();
+        isTicketView = true;
+    }
+
     @FXML
     private void initialize() {
         tabHeaderController.setIcon(FontAwesome.Glyph.USERS);
@@ -132,6 +152,7 @@ public class CustomerController extends TabElement implements LocalizationObserv
         btNext.setText(BundleManager.getBundle().getString("customer.next"));
 
         lbNoMatch.setVisible(false);
+        isTicketView = false;
     }
 
 
@@ -308,7 +329,12 @@ public class CustomerController extends TabElement implements LocalizationObserv
     @Override
     public void update() {
 
-        tabHeaderController.setTitle(BundleManager.getBundle().getString("customer.customer"));
+        if(isTicketView){
+            tabHeaderController.setTitle(BundleManager.getBundle().getString("customer.chooseCustomer"));
+        }else{
+            tabHeaderController.setTitle(BundleManager.getBundle().getString("customer.customer"));
+        }
+
         btSearch.setText(BundleManager.getBundle().getString("menu.search"));
         lbSearch.setText(BundleManager.getBundle().getString("menu.search"));
         tfSearch.setPromptText(BundleManager.getBundle().getString("customer.searchField"));
