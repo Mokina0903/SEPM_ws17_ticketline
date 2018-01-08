@@ -1,6 +1,7 @@
 package at.ac.tuwien.inso.sepm.ticketline.client.service;
 
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
+import at.ac.tuwien.inso.sepm.ticketline.client.exception.TicketAlreadyExistsException;
 import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketDTO;
 
 import java.util.List;
@@ -55,5 +56,5 @@ public interface TicketService {
      * @param ticketDTO to save
      * @return saved ticket with id, or throw AlreadyExistsException if ticket is already booked
      */
-    TicketDTO save(TicketDTO ticketDTO) throws DataAccessException;
+    TicketDTO save(TicketDTO ticketDTO) throws DataAccessException, TicketAlreadyExistsException;
 }

@@ -1,6 +1,7 @@
 package at.ac.tuwien.inso.sepm.ticketline.client.service.implementation;
 
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
+import at.ac.tuwien.inso.sepm.ticketline.client.exception.TicketAlreadyExistsException;
 import at.ac.tuwien.inso.sepm.ticketline.client.rest.TicketRestClient;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.TicketService;
 import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketDTO;
@@ -42,7 +43,7 @@ public class SimpleTicketService implements TicketService {
     }
 
     @Override
-    public TicketDTO save( TicketDTO ticketDTO ) throws DataAccessException {
+    public TicketDTO save( TicketDTO ticketDTO ) throws DataAccessException, TicketAlreadyExistsException {
         return ticketRestClient.save(ticketDTO);
     }
 }
