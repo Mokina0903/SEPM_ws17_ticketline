@@ -2,6 +2,7 @@ package at.ac.tuwien.inso.sepm.ticketline.rest.ticket;
 
 import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.DetailedEventDTO;
+import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.seat.SeatDTO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -15,13 +16,13 @@ public class TicketDTO {
     private Long id;
 
     @ApiModelProperty(readOnly = true, required = true,name = "The event the ticket is for")
-    private DetailedEventDTO eventDTO;
+    private SimpleEventDTO event;
 
     @ApiModelProperty(readOnly = true, required = true, name = "The customer the ticket is sold/reserved to")
-    private CustomerDTO customerDTO;
+    private CustomerDTO customer;
 
     @ApiModelProperty(required = true, name = "The seat the ticket is associated with")
-    private SeatDTO seatDTO;
+    private SeatDTO seat;
 
     @ApiModelProperty(required = true, name = "The explicit price of the ticket")
     private int price;
@@ -34,29 +35,30 @@ public class TicketDTO {
         this.id = id;
     }
 
-    public DetailedEventDTO getEventDTO() {
-        return eventDTO;
+    public SimpleEventDTO getEvent() {
+        return event;
     }
 
-    public void setEventDTO( DetailedEventDTO eventDTO ) {
-        this.eventDTO = eventDTO;
+    public void setEvent( SimpleEventDTO event ) {
+        this.event = event;
     }
 
-    public CustomerDTO getCustomerDTO() {
-        return customerDTO;
+    public CustomerDTO getCustomer() {
+        return customer;
     }
 
-    public void setCustomerDTO( CustomerDTO customerDTO ) {
-        this.customerDTO = customerDTO;
+    public void setCustomer( CustomerDTO customer ) {
+        this.customer = customer;
     }
 
-    public SeatDTO getSeatDTO() {
-        return seatDTO;
+    public SeatDTO getSeat() {
+        return seat;
     }
 
-    public void setSeatDTO( SeatDTO seatDTO ) {
-        this.seatDTO = seatDTO;
+    public void setSeat( SeatDTO seat ) {
+        this.seat = seat;
     }
+
 
     public int getPrice() {
         return price;
@@ -77,17 +79,17 @@ public class TicketDTO {
 
         if (getPrice() != ticketDTO.getPrice()) return false;
         if (!getId().equals(ticketDTO.getId())) return false;
-        if (!getEventDTO().equals(ticketDTO.getEventDTO())) return false;
-        if (!getCustomerDTO().equals(ticketDTO.getCustomerDTO())) return false;
-        return getSeatDTO().equals(ticketDTO.getSeatDTO());
+        if (!getEvent().equals(ticketDTO.getEvent())) return false;
+        if (!getCustomer().equals(ticketDTO.getCustomer())) return false;
+        return getSeat().equals(ticketDTO.getSeat());
     }
 
     @Override
     public int hashCode() {
         int result = getId().hashCode();
-        result = 31 * result + getEventDTO().hashCode();
-        result = 31 * result + getCustomerDTO().hashCode();
-        result = 31 * result + getSeatDTO().hashCode();
+        result = 31 * result + getEvent().hashCode();
+        result = 31 * result + getCustomer().hashCode();
+        result = 31 * result + getSeat().hashCode();
         result = 31 * result + getPrice();
         return result;
     }
@@ -96,9 +98,9 @@ public class TicketDTO {
     public String toString() {
         return "TicketDTO{" +
             "id=" + id +
-            ", eventDTO=" + eventDTO +
-            ", customerDTO=" + customerDTO +
-            ", seatDTO=" + seatDTO +
+            ", event=" + event +
+            ", customer=" + customer +
+            ", seat=" + seat +
             ", price=" + price +
             '}';
     }
@@ -106,7 +108,7 @@ public class TicketDTO {
     public static final class TicketDTOBuilder{
 
         private Long id;
-        private DetailedEventDTO eventDTO;
+        private SimpleEventDTO eventDTO;
         private CustomerDTO customerDTO;
         private SeatDTO seatDTO;
         private int price;
@@ -116,7 +118,7 @@ public class TicketDTO {
             return this;
         }
 
-        public TicketDTOBuilder event(DetailedEventDTO eventDTO){
+        public TicketDTOBuilder event(SimpleEventDTO eventDTO){
             this.eventDTO = eventDTO;
             return this;
         }
@@ -138,11 +140,11 @@ public class TicketDTO {
 
         public TicketDTO build(){
             TicketDTO ticketDTO= new TicketDTO();
-            ticketDTO.setCustomerDTO(customerDTO);
-            ticketDTO.setEventDTO(eventDTO);
+            ticketDTO.setCustomer(customerDTO);
+            ticketDTO.setEvent(eventDTO);
             ticketDTO.setId(id);
             ticketDTO.setPrice(price);
-            ticketDTO.setSeatDTO(seatDTO);
+            ticketDTO.setSeat(seatDTO);
 
             return ticketDTO;
         }
