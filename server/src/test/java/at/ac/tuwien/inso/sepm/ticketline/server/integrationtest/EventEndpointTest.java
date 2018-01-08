@@ -4,6 +4,7 @@ import at.ac.tuwien.inso.sepm.ticketline.rest.artist.SimpleArtistDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.DetailedEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.hall.DetailedHallDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.news.DetailedNewsDTO;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.Artist;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
 import at.ac.tuwien.inso.sepm.ticketline.server.integrationtest.base.BaseIntegrationTest;
 import com.jayway.restassured.RestAssured;
@@ -25,6 +26,10 @@ import static org.hamcrest.core.Is.is;
 public class EventEndpointTest extends BaseIntegrationTest {
 
     private static final String EVENT_ENDPOINT = "/event";
+
+    private static final String EVENT_ARTIST_FIRSTNAME = "Firstname";
+    private static final String EVENT_ARTIST_LASTNAME = "Lastname";
+
 
     @Test
     public void publishEventUnauthorizedAsUser() {
@@ -77,6 +82,8 @@ public class EventEndpointTest extends BaseIntegrationTest {
 
         artists.add(SimpleArtistDTO.builder()
             .id(1L)
+            .artistFirstname(EVENT_ARTIST_FIRSTNAME)
+            .artistLastName(EVENT_ARTIST_LASTNAME)
             .build());
 
         DetailedEventDTO detailedEventDTO = DetailedEventDTO.builder()

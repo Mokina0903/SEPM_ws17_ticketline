@@ -63,10 +63,12 @@ public class SimpleEventService implements EventService {
         if (hallRepository.findOne(event.getHall().getId()) == null)
             throw new NotFoundException();
 
-        if (artistRepository.findOne(event.getArtists().get(1).getId()) == null)
+
+        if (artistRepository.findOne(event.getArtists().get(0).getId()) == null)
         {
             throw new NotFoundException();
         }
+
 
         // TODO: Implement here verification if necessary (two events same Time)
 
