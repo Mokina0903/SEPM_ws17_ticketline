@@ -96,32 +96,31 @@ public class HallplanController {
     }
 
 
-     int getTicketCount() {
+    int getTicketCount() {
         return ticketCount;
     }
 
-     void setTicketCount(int ticketCount) {
+    void setTicketCount(int ticketCount) {
         this.ticketCount = ticketCount;
     }
 
-    void addSelectedSeat(SeatDTO seat){
+    void addSelectedSeat(SeatDTO seat) {
         selectedSeats.add(seat);
     }
-    void removeSelectedSeat(SeatDTO seat){
+
+    void removeSelectedSeat(SeatDTO seat) {
         selectedSeats.remove(seat);
     }
 
     @FXML
-    void initialize(){
+    void initialize() {
         tabHeaderController.setIcon(FontAwesome.Glyph.TICKET);
         tabHeaderController.setTitle(BundleManager.getBundle().getString("hallplan.chooseYourTickets"));
         ticketCount = 0;
         ticketAmountLb.setText(String.valueOf(ticketCount));
-
-
     }
 
-    public void initializeData(DetailedEventDTO event, CustomerDTO customer, Node oldContent){
+    public void initializeData(DetailedEventDTO event, CustomerDTO customer, Node oldContent) {
         this.event = event;
         this.hall = event.getHall();
         this.customer = customer;
@@ -129,7 +128,7 @@ public class HallplanController {
 
         initializeSeats();
 
-        setButtonGraphic( backbut, "TIMES", Color.DARKGRAY);
+        setButtonGraphic(backbut, "TIMES", Color.DARKGRAY);
 
         lbEventNameHeader.setText(event.getTitle());
         lbKnr.setText(String.valueOf(customer.getKnr()));
@@ -142,67 +141,67 @@ public class HallplanController {
 
     }
 
-   void initializeSeats(){
+    void initializeSeats() {
 
-     //* ************** Preperation for testing ***************
+        //* ************** Preperation for testing ***************
         DetailedHallDTO hall = new DetailedHallDTO();
         ArrayList<SeatDTO> seatsToAdd = new ArrayList<>();
         int row = 1;
         int nr = 1;
         char sector = 'a';
-       for (int i = 0; i < 74 ; i++){
-           SeatDTO seat = new SeatDTO();
-           seat.setNr(nr);
-           seat.setRow(row);
-           seat.setSector(sector);
-           seatsToAdd.add(seat);
-           if(nr == 10){
-               nr = 0;
-               row ++;
-               if(row%2==0){
-                   sector++;
-               }
-           }
-           nr++;
-       }
+        for (int i = 0; i < 74; i++) {
+            SeatDTO seat = new SeatDTO();
+            seat.setNr(nr);
+            seat.setRow(row);
+            seat.setSector(sector);
+            seatsToAdd.add(seat);
+            if (nr == 10) {
+                nr = 0;
+                row++;
+                if (row % 2 == 0) {
+                    sector++;
+                }
+            }
+            nr++;
+        }
         hall.setSeats(seatsToAdd);
-       //*************** END  *************** */
+        //*************** END  *************** */
 
         List<SeatDTO> seats = hall.getSeats();
-       List<TicketDTO> occupiedTickets = null;
-       try {
-           occupiedTickets = ticketService.findByEventId(event.getId());
-       } catch (DataAccessException e) {
-         //TODO: add ticktes already reserverd lbl/warning
-           e.printStackTrace();
-       }
-       List<SeatDTO> occupiedSeats = new ArrayList<>();
-       if(occupiedTickets != null){
-           for (TicketDTO ticket : occupiedTickets) {
-               occupiedSeats.add(ticket.getSeat());
-           }
-       }
+        List<TicketDTO> occupiedTickets = null;
+        try {
+            occupiedTickets = ticketService.findByEventId(event.getId());
+        } catch (DataAccessException e) {
+            //TODO: add ticktes already reserverd lbl/warning
+            e.printStackTrace();
+        }
+        List<SeatDTO> occupiedSeats = new ArrayList<>();
+        if (occupiedTickets != null) {
+            for (TicketDTO ticket : occupiedTickets) {
+                occupiedSeats.add(ticket.getSeat());
+            }
+        }
 
-       for (SeatDTO seat : seats) {
-           //show seats
+        for (SeatDTO seat : seats) {
+            //show seats
 
-           SpringFxmlLoader.Wrapper<SeatElementController> wrapper =
-               springFxmlLoader.loadAndWrap("/fxml/ticket/seatElement.fxml");
-           wrapper.getController().initializeData(seat, HallplanController.this);
-           seatsContainerGV.add(wrapper.getController().vBseat, seat.getNr(), seat.getRow());
-           if(seat.getNr() == 1){
-               Label label = new Label();
-               label.setText(String.valueOf(seat.getRow()));
-               label.setFont(Font.font(16));
-               label.setAlignment(Pos.CENTER);
-               label.setPadding(new Insets(0,0,0,5));
-               seatsContainerGV.add(label, 0, seat.getRow());
-           }
-           //******* for testting ************
-           if(seat.getNr() == 1){
-               wrapper.getController().vBseat.getStyleClass().add("occupied");
-           }
-           //********* end ******************
+            SpringFxmlLoader.Wrapper<SeatElementController> wrapper =
+                springFxmlLoader.loadAndWrap("/fxml/ticket/seatElement.fxml");
+            wrapper.getController().initializeData(seat, HallplanController.this);
+            seatsContainerGV.add(wrapper.getController().vBseat, seat.getNr(), seat.getRow());
+            if (seat.getNr() == 1) {
+                Label label = new Label();
+                label.setText(String.valueOf(seat.getRow()));
+                label.setFont(Font.font(16));
+                label.setAlignment(Pos.CENTER);
+                label.setPadding(new Insets(0, 0, 0, 5));
+                seatsContainerGV.add(label, 0, seat.getRow());
+            }
+            //******* for testting ************
+            if (seat.getNr() == 1) {
+                wrapper.getController().vBseat.getStyleClass().add("occupied");
+            }
+            //********* end ******************
 
 /*
            if(!occupiedSeats.isEmpty()) {
@@ -211,21 +210,26 @@ public class HallplanController {
                }
            } */
 
-           char seatSector = seat.getSector();
-           switch (seatSector){
-               case 'a': wrapper.getController().vBseat.getStyleClass().add("sectorA");
-               break;
-               case 'b': wrapper.getController().vBseat.getStyleClass().add("sectorB");
-               break;
-               case 'c': wrapper.getController().vBseat.getStyleClass().add("sectorC");
-               break;
-               case 'd': wrapper.getController().vBseat.getStyleClass().add("sectorD");
-               break;
-               case 'e': wrapper.getController().vBseat.getStyleClass().add("sectorE");
+            char seatSector = seat.getSector();
+            switch (seatSector) {
+                case 'a':
+                    wrapper.getController().vBseat.getStyleClass().add("sectorA");
+                    break;
+                case 'b':
+                    wrapper.getController().vBseat.getStyleClass().add("sectorB");
+                    break;
+                case 'c':
+                    wrapper.getController().vBseat.getStyleClass().add("sectorC");
+                    break;
+                case 'd':
+                    wrapper.getController().vBseat.getStyleClass().add("sectorD");
+                    break;
+                case 'e':
+                    wrapper.getController().vBseat.getStyleClass().add("sectorE");
 
-           }
+            }
 
-       }
+        }
     }
 
     private void setButtonGraphic(Button button, String glyphSymbol, Color color) {
@@ -239,5 +243,15 @@ public class HallplanController {
     @FXML
     public void backToEventSelection(ActionEvent actionEvent) {
         mainController.getEventTab().setContent(oldContent);
+    }
+
+    @FXML
+    public void reserveTickets(ActionEvent actionEvent) {
+        //TODO: reserve/create Tickets from the seats within selectedSeats
+    }
+
+    @FXML
+    public void buyTickets(ActionEvent actionEvent) {
+        //TODO: buy/create Tickets from the seats within selectedSeats
     }
 }

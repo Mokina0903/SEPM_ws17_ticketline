@@ -47,11 +47,10 @@
                 <Label fx:id="lbVname" />
                 <Label fx:id="lbSurname" />
             </HBox>
-
             <Label text="%hallplan.amountOfTickets" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
             <Label fx:id="ticketAmountLb" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-            <Button fx:id="reserveBut" text="%hallplan.reserveTickets" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-            <Button fx:id="buyBut" text="%hallplan.buy" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+            <Button fx:id="reserveBut" onAction="#reserveTickets" text="%hallplan.reserveTickets" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+            <Button fx:id="buyBut" onAction="#buyTickets" text="%hallplan.buy" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
             <Button fx:id="backbut" onAction="#backToEventSelection" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
             <columnConstraints>
                 <ColumnConstraints/>
@@ -67,9 +66,7 @@
             </rowConstraints>
         </GridPane>
     </right>
-
     <bottom>
-
         <HBox>
             <BorderPane.margin>
                 <Insets bottom="5.0" top="15.0"/>
