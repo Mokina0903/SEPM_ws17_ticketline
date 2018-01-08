@@ -113,6 +113,10 @@ public class User {
         this.attempts = LOGIN_ATTEMPTS;
     }
 
+    public void newVersion() {this.version = version + 1;}
+
+    public Boolean correctVersion(Integer checkVersion){return (checkVersion == version);}
+
 
     public static final class UserBuilder {
         private Long id;

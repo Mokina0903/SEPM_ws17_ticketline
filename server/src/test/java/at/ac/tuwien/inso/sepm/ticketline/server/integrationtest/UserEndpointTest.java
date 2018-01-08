@@ -196,6 +196,7 @@ public class UserEndpointTest extends BaseIntegrationTest {
             .body(SimpleUserDTO.builder()
                 .userName(USER_USERNAME)
                 .password(USER_PASSWORD + "neu")
+                .version(1)
                 .build())
             .when().post(USER_ENDPOINT_RESET)
             .then().extract().response();
