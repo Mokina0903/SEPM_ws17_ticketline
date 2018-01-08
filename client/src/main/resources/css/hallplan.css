@@ -53,9 +53,7 @@
 .sectorE.selected{
 -fx-background-color: derive(GREENYELLOW, -20%);
 }
-.sectorA.selected:hover{
--fx-background-color: #dcdcdc;
-}
+
 
 .seatVbox:hover, .sectorA.selected:hover, .sectorB.selected:hover, .sectorC.selected:hover, .sectorD.selected:hover, .sectorE.selected:hover{
 -fx-background-color: #dcdcdc;

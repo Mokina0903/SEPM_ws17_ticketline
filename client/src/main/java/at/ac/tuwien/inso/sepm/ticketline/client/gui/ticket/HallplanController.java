@@ -64,6 +64,9 @@ public class HallplanController {
     public Label lblCustomerDescription;
     @FXML
     public Button backbut;
+    @FXML
+    public Label lbEventNameHeader;
+
     private GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
     private final int FONT_SIZE = 16;
 
@@ -99,6 +102,7 @@ public class HallplanController {
 
        setButtonGraphic( backbut, "TIMES", Color.DARKGRAY);
 
+        lbEventNameHeader.setText(event.getTitle());
         lbKnr.setText(String.valueOf(customer.getKnr()));
         lbSurname.setText(customer.getSurname());
         lbVname.setText(customer.getName());
