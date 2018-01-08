@@ -4,8 +4,11 @@ import at.ac.tuwien.inso.sepm.ticketline.client.gui.MainController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.TabElement;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.TabHeaderController;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.NewsService;
+import at.ac.tuwien.inso.sepm.ticketline.client.service.TicketService;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.UserService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
+import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
+import at.ac.tuwien.inso.sepm.ticketline.rest.event.DetailedEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.hall.DetailedHallDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.seat.SeatDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
@@ -50,13 +53,18 @@ public class HallplanController extends TabElement {
     @FXML
     private TabHeaderController tabHeaderController;
 
+
+    private TicketService ticketService;
     private Tab ticketTab;
+    private DetailedEventDTO event;
+    private CustomerDTO customer;
 
-  //  private DetailedHallDTO hall;
+    private DetailedHallDTO hall;
 
-    public HallplanController(MainController mainController, SpringFxmlLoader springFxmlLoader) {
+    public HallplanController(MainController mainController, SpringFxmlLoader springFxmlLoader, TicketService ticketService) {
         this.mainController = mainController;
         this.springFxmlLoader = springFxmlLoader;
+        this.ticketService = ticketService;
     }
 
     @FXML
@@ -64,6 +72,13 @@ public class HallplanController extends TabElement {
         tabHeaderController.setIcon(FontAwesome.Glyph.TICKET);
         tabHeaderController.setTitle(BundleManager.getBundle().getString("hallplan.chooseYourTickets"));
         initializeSeats();
+    }
+
+    void initializeData(DetailedEventDTO event, CustomerDTO customer){
+        this.event = event;
+        this.hall = event.getHall();
+        this.customer = customer;
+
     }
 
    void initializeSeats(){
