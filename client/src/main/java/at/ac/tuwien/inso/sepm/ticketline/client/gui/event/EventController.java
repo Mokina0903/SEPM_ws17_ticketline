@@ -5,30 +5,22 @@ import at.ac.tuwien.inso.sepm.ticketline.client.exception.SearchNoMatchException
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.*;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.EventService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
-import at.ac.tuwien.inso.sepm.ticketline.client.util.JavaFXUtils;
-import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
-import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
-import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
-import java.util.AbstractSet;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 @Component
 public class EventController extends TabElement implements LocalizationObserver {
@@ -44,7 +36,7 @@ public class EventController extends TabElement implements LocalizationObserver 
 
     private Tab eventTab;
 
-    private List<SimpleEventDTO> events;
+    private Page<SimpleEventDTO> events;
 
     private final MainController mainController;
     private final SpringFxmlLoader springFxmlLoader;
@@ -92,8 +84,12 @@ public class EventController extends TabElement implements LocalizationObserver 
     public void preparePagination() {
         //all customer at start or searchfield is empty
         try {
-            events = eventService.findAllUpcoming(0,Integer.MAX_VALUE);
-            pagination.setPageCount(events.size() / EVENTS_PER_PAGE + 1);
+            Pageable request = new PageRequest(0, EVENTS_PER_PAGE);
+            int amount = eventService.findAllUpcoming(request).getTotalPages();
+            Page<SimpleEventDTO> page1 = eventService.findAllUpcoming(request);
+            events = eventService.findAllUpcoming(request);
+            pagination.setPageCount(amount);
+            //todo pages instead of content
             preparePagination(events);
         } catch (DataAccessException e) {
             LOGGER.warn("Could not access total number of customers");
@@ -101,7 +97,7 @@ public class EventController extends TabElement implements LocalizationObserver 
             noMatchFound();        }
     }
 
-    public void preparePagination(List<SimpleEventDTO> events) {
+    public void preparePagination(Page<SimpleEventDTO> events) {
 
 /*        if (customer == null || customer.isEmpty()) {
             noMatchFound();
@@ -122,15 +118,15 @@ public class EventController extends TabElement implements LocalizationObserver 
         });
     }
 
-    private List<SimpleEventDTO> loadPage(int pageIndex) {
-        List<SimpleEventDTO> page = new ArrayList<SimpleEventDTO>();
+    private Page<SimpleEventDTO> loadPage(int pageIndex) {
 
         try {
             switch (searchFor) {
                 case ALL:
-                    events = eventService.findAllUpcoming(0, Integer.MAX_VALUE);
-                    page = eventService.findAllUpcoming(pageIndex, EVENTS_PER_PAGE);
-                    pagination.setPageCount(events.size() / EVENTS_PER_PAGE + 1);
+                    Pageable request = new PageRequest(pageIndex, EVENTS_PER_PAGE);
+
+                    events = eventService.findAllUpcoming(request);
+                    pagination.setPageCount(events.getTotalPages());
                     break;
                 case ARTIST:
                     /*customer = customerService.findByName(tfSearch.getText(), 0, Integer.MAX_VALUE);
@@ -149,24 +145,23 @@ public class EventController extends TabElement implements LocalizationObserver 
         } catch (DataAccessException e) {
             LOGGER.warn("Could not access find events");
         }
-        return page;
+        return events;
     }
 
     private Node createPage(int pageIndex) {
         pagination.setCurrentPageIndex(pageIndex);
-        List<SimpleEventDTO> events = loadPage(pageIndex);
+        Page<SimpleEventDTO> events = loadPage(pageIndex);
         ListView<VBox> lvEventElements = new ListView<>();
+        lvEventElements.setStyle("-fx-background-color: transparent;");
 
-        if(!events.isEmpty()){
-            for(SimpleEventDTO event : events) {
+        if(!events.getContent().isEmpty()){
+            for(SimpleEventDTO event : events.getContent()) {
                 SpringFxmlLoader.Wrapper<EventElementController> wrapper =
                     springFxmlLoader.loadAndWrap("/fxml/event/eventElement.fxml");
                 wrapper.getController().initializeData(eventService,event);
-
                 lvEventElements.getItems().add(wrapper.getController().vbEventElement);
             }
         }
-
         return lvEventElements;
     }
 

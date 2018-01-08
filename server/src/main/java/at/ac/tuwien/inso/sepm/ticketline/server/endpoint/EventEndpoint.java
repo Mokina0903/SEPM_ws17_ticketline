@@ -2,13 +2,12 @@ package at.ac.tuwien.inso.sepm.ticketline.server.endpoint;
 
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.DetailedEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.event.EventMapper;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.EventService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -31,10 +30,12 @@ public class EventEndpoint {
 
     @RequestMapping(value = "/{pageIndex}/{eventsPerPage}", method = RequestMethod.GET)
     @ApiOperation(value = "Get list of simple upcoming event entries")
-    public List<SimpleEventDTO> findAllUpcomingAsc(@PathVariable("pageIndex")int pageIndex, @PathVariable("eventsPerPage")int eventsPerPage) {
-        Pageable request = new PageRequest(pageIndex,eventsPerPage, Sort.Direction.ASC, "start_of_event");
-
-        return eventMapper.eventToSimpleEventDTO(eventService.findAllUpcomingAsc(request));
+    public Page<SimpleEventDTO> findAllUpcomingAsc(@PathVariable("pageIndex")int pageIndex, @PathVariable("eventsPerPage")int eventsPerPage) {
+        //mapping of Event to EventDTO
+        Pageable request = new PageRequest(pageIndex, eventsPerPage, Sort.Direction.ASC, "start_of_event");
+        Page<Event> eventPage = eventService.findAllUpcomingAsc(request);
+        List<SimpleEventDTO> dtos = eventMapper.eventToSimpleEventDTO(eventPage.getContent());
+        return new PageImpl<>(dtos, request, eventPage.getTotalElements());
     }
 
     @RequestMapping(method = RequestMethod.GET)

@@ -69,7 +69,7 @@ public class EventElementController implements LocalizationObserver {
         lblStartDate.setText(EVENT_DTF.format(simpleEventDTO.getStartOfEvent()));
         lblEndDate.setText(EVENT_DTF.format(simpleEventDTO.getEndOfEvent()));
         lblTitle.setText(simpleEventDTO.getTitle());
-        lblArtistName.setText(simpleEventDTO.getArtistFirstName()+" "+simpleEventDTO.getArtistLastName());
+       // lblArtistName.setText(simpleEventDTO.getArtistFirstName()+" "+simpleEventDTO.getArtistLastName());
         lblArtist.setText(BundleManager.getBundle().getString("events.artist"));
         lblPrice.setText(String.valueOf(simpleEventDTO.getPrice()));
         lblText.setMaxWidth(500);

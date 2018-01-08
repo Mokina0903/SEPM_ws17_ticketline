@@ -7,18 +7,14 @@ import at.ac.tuwien.inso.sepm.ticketline.client.gui.MainController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.TabHeaderController;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.NewsService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
-import at.ac.tuwien.inso.sepm.ticketline.client.util.JavaFXUtils;
 import at.ac.tuwien.inso.sepm.ticketline.rest.news.DetailedNewsDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
-import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.Tab;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -34,10 +30,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.channels.SelectionKey;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 
@@ -45,6 +38,10 @@ import java.nio.file.Files;
 public class NewsAddFormularController implements LocalizationObserver {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NewsController.class);
+
+    @FXML
+    private TabHeaderController tabHeaderController;
+
     @FXML
     public TextField TitleTF;
 
@@ -55,7 +52,7 @@ public class NewsAddFormularController implements LocalizationObserver {
     @FXML
     public ImageView newsImage;
     @FXML
-    public javafx.scene.control.TextArea TextArea;
+    public TextArea textArea;
     @FXML
     public VBox VBroot;
     @FXML
@@ -80,7 +77,6 @@ public class NewsAddFormularController implements LocalizationObserver {
 
     private String picPath;
     private NewsController c;
-    private TabHeaderController tabHeaderController;
 
     @Autowired
     private MainController mainController;
@@ -94,10 +90,15 @@ public class NewsAddFormularController implements LocalizationObserver {
 
     @FXML
     void initialize(){
+        tabHeaderController.setIcon(FontAwesome.Glyph.NEWSPAPER_ALT);
+        tabHeaderController.setTitle(BundleManager.getBundle().getString("news.news"));
+
         localizationSubject.attach(this);
 
         lblInvalidTitle.setVisible(false);
         lblInvalidText.setVisible(false);
+        tabHeaderController.setIcon(FontAwesome.Glyph.NEWSPAPER_ALT);
+        tabHeaderController.setTitle(BundleManager.getBundle().getString("news.addNews"));
 
         setButtonGraphic(saveBtn, "CHECK", Color.OLIVE);
         setButtonGraphic(backWithoutSaveBtn, "TIMES", Color.CRIMSON);
@@ -134,7 +135,7 @@ public class NewsAddFormularController implements LocalizationObserver {
             return;
         }
 
-        if(!newsService.validateTextArea(TextArea)){
+        if(!newsService.validateTextArea(textArea)){
             LOGGER.warn("Invalid text was typed in!");
             lblInvalidText.setVisible(true);
             return;
@@ -146,7 +147,7 @@ public class NewsAddFormularController implements LocalizationObserver {
             builder.picture(picPath);
         }
 
-        builder.text(TextArea.getText());
+        builder.text(textArea.getText());
         newNews = builder.build();
         try {
             newNews = newsService.publishNews(newNews);
@@ -215,5 +216,6 @@ public class NewsAddFormularController implements LocalizationObserver {
         lblTitle.setText(BundleManager.getBundle().getString("news.title"));
         lblInvalidText.setText(BundleManager.getBundle().getString("news.text.tooLong"));
         lblInvalidTitle.setText(BundleManager.getBundle().getString("news.title.tooLong"));
+        tabHeaderController.setTitle(BundleManager.getBundle().getString("news.addNews"));
     }
 }

@@ -14,9 +14,7 @@
 <BorderPane fx:id="customerOverviewRoot" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.customer.CustomerController">
 
     <top>
-
         <fx:include source="/fxml/tabHeader.fxml" fx:id="tabHeader"/>
-
     </top>
 
     <center>
@@ -33,8 +31,8 @@
                     </rowConstraints>
                     <children>
                         <Label fx:id="lbSearch" text="%menu.search" />
-                        <TextField fx:id="tfSearch" prefHeight="26.0" prefWidth="343.0" promptText="%customer.searchField" GridPane.columnIndex="1" />
-                        <Button fx:id="btSearch" mnemonicParsing="false" onAction="#search" text="%menu.search" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <TextField fx:id="tfSearch"  prefHeight="26.0" prefWidth="343.0" promptText="%customer.searchField" GridPane.columnIndex="1" />
+                        <Button fx:id="btSearch" defaultButton="true" mnemonicParsing="false" onAction="#search" text="%menu.search" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <Label fx:id="lbNoMatch" text="%customer.noMatches" textFill="#cc1d1d" GridPane.rowIndex="1" />
                     </children>
                     <VBox.margin>
@@ -44,7 +42,7 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding>
                 </GridPane>
-                <Pagination fx:id="pagination" maxHeight="-Infinity" prefHeight="400.0">
+                <Pagination fx:id="pagination" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="400.0" VBox.vgrow="ALWAYS">
                <VBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </VBox.margin>
@@ -54,6 +52,7 @@
             </children>
         </VBox>
     </center>
+
     <right>
         <GridPane hgap="10" prefWidth="77.0" vgap="20" BorderPane.alignment="CENTER">
             <BorderPane.margin>
@@ -61,7 +60,7 @@
             </BorderPane.margin>
             <Button fx:id="btNew" onAction="#openNewDialog" prefWidth="40.0" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="1" />
             <Button fx:id="btEdit" onAction="#openEditDialog" prefWidth="40.0" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-            <Button fx:id="btTickets" prefWidth="40.0" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+            <Button fx:id="btTickets" onAction="#openEventTab" prefWidth="40.0" GridPane.columnIndex="0" GridPane.rowIndex="3" />
             <columnConstraints>
                 <ColumnConstraints />
             </columnConstraints>
@@ -73,7 +72,6 @@
                 <RowConstraints />
             </rowConstraints>
         </GridPane>
-
     </right>
 
     <padding>

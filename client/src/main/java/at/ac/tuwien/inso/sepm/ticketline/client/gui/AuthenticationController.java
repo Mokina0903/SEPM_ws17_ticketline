@@ -67,9 +67,6 @@ public class AuthenticationController {
     }
 
 
-    //todo login after log out not possible -> task failed() instead of succeeded()
-
-
     @FXML
     private void handleAuthenticate(ActionEvent actionEvent) {
 
@@ -97,6 +94,7 @@ public class AuthenticationController {
                         lblNumberFreeAttempts.setText("");
 
                         mainController.loadDetailedUserDTO(getValue().getUsername());
+                        mainController.loadGuiComponentsOfUser();
                     }
 
                     @Override

@@ -1,6 +1,5 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.repository;
 
-import at.ac.tuwien.inso.sepm.ticketline.server.entity.News;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -22,7 +21,21 @@ public interface UserRepository extends JpaRepository<User, Long> {
      */
     Optional<User> findByUserName(String userName);
 
+    /**
+     * Find a single user entry by Username
+     *
+     * @param userName of the user entry
+     * @return user entry
+     */
     User findOneByUserName(String userName);
+
+    /**
+     * Find a single user entry by Username ignoring case
+     *
+     * @param userName of the user entry
+     * @return user entry
+     */
+    User findOneByUserNameIgnoreCase(String userName);
 
     /**
      * Find a single user entry by id.

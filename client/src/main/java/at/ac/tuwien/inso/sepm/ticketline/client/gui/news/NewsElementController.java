@@ -97,7 +97,7 @@ public class NewsElementController {
             mainController.showGeneralError("Can not close the detailed view of this news.");
             //e.printStackTrace();
         }
-        vbNewsElement.setStyle("-fx-background-color:rgba(245, 245, 245,0)");
+
     }
 
     public void detailedNews(MouseEvent mouseEvent) {
@@ -123,7 +123,7 @@ public class NewsElementController {
 
                 backButton.setVisible(true);
                 backButton.setDisable(false);
-
+                vbNewsElement.setStyle("-fx-background-color:rgba(245, 245, 245,0)");
             }
 
             @Override

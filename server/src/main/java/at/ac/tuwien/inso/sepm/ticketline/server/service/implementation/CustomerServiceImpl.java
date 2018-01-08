@@ -10,8 +10,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-
-import javax.swing.*;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.OffsetTime;
@@ -19,14 +17,15 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
 
-    public CustomerServiceImpl(CustomerRepository repository){
+    public CustomerServiceImpl(CustomerRepository repository) {
         customerRepository = repository;
     }
 
@@ -38,11 +37,11 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public Customer findOneById(Long id) throws InvalidIdException, CustomerNotValidException {
-        if(!validateIdOrKnr(id)){
+        if (!validateIdOrKnr(id)) {
             throw new InvalidIdException("Given id was not valid.");
         }
         Customer customer = customerRepository.findOneById(id).orElseThrow(NotFoundException::new);
-        if(!validateCustomer(customer)){
+        if (!validateCustomer(customer)) {
             throw new CustomerNotValidException("Customer not valid");
         }
         return customer;
@@ -50,8 +49,9 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public Customer createCustomer(Customer customer) throws CustomerNotValidException {
-        if(!validateCustomer(customer)){
-        throw new CustomerNotValidException("Customer was not valid!"); }
+        if (!validateCustomer(customer)) {
+            throw new CustomerNotValidException("Customer was not valid!");
+        }
         OffsetTime now = OffsetTime.now(ZoneOffset.UTC);
         String format = now.format(DateTimeFormatter.ISO_LOCAL_TIME);
         format.replace("-", "");
@@ -61,8 +61,8 @@ public class CustomerServiceImpl implements CustomerService {
         System.out.println(format);
         char[] myChar = format.toCharArray();
 
-        String seq = ""+myChar[myChar.length-1]+myChar[1]+myChar[0]+myChar[myChar.length-3]+myChar[myChar.length-2]+myChar[myChar.length-4];
-        Long knr =Long.valueOf(seq);
+        String seq = "" + myChar[myChar.length - 1] + myChar[1] + myChar[0] + myChar[myChar.length - 3] + myChar[myChar.length - 2] + myChar[myChar.length - 4];
+        Long knr = Long.valueOf(seq);
         System.out.println(knr);
         customer.setKnr(knr);
         Customer c = customerRepository.save(customer);
@@ -71,18 +71,19 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public void updateCustomer(Customer customer) throws CustomerNotValidException, InvalidIdException {
-        if(!validateCustomer(customer)){
-        throw new CustomerNotValidException("Customer was not valid!"); }
+        if (!validateCustomer(customer)) {
+            throw new CustomerNotValidException("Customer was not valid!");
+        }
 
         customerRepository.setCustomerInfoByKnr(customer.getName(), customer.getSurname(), customer.getEmail(), Timestamp.valueOf(customer.getBirthDate().atStartOfDay()), customer.getKnr());
     }
 
     @Override
     public Customer findByKnr(Long knr) throws InvalidIdException, CustomerNotValidException {
-        if(!validateIdOrKnr(knr)){
+        if (!validateIdOrKnr(knr)) {
             throw new InvalidIdException("No valid knr!");
         }
-        Customer customer= customerRepository.findOneByKnr(knr);
+        Customer customer = customerRepository.findOneByKnr(knr);
         return customer;
     }
 
@@ -99,33 +100,39 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
 
-    private boolean validateIdOrKnr(Long id){
+    private boolean validateIdOrKnr(Long id) {
         return id >= 0;
     }
 
-    private boolean validateCustomer(Customer customer){
-        if(customer.getBirthDate().isAfter(LocalDate.now())){
+    private boolean validateCustomer(Customer customer) {
+        if (customer.getBirthDate().isAfter(LocalDate.now())) {
             return false;
         }
-        if(ChronoUnit.DAYS.between(customer.getBirthDate(),LocalDate.now())<14*365){
+        if (ChronoUnit.DAYS.between(customer.getBirthDate(), LocalDate.now()) < 14 * 365) {
             return false;
         }
-        if(customer.getKnr()!= null && customer.getKnr()<0){
+        if (customer.getKnr() != null && customer.getKnr() < 0) {
             return false;
         }
-        if(customer.getId() != null && customer.getId()<0){
+        if (customer.getId() != null && customer.getId() < 0) {
             return false;
         }
-        if(customer.getEmail()!= null && !customer.getEmail().isEmpty()){
-            if(!customer.getEmail().contains("@") || !customer.getEmail().contains(".")|| customer.getEmail().length()>100){
+
+        if (customer.getEmail() != null && !customer.getEmail().isEmpty() && customer.getEmail().length() <= 100) {
+
+            Pattern pattern = Pattern.compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+                + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
+            Matcher matcher = pattern.matcher(customer.getEmail());
+
+            if (!matcher.matches()) {
                 return false;
             }
         }
 
-        if(customer.getName() == null || customer.getName().equals("")){
+        if (customer.getName() == null || customer.getName().equals("")) {
             return false;
         }
-        if(customer.getSurname() == null || customer.getSurname().equals("")){
+        if (customer.getSurname() == null || customer.getSurname().equals("")) {
             return false;
         }
         return true;
