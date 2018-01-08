@@ -47,6 +47,7 @@ public class TicketEndpoint {
     @ApiOperation(value = "create ticket entry")
     public TicketDTO create(@RequestBody TicketDTO ticketDTO) {
         Ticket ticket = ticketMapper.ticketDTOtoTicket(ticketDTO);
+
         ticket = ticketService.save(ticket);
         return ticketMapper.ticketToTicketDTO(ticket);
     }

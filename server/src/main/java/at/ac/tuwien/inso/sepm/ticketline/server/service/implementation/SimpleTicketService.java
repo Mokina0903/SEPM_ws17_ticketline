@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -44,9 +45,12 @@ public class SimpleTicketService implements TicketService {
 
     @Override
     public Ticket save( Ticket ticket ) {
+        long reservationNR = LocalDate.now().getYear()*10000000 + ticket.getId();
         if(isBooked(ticket.getEvent().getId(),ticket.getSeat().getId())){
             throw new AlreadyExistsException("Ticket already sold.");
         }
+        ticket.setReservationNumber(reservationNR);
+        ticket.setDeleted(false);
         return ticketRepository.save(ticket);
     }
 
