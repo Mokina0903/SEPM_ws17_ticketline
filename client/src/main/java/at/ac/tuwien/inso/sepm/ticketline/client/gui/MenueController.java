@@ -31,6 +31,9 @@ public class MenueController implements LocalizationObserver {
     private SimpleAuthenticationService authenticationService;
 
     @Autowired
+    private MainController mainController;
+
+    @Autowired
     private LocalizationSubject localizationSubject;
 
 
@@ -53,7 +56,8 @@ public class MenueController implements LocalizationObserver {
 
     @FXML
     private void handleLogout() {
-        authenticationService.deAuthenticate();
+        //authenticationService.deAuthenticate();
+        mainController.setAuthenticated(false);
     }
 
     @Override

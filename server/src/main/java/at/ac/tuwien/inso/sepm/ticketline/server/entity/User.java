@@ -1,5 +1,7 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.entity;
 
+
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +11,7 @@ import java.util.List;
 public class User {
 
     public static final Integer LOGIN_ATTEMPTS = 5;
+    public static final Integer VERSION = 1;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq_user_id")
@@ -25,6 +28,8 @@ public class User {
     private Integer role;
     @Column(nullable = false)
     private boolean blocked;
+    @Column(nullable = false)
+    private Integer version = VERSION;
 
     @ManyToMany()
     @JoinTable(
@@ -96,6 +101,10 @@ public class User {
         this.notSeen = notSeen;
     }
 
+    public Integer getVersion(){return version;}
+
+    public void setVersion(Integer version){ this.version = version;}
+
     public static UserBuilder builder() {
         return new UserBuilder();
     }
@@ -112,6 +121,7 @@ public class User {
         private Integer role;
         private boolean blocked;
         private List<News> notSeen;
+
 
         private UserBuilder() {
         }
@@ -146,6 +156,7 @@ public class User {
             return this;
         }
 
+
         public User build() {
             User user = new User();
             user.setId(id);
@@ -155,6 +166,7 @@ public class User {
             user.setRole(role);
             user.setBlocked(blocked);
             user.setNotSeen(notSeen);
+            user.setVersion(VERSION);
             return user;
         }
     }
