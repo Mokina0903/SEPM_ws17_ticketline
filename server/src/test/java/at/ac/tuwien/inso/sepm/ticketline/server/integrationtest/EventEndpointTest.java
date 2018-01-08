@@ -54,6 +54,7 @@ public class EventEndpointTest extends BaseIntegrationTest {
             .description("Description")
             .title("Title")
             .hall(detailedHallDTO)
+            .seatSelection(true)
             .build();
 
         Response response = RestAssured
@@ -94,6 +95,7 @@ public class EventEndpointTest extends BaseIntegrationTest {
             .description("Description")
             .title("Title")
             .hall(detailedHallDTO)
+            .seatSelection(true)
             .build();
 
         Response response = RestAssured
