@@ -113,7 +113,8 @@ public class EventElementController implements LocalizationObserver {
                 loader.loadAndWrap("/fxml/customer/customerComponent.fxml");
             Node root = loader.load("/fxml/customer/customerComponent.fxml");
             CustomerController c = wrapper.getController();
-            c.toggleTicketBtn();
+            c.preparePagination();
+            c.toggleTicketprozessView();
             mainController.getEventTab().setContent(root);
         } else {
             SpringFxmlLoader.Wrapper<HallplanController> wrapper =

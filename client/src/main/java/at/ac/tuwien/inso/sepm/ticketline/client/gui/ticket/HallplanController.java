@@ -239,7 +239,6 @@ public class HallplanController {
         button.setGraphic(glyph);
     }
 
-
     @FXML
     public void backToEventSelection(ActionEvent actionEvent) {
         mainController.getEventTab().setContent(oldContent);

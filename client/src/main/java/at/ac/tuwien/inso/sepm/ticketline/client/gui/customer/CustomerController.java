@@ -8,6 +8,7 @@ import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.JavaFXUtils;
 import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
+import com.sun.javafx.tools.packager.bundlers.Bundler;
 import javafx.beans.binding.Bindings;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -34,6 +35,8 @@ import java.util.List;
 public class CustomerController extends TabElement implements LocalizationObserver {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(at.ac.tuwien.inso.sepm.ticketline.client.gui.customer.CustomerController.class);
+    @FXML
+    public Button btNext;
 
     @FXML
     private TabHeaderController tabHeaderController;
@@ -97,9 +100,12 @@ public class CustomerController extends TabElement implements LocalizationObserv
         this.customerService = customerService;
     }
 
-    public void toggleTicketBtn(){
+    public void toggleTicketprozessView(){
         btTickets.setVisible(!btTickets.isVisible());
         btTickets.setDisable(!btTickets.isDisable());
+        btNext.setDisable(!btNext.isDisable());
+        btNext.setVisible(!btNext.isVisible());
+        tabHeaderController.setTitle(BundleManager.getBundle().getString("customer.chooseCustomer"));
     }
 
     @FXML
@@ -110,6 +116,10 @@ public class CustomerController extends TabElement implements LocalizationObserv
         btNew.setGraphic(fontAwesome.create("USER_PLUS").size(FONT_SIZE));
         btEdit.setGraphic(fontAwesome.create("PENCIL_SQUARE_ALT").size(FONT_SIZE));
         btTickets.setGraphic(fontAwesome.create("TICKET").size(FONT_SIZE));
+
+        btNext.setDisable(true);
+        btNext.setVisible(false);
+        btNext.setText(BundleManager.getBundle().getString("customer.next"));
 
         lbNoMatch.setVisible(false);
     }
@@ -297,6 +307,7 @@ public class CustomerController extends TabElement implements LocalizationObserv
         tcSurname.setText(BundleManager.getBundle().getString("customer.lname"));
         tcBirthdate.setText(BundleManager.getBundle().getString("customer.birthdate"));
         tcNumber.setText(BundleManager.getBundle().getString("customer.number"));
+        btNext.setText(BundleManager.getBundle().getString("customer.next"));
         //todo update TVcolumns
     }
 
