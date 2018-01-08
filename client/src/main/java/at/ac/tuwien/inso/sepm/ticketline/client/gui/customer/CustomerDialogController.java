@@ -73,8 +73,6 @@ public class CustomerDialogController implements LocalizationObserver {
     private Button btOk;
     @FXML
     private Button btCancel;
-    @FXML
-    private TabHeaderController tabHeaderController;
 
     @Autowired
     private LocalizationSubject localizationSubject;
@@ -136,7 +134,7 @@ public class CustomerDialogController implements LocalizationObserver {
 
         tabHeaderController.setIcon(FontAwesome.Glyph.USERS);
         tabHeaderController.setTitle(BundleManager.getBundle().getString("customer.addCustomer"));
-        
+
         Glyph glyph = fontAwesome.create(FontAwesome.Glyph.TIMES);
         glyph.setColor(Color.CRIMSON);
         invalidFieldSymbol = glyph;
