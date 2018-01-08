@@ -58,7 +58,7 @@
 -fx-background-color: derive(GREENYELLOW, -20%);
 }
 
-.sectorA.occupied, .sectorA.occupied.selected, .sectorB.occupied.selected, .sectorB.occupied, .sectorC.occupied.selected, .sectorC.occupied, .sectorD.occupied.selected, .sectorD.occupied,  .sectorE.occupied, .sectorE.occupied.selected{
+.sectorA.occupied,  .sectorB.occupied, .sectorC.occupied, .sectorD.occupied,  .sectorE.occupied{
  -fx-background-color: DARKGREY;
  }
 .seatVbox:hover, .sectorA.selected:hover, .sectorB.selected:hover, .sectorC.selected:hover, .sectorD.selected:hover, .sectorE.selected:hover{

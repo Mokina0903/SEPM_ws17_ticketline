@@ -14,6 +14,8 @@ import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.hall.DetailedHallDTO
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.seat.SeatDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventTarget;
 import javafx.fxml.FXML;
@@ -93,19 +95,23 @@ public class HallplanController {
     }
 
 
-    public int getTicketCount() {
+     int getTicketCount() {
         return ticketCount;
     }
 
-    public void setTicketCount(int ticketCount) {
+     void setTicketCount(int ticketCount) {
         this.ticketCount = ticketCount;
     }
+
+
 
     @FXML
     void initialize(){
         tabHeaderController.setIcon(FontAwesome.Glyph.TICKET);
         tabHeaderController.setTitle(BundleManager.getBundle().getString("hallplan.chooseYourTickets"));
         ticketCount = 0;
+        ticketAmountLb.setText(String.valueOf(ticketCount));
+
 
     }
 
