@@ -1,6 +1,7 @@
 package at.ac.tuwien.inso.sepm.ticketline.client.rest;
 
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
+import at.ac.tuwien.inso.sepm.ticketline.client.exception.EmptyValueException;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.TicketAlreadyExistsException;
 import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketDTO;
 
@@ -53,8 +54,8 @@ public interface TicketRestClient {
     /**
      * save ticket if seat is free
      *
-     * @param ticketDTO to save
+     * @param ticketDTOS to save
      * @return saved ticket with id, or throw AlreadyExistsException if ticket is already booked
      */
-    TicketDTO save(TicketDTO ticketDTO) throws DataAccessException, TicketAlreadyExistsException;
+    List<TicketDTO> save(List<TicketDTO> ticketDTOS) throws DataAccessException, TicketAlreadyExistsException, EmptyValueException;
 }

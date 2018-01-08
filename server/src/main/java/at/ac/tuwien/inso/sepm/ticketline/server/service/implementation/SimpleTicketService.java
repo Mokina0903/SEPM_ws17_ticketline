@@ -4,6 +4,7 @@ import at.ac.tuwien.inso.sepm.ticketline.server.entity.Customer;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Ticket;
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.AlreadyExistsException;
+import at.ac.tuwien.inso.sepm.ticketline.server.exception.EmptyFieldException;
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.NotFoundException;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.TicketRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.TicketService;
@@ -44,14 +45,20 @@ public class SimpleTicketService implements TicketService {
     }
 
     @Override
-    public Ticket save( Ticket ticket ) {
-        long reservationNR = LocalDate.now().getYear()*10000000 + ticket.getId();
-        if(isBooked(ticket.getEvent().getId(),ticket.getSeat().getId())){
-            throw new AlreadyExistsException("Ticket already sold.");
+    public List<Ticket> save( List<Ticket> tickets ) {
+        if(tickets==null || tickets.isEmpty()){throw new EmptyFieldException();}
+
+        long reservationNR = (LocalDate.now().getYear() % 100) * 100000000 + tickets.get(0).getId();
+
+        for(Ticket ticket : tickets) {
+            if (isBooked(ticket.getEvent().getId(), ticket.getSeat().getId())) {
+                throw new AlreadyExistsException("Ticket already sold.");
+            }
+            ticket.setDeleted(false);
+            ticket.setReservationNumber(reservationNR);
         }
-        ticket.setReservationNumber(reservationNR);
-        ticket.setDeleted(false);
-        return ticketRepository.save(ticket);
+
+        return ticketRepository.save(tickets);
     }
 
     @Override

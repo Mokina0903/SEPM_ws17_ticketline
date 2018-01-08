@@ -15,4 +15,6 @@ public interface TicketMapper {
 
     List<TicketDTO> ticketToTicketDTO( List<Ticket> all);
 
+    List<Ticket> ticketDTOtoTicket(List<TicketDTO> all);
+
 }

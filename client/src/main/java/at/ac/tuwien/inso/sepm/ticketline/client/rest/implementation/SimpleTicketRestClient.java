@@ -1,6 +1,7 @@
 package at.ac.tuwien.inso.sepm.ticketline.client.rest.implementation;
 
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
+import at.ac.tuwien.inso.sepm.ticketline.client.exception.EmptyValueException;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.TicketAlreadyExistsException;
 import at.ac.tuwien.inso.sepm.ticketline.client.rest.TicketRestClient;
 import at.ac.tuwien.inso.sepm.ticketline.rest.news.DetailedNewsDTO;
@@ -110,21 +111,23 @@ public class SimpleTicketRestClient implements TicketRestClient {
     }
 
     @Override
-    public TicketDTO save( TicketDTO ticketDTO ) throws DataAccessException, TicketAlreadyExistsException {
+    public List<TicketDTO> save( List<TicketDTO> ticketDTOS ) throws DataAccessException, TicketAlreadyExistsException, EmptyValueException {
         try {
-            LOGGER.debug("Save ticket");
-            HttpEntity<TicketDTO> ticket = new HttpEntity<>(ticketDTO);
+            LOGGER.debug("Save tickets");
+            HttpEntity<List<TicketDTO>> tickets = new HttpEntity<>(ticketDTOS);
             restClient.exchange(
                 restClient.getServiceURI(TICKET_URL),
                 HttpMethod.POST,
-                ticket,
+                tickets,
                 Void.class);
-            return ticket.getBody();
+            return tickets.getBody();
         } catch (HttpStatusCodeException e) {
-            //todo: new AlreadyExistsException if ticket was already created
             if(e.getStatusCode()== HttpStatus.CONFLICT){
                 throw new TicketAlreadyExistsException("The ticket is already occupied." + e.getStatusCode().toString());
-            }else {
+            }else if(e.getStatusCode()==HttpStatus.NOT_ACCEPTABLE){
+                throw new EmptyValueException();
+            }
+            else {
                 throw new DataAccessException("Failed save ticket with status code " + e.getStatusCode().toString());
             }
         } catch (RestClientException e) {

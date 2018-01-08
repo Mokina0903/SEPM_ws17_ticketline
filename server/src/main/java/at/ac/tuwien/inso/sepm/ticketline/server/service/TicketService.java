@@ -54,10 +54,10 @@ public interface TicketService {
     Boolean isBooked(Long eventId,Long seatId);
 
     /**
-     * save ticket if seat is free
+     * save tickets if seat is free
      *
-     * @param ticket to save
-     * @return saved ticket with id, or throw AlreadyExistsException if ticket is already booked
+     * @param tickets to save
+     * @return saved tickets with id, or throw AlreadyExistsException if ticket is already booked
      */
-    Ticket save(Ticket ticket);
+    List<Ticket> save(List<Ticket> tickets);
 }

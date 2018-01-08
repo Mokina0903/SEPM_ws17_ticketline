@@ -45,11 +45,11 @@ public class TicketEndpoint {
     @RequestMapping(method = RequestMethod.POST)
     @PreAuthorize("hasRole('USER')")
     @ApiOperation(value = "create ticket entry")
-    public TicketDTO create(@RequestBody TicketDTO ticketDTO) {
-        Ticket ticket = ticketMapper.ticketDTOtoTicket(ticketDTO);
+    public List<TicketDTO> create(@RequestBody List<TicketDTO> ticketDTOS) {
+        List<Ticket> tickets = ticketMapper.ticketDTOtoTicket(ticketDTOS);
 
-        ticket = ticketService.save(ticket);
-        return ticketMapper.ticketToTicketDTO(ticket);
+        tickets = ticketService.save(tickets);
+        return ticketMapper.ticketToTicketDTO(tickets);
     }
 
     @RequestMapping(value = "/isBooked/{eventId}/{seatId}", method = RequestMethod.GET)
