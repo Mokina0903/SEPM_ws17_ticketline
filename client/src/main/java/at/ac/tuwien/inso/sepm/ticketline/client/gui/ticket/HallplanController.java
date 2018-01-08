@@ -76,6 +76,7 @@ public class HallplanController {
     private final int FONT_SIZE = 16;
 
     private int ticketCount;
+    ArrayList<SeatDTO> selectedSeats;
 
     @FXML
     private TabHeaderController tabHeaderController;
@@ -103,7 +104,12 @@ public class HallplanController {
         this.ticketCount = ticketCount;
     }
 
-
+    void addSelectedSeat(SeatDTO seat){
+        selectedSeats.add(seat);
+    }
+    void removeSelectedSeat(SeatDTO seat){
+        selectedSeats.remove(seat);
+    }
 
     @FXML
     void initialize(){

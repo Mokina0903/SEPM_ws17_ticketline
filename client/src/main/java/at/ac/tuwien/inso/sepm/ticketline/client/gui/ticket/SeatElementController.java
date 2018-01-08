@@ -34,10 +34,12 @@ public class SeatElementController {
             vBseat.getStyleClass().remove("selected");
             hallplanController.setTicketCount(hallplanController.getTicketCount()-1);
             hallplanController.ticketAmountLb.setText(String.valueOf(hallplanController.getTicketCount()));
+            hallplanController.removeSelectedSeat(seat);
         } else if((!vBseat.getStyleClass().contains("selected"))&&(!vBseat.getStyleClass().contains("occupied"))) {
             vBseat.getStyleClass().add("selected");
             hallplanController.setTicketCount(hallplanController.getTicketCount()+1);
             hallplanController.ticketAmountLb.setText(String.valueOf(hallplanController.getTicketCount()));
+            hallplanController.addSelectedSeat(seat);
         }
 
     }
