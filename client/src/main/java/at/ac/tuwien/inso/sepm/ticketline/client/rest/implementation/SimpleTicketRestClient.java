@@ -1,6 +1,7 @@
 package at.ac.tuwien.inso.sepm.ticketline.client.rest.implementation;
 
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
+import at.ac.tuwien.inso.sepm.ticketline.client.exception.TicketAlreadyExistsException;
 import at.ac.tuwien.inso.sepm.ticketline.client.rest.TicketRestClient;
 import at.ac.tuwien.inso.sepm.ticketline.rest.news.DetailedNewsDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketDTO;
@@ -9,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpStatusCodeException;
@@ -108,7 +110,7 @@ public class SimpleTicketRestClient implements TicketRestClient {
     }
 
     @Override
-    public TicketDTO save( TicketDTO ticketDTO ) throws DataAccessException {
+    public TicketDTO save( TicketDTO ticketDTO ) throws DataAccessException, TicketAlreadyExistsException {
         try {
             LOGGER.debug("Save ticket");
             HttpEntity<TicketDTO> ticket = new HttpEntity<>(ticketDTO);
@@ -120,7 +122,11 @@ public class SimpleTicketRestClient implements TicketRestClient {
             return ticket.getBody();
         } catch (HttpStatusCodeException e) {
             //todo: new AlreadyExistsException if ticket was already created
-            throw new DataAccessException("Failed save ticket with status code " + e.getStatusCode().toString());
+            if(e.getStatusCode()== HttpStatus.CONFLICT){
+                throw new TicketAlreadyExistsException("The ticket is already occupied." + e.getStatusCode().toString());
+            }else {
+                throw new DataAccessException("Failed save ticket with status code " + e.getStatusCode().toString());
+            }
         } catch (RestClientException e) {
             throw new DataAccessException(e.getMessage(), e);
         }
