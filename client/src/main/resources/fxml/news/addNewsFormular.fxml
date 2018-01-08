@@ -26,8 +26,8 @@
                 <BorderPane.margin>
                     <Insets bottom="10" left="20" right="20" top="10" />
                 </BorderPane.margin>
-
-                <HBox spacing="8" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                <fx:include source="/fxml/tabHeader.fxml" fx:id="tabHeader" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                <HBox spacing="8" GridPane.columnIndex="0" GridPane.rowIndex="1">
                     <Label fx:id="lblTitle" text="%news.title" />
                     <TextField fx:id="TitleTF" />
                     <Label fx:id="lblInvalidTitle" text="%news.title.tooLong" textFill="crimson" />
