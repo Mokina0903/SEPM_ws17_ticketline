@@ -84,10 +84,11 @@ public class EventLocationDataGenerator {
                     hall = hallRepository.save(hall);
 
                     for (int j = 0; j < 100; j++) {
+
                         Seat seat = Seat.builder()
                             .nr(j)
                             .row(j / 10)
-                            .sector('A')
+                            .sector(j/20==0?'a':j/20==1?'b':j/20==2?'c':j/20==3?'d':'e')
                             .hall(hall)
                             .build();
                         LOGGER.debug("saving seat {}",seat);
