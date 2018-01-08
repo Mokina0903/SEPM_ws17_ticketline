@@ -25,6 +25,37 @@ public class Ticket {
     @Column(nullable = false)
     private int price;
 
+    private boolean isDeleted;
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted( boolean deleted ) {
+        isDeleted = deleted;
+    }
+
+    public boolean isPaid() {
+        return isPaid;
+    }
+
+    public void setPaid( boolean paid ) {
+        isPaid = paid;
+    }
+
+    public Long getReservationNumber() {
+        return reservationNumber;
+    }
+
+    public void setReservationNumber( Long reservationNumber ) {
+        this.reservationNumber = reservationNumber;
+    }
+
+    private boolean isPaid;
+
+    @Column(nullable = false, updatable = false)
+    private Long reservationNumber;
+
     public Long getId() {
         return id;
     }
@@ -77,6 +108,9 @@ public class Ticket {
             ", customer=" + customer +
             ", seat=" + seat +
             ", price=" + price +
+            ", isDeleted=" + isDeleted +
+            ", isPaid=" + isPaid +
+            ", reservationNumber=" + reservationNumber +
             '}';
     }
 
@@ -88,10 +122,13 @@ public class Ticket {
         Ticket ticket = (Ticket) o;
 
         if (getPrice() != ticket.getPrice()) return false;
+        if (isDeleted() != ticket.isDeleted()) return false;
+        if (isPaid() != ticket.isPaid()) return false;
         if (!getId().equals(ticket.getId())) return false;
         if (!getEvent().equals(ticket.getEvent())) return false;
         if (!getCustomer().equals(ticket.getCustomer())) return false;
-        return getSeat().equals(ticket.getSeat());
+        if (!getSeat().equals(ticket.getSeat())) return false;
+        return getReservationNumber().equals(ticket.getReservationNumber());
     }
 
     @Override
@@ -101,6 +138,9 @@ public class Ticket {
         result = 31 * result + getCustomer().hashCode();
         result = 31 * result + getSeat().hashCode();
         result = 31 * result + getPrice();
+        result = 31 * result + (isDeleted() ? 1 : 0);
+        result = 31 * result + (isPaid() ? 1 : 0);
+        result = 31 * result + getReservationNumber().hashCode();
         return result;
     }
 
@@ -110,6 +150,9 @@ public class Ticket {
         private Customer customer;
         private Seat seat;
         private int price;
+        private long reservationNumbler;
+        private boolean isDeleted;
+        private boolean isPaid;
 
         public TicketBuilder id(Long id){
             this.id = id;
@@ -131,6 +174,18 @@ public class Ticket {
             this.price = price;
             return this;
         }
+        public TicketBuilder reservationNumber(Long reservationNumbler){
+            this.reservationNumbler = reservationNumbler;
+            return this;
+        }
+        public TicketBuilder isPaid(boolean isPaid){
+            this.isPaid = isPaid;
+            return this;
+        }
+        public TicketBuilder isDeleted(boolean isDeleted){
+            this.isDeleted = isDeleted;
+            return this;
+        }
 
         public Ticket build(){
             Ticket ticket = new Ticket();
@@ -139,6 +194,9 @@ public class Ticket {
             ticket.setId(id);
             ticket.setPrice(price);
             ticket.setSeat(seat);
+            ticket.setDeleted(isDeleted);
+            ticket.setPaid(isPaid);
+            ticket.setReservationNumber(reservationNumbler);
 
             return ticket;
         }
