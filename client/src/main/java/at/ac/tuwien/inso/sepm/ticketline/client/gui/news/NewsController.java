@@ -95,7 +95,7 @@ public class NewsController extends TabElement implements LocalizationObserver{
         localizationSubject.attach(this);
 
         addNewNews.setGraphic(fontAwesome.create("PLUS").size(FONT_SIZE));
-        vbNewsElements.getSelectionModel()
+        vbNewsElementsNew.getSelectionModel()
             .selectedIndexProperty()
             .addListener((observable, oldvalue, newValue) -> {
 

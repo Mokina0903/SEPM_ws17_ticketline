@@ -77,9 +77,6 @@ public class NewsAddFormularController implements LocalizationObserver {
 
     private String picPath;
     private NewsController c;
-    
-    @FXML
-    private TabHeaderController tabHeaderController;
 
     @Autowired
     private MainController mainController;

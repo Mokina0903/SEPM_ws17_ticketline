@@ -24,19 +24,19 @@
         </VBox>
         <TabPane>
 
-       <Tab fx:id="newNewsTab" text="%news.newnews">
-           <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS"
-                       style="-fx-background-color: transparent;">
+            <Tab fx:id="newNewsTab" text="%news.newnews">
+                <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS"
+                            style="-fx-background-color: transparent;">
 
-               <ListView fx:id="vbNewsElementsNew" maxHeight="1.7976931348623157E308"
-                         maxWidth="1.7976931348623157E308"
-                         style="-fx-background-color: transparent;">
-                   <padding>
-                       <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
-                   </padding>
-               </ListView>
-           </ScrollPane>
-       </Tab>
+                    <ListView fx:id="vbNewsElementsNew" maxHeight="1.7976931348623157E308"
+                              maxWidth="1.7976931348623157E308"
+                              style="-fx-background-color: transparent;">
+                        <padding>
+                            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                        </padding>
+                    </ListView>
+                </ScrollPane>
+            </Tab>
             <Tab fx:id="oldNewsTab" text="%news.oldnews">
                 <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS"
                             style="-fx-background-color: transparent;">

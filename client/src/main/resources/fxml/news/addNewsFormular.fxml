@@ -15,7 +15,6 @@
 <?import javafx.scene.layout.VBox?>
 
 <VBox fx:id="VBroot" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.news.NewsAddFormularController">
-    <fx:include source="/fxml/tabHeader.fxml" fx:id="tabHeader"/>
     <BorderPane>
         <stylesheets>
             <URL value="@/css/newsElement.css" />
