@@ -27,6 +27,9 @@ import javafx.scene.text.Font;
 import net.bytebuddy.asm.Advice;
 import org.controlsfx.control.GridView;
 import org.controlsfx.glyphfont.FontAwesome;
+import org.controlsfx.glyphfont.Glyph;
+import org.controlsfx.glyphfont.GlyphFont;
+import org.controlsfx.glyphfont.GlyphFontRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -57,6 +60,10 @@ public class HallplanController extends TabElement {
     public Label lbSurname;
     @FXML
     public Label lblCustomerDescription;
+    @FXML
+    public Button backbut;
+    private GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
+    private final int FONT_SIZE = 16;
 
     @FXML
     private TabHeaderController tabHeaderController;
@@ -86,6 +93,8 @@ public class HallplanController extends TabElement {
         this.event = event;
         this.hall = event.getHall();
         this.customer = customer;
+
+       setButtonGraphic( backbut, "TIMES", Color.DARKGRAY);
 
         lbKnr.setText(String.valueOf(customer.getKnr()));
         lbSurname.setText(customer.getSurname());
@@ -161,6 +170,14 @@ public class HallplanController extends TabElement {
 
        }
     }
+
+    private void setButtonGraphic(Button button, String glyphSymbol, Color color) {
+        Glyph glyph = fontAwesome.create(FontAwesome.Glyph.valueOf(glyphSymbol));
+        glyph.setColor(color);
+        glyph.setFontSize(FONT_SIZE);
+        button.setGraphic(glyph);
+    }
+
 
     @Override
     protected void setTab(Tab tab) {
