@@ -13,6 +13,7 @@ import at.ac.tuwien.inso.sepm.ticketline.client.service.UserService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.JavaFXUtils;
 import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
+import at.ac.tuwien.inso.sepm.ticketline.rest.event.DetailedEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.user.DetailedUserDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
 import javafx.application.Platform;
@@ -73,6 +74,7 @@ public class MainController implements LocalizationObserver {
     private UserService userService;
     private DetailedUserDTO detailedUserDTO;
     private CustomerDTO cutsomer;
+    private DetailedEventDTO event;
 
     private Tab newsTab = new Tab();
     private Tab eventTab = new Tab();
@@ -95,6 +97,14 @@ public class MainController implements LocalizationObserver {
 
     public void setCutsomer(CustomerDTO cutsomer) {
         this.cutsomer = cutsomer;
+    }
+
+    public DetailedEventDTO getEvent() {
+        return event;
+    }
+
+    public void setEvent(DetailedEventDTO event) {
+        this.event = event;
     }
 
     public Tab getNewsTab() {

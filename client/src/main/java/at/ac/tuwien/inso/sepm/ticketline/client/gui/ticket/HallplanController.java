@@ -76,7 +76,7 @@ public class HallplanController {
     private final int FONT_SIZE = 16;
 
     private int ticketCount;
-    ArrayList<SeatDTO> selectedSeats;
+    private ArrayList<SeatDTO> selectedSeats;
 
     @FXML
     private TabHeaderController tabHeaderController;
@@ -93,6 +93,7 @@ public class HallplanController {
         this.mainController = mainController;
         this.springFxmlLoader = springFxmlLoader;
         this.ticketService = ticketService;
+        selectedSeats = new ArrayList<>();
     }
 
 

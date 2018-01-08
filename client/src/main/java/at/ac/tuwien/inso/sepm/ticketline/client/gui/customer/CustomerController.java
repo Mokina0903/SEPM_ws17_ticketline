@@ -3,6 +3,7 @@ package at.ac.tuwien.inso.sepm.ticketline.client.gui.customer;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.SearchNoMatchException;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.*;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket.HallplanController;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.CustomerService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.JavaFXUtils;
@@ -348,5 +349,17 @@ public class CustomerController extends TabElement implements LocalizationObserv
 
         new Thread(taskLoadCustomer).start();
 
+    }
+
+    public void openHallplan(ActionEvent actionEvent) {
+
+        SpringFxmlLoader.Wrapper<HallplanController> wrapper =
+            springFxmlLoader.loadAndWrap("/fxml/ticket/hallplan.fxml");
+        Node root = springFxmlLoader.load("/fxml/ticket/hallplan.fxml");
+        HallplanController c = wrapper.getController();
+
+        c.initializeData(mainController.getEvent(),currentTableview.getSelectionModel().getSelectedItem(),  customerOverviewRoot);
+
+        mainController.getEventTab().setContent(root);
     }
 }

@@ -104,9 +104,22 @@ public class EventElementController implements LocalizationObserver {
 
 
     public void detailedEventInfo(MouseEvent mouseEvent) {
+
     }
 
     public void ticketReservationForEvent(ActionEvent actionEvent) {
+        DetailedEventDTO event  = null;
+        try {
+            event = eventService.findById(simpleEventDTO.getId());
+
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+        }
+        if(event  == null){
+            //TODO: add alert/warning
+            return;
+        }
+        mainController.setEvent(event);
 
         if (mainController.getCutsomer() == null) {
             SpringFxmlLoader.Wrapper<CustomerController> wrapper =
@@ -121,13 +134,7 @@ public class EventElementController implements LocalizationObserver {
                 loader.loadAndWrap("/fxml/ticket/hallplan.fxml");
             Node root = loader.load("/fxml/ticket/hallplan.fxml");
             HallplanController c = wrapper.getController();
-            try {
-                DetailedEventDTO event = eventService.findById(simpleEventDTO.getId());
-                c.initializeData(event, mainController.getCutsomer(), myContainer );
-            } catch (DataAccessException e) {
-                e.printStackTrace();
-            }
-
+            c.initializeData(event, mainController.getCutsomer(), myContainer );
             mainController.getEventTab().setContent(root);
         }
     }
