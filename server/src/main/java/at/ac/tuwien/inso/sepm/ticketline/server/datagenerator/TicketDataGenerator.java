@@ -7,6 +7,7 @@ import at.ac.tuwien.inso.sepm.ticketline.server.repository.CustomerRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.EventRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.Location.SeatRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.TicketRepository;
+import at.ac.tuwien.inso.sepm.ticketline.server.service.TicketService;
 import com.github.javafaker.Faker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
+import java.time.LocalDate;
 import java.util.List;
 
 @Profile("generateData")
@@ -47,13 +49,17 @@ public class TicketDataGenerator {
             LOGGER.info("generating {} ticket entries", NUMBER_OF_TICKETSPEREVENT_TO_GENERATE*eventRepository.count());
             for (Event event: eventRepository.findAll()) {
                 List<Seat> seats= seatRepository.findAllByHallId(event.getHall().getId());
+
                 for (int i=0;i<NUMBER_OF_TICKETSPEREVENT_TO_GENERATE;i++){
+                    long reservationNR = (LocalDate.now().getYear()%100)*100000000 + i/10 +event.getId();
 
                     Ticket ticket= Ticket.builder()
                         .customer(customerRepository.findAll().get(1))
                         .event(event)
                         .seat(seats.remove(0))
                         .price(faker.number().numberBetween((int)event.getPrice(),(int)event.getPrice()*2))
+                        .isPaid(true)
+                        .reservationNumber(reservationNR)
                         .build();
 
                     LOGGER.debug("saving ticket {}", ticket);
