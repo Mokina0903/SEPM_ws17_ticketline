@@ -4,6 +4,7 @@ import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.MainController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.TabElement;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.TabHeaderController;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.event.EventController;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.NewsService;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.TicketService;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.UserService;
@@ -39,6 +40,7 @@ import org.controlsfx.glyphfont.GlyphFont;
 import org.controlsfx.glyphfont.GlyphFontRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
@@ -48,6 +50,8 @@ import java.util.List;
 @Component
 public class HallplanController {
     private static final Logger LOGGER = LoggerFactory.getLogger(at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket.TicketController.class);
+
+    @Autowired
     private final MainController mainController;
     private final SpringFxmlLoader springFxmlLoader;
 
@@ -84,7 +88,7 @@ public class HallplanController {
 
     private TicketService ticketService;
     private DetailedEventDTO event;
-    private CustomerDTO customer;
+
 
     private DetailedHallDTO hall;
     private Node oldContent;
@@ -124,7 +128,7 @@ public class HallplanController {
     public void initializeData(DetailedEventDTO event, CustomerDTO customer, Node oldContent) {
         this.event = event;
         this.hall = event.getHall();
-        this.customer = customer;
+
         this.oldContent = oldContent;
 
         initializeSeats();
@@ -249,10 +253,27 @@ public class HallplanController {
     public void reserveTickets(ActionEvent actionEvent) {
         //TODO: reserve/create Tickets from the seats within selectedSeats
 
+      backToEventTabBeginning();
     }
 
     @FXML
     public void buyTickets(ActionEvent actionEvent) {
         //TODO: buy/create Tickets from the seats within selectedSeats
+
+      backToEventTabBeginning();
+    }
+
+    private void backToEventTabBeginning(){
+        mainController.getCustomerController().setNormalTabView();
+        SpringFxmlLoader.Wrapper<EventController> wrapper =
+            springFxmlLoader.loadAndWrap("/fxml/event/eventComponent.fxml");
+        Node root = springFxmlLoader.load("/fxml/event/eventComponent.fxml");
+
+        EventController c = wrapper.getController();
+
+        c.loadEvents();
+        mainController.getEventTab().setContent(root);
+        mainController.setCutsomer(null);
+        mainController.setEvent(null);
     }
 }

@@ -103,6 +103,10 @@ public class MainController implements LocalizationObserver {
         return event;
     }
 
+    public CustomerController getCustomerController() {
+        return customerController;
+    }
+
     public void setEvent(DetailedEventDTO event) {
         this.event = event;
     }
