@@ -49,6 +49,14 @@ public class HallplanController extends TabElement {
     public Button reserveBut;
     @FXML
     public Button buyBut;
+    @FXML
+    public Label lbKnr;
+    @FXML
+    public Label lbVname;
+    @FXML
+    public Label lbSurname;
+    @FXML
+    public Label lblCustomerDescription;
 
     @FXML
     private TabHeaderController tabHeaderController;
@@ -78,6 +86,14 @@ public class HallplanController extends TabElement {
         this.event = event;
         this.hall = event.getHall();
         this.customer = customer;
+
+        lbKnr.setText(String.valueOf(customer.getKnr()));
+        lbSurname.setText(customer.getSurname());
+        lbVname.setText(customer.getName());
+        lblCustomerDescription.setFont(Font.font(16));
+        lbVname.setFont(Font.font(14));
+        lbSurname.setFont(Font.font(14));
+        lbKnr.setFont(Font.font(14));
 
     }
 

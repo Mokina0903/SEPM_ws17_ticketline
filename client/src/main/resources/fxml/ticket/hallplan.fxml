@@ -30,17 +30,28 @@
 
         <GridPane hgap="10" vgap="10">
             <BorderPane.margin>
-                <Insets bottom="5.0" top="300.0" left="20.0" right="200.0"/>
+                <Insets bottom="5.0" top="100.0" left="20.0" right="200.0"/>
             </BorderPane.margin>
-            <Label text="%hallplan.amountOfTickets" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-            <Label fx:id="ticketAmountLb" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-            <Button fx:id="reserveBut" text="%hallplan.reserveTickets" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
-            <Button fx:id="buyBut" text="%hallplan.buy" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+
+            <Label fx:id="lblCustomerDescription" text ="%customer.customerSelected" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+            <HBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                <Label fx:id="lbKnr" />
+                <Label fx:id="lbVname" />
+                <Label fx:id="lbSurname" />
+            </HBox>
+
+            <Label text="%hallplan.amountOfTickets" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+            <Label fx:id="ticketAmountLb" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+            <Button fx:id="reserveBut" text="%hallplan.reserveTickets" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+            <Button fx:id="buyBut" text="%hallplan.buy" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
             <columnConstraints>
+                <ColumnConstraints/>
                 <ColumnConstraints/>
                 <ColumnConstraints/>
             </columnConstraints>
             <rowConstraints>
+                <RowConstraints/>
+                <RowConstraints/>
                 <RowConstraints/>
                 <RowConstraints/>
                 <RowConstraints/>
