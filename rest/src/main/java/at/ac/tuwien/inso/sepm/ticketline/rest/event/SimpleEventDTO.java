@@ -6,7 +6,6 @@ import io.swagger.annotations.ApiModelProperty;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 
 @ApiModel(value = "SimpleEventDTO", description = "A simple DTO for event entries via rest")
 public class SimpleEventDTO {
@@ -30,6 +29,9 @@ public class SimpleEventDTO {
 
     @ApiModelProperty(required = true, name = "The end Time and Date of the event")
     private LocalDateTime endOfEvent;
+
+    @ApiModelProperty(required =true, name = "Info about seat selection or sectors")
+    private Boolean seatSelection;
 
     public Long getId() {
         return id;
@@ -87,33 +89,12 @@ public class SimpleEventDTO {
         this.endOfEvent = endOfEvent;
     }
 
-
-    @Override
-    public boolean equals( Object o ) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        DetailedEventDTO that = (DetailedEventDTO) o;
-
-        if (!getId().equals(that.getId())) return false;
-        if (!getArtists().equals(that.getArtists())) return false;
-        if (!getTitle().equals(that.getTitle())) return false;
-        if (!getDescriptionSummary().equals(that.getDescription())) return false;
-        if (!getPrice().equals(that.getPrice())) return false;
-        if (!getStartOfEvent().equals(that.getStartOfEvent())) return false;
-        return  (!getEndOfEvent().equals(that.getEndOfEvent()));
+    public Boolean getSeatSelection() {
+        return seatSelection;
     }
 
-    @Override
-    public int hashCode() {
-        int result = getId().hashCode();
-        result = 31 * result + getArtists().hashCode();
-        result = 31 * result + getTitle().hashCode();
-        result = 31 * result + getDescriptionSummary().hashCode();
-        result = 31 * result + getPrice().hashCode();
-        result = 31 * result + getStartOfEvent().hashCode();
-        result = 31 * result + getEndOfEvent().hashCode();
-        return result;
+    public void setSeatSelection( Boolean seatSelection ) {
+        this.seatSelection = seatSelection;
     }
 
     @Override
@@ -121,11 +102,43 @@ public class SimpleEventDTO {
         return "SimpleEventDTO{" +
             "id=" + id +
             ", title='" + title + '\'' +
+            ", artists=" + artists +
             ", descriptionSummary='" + descriptionSummary + '\'' +
             ", price=" + price +
             ", startOfEvent=" + startOfEvent +
             ", endOfEvent=" + endOfEvent +
+            ", seatSelection=" + seatSelection +
             '}';
+    }
+
+    @Override
+    public boolean equals( Object o ) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        SimpleEventDTO that = (SimpleEventDTO) o;
+
+        if (!getId().equals(that.getId())) return false;
+        if (!getTitle().equals(that.getTitle())) return false;
+        if (!getArtists().equals(that.getArtists())) return false;
+        if (!getDescriptionSummary().equals(that.getDescriptionSummary())) return false;
+        if (!getPrice().equals(that.getPrice())) return false;
+        if (!getStartOfEvent().equals(that.getStartOfEvent())) return false;
+        if (!getEndOfEvent().equals(that.getEndOfEvent())) return false;
+        return getSeatSelection().equals(that.getSeatSelection());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getId().hashCode();
+        result = 31 * result + getTitle().hashCode();
+        result = 31 * result + getArtists().hashCode();
+        result = 31 * result + getDescriptionSummary().hashCode();
+        result = 31 * result + getPrice().hashCode();
+        result = 31 * result + getStartOfEvent().hashCode();
+        result = 31 * result + getEndOfEvent().hashCode();
+        result = 31 * result + getSeatSelection().hashCode();
+        return result;
     }
 
     public static SimpleEventDTOBuilder builder() {
@@ -140,6 +153,7 @@ public class SimpleEventDTO {
         private Long price;
         private LocalDateTime startOfEvent;
         private LocalDateTime endOfEvent;
+        private Boolean seatSelection;
 
         public SimpleEventDTOBuilder id(Long id){
             this.id = id;
@@ -173,6 +187,11 @@ public class SimpleEventDTO {
 
         public SimpleEventDTOBuilder endOfEvent(LocalDateTime endOfEvent){
             this.endOfEvent = endOfEvent;
+            return this;
+        }
+
+        public SimpleEventDTOBuilder seatSelection(Boolean seatSelection){
+            this.seatSelection = seatSelection;
             return this;
         }
 

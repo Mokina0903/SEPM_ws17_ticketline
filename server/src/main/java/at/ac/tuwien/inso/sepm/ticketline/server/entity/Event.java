@@ -34,6 +34,17 @@ public class Event {
     @Column(nullable = false)
     private LocalDateTime endOfEvent;
 
+    @Column(nullable = false)
+    private Boolean seatSelection;
+
+    public Boolean getSeatSelection() {
+        return seatSelection;
+    }
+
+    public void setSeatSelection( Boolean seatSelection ) {
+        this.seatSelection = seatSelection;
+    }
+
     @ManyToOne
     private Hall hall;
 
@@ -111,6 +122,21 @@ public class Event {
     public static EventBuilder builder(){return new EventBuilder();}
 
     @Override
+    public String toString() {
+        return "Event{" +
+            "id=" + id +
+            ", title='" + title + '\'' +
+            ", description='" + description + '\'' +
+            ", price=" + price +
+            ", startOfEvent=" + startOfEvent +
+            ", endOfEvent=" + endOfEvent +
+            ", seatSelection=" + seatSelection +
+            ", hall=" + hall +
+            ", artists=" + artists +
+            '}';
+    }
+
+    @Override
     public boolean equals( Object o ) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -123,7 +149,9 @@ public class Event {
         if (!getDescription().equals(event.getDescription())) return false;
         if (!getStartOfEvent().equals(event.getStartOfEvent())) return false;
         if (!getEndOfEvent().equals(event.getEndOfEvent())) return false;
-        return getHall().equals(event.getHall());
+        if (!getSeatSelection().equals(event.getSeatSelection())) return false;
+        if (!getHall().equals(event.getHall())) return false;
+        return getArtists().equals(event.getArtists());
     }
 
     @Override
@@ -134,21 +162,10 @@ public class Event {
         result = 31 * result + (int) (getPrice() ^ (getPrice() >>> 32));
         result = 31 * result + getStartOfEvent().hashCode();
         result = 31 * result + getEndOfEvent().hashCode();
+        result = 31 * result + getSeatSelection().hashCode();
         result = 31 * result + getHall().hashCode();
+        result = 31 * result + getArtists().hashCode();
         return result;
-    }
-
-    @Override
-    public String toString() {
-        return "Event{" +
-            "id=" + id +
-            ", title='" + title + '\'' +
-            ", description='" + description + '\'' +
-            ", price=" + price +
-            ", startOfEvent=" + startOfEvent +
-            ", endOfEvent=" + endOfEvent +
-            ", hall=" + hall +
-            '}';
     }
 
     public static final class EventBuilder{
@@ -156,6 +173,7 @@ public class Event {
         private String title;
         private String description;
         private Long price;
+        private Boolean seatSelection;
         private LocalDateTime startOfEvent;
         private LocalDateTime endOfEvent;
         private Hall hall;
@@ -191,6 +209,11 @@ public class Event {
             return this;
         }
 
+        public EventBuilder seatSelection(Boolean seatSelection){
+            this.seatSelection = seatSelection;
+            return this;
+        }
+
         public EventBuilder hall(Hall hall){
             this.hall = hall;
             return this;
@@ -211,6 +234,7 @@ public class Event {
             event.setEndOfEvent(endOfEvent);
             event.setHall(hall);
             event.setArtists(artists);
+            event.setSeatSelection(seatSelection);
 
             return event;
         }
