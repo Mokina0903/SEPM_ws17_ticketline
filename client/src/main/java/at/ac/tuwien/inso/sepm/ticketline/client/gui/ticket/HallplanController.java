@@ -275,15 +275,14 @@ public class HallplanController {
             if (currentSector == sector) {
                 continue;
             }
-            SpringFxmlLoader.Wrapper<SeatElementController> wrapper =
-                springFxmlLoader.loadAndWrap("/fxml/ticket/seatElement.fxml");
-            wrapper.getController().initializeData(seat, HallplanController.this);
-            seatsContainerGV.add(wrapper.getController().vBseat, seat.getNr(), seat.getRow());
-            wrapper.getController().vBseat.minHeight(30);
-            wrapper.getController().vBseat.minWidth(500);
+            SpringFxmlLoader.Wrapper<SectorElementController> wrapper =
+                springFxmlLoader.loadAndWrap("/fxml/ticket/sectorElement.fxml");
+            wrapper.getController().initializeData(10, HallplanController.this);
+            seatsContainerGV.add(wrapper.getController().hBSector, seat.getNr(), seat.getRow());
             if (seat.getNr() == 1) {
                 Label label = new Label();
-                label.setText(String.valueOf(seat.getSector()));
+                String s = String.valueOf(seat.getSector());
+                label.setText(s.toUpperCase());
                 label.setFont(Font.font(16));
                 label.setAlignment(Pos.CENTER);
                 label.setPadding(new Insets(0, 0, 0, 5));
@@ -292,19 +291,19 @@ public class HallplanController {
 
             switch (sector) {
                 case 'a':
-                    wrapper.getController().vBseat.getStyleClass().add("sectorA");
+                    wrapper.getController().hBSector.getStyleClass().add("sectorA");
                     break;
                 case 'b':
-                    wrapper.getController().vBseat.getStyleClass().add("sectorB");
+                    wrapper.getController().hBSector.getStyleClass().add("sectorB");
                     break;
                 case 'c':
-                    wrapper.getController().vBseat.getStyleClass().add("sectorC");
+                    wrapper.getController().hBSector.getStyleClass().add("sectorC");
                     break;
                 case 'd':
-                    wrapper.getController().vBseat.getStyleClass().add("sectorD");
+                    wrapper.getController().hBSector.getStyleClass().add("sectorD");
                     break;
                 case 'e':
-                    wrapper.getController().vBseat.getStyleClass().add("sectorE");
+                    wrapper.getController().hBSector.getStyleClass().add("sectorE");
 
             }
             currentSector++;

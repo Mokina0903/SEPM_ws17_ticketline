@@ -21,6 +21,12 @@
 -fx-effect: dropshadow(three-pass-box, derive(slategrey, -20%), 10, 0, 4, 4);
 }
 
+.sectorHbox{
+-fx-alignment: center;
+-fx-min-width: 700pm;
+-fx-min-heit: 200px;
+-fx-background-color: #3c3f41;
+}
 
 .sectorA{
  -fx-effect: dropshadow(three-pass-box, derive(cadetblue, -20%), 10, 0, 4, 4);

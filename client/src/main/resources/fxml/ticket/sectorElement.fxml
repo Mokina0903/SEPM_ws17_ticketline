@@ -9,13 +9,13 @@
 <HBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket.SectorElementController"
-      prefHeight="40.0" prefWidth="600.0" fx:id="hBSector" styleClass="seatVbox">
+      prefHeight="200.0" prefWidth="800.0" styleClass="sectorHbox" fx:id="hBSector">
 
 
     <HBox spacing="5">
-        <Label fx:id="currentReservedTickets"/>
-        <Label text=" / "/>
-        <Label fx:id="maxAnzFromTickets"/>
+        <Label styleClass="seatLbl" fx:id="currentReservedTickets"/>
+        <Label styleClass="seatLbl" text=" / "/>
+        <Label styleClass="seatLbl" fx:id="maxAnzFromTickets"/>
     </HBox>
 
 
