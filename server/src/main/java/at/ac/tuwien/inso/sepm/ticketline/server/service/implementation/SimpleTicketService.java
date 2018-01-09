@@ -62,6 +62,11 @@ public class SimpleTicketService implements TicketService {
     }
 
     @Override
+    public int ticketCountForEventForSector( Long event_id, char sector ) {
+        return ticketRepository.ticketCountForEventForSector(event_id,sector);
+    }
+
+    @Override
     public Boolean isBooked(Long eventId,Long seatId){
         return ticketRepository.findByEvent_idAndSeat_id(eventId,seatId).isPresent();
     }

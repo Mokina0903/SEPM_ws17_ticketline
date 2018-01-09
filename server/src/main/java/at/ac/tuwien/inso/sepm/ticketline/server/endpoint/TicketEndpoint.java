@@ -36,6 +36,12 @@ public class TicketEndpoint {
         return ticketMapper.ticketToTicketDTO(ticketService.findByEventId(eventId));
     }
 
+    @RequestMapping(value = "/event/{eventId}/{sector}", method = RequestMethod.GET)
+    @ApiOperation(value = "Get number of ticket entries by event and sector")
+    public int ticketCountForEventForSector( @PathVariable Long eventId, @PathVariable char sector) {
+        return ticketService.ticketCountForEventForSector(eventId,sector);
+    }
+
     @RequestMapping(value = "/customer/{customerId}", method = RequestMethod.GET)
     @ApiOperation(value = "Get information about ticket entries by customer")
     public List<TicketDTO> findByCustomerId( @PathVariable Long customerId) {
@@ -57,4 +63,6 @@ public class TicketEndpoint {
     public Boolean isBooked( @PathVariable Long eventId, @PathVariable Long seatId) {
         return ticketService.isBooked(eventId,seatId);
     }
+
+
 }

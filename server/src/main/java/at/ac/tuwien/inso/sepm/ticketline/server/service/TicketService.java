@@ -60,4 +60,13 @@ public interface TicketService {
      * @return saved tickets with id, or throw AlreadyExistsException if ticket is already booked
      */
     List<Ticket> save(List<Ticket> tickets);
+
+    /**
+     * get the number of tickets already booked in specific sector for event
+     *
+     * @param event_id of the event
+     * @param sector to check for tickets
+     * @return number of tickets
+     */
+    int ticketCountForEventForSector(Long event_id,char sector);
 }
