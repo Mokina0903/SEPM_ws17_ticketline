@@ -47,4 +47,9 @@ public class SimpleTicketService implements TicketService {
     public List<TicketDTO> save( List<TicketDTO> ticketDTOS ) throws DataAccessException, TicketAlreadyExistsException, EmptyValueException {
         return ticketRestClient.save(ticketDTOS);
     }
+
+    @Override
+    public int ticketCountForEventForSector( Long event_id, char sector ) throws DataAccessException {
+        return ticketRestClient.ticketCountForEventForSector(event_id,sector);
+    }
 }
