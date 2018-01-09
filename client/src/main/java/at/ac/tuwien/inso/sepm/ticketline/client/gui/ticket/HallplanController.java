@@ -131,9 +131,10 @@ public class HallplanController {
 
         this.oldContent = oldContent;
 
-        initializeSeats();
+        //initializeSeats();
+        initializeSectors();
 
-        setButtonGraphic(backbut, "TIMES", Color.DARKGRAY);
+        setButtonGraphic(backbut, "ARROW_LEFT", Color.DARKGRAY);
 
         lbEventNameHeader.setText(event.getTitle());
         lbKnr.setText(String.valueOf(customer.getKnr()));
@@ -237,6 +238,79 @@ public class HallplanController {
         }
     }
 
+    void initializeSectors() {
+
+        //* ************** Preperation for testing ***************
+        DetailedHallDTO hall = new DetailedHallDTO();
+        ArrayList<SeatDTO> seatsToAdd = new ArrayList<>();
+        int row = 1;
+        int nr = 1;
+        char sector1 = 'a';
+        for (int i = 0; i < 74; i++) {
+            SeatDTO seat = new SeatDTO();
+            seat.setNr(nr);
+            seat.setRow(row);
+            seat.setSector(sector1);
+            seatsToAdd.add(seat);
+            if (nr == 10) {
+                nr = 0;
+                row++;
+                if (row % 2 == 0) {
+                    sector1++;
+                }
+            }
+            nr++;
+        }
+        hall.setSeats(seatsToAdd);
+        //*************** END  *************** */
+
+        List<SeatDTO> seats = hall.getSeats();
+
+        char currentSector = (char) 96;
+
+        for (SeatDTO seat : seats) {
+            //show sectors
+
+            char sector = seat.getSector();
+            if (currentSector == sector) {
+                continue;
+            }
+            SpringFxmlLoader.Wrapper<SeatElementController> wrapper =
+                springFxmlLoader.loadAndWrap("/fxml/ticket/seatElement.fxml");
+            wrapper.getController().initializeData(seat, HallplanController.this);
+            seatsContainerGV.add(wrapper.getController().vBseat, seat.getNr(), seat.getRow());
+            wrapper.getController().vBseat.minHeight(30);
+            wrapper.getController().vBseat.minWidth(500);
+            if (seat.getNr() == 1) {
+                Label label = new Label();
+                label.setText(String.valueOf(seat.getSector()));
+                label.setFont(Font.font(16));
+                label.setAlignment(Pos.CENTER);
+                label.setPadding(new Insets(0, 0, 0, 5));
+                seatsContainerGV.add(label, 0, seat.getRow());
+            }
+
+            switch (sector) {
+                case 'a':
+                    wrapper.getController().vBseat.getStyleClass().add("sectorA");
+                    break;
+                case 'b':
+                    wrapper.getController().vBseat.getStyleClass().add("sectorB");
+                    break;
+                case 'c':
+                    wrapper.getController().vBseat.getStyleClass().add("sectorC");
+                    break;
+                case 'd':
+                    wrapper.getController().vBseat.getStyleClass().add("sectorD");
+                    break;
+                case 'e':
+                    wrapper.getController().vBseat.getStyleClass().add("sectorE");
+
+            }
+            currentSector++;
+        }
+    }
+
     private void setButtonGraphic(Button button, String glyphSymbol, Color color) {
         Glyph glyph = fontAwesome.create(FontAwesome.Glyph.valueOf(glyphSymbol));
         glyph.setColor(color);
@@ -264,6 +338,7 @@ public class HallplanController {
     }
 
     private void backToEventTabBeginning(){
+
         mainController.getCustomerController().setNormalTabView();
         SpringFxmlLoader.Wrapper<EventController> wrapper =
             springFxmlLoader.loadAndWrap("/fxml/event/eventComponent.fxml");

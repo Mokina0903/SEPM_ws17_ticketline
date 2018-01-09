@@ -18,6 +18,7 @@ public class SeatElementController {
     @FXML
     public Label seatNrLbl;
 
+
     private SeatDTO seat;
     private HallplanController hallplanController;
 
