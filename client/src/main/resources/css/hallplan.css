@@ -23,8 +23,6 @@
 
 .sectorHbox{
 -fx-alignment: center;
--fx-min-width: 700pm;
--fx-min-heit: 200px;
 -fx-background-color: #3c3f41;
 }
 
