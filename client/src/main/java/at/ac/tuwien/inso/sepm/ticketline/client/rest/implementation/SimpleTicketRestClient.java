@@ -134,4 +134,24 @@ public class SimpleTicketRestClient implements TicketRestClient {
             throw new DataAccessException(e.getMessage(), e);
         }
     }
+
+    @Override
+    public int ticketCountForEventForSector( Long event_id, char sector ) throws DataAccessException {
+        try {
+            LOGGER.debug("Get the number of tickets booked in sector for event from {}", restClient.getServiceURI(TICKET_URL));
+            ResponseEntity<Integer> count =
+                restClient.exchange(
+                    restClient.getServiceURI(TICKET_URL+"/event/"+event_id+"/"+sector),
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<Integer>() {}
+                );
+            LOGGER.debug("Result status was {} with content {}", count.getStatusCode(), count.getBody());
+            return count.getBody();
+        } catch (HttpStatusCodeException e) {
+            throw new DataAccessException("Failed retrieve count of tickets with status code " + e.getStatusCode().toString());
+        } catch (RestClientException e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+    }
 }
