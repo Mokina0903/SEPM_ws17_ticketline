@@ -11,7 +11,7 @@
       fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket.SectorElementController"
       prefHeight="200.0" prefWidth="800.0" styleClass="sectorHbox" fx:id="hBSector">
 
-    <Button fx:id="btnIncrease"/>
+    <Button fx:id="btnDecrease" onAction="#decreaseSeatCount"/>
 
     <HBox spacing="5">
         <Label styleClass="seatLbl" fx:id="currentReservedTickets"/>
@@ -19,7 +19,6 @@
         <Label styleClass="seatLbl" fx:id="maxAnzFromTickets"/>
     </HBox>
 
-
-    <Button fx:id="btnDecrease"/>
+    <Button fx:id="btnIncrease" onAction="#increaseSeatCount"/>
 
 </HBox>

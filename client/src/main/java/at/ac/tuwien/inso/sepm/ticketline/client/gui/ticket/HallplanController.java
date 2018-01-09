@@ -4,6 +4,7 @@ import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.MainController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.TabElement;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.TabHeaderController;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.customer.CustomerController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.event.EventController;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.NewsService;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.TicketService;
@@ -44,6 +45,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
+import javax.sound.midi.Soundbank;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -93,7 +95,7 @@ public class HallplanController {
     private DetailedHallDTO hall;
     private Node oldContent;
 
-    public HallplanController(MainController mainController, SpringFxmlLoader springFxmlLoader, TicketService ticketService) {
+    public HallplanController(MainController mainController, CustomerController customerController, SpringFxmlLoader springFxmlLoader, TicketService ticketService) {
         this.mainController = mainController;
         this.springFxmlLoader = springFxmlLoader;
         this.ticketService = ticketService;
@@ -131,8 +133,8 @@ public class HallplanController {
 
         this.oldContent = oldContent;
 
-        //initializeSeats();
-        initializeSectors();
+        initializeSeats();
+        //initializeSectors();
 
         setButtonGraphic(backbut, "ARROW_LEFT", Color.DARKGRAY);
 
@@ -149,7 +151,7 @@ public class HallplanController {
 
     void initializeSeats() {
 
-        //* ************** Preperation for testing ***************
+        /* ************** Preperation for testing ***************
         DetailedHallDTO hall = new DetailedHallDTO();
         ArrayList<SeatDTO> seatsToAdd = new ArrayList<>();
         int row = 1;
@@ -203,18 +205,13 @@ public class HallplanController {
                 label.setPadding(new Insets(0, 0, 0, 5));
                 seatsContainerGV.add(label, 0, seat.getRow());
             }
-            //******* for testting ************
-            if (seat.getNr() == 1) {
-                wrapper.getController().vBseat.getStyleClass().add("occupied");
-            }
-            //********* end ******************
 
-/*
+
            if(!occupiedSeats.isEmpty()) {
                if (occupiedSeats.contains(seat)) {
                    wrapper.getController().vBseat.getStyleClass().add("occupied");
                }
-           } */
+           }
 
             char seatSector = seat.getSector();
             switch (seatSector) {
@@ -277,7 +274,7 @@ public class HallplanController {
             }
             SpringFxmlLoader.Wrapper<SectorElementController> wrapper =
                 springFxmlLoader.loadAndWrap("/fxml/ticket/sectorElement.fxml");
-            wrapper.getController().initializeData(10, HallplanController.this);
+            wrapper.getController().initializeData(2, 20,HallplanController.this);
             seatsContainerGV.add(wrapper.getController().hBSector, seat.getNr(), seat.getRow());
             if (seat.getNr() == 1) {
                 Label label = new Label();
@@ -337,6 +334,15 @@ public class HallplanController {
     }
 
     private void backToEventTabBeginning(){
+
+        if(mainController == null){
+            System.out.println("Main");
+            return;
+        }
+        if(mainController.getCustomerController()==null){
+            System.out.println("Customer");
+            return;
+        }
 
         mainController.getCustomerController().setNormalTabView();
         SpringFxmlLoader.Wrapper<EventController> wrapper =

@@ -1,6 +1,7 @@
 package at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket;
 
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.seat.SeatDTO;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -31,15 +32,25 @@ public class SectorElementController {
     private GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
     private final int FONT_SIZE = 16;
 
+    private int seatCount;
+    private int reservedTickets;
+    private int capacity;
+
 
     private HallplanController hallplanController;
 
-    void initializeData(int reservedTickets, HallplanController hallplanController){
+    void initializeData(int reservedTickets, int capacity, HallplanController hallplanController){
         currentReservedTickets.setText(String.valueOf(reservedTickets));
+        maxAnzFromTickets.setText(String .valueOf(capacity));
         this.hallplanController = hallplanController;
+        this.seatCount = reservedTickets;
+        this.reservedTickets = reservedTickets;
+        this.capacity = capacity;
 
-        setButtonGraphic(btnDecrease, "PLUS", Color.DARKGRAY);
-        setButtonGraphic(btnIncrease, "MINUS", Color.DARKGRAY);
+
+
+        setButtonGraphic(btnIncrease, "PLUS", Color.DARKGRAY);
+        setButtonGraphic(btnDecrease, "MINUS", Color.DARKGRAY);
     }
 
     private void setButtonGraphic(Button button, String glyphSymbol, Color color) {
@@ -49,4 +60,28 @@ public class SectorElementController {
         button.setGraphic(glyph);
     }
 
+    @FXML
+    public void increaseSeatCount(ActionEvent actionEvent) {
+        if(seatCount == capacity){
+            return;
+        }
+        seatCount++;
+        currentReservedTickets.setText(String.valueOf(seatCount));
+        if( !hBSector.getStyleClass().contains("selected")){
+            hBSector.getStyleClass().add("selected");
+        }
+
+    }
+
+    @FXML
+    public void decreaseSeatCount(ActionEvent actionEvent) {
+        if(seatCount == 0 || seatCount == reservedTickets){
+            return;
+        }
+        seatCount--;
+        currentReservedTickets.setText(String.valueOf(seatCount));
+        if(seatCount == reservedTickets && hBSector.getStyleClass().contains("selected")){
+            hBSector.getStyleClass().remove("selected");
+        }
+    }
 }
