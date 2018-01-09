@@ -6,6 +6,8 @@ import at.ac.tuwien.inso.sepm.ticketline.client.rest.CustomerRestClient;
 import at.ac.tuwien.inso.sepm.ticketline.client.rest.NewsRestClient;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.CustomerService;
 import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -23,28 +25,26 @@ public class SimpleCustomerService implements CustomerService{
         this.customerRestClient = customerRestClient;
     }
     @Override
-    public List<CustomerDTO> findAll(int pageIndex, int customersPerPage) throws DataAccessException {
-        return customerRestClient.findAll(pageIndex, customersPerPage);
+    public Page<CustomerDTO> findAll(Pageable request) throws DataAccessException {
+        return customerRestClient.findAll(request);
     }
 
     @Override
-    public List<CustomerDTO> findByName(String name, int pageIndex, int customersPerPage) throws DataAccessException, SearchNoMatchException {
-        List<CustomerDTO> customer = customerRestClient.findByName(name, pageIndex, customersPerPage);
-        if (customer.isEmpty()) {
+    public Page<CustomerDTO> findByName(String name, Pageable request) throws DataAccessException, SearchNoMatchException {
+        Page<CustomerDTO> customer = customerRestClient.findByName(name, request);
+        if (customer.getContent().isEmpty()) {
             throw new SearchNoMatchException();
         }
         return customer;
     }
 
     @Override
-    public List<CustomerDTO> findByNumber(Long customerNumber) throws DataAccessException, SearchNoMatchException {
+    public CustomerDTO findByNumber(Long customerNumber) throws DataAccessException, SearchNoMatchException {
         CustomerDTO customer =  customerRestClient.findByNumber(customerNumber);
         if (customer == null) {
             throw new SearchNoMatchException();
         }
-        List<CustomerDTO> list = new ArrayList<>();
-        list.add(customer);
-        return list;
+        return customer;
     }
 
     @Override

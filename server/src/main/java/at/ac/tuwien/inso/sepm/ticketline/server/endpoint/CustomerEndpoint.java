@@ -1,6 +1,7 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.endpoint;
 
 import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.Customer;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.customer.CustomerMapper;
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.CustomerNotValidException;
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.InvalidIdException;
@@ -9,8 +10,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import net.bytebuddy.matcher.NullMatcher;
 import org.slf4j.LoggerFactory;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.web.bind.annotation.*;
 
 import javax.crypto.Cipher;
@@ -35,9 +35,11 @@ public class CustomerEndpoint {
 
     @RequestMapping(value= "/{pageIndex}/{customerPerPage}", method = RequestMethod.GET)
     @ApiOperation(value = "Get list of customer entries")
-    public List<CustomerDTO> findAll(@PathVariable("pageIndex")int pageIndex, @PathVariable("customerPerPage")int customerPerPage){
-        PageRequest request = new PageRequest(pageIndex, customerPerPage, Sort.Direction.ASC, "surname");
-        return customerMapper.customerToCustomerDTO(customerService.findAll(request));
+    public Page<CustomerDTO> findAll(@PathVariable("pageIndex")int pageIndex, @PathVariable("customerPerPage")int customerPerPage){
+        Pageable request = new PageRequest(pageIndex, customerPerPage, Sort.Direction.ASC, "start_of_event");
+        Page<Customer> customerPage = customerService.findAll(request);
+        List<CustomerDTO> dtos = customerMapper.customerToCustomerDTO(customerPage.getContent());
+        return new PageImpl<>(dtos, request, customerPage.getTotalElements());
     }
 
     @RequestMapping(value= "/{id}",method = RequestMethod.GET)
@@ -89,17 +91,20 @@ public class CustomerEndpoint {
 
     @RequestMapping(value="/findName/{pageIndex}/{customerPerPage}/{name}", method = RequestMethod.GET)
     @ApiOperation(value = "Gets all customers with the given name")
-    public List<CustomerDTO> findByName(@PathVariable("pageIndex")int pageIndex, @PathVariable("customerPerPage")int customerPerPage, @PathVariable("name") String name){
-        PageRequest request = new PageRequest(pageIndex, customerPerPage, Sort.Direction.ASC, "surname");
-        return customerMapper.customerToCustomerDTO(customerService.findByName(name, request));
+    public Page<CustomerDTO> findByName(@PathVariable("pageIndex")int pageIndex, @PathVariable("customerPerPage")int customerPerPage, @PathVariable("name") String name){
+        Pageable request = new PageRequest(pageIndex, customerPerPage, Sort.Direction.ASC, "start_of_event");
+        Page<Customer> customerPage = customerService.findByName(name, request);
+        List<CustomerDTO> dtos = customerMapper.customerToCustomerDTO(customerPage.getContent());
+        return new PageImpl<>(dtos, request, customerPage.getTotalElements());
     }
 
-    @RequestMapping(value="/findSurename/{pageIndex}/{customerPerPage}/{surname}", method = RequestMethod.GET)
+
+    /*@RequestMapping(value="/findSurename/{pageIndex}/{customerPerPage}/{surname}", method = RequestMethod.GET)
     @ApiOperation(value = "Gets all customers with the given name")
     public List<CustomerDTO> findBySurname(@PathVariable("pageIndex")int pageIndex, @PathVariable("customerPerPage")int customerPerPage, @PathVariable("surname") String surname){
         PageRequest request = new PageRequest(pageIndex, customerPerPage, Sort.Direction.ASC, "surname");
         return customerMapper.customerToCustomerDTO(customerService.findBySurname(surname, request));
-    }
+    }*/
 
 
 

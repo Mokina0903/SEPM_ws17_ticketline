@@ -24,6 +24,10 @@ import org.controlsfx.glyphfont.GlyphFontRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -77,7 +81,7 @@ public class CustomerController extends TabElement implements LocalizationObserv
     private final int FONT_SIZE = 16;
 
 
-    private List<CustomerDTO> customer;
+    private Page<CustomerDTO> customer;
 
     private CustomerSearchFor searchFor = CustomerSearchFor.ALL;
 
@@ -114,15 +118,19 @@ public class CustomerController extends TabElement implements LocalizationObserv
         //all customer at start or searchfield is empty
         LOGGER.info("prepareing Pagination for the customer overview");
         try {
-            customer = customerService.findAll(0, Integer.MAX_VALUE);
-            pagination.setPageCount(customer.size() / CUSTOMER_PER_PAGE + 1);
+            Pageable request = new PageRequest(0, CUSTOMER_PER_PAGE);
+            customer = customerService.findAll(request);
+            System.out.println("*************************** " + customer.getTotalElements());
+            int amount = customer.getTotalPages();
+            pagination.setPageCount(amount);
             preparePagination(customer);
         } catch (DataAccessException e) {
             LOGGER.warn("Could not access total number of customers");
-        }
+        } /*catch (SearchNoMatchException e) {
+            noMatchFound();        }*/
     }
 
-    public void preparePagination(List<CustomerDTO> customer) {
+    public void preparePagination(Page<CustomerDTO> customer) {
 
         LOGGER.info("search matches");
 
@@ -137,28 +145,28 @@ public class CustomerController extends TabElement implements LocalizationObserv
         });
     }
 
-    private List<CustomerDTO> loadPage(int pageIndex) {
-        List<CustomerDTO> page = new ArrayList<CustomerDTO>();
+    private Page<CustomerDTO> loadPage(int pageIndex) {
 
         if (tfSearch.getText().isEmpty() || tfSearch.getText().equals("")) {
             searchFor = CustomerSearchFor.ALL;
         }
-
+        Pageable request = new PageRequest(pageIndex, CUSTOMER_PER_PAGE);
         try {
             switch (searchFor) {
                 case ALL:
-                    customer = customerService.findAll(0, Integer.MAX_VALUE);
-                    page = customerService.findAll(pageIndex, CUSTOMER_PER_PAGE);
-                    pagination.setPageCount(customer.size() / CUSTOMER_PER_PAGE + 1);
+                    customer = customerService.findAll(request);
+                    pagination.setPageCount(customer.getTotalPages());
                     break;
                 case NAME:
-                    customer = customerService.findByName(tfSearch.getText(), 0, Integer.MAX_VALUE);
-                    page = customerService.findByName(tfSearch.getText(), pageIndex, CUSTOMER_PER_PAGE);
-                    pagination.setPageCount(customer.size() / CUSTOMER_PER_PAGE + 1);
-
+                    customer = customerService.findByName(tfSearch.getText(), request);
+                    pagination.setPageCount(customer.getTotalPages());
                     break;
                 case CUSTOMER_NUMBER:
-                    page = customerService.findByNumber(Long.parseLong(tfSearch.getText()));
+                    long customerNumber = Long.parseLong(tfSearch.getText());
+                    CustomerDTO c = customerService.findByNumber(customerNumber);
+                    List<CustomerDTO> customerToList = new ArrayList<>();
+                    customerToList.add(c);
+                    customer = new PageImpl<>(customerToList);
                     pagination.setPageCount(1);
                     break;
             }
@@ -169,12 +177,12 @@ public class CustomerController extends TabElement implements LocalizationObserv
         } catch (DataAccessException e) {
             LOGGER.warn("Could not access find customers");
         }
-        return page;
+        return customer;
     }
 
     private Node createPage(int pageIndex) {
         pagination.setCurrentPageIndex(pageIndex);
-        List<CustomerDTO> costumers = loadPage(pageIndex);
+        Page<CustomerDTO> costumers = loadPage(pageIndex);
 
         TableView<CustomerDTO> tvCustomer = new TableView<>();
 
@@ -182,8 +190,6 @@ public class CustomerController extends TabElement implements LocalizationObserv
         tvCustomer.setFixedCellSize(25);
         tvCustomer.prefHeightProperty().bind(Bindings.size(tvCustomer.getItems()).multiply(tvCustomer.getFixedCellSize()).add(30));
         tvCustomer.getStylesheets().addAll(getClass().getResource("/css/customerComponent.css").toExternalForm());
-
-
 
         tcName = new TableColumn<>();
         tcSurname = new TableColumn<>();
@@ -204,7 +210,7 @@ public class CustomerController extends TabElement implements LocalizationObserv
         tcNumber.setCellValueFactory(new PropertyValueFactory<>("knr"));
 
         tvCustomer.getColumns().addAll(tcNumber, tcName, tcSurname, tcBirthdate, tcMail);
-        tvCustomer.getItems().addAll(costumers);
+        tvCustomer.getItems().addAll(costumers.getContent());
         tvCustomer.refresh();
         currentTableview = tvCustomer;
 
@@ -221,7 +227,6 @@ public class CustomerController extends TabElement implements LocalizationObserv
             searchFor = CustomerSearchFor.ALL;
             preparePagination();
         } else {
-
             try {
                 LOGGER.info("Search for Customer Number");
                 long customerNumber = Long.parseLong(tfSearch.getText());
@@ -302,11 +307,13 @@ public class CustomerController extends TabElement implements LocalizationObserv
     public void loadCustomer() {
 
         searchFor = CustomerSearchFor.ALL;
-        Task<List<CustomerDTO>> taskLoadCustomer = new Task<>() {
-            @Override
-            protected List<CustomerDTO> call() throws DataAccessException {
 
-                return customerService.findAll(0, CUSTOMER_PER_PAGE);
+        Task<Page<CustomerDTO>> taskLoadCustomer = new Task<>() {
+            @Override
+            protected Page<CustomerDTO> call() throws DataAccessException {
+
+                Pageable request = new PageRequest(0, CUSTOMER_PER_PAGE);
+                return customerService.findAll(request);
             }
 
             @Override
@@ -317,7 +324,7 @@ public class CustomerController extends TabElement implements LocalizationObserv
 
             @Override
             protected void failed() {
-                if (getValue() == null || getValue().isEmpty()) {
+                if (getValue() == null || getValue().getContent().isEmpty()) {
                     super.failed();
                     mainController.showGeneralError("Failure at load customer: " + getException().getMessage());
                 }

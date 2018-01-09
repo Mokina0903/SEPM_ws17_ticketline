@@ -83,13 +83,13 @@ public class EventController extends TabElement implements LocalizationObserver 
 
     public void preparePagination() {
         //all customer at start or searchfield is empty
+        LOGGER.info("prepareing Pagination for the event overview");
         try {
             Pageable request = new PageRequest(0, EVENTS_PER_PAGE);
-            int amount = eventService.findAllUpcoming(request).getTotalPages();
-            Page<SimpleEventDTO> page1 = eventService.findAllUpcoming(request);
+            Page<SimpleEventDTO> page = eventService.findAllUpcoming(request);
+            int amount = page.getTotalPages();
             events = eventService.findAllUpcoming(request);
             pagination.setPageCount(amount);
-            //todo pages instead of content
             preparePagination(events);
         } catch (DataAccessException e) {
             LOGGER.warn("Could not access total number of customers");
