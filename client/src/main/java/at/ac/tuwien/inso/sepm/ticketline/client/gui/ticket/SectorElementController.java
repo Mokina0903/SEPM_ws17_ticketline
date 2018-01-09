@@ -66,9 +66,11 @@ public class SectorElementController {
             return;
         }
         seatCount++;
+        hallplanController.setTicketCount(hallplanController.getTicketCount()+1);
+        hallplanController.ticketAmountLb.setText(String.valueOf(hallplanController.getTicketCount()));
         currentReservedTickets.setText(String.valueOf(seatCount));
-        if( !hBSector.getStyleClass().contains("selected")){
-            hBSector.getStyleClass().add("selected");
+        if( !hBSector.getStyleClass().contains("ticketsAdded")){
+            hBSector.getStyleClass().add("ticketsAdded");
         }
 
     }
@@ -79,9 +81,11 @@ public class SectorElementController {
             return;
         }
         seatCount--;
+        hallplanController.setTicketCount(hallplanController.getTicketCount()-1);
+        hallplanController.ticketAmountLb.setText(String.valueOf(hallplanController.getTicketCount()));
         currentReservedTickets.setText(String.valueOf(seatCount));
-        if(seatCount == reservedTickets && hBSector.getStyleClass().contains("selected")){
-            hBSector.getStyleClass().remove("selected");
+        if(seatCount == reservedTickets && hBSector.getStyleClass().contains("ticketsAdded")){
+            hBSector.getStyleClass().remove("ticketsAdded");
         }
     }
 }

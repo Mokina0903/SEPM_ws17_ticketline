@@ -68,3 +68,23 @@
 .seatVbox:hover, .sectorA.selected:hover, .sectorB.selected:hover, .sectorC.selected:hover, .sectorD.selected:hover, .sectorE.selected:hover{
 -fx-background-color: #dcdcdc;
 }
+
+.sectorA.ticketsAdded{
+-fx-background-color: derive(cadetblue, -20%);
+}
+
+.sectorB.ticketsAdded{
+-fx-background-color: derive(CRIMSON, -20%);
+}
+
+.sectorC.ticketsAdded{
+-fx-background-color: derive(DARKMAGENTA, -20%);
+}
+
+.sectorD.ticketsAdded{
+-fx-background-color: derive(GREEN, -20%);
+}
+
+.sectorE.ticketsAdded{
+-fx-background-color: derive(GREENYELLOW, -20%);
+}

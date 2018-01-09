@@ -135,8 +135,9 @@ public class HallplanController {
 
         this.oldContent = oldContent;
 
-        initializeSeats();
-        //initializeSectors();
+        //TODO: when implemented, create if,  depending on the event.IsSectorView - then initializeSectors, else initializeSeats
+        //initializeSeats();
+        initializeSectors();
 
         setButtonGraphic(backbut, "ARROW_LEFT", Color.DARKGRAY);
 
