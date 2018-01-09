@@ -56,6 +56,7 @@ public class HallplanController {
     @Autowired
     private final MainController mainController;
     private final SpringFxmlLoader springFxmlLoader;
+    private CustomerController customerController;
 
     @FXML
     public GridPane seatsContainerGV;
@@ -98,6 +99,7 @@ public class HallplanController {
     public HallplanController(MainController mainController, CustomerController customerController, SpringFxmlLoader springFxmlLoader, TicketService ticketService) {
         this.mainController = mainController;
         this.springFxmlLoader = springFxmlLoader;
+        this.customerController = customerController;
         this.ticketService = ticketService;
         selectedSeats = new ArrayList<>();
     }
@@ -335,16 +337,8 @@ public class HallplanController {
 
     private void backToEventTabBeginning(){
 
-        if(mainController == null){
-            System.out.println("Main");
-            return;
-        }
-        if(mainController.getCustomerController()==null){
-            System.out.println("Customer");
-            return;
-        }
 
-        mainController.getCustomerController().setNormalTabView();
+        customerController.setNormalTabView();
         SpringFxmlLoader.Wrapper<EventController> wrapper =
             springFxmlLoader.loadAndWrap("/fxml/event/eventComponent.fxml");
         Node root = springFxmlLoader.load("/fxml/event/eventComponent.fxml");
