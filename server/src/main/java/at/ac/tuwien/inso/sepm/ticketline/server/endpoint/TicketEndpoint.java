@@ -3,12 +3,14 @@ package at.ac.tuwien.inso.sepm.ticketline.server.endpoint;
 import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketDTO;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Ticket;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.ticket.TicketMapper;
+import at.ac.tuwien.inso.sepm.ticketline.server.service.EventService;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.TicketService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -18,10 +20,12 @@ public class TicketEndpoint {
 
     private final TicketService ticketService;
     private final TicketMapper ticketMapper;
+    private final EventService eventService;
 
-    public TicketEndpoint( TicketService ticketService, TicketMapper ticketMapper ) {
+    public TicketEndpoint( TicketService ticketService, TicketMapper ticketMapper, EventService eventService ) {
         this.ticketService = ticketService;
         this.ticketMapper = ticketMapper;
+        this.eventService = eventService;
     }
 
     @RequestMapping(value = "/{ticketId}", method = RequestMethod.GET)
@@ -49,12 +53,21 @@ public class TicketEndpoint {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    @PreAuthorize("hasRole('USER')")
     @ApiOperation(value = "create ticket entry")
     public List<TicketDTO> create(@RequestBody List<TicketDTO> ticketDTOS) {
-        List<Ticket> tickets = ticketMapper.ticketDTOtoTicket(ticketDTOS);
 
-        tickets = ticketService.save(tickets);
+        /*if(ticketDTOS==null || ticketDTOS.isEmpty()){
+            return ticketDTOS;
+        }
+        List<Ticket> tickets = new ArrayList<>();
+
+        for (TicketDTO ticketDTO : ticketDTOS){
+            Ticket ticket = ticketMapper.ticketDTOtoTicket(ticketDTO);
+            ticket.setEvent(eventService.findOne(ticketDTO.getEvent().getId()));
+            tickets.add(ticket);
+        }*/
+
+        List<Ticket> tickets = ticketService.save(ticketMapper.ticketDTOToTicket(ticketDTOS));
         return ticketMapper.ticketToTicketDTO(tickets);
     }
 
@@ -64,5 +77,6 @@ public class TicketEndpoint {
         return ticketService.isBooked(eventId,seatId);
     }
 
+    //todo: getFreeSeatsInSector(Event,Char), getTotalCountOfSeatsInSector(Hall,Char)
 
 }

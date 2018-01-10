@@ -1,6 +1,8 @@
 package at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket;
 
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
+import at.ac.tuwien.inso.sepm.ticketline.client.exception.EmptyValueException;
+import at.ac.tuwien.inso.sepm.ticketline.client.exception.TicketAlreadyExistsException;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.*;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.customer.CustomerController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.event.EventController;
@@ -10,6 +12,7 @@ import at.ac.tuwien.inso.sepm.ticketline.client.service.UserService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
 import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.DetailedEventDTO;
+import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.hall.DetailedHallDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.seat.SeatDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketDTO;
@@ -329,7 +332,40 @@ public class HallplanController implements LocalizationObserver {
     public void reserveTickets(ActionEvent actionEvent) {
         //TODO: reserve/create Tickets from the seats within selectedSeats
 
-      backToEventTabBeginning();
+
+        List<TicketDTO> tickets=new ArrayList<>();
+        for(SeatDTO seat:selectedSeats) {
+            tickets.add(new TicketDTO().builder()
+                .customer(mainController.getCutsomer())
+                .event(new SimpleEventDTO().builder()
+                    .endOfEvent(event.getEndOfEvent())
+                    .startOfEvent(event.getStartOfEvent())
+                    .artists(event.getArtists())
+                    .id(event.getId())
+                    .price(event.getPrice())
+                    .build())
+                .isPaid(false)
+                .price(event.getPrice().intValue())
+                .seat(seat)
+                .build());
+
+        }
+        try {
+            ticketService.save(tickets);
+
+            backToEventTabBeginning();
+
+        } catch (DataAccessException e) {
+
+            lblError.setText(BundleManager.getBundle().getString("exception.unexpected"));
+
+        } catch (TicketAlreadyExistsException e) {
+
+            lblError.setText(BundleManager.getBundle().getString("exception.ticketAlreadyExists"));
+
+        } catch (EmptyValueException e) {
+            lblError.setText(BundleManager.getBundle().getString("exception.noSeatSelected"));
+        }
     }
 
     @FXML
