@@ -8,6 +8,7 @@ import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.news.NewsMapper;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.user.UserMapper;
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.EmptyFieldException;
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.IllegalValueException;
+import at.ac.tuwien.inso.sepm.ticketline.server.exception.OldVersionException;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.UserRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.UserService;
 import io.swagger.annotations.Api;
@@ -60,6 +61,7 @@ public class UserEndpoint {
         User user=userService.findOneByName(userName);
         DetailedUserDTO userDTO = userMapper.userToDetailedUserDTO(user);
         userDTO.setNotSeen(newsMapper.newsToSimpleNewsDTO(user.getNotSeen()));
+        System.out.println(userDTO.getVersion());
         return userDTO;
     }
 
@@ -118,8 +120,16 @@ public class UserEndpoint {
     @ApiOperation(value = "Reset a specific users password")
     public DetailedUserDTO resetUserPassword(@RequestBody SimpleUserDTO simpleUserDTO) {
         User user = userService.findByUsername(simpleUserDTO.getUserName());
-        user.setPassword(simpleUserDTO.getPassword());
-        user = userService.resetPassword(user);
+        if(user.correctVersion(simpleUserDTO.getVersion())){
+            System.out.println("Server " + simpleUserDTO.getVersion());
+            user.setPassword(simpleUserDTO.getPassword());
+            user.newVersion();
+            user = userService.resetPassword(user);
+        }
+        else{
+            System.out.println("Server unten " + simpleUserDTO.getVersion());
+            throw new OldVersionException();
+        }
         return userMapper.userToDetailedUserDTO(user);
     }
 

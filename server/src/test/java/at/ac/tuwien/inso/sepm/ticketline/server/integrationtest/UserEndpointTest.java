@@ -196,6 +196,7 @@ public class UserEndpointTest extends BaseIntegrationTest {
             .body(SimpleUserDTO.builder()
                 .userName(USER_USERNAME)
                 .password(USER_PASSWORD + "neu")
+                .version(1)
                 .build())
             .when().post(USER_ENDPOINT_RESET)
             .then().extract().response();
@@ -210,6 +211,44 @@ public class UserEndpointTest extends BaseIntegrationTest {
             //Assert.assertTrue(response.asString().contains(USER_PASSWORD + "neu"));
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
     }
+
+    @Test
+    public void ResetUserAsAdminWithOldVersion() {
+        super.setupDefaultUsers();
+        userRepository.findOneByUserName(USER_USERNAME).setVersion(5);
+        Response response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
+            .body(SimpleUserDTO.builder()
+                .userName(USER_USERNAME)
+                .password(USER_PASSWORD + "neu")
+                .version(3)
+                .build())
+            .when().post(USER_ENDPOINT_RESET)
+            .then().extract().response();
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.FAILED_DEPENDENCY.value()));
+    }
+
+    @Test
+    public void ResetUserAsAdminAndCheckVersion() {
+        super.setupDefaultUsers();
+        Response response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
+            .body(SimpleUserDTO.builder()
+                .userName(USER_USERNAME)
+                .password(USER_PASSWORD + "neu")
+                .version(1)
+                .build())
+            .when().post(USER_ENDPOINT_RESET)
+            .then().extract().response();
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
+        Assert.assertTrue(userRepository.findOneByUserName(USER_USERNAME).getVersion() == 2);
+    }
+
+
 
 
     @Test

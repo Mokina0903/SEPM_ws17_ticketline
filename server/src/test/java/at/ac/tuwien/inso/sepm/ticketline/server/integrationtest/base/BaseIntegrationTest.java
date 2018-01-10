@@ -142,6 +142,7 @@ public abstract class BaseIntegrationTest {
                 tUser.resetAttempts();
                 tUser.setPassword(encoder.encode(USER_PASSWORD));
                 tUser.setBlocked(false);
+                tUser.setVersion(1);
                 tUser.setNotSeen(newsRepository.findAllByOrderByPublishedAtDesc());
                 userRepository.save(tUser);
             }

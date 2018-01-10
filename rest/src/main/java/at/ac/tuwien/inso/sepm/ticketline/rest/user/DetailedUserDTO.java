@@ -30,6 +30,9 @@ public class DetailedUserDTO {
     @ApiModelProperty(required = true, name = "the news the user has not yet seen")
     private List<SimpleNewsDTO> notSeen;
 
+    @ApiModelProperty(required = true, readOnly = true, name = "The current version of the DTO")
+    private Integer version;
+
     public Long getId() {
         return id;
     }
@@ -76,6 +79,14 @@ public class DetailedUserDTO {
 
     public void setNotSeen( List<SimpleNewsDTO> notSeen ) {
         this.notSeen = notSeen;
+    }
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
     }
 
     @Override
@@ -127,6 +138,7 @@ public class DetailedUserDTO {
         private Integer role;
         private boolean blocked;
         private List<SimpleNewsDTO> notSeen;
+        private Integer version;
 
         public UserDTOBuilder id(Long id) {
             this.id = id;
@@ -158,6 +170,11 @@ public class DetailedUserDTO {
             return this;
         }
 
+        public UserDTOBuilder version(Integer version){
+            this.version = version;
+            return this;
+        }
+
         public DetailedUserDTO build() {
             DetailedUserDTO userDTO = new DetailedUserDTO();
             userDTO.setId(id);
@@ -166,6 +183,7 @@ public class DetailedUserDTO {
             userDTO.setRole(role);
             userDTO.setBlocked(blocked);
             userDTO.setNotSeen(notSeen);
+            userDTO.setVersion(version);
             return userDTO;
         }
     }
