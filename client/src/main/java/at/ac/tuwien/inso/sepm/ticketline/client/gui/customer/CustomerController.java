@@ -38,6 +38,8 @@ public class CustomerController extends TabElement implements LocalizationObserv
     private static final Logger LOGGER = LoggerFactory.getLogger(at.ac.tuwien.inso.sepm.ticketline.client.gui.customer.CustomerController.class);
     @FXML
     public Button btNext;
+    @FXML
+    public Label lbNoCustomerError;
 
     @FXML
     private TabHeaderController tabHeaderController;
@@ -127,6 +129,7 @@ public class CustomerController extends TabElement implements LocalizationObserv
         tabHeaderController.setTitle(BundleManager.getBundle().getString("customer.customer"));
         currentTab=customerTab;
         isTicketView = false;
+        lbNoCustomerError.setVisible(false);
     }
     public void setTicketProzessView(){
         btTickets.setVisible(false);
@@ -345,6 +348,7 @@ public class CustomerController extends TabElement implements LocalizationObserv
         tcBirthdate.setText(BundleManager.getBundle().getString("customer.birthdate"));
         tcNumber.setText(BundleManager.getBundle().getString("customer.number"));
         btNext.setText(BundleManager.getBundle().getString("customer.next"));
+        lbNoCustomerError.setText(BundleManager.getBundle().getString("customer.chooseCustomer"+"!"));
         //todo update TVcolumns
     }
 
@@ -388,11 +392,17 @@ public class CustomerController extends TabElement implements LocalizationObserv
     }
 
     public void openHallplan(ActionEvent actionEvent) {
+        lbNoCustomerError.setVisible(false);
 
         SpringFxmlLoader.Wrapper<HallplanController> wrapper =
             springFxmlLoader.loadAndWrap("/fxml/ticket/hallplan.fxml");
         Node root = springFxmlLoader.load("/fxml/ticket/hallplan.fxml");
         HallplanController c = wrapper.getController();
+        if(currentTableview.getSelectionModel().getSelectedItem()==null){
+            lbNoCustomerError.setText(BundleManager.getBundle().getString("customer.chooseCustomer"+"!"));
+            lbNoCustomerError.setVisible(true);
+            return;
+        }
         mainController.setCutsomer(currentTableview.getSelectionModel().getSelectedItem());
 
         c.initializeData(mainController.getEvent(),currentTableview.getSelectionModel().getSelectedItem(),  customerOverviewRoot);
