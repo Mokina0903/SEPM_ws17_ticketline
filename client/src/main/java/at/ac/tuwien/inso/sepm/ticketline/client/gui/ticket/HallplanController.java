@@ -343,6 +343,7 @@ public class HallplanController implements LocalizationObserver {
                     .artists(event.getArtists())
                     .id(event.getId())
                     .price(event.getPrice())
+                    .title(event.getTitle())
                     .build())
                 .isPaid(false)
                 .price(event.getPrice().intValue())
