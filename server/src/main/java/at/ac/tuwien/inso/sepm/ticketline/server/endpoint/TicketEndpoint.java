@@ -1,14 +1,16 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.endpoint;
 
+import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.seat.SeatDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketDTO;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Ticket;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.eventLocation.seat.SeatMapper;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.ticket.TicketMapper;
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.EmptyFieldException;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.EventService;
+import at.ac.tuwien.inso.sepm.ticketline.server.service.LocationService;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.TicketService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -22,11 +24,15 @@ public class TicketEndpoint {
     private final TicketService ticketService;
     private final TicketMapper ticketMapper;
     private final EventService eventService;
+    private final SeatMapper seatMapper;
+    private final LocationService locationService;
 
-    public TicketEndpoint( TicketService ticketService, TicketMapper ticketMapper, EventService eventService ) {
+    public TicketEndpoint( TicketService ticketService, TicketMapper ticketMapper, EventService eventService, SeatMapper seatMapper, LocationService locationService ) {
         this.ticketService = ticketService;
         this.ticketMapper = ticketMapper;
         this.eventService = eventService;
+        this.seatMapper = seatMapper;
+        this.locationService = locationService;
     }
 
     @RequestMapping(value = "/{ticketId}", method = RequestMethod.GET)
@@ -78,6 +84,11 @@ public class TicketEndpoint {
         return ticketService.isBooked(eventId,seatId);
     }
 
+    @RequestMapping(value = "/isFree/{eventId}/{sector}", method = RequestMethod.GET)
+    @ApiOperation(value = "Search for free seats for event in sector")
+    public List<SeatDTO> freeSeatsForEventInSector( @PathVariable Long eventId, @PathVariable char sector) {
+        return seatMapper.seatToSeatDTO(locationService.findFreeSeatsForEventInSector(eventId,sector));
+    }
     //todo: getFreeSeatsInSector(Event,Char), getTotalCountOfSeatsInSector(Hall,Char)
 
 }
