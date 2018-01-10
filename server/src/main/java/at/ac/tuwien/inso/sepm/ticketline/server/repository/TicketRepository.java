@@ -1,7 +1,6 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.repository;
 
-import at.ac.tuwien.inso.sepm.ticketline.server.entity.Customer;
-import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
+
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Ticket;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

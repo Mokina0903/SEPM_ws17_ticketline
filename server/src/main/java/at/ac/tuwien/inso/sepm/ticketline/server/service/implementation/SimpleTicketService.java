@@ -48,7 +48,7 @@ public class SimpleTicketService implements TicketService {
     public List<Ticket> save( List<Ticket> tickets ) {
         if(tickets==null || tickets.isEmpty()){throw new EmptyFieldException();}
 
-        long reservationNR = (LocalDate.now().getYear() % 100) * 100000000 + tickets.get(0).getId();
+        long reservationNR = (LocalDate.now().getYear() % 100) * 100000000 ;
 
         for(Ticket ticket : tickets) {
             if (isBooked(ticket.getEvent().getId(), ticket.getSeat().getId())) {
@@ -57,7 +57,11 @@ public class SimpleTicketService implements TicketService {
             ticket.setDeleted(false);
             ticket.setReservationNumber(reservationNR);
         }
-
+        tickets = ticketRepository.save(tickets);
+        reservationNR+=+ tickets.get(0).getId();
+        for(Ticket ticket: tickets){
+            ticket.setReservationNumber(reservationNR);
+        }
         return ticketRepository.save(tickets);
     }
 

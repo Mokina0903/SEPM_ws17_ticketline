@@ -354,6 +354,7 @@ public class HallplanController implements LocalizationObserver {
         try {
             ticketService.save(tickets);
 
+            selectedSeats.clear();
             backToEventTabBeginning();
 
         } catch (DataAccessException e) {
