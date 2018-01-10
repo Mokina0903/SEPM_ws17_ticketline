@@ -54,6 +54,8 @@ public class EventController extends TabElement implements LocalizationObserver 
     @FXML
     public Button btnAddEvent;
     @FXML
+    public BorderPane bPEventContainer;
+    @FXML
     public BorderPane eventRootContainer;
     @FXML
     private TabHeaderController tabHeaderController;
