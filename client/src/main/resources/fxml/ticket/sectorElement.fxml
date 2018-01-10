@@ -13,7 +13,7 @@
 
     <Button fx:id="btnDecrease" onAction="#decreaseSeatCount"/>
 
-    <HBox spacing="5">
+    <HBox spacing="7">
         <Label styleClass="seatLbl" fx:id="currentReservedTickets"/>
         <Label styleClass="seatLbl" text=" / "/>
         <Label styleClass="seatLbl" fx:id="maxAnzFromTickets"/>

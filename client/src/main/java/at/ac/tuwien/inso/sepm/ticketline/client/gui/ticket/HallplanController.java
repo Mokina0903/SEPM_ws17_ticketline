@@ -136,12 +136,15 @@ public class HallplanController {
         this.oldContent = oldContent;
 
         //TODO: when implemented, create if,  depending on the event.IsSectorView - then initializeSectors, else initializeSeats
-        //initializeSeats();
-        initializeSectors();
+        initializeSeats();
+        //initializeSectors();
 
         setButtonGraphic(backbut, "ARROW_LEFT", Color.DARKGRAY);
 
         lbEventNameHeader.setText(event.getTitle());
+        lbEventNameHeader.setFont(Font.font(20));
+        lbEventNameHeader.setAlignment(Pos.CENTER);
+        lbEventNameHeader.setPadding(new Insets(0, 0, 0, 25));
         lbKnr.setText(String.valueOf(customer.getKnr()));
         lbSurname.setText(customer.getSurname());
         lbVname.setText(customer.getName());
@@ -205,36 +208,16 @@ public class HallplanController {
                 label.setText(String.valueOf(seat.getRow()));
                 label.setFont(Font.font(16));
                 label.setAlignment(Pos.CENTER);
-                label.setPadding(new Insets(0, 0, 0, 5));
+                label.setPadding(new Insets(0, 2, 0, 5));
                 seatsContainerGV.add(label, 0, seat.getRow());
             }
-
 
            if(!occupiedSeats.isEmpty()) {
                if (occupiedSeats.contains(seat)) {
                    wrapper.getController().vBseat.getStyleClass().add("occupied");
                }
            }
-
-            char seatSector = seat.getSector();
-            switch (seatSector) {
-                case 'a':
-                    wrapper.getController().vBseat.getStyleClass().add("sectorA");
-                    break;
-                case 'b':
-                    wrapper.getController().vBseat.getStyleClass().add("sectorB");
-                    break;
-                case 'c':
-                    wrapper.getController().vBseat.getStyleClass().add("sectorC");
-                    break;
-                case 'd':
-                    wrapper.getController().vBseat.getStyleClass().add("sectorD");
-                    break;
-                case 'e':
-                    wrapper.getController().vBseat.getStyleClass().add("sectorE");
-
-            }
-
+           addSector( wrapper.getController().vBseat, seat.getSector());
         }
     }
 
@@ -293,30 +276,34 @@ public class HallplanController {
                 Label label = new Label();
                 String s = String.valueOf(seat.getSector());
                 label.setText(s.toUpperCase());
-                label.setFont(Font.font(16));
+                label.setFont(Font.font(14));
                 label.setAlignment(Pos.CENTER);
-                label.setPadding(new Insets(0, 0, 0, 7));
+                label.setPadding(new Insets(0, 5, 0, 0));
                 seatsContainerGV.add(label, 0, seat.getRow());
             }
-
-            switch (sector) {
-                case 'a':
-                    wrapper.getController().hBSector.getStyleClass().add("sectorA");
-                    break;
-                case 'b':
-                    wrapper.getController().hBSector.getStyleClass().add("sectorB");
-                    break;
-                case 'c':
-                    wrapper.getController().hBSector.getStyleClass().add("sectorC");
-                    break;
-                case 'd':
-                    wrapper.getController().hBSector.getStyleClass().add("sectorD");
-                    break;
-                case 'e':
-                    wrapper.getController().hBSector.getStyleClass().add("sectorE");
-
-            }
+            addSector(wrapper.getController().hBSector, sector);
             currentSector++;
+        }
+    }
+
+    private void addSector(Node node, char sector){
+
+        switch (sector) {
+            case 'a':
+                node.getStyleClass().add("sectorA");
+                break;
+            case 'b':
+               node.getStyleClass().add("sectorB");
+                break;
+            case 'c':
+                node.getStyleClass().add("sectorC");
+                break;
+            case 'd':
+                node.getStyleClass().add("sectorD");
+                break;
+            case 'e':
+                node.getStyleClass().add("sectorE");
+
         }
     }
 
