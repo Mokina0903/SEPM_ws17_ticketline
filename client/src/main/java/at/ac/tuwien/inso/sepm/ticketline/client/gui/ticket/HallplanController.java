@@ -359,7 +359,6 @@ public class HallplanController implements LocalizationObserver {
                     freeSeatsSectorE.size()<ticketCountSectorE){
                     lblError.setText(BundleManager.getBundle().getString("exception.ticketAlreadyExists"));
                     selectedSeats.clear();
-                    ticketAmountLb.setText("");
 
                     if(event.getSeatSelection()){
                         initializeSeats();
@@ -456,7 +455,6 @@ public class HallplanController implements LocalizationObserver {
                     freeSeatsSectorE.size()<ticketCountSectorE){
                     lblError.setText(BundleManager.getBundle().getString("exception.ticketAlreadyExists"));
                     selectedSeats.clear();
-                    ticketAmountLb.setText("");
 
                     if(event.getSeatSelection()){
                         initializeSeats();
@@ -504,6 +502,7 @@ public class HallplanController implements LocalizationObserver {
             ticketService.save(tickets);
 
             selectedSeats.clear();
+
             backToEventTabBeginning();
 
         } catch (DataAccessException e) {
@@ -513,6 +512,7 @@ public class HallplanController implements LocalizationObserver {
         } catch (TicketAlreadyExistsException e) {
 
             lblError.setText(BundleManager.getBundle().getString("exception.ticketAlreadyExists"));
+            ticketAmountLb.setText("");
             selectedSeats.clear();
 
             if(event.getSeatSelection()){
