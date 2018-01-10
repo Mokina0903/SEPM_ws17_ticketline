@@ -24,12 +24,13 @@
                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
             </padding>
             <Label fx:id="lblChooseFile" text="%event.chooseYourInputFile"/>
+            <Label fx:id="lblChoosenFile" text=""/>
             <Button fx:id="btnAddFile" onAction="#chooseFile" text="+"/>
             <Button fx:id="btnImport" onAction="#importCSVFile" text="%event.import"/>
         </VBox>
     </center>
     <left>
-            <TextArea fx:id="TAlogOutput" maxWidth="500" maxHeight="1000"/>
+            <TextArea fx:id="TAlogOutput" maxWidth="500" maxHeight="1000" editable="false" wrapText="false"/>
     </left>
     <bottom>
         <HBox spacing="20">
