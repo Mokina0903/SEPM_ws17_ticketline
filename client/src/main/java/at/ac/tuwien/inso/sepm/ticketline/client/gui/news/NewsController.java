@@ -92,6 +92,9 @@ public class NewsController extends TabElement implements LocalizationObserver{
     private void initialize() {
         tabHeaderController.setIcon(FontAwesome.Glyph.NEWSPAPER_ALT);
         tabHeaderController.setTitle(BundleManager.getBundle().getString("news.news"));
+
+        newNewsTab.setClosable(false);
+        oldNewsTab.setClosable(false);
         localizationSubject.attach(this);
 
         addNewNews.setGraphic(fontAwesome.create("PLUS").size(FONT_SIZE));
