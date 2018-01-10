@@ -87,7 +87,7 @@ public class EventLocationDataGenerator {
 
                         Seat seat = Seat.builder()
                             .nr((j%10) +1)
-                            .row(j / 10)
+                            .row((j / 10)+1)
                             .sector(j/20==0?'a':j/20==1?'b':j/20==2?'c':j/20==3?'d':'e')
                             .hall(hall)
                             .build();
