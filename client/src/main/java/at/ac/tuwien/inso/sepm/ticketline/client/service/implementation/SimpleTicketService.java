@@ -5,6 +5,7 @@ import at.ac.tuwien.inso.sepm.ticketline.client.exception.EmptyValueException;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.TicketAlreadyExistsException;
 import at.ac.tuwien.inso.sepm.ticketline.client.rest.TicketRestClient;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.TicketService;
+import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.seat.SeatDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,5 +52,10 @@ public class SimpleTicketService implements TicketService {
     @Override
     public int ticketCountForEventForSector( Long event_id, char sector ) throws DataAccessException {
         return ticketRestClient.ticketCountForEventForSector(event_id,sector);
+    }
+
+    @Override
+    public List<SeatDTO> findFreeSeatsForEventInSector( Long event_id, char sector ) throws DataAccessException {
+        return ticketRestClient.findFreeSeatsForEventInSector(event_id,sector);
     }
 }

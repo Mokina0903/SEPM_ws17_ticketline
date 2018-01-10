@@ -3,6 +3,7 @@ package at.ac.tuwien.inso.sepm.ticketline.client.rest;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.EmptyValueException;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.TicketAlreadyExistsException;
+import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.seat.SeatDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketDTO;
 
 import java.util.List;
@@ -67,4 +68,13 @@ public interface TicketRestClient {
      * @return number of tickets
      */
     int ticketCountForEventForSector(Long event_id,char sector) throws DataAccessException;
+
+    /**
+     * find seats within sector that are still free for the specified event
+     *
+     * @param event_id of the event
+     * @param sector to check for seats
+     * @return list of free seats
+     */
+    List<SeatDTO> findFreeSeatsForEventInSector( Long event_id, char sector) throws DataAccessException;
 }

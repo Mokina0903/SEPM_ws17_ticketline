@@ -4,6 +4,7 @@ import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.EmptyValueException;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.TicketAlreadyExistsException;
 import at.ac.tuwien.inso.sepm.ticketline.client.rest.TicketRestClient;
+import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.seat.SeatDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.news.DetailedNewsDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketDTO;
 import org.slf4j.Logger;
@@ -150,6 +151,26 @@ public class SimpleTicketRestClient implements TicketRestClient {
             return count.getBody();
         } catch (HttpStatusCodeException e) {
             throw new DataAccessException("Failed retrieve count of tickets with status code " + e.getStatusCode().toString());
+        } catch (RestClientException e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<SeatDTO> findFreeSeatsForEventInSector( Long event_id, char sector ) throws DataAccessException {
+        try {
+            LOGGER.debug("Retrieving free seats for event in sector from {}", restClient.getServiceURI(TICKET_URL));
+            ResponseEntity<List<SeatDTO>> seats =
+                restClient.exchange(
+                    restClient.getServiceURI(TICKET_URL+"/isFree/"+event_id+"/"+sector),
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<List<SeatDTO>>() {}
+                );
+            LOGGER.debug("Result status was {} with content {}", seats.getStatusCode(), seats.getBody());
+            return seats.getBody();
+        } catch (HttpStatusCodeException e) {
+            throw new DataAccessException("Failed retrieve seats with status code " + e.getStatusCode().toString());
         } catch (RestClientException e) {
             throw new DataAccessException(e.getMessage(), e);
         }
