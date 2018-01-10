@@ -40,4 +40,9 @@ public class SimpleEventService implements EventService {
 
         return eventRestClient.findAllUpcoming(request);
     }
+
+    @Override
+    public DetailedEventDTO publishEvent(DetailedEventDTO detailedEventDTO) throws DataAccessException {
+        return eventRestClient.publishEvent(detailedEventDTO);
+    }
 }

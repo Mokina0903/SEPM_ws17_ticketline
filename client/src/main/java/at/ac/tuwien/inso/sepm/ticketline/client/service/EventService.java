@@ -36,4 +36,7 @@ public interface EventService {
      * @throws DataAccessException in case something went wrong
      */
     Page<SimpleEventDTO> findAllUpcoming(Pageable request) throws DataAccessException,SearchNoMatchException;
+
+    // TODO: (David) Javadoc
+    DetailedEventDTO publishEvent(DetailedEventDTO detailedEventDTO) throws DataAccessException;
 }

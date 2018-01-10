@@ -40,4 +40,12 @@ public interface EventService {
      * @return page of events
      */
     Page<Event> findAllUpcomingByTitle(Pageable request, String title);
+
+    /**
+     * Publish new Event
+     *
+     * @param event to publish
+     * @return published Event entry
+     */
+    Event publishEvent(Event event);
 }

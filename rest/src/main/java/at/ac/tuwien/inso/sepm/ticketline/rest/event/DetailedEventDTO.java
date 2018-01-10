@@ -32,6 +32,9 @@ public class DetailedEventDTO{
     @ApiModelProperty(required = true, name = "The end Time and Date of the event")
     private LocalDateTime endOfEvent;
 
+    @ApiModelProperty(required =true, name = "Information about seat selection or sectors")
+    private Boolean seatSelection;
+
     @ApiModelProperty(required = true, name = "The hall where the event takes place")
     private DetailedHallDTO hall;
 
@@ -75,6 +78,14 @@ public class DetailedEventDTO{
         this.price = price;
     }
 
+    public Boolean getSeatSelection() {
+        return seatSelection;
+    }
+
+    public void setSeatSelection( Boolean seatSelection ) {
+        this.seatSelection = seatSelection;
+    }
+
     public LocalDateTime getStartOfEvent() {
         return startOfEvent;
     }
@@ -100,20 +111,36 @@ public class DetailedEventDTO{
     }
 
     @Override
+    public String toString() {
+        return "DetailedEventDTO{" +
+            "id=" + id +
+            ", artists=" + artists +
+            ", title='" + title + '\'' +
+            ", description='" + description + '\'' +
+            ", price=" + price +
+            ", startOfEvent=" + startOfEvent +
+            ", endOfEvent=" + endOfEvent +
+            ", seatSelection=" + seatSelection +
+            ", hall=" + hall +
+            '}';
+    }
+
+    @Override
     public boolean equals( Object o ) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        DetailedEventDTO that = (DetailedEventDTO) o;
+        DetailedEventDTO eventDTO = (DetailedEventDTO) o;
 
-        if (!getId().equals(that.getId())) return false;
-        if (!getArtists().equals(that.getArtists())) return false;
-        if (!getTitle().equals(that.getTitle())) return false;
-        if (!getDescription().equals(that.getDescription())) return false;
-        if (!getPrice().equals(that.getPrice())) return false;
-        if (!getStartOfEvent().equals(that.getStartOfEvent())) return false;
-        if (!getEndOfEvent().equals(that.getEndOfEvent())) return false;
-        return getHall().equals(that.getHall());
+        if (!getId().equals(eventDTO.getId())) return false;
+        if (!getArtists().equals(eventDTO.getArtists())) return false;
+        if (!getTitle().equals(eventDTO.getTitle())) return false;
+        if (!getDescription().equals(eventDTO.getDescription())) return false;
+        if (!getPrice().equals(eventDTO.getPrice())) return false;
+        if (!getStartOfEvent().equals(eventDTO.getStartOfEvent())) return false;
+        if (!getEndOfEvent().equals(eventDTO.getEndOfEvent())) return false;
+        if (!getSeatSelection().equals(eventDTO.getSeatSelection())) return false;
+        return getHall().equals(eventDTO.getHall());
     }
 
     @Override
@@ -125,22 +152,9 @@ public class DetailedEventDTO{
         result = 31 * result + getPrice().hashCode();
         result = 31 * result + getStartOfEvent().hashCode();
         result = 31 * result + getEndOfEvent().hashCode();
+        result = 31 * result + getSeatSelection().hashCode();
         result = 31 * result + getHall().hashCode();
         return result;
-    }
-
-    @Override
-    public String toString() {
-        return "DetailedEventDTO{" +
-            "id=" + id +
-            ", artist=" + artists +
-            ", title='" + title + '\'' +
-            ", description='" + description + '\'' +
-            ", price=" + price +
-            ", startOfEvent=" + startOfEvent +
-            ", endOfEvent=" + endOfEvent +
-            ", hall=" + hall +
-            '}';
     }
 
     public static DetailedEventDTOBuilder builder() {
@@ -157,6 +171,7 @@ public class DetailedEventDTO{
         private LocalDateTime startOfEvent;
         private LocalDateTime endOfEvent;
         private DetailedHallDTO hall;
+        private Boolean seatSelection;
 
 
         public DetailedEventDTOBuilder id(Long id){
@@ -199,6 +214,11 @@ public class DetailedEventDTO{
             return this;
         }
 
+        public DetailedEventDTOBuilder seatSelection(Boolean seatSelection){
+            this.seatSelection = seatSelection;
+            return this;
+        }
+
         public DetailedEventDTO build(){
             DetailedEventDTO event = new DetailedEventDTO();
             event.setId(id);
@@ -209,6 +229,7 @@ public class DetailedEventDTO{
             event.setStartOfEvent(startOfEvent);
             event.setEndOfEvent(endOfEvent);
             event.setHall(hall);
+            event.setSeatSelection(seatSelection);
 
             return event;
         }

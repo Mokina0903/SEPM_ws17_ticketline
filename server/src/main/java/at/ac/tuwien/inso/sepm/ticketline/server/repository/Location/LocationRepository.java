@@ -16,4 +16,7 @@ public interface LocationRepository extends JpaRepository<Location,Long> {
      * @return Optional containing the location entry
      */
     Optional<Location> findOneById( Long id);
+
+    // TODO: (David) JavaDoc
+    Location findOneByDescription( String description);
 }

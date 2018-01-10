@@ -145,6 +145,7 @@ public class EventLocationDataGenerator {
                     .title(faker.music().instrument() + " concert")
                     .hall(hallRepository.findAll().get(faker.number().numberBetween(0,(int)hallRepository.count())))
                     .artists(artists)
+                    .seatSelection(faker.bool().bool())
                     .build();
                 LOGGER.debug("saving event {}", event);
                 eventRepository.save(event);

@@ -34,4 +34,7 @@ public interface EventRestClient {
      * @throws DataAccessException in case something went wrong
      */
     Page<SimpleEventDTO> findAllUpcoming(Pageable request) throws DataAccessException;
+
+    // TODO: (David) Javadoc
+    DetailedEventDTO publishEvent(DetailedEventDTO detailedEventDTO) throws DataAccessException;
 }

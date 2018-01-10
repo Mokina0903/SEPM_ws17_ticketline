@@ -1,8 +1,15 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.integrationtest.base;
 
+import at.ac.tuwien.inso.sepm.ticketline.rest.artist.SimpleArtistDTO;
 import at.ac.tuwien.inso.sepm.ticketline.server.configuration.JacksonConfiguration;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.Artist;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.News;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.User;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Hall;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Location;
+import at.ac.tuwien.inso.sepm.ticketline.server.repository.ArtistRepository;
+import at.ac.tuwien.inso.sepm.ticketline.server.repository.Location.HallRepository;
+import at.ac.tuwien.inso.sepm.ticketline.server.repository.Location.LocationRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.NewsRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.UserRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.security.AuthenticationConstants;
@@ -60,8 +67,20 @@ public abstract class BaseIntegrationTest {
     @Autowired
     protected NewsRepository newsRepository;
 
+    @Autowired
+    protected LocationRepository locationRepository;
+
+    @Autowired
+    protected HallRepository hallRepository;
+
+    @Autowired
+    protected ArtistRepository artistRepository;
+
     protected String validUserTokenWithPrefix;
     protected String validAdminTokenWithPrefix;
+    protected Location location;
+    protected Hall hall;
+    protected Artist artist;
 
     @Before
     public void beforeBase() throws Exception {
@@ -161,5 +180,32 @@ public abstract class BaseIntegrationTest {
                 .build());
 
         }
+    }
+
+    public void setupDefaultLocation(){
+
+        location = Location.builder()
+            .description("Test 1")
+            .city("TestCity")
+            .country("TestCountry")
+            .houseNr(1)
+            .street("TestStreet")
+            .zip(1234)
+            .build();
+
+        location = locationRepository.save(location);
+
+        hall = Hall.builder()
+            .description("Hall1")
+            .location(location)
+            .build();
+        hall = hallRepository.save(hall);
+
+        artist = Artist.builder()
+            .artistFirstname("Firstname")
+            .artistLastName("Lastname")
+            .build();
+
+        artist = artistRepository.save(artist);
     }
 }
