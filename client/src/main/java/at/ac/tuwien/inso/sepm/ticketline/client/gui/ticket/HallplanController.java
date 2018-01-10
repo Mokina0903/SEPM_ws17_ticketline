@@ -54,8 +54,11 @@ public class HallplanController implements LocalizationObserver {
     @Autowired
     private final MainController mainController;
     private final SpringFxmlLoader springFxmlLoader;
+
     private CustomerController customerController;
 
+    @FXML
+    public Label lblError;
     @FXML
     public GridPane seatsContainerGV;
     @FXML
