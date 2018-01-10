@@ -3,6 +3,7 @@ package at.ac.tuwien.inso.sepm.ticketline.server.integrationtest;
 import at.ac.tuwien.inso.sepm.ticketline.rest.artist.SimpleArtistDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.DetailedEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.hall.DetailedHallDTO;
+import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.location.DetailedLocationDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.news.DetailedNewsDTO;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Artist;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
@@ -11,6 +12,7 @@ import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -29,7 +31,6 @@ public class EventEndpointTest extends BaseIntegrationTest {
 
     private static final String EVENT_ARTIST_FIRSTNAME = "Firstname";
     private static final String EVENT_ARTIST_LASTNAME = "Lastname";
-
 
     @Test
     public void publishEventUnauthorizedAsUser() {
@@ -73,11 +74,14 @@ public class EventEndpointTest extends BaseIntegrationTest {
 
         LocalDateTime start = LocalDateTime.of(2017, 11, 29, 12, 15, 0, 0);
 
-        DetailedHallDTO detailedHallDTO = DetailedHallDTO.builder()
-            .description("Hall Description")
-            .id(1L)
+        DetailedLocationDTO locationDTO = DetailedLocationDTO.builder()
+            .description("Test 1")
             .build();
 
+        DetailedHallDTO detailedHallDTO = DetailedHallDTO.builder()
+            .description("Hall1")
+            .location(locationDTO)
+            .build();
 
         List<SimpleArtistDTO> artists = new ArrayList<>();
 
@@ -91,6 +95,7 @@ public class EventEndpointTest extends BaseIntegrationTest {
             .startOfEvent(start)
             .endOfEvent(start.plusHours(2))
             .artists(artists)
+            .seatSelection(true)
             .price(123L)
             .description("Description")
             .title("Title")

@@ -78,6 +78,9 @@ public abstract class BaseIntegrationTest {
 
     protected String validUserTokenWithPrefix;
     protected String validAdminTokenWithPrefix;
+    protected Location location;
+    protected Hall hall;
+    protected Artist artist;
 
     @Before
     public void beforeBase() throws Exception {
@@ -181,7 +184,7 @@ public abstract class BaseIntegrationTest {
 
     public void setupDefaultLocation(){
 
-        Location location = Location.builder()
+        location = Location.builder()
             .description("Test 1")
             .city("TestCity")
             .country("TestCountry")
@@ -192,15 +195,15 @@ public abstract class BaseIntegrationTest {
 
         location = locationRepository.save(location);
 
-        Hall hall = Hall.builder()
+        hall = Hall.builder()
             .description("Hall1")
             .location(location)
             .build();
         hall = hallRepository.save(hall);
 
-        Artist artist = Artist.builder()
-            .artistFirstname("artistFirstName")
-            .artistLastName("artistLastName")
+        artist = Artist.builder()
+            .artistFirstname("Firstname")
+            .artistLastName("Lastname")
             .build();
 
         artist = artistRepository.save(artist);
