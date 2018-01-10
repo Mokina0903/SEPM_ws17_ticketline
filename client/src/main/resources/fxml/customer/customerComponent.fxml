@@ -32,9 +32,9 @@
                     </rowConstraints>
                     <children>
                         <Label fx:id="lbSearch" text="%menu.search" />
-                        <TextField fx:id="tfSearch"  prefHeight="26.0" prefWidth="343.0" promptText="%customer.searchField" GridPane.columnIndex="1" />
-                        <Button fx:id="btSearch" defaultButton="true" mnemonicParsing="false" onAction="#search" text="%menu.search" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <Label fx:id="lbNoMatch" text="%customer.noMatches" textFill="#cc1d1d" GridPane.rowIndex="1" />
+                        <TextField fx:id="tfSearch" prefHeight="26.0" prefWidth="343.0" promptText="%customer.searchField" GridPane.columnIndex="1" />
+                        <Button fx:id="btSearch" defaultButton="true" mnemonicParsing="false" onAction="#search" text="%menu.search" GridPane.rowIndex="1" />
+                        <Label fx:id="lbNoMatch" text="%customer.noMatches" textFill="#cc1d1d" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                     </children>
                     <VBox.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

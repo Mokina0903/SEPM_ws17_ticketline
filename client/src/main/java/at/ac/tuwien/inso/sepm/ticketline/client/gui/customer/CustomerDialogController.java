@@ -332,9 +332,9 @@ public class CustomerDialogController implements LocalizationObserver {
     public void update() {
 
         lbCustomerNumberText.setText(BundleManager.getBundle().getString("customer.number"));
-        lbCustomerName.setText(BundleManager.getBundle().getString("customer.lname"));
-        lbCustomerBirthdate.setText(BundleManager.getBundle().getString("customer.birthdate"));
-        lbFirstName.setText(BundleManager.getBundle().getString("customer.fname"));
+        lbCustomerName.setText(BundleManager.getBundle().getString("customer.lname_"));
+        lbCustomerBirthdate.setText(BundleManager.getBundle().getString("customer.birthdate_"));
+        lbFirstName.setText(BundleManager.getBundle().getString("customer.fname_"));
 
         lbInvalidName.setText(BundleManager.getBundle().getString("customer.invalidName"));
         lbInvalidBirthdate.setText(BundleManager.getBundle().getString("customer.invalidBirthdate"));

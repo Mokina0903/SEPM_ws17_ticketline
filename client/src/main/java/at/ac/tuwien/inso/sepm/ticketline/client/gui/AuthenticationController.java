@@ -13,6 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Color;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -56,6 +57,7 @@ public class AuthenticationController {
     @FXML
     public void initialize() {
 
+        lblNumberFreeAttempts.setTextFill(Color.WHITE);
         lblLoginAttempts.setVisible(false);
         lblLoginAttempts.setText(BundleManager.getBundle().getString("authenticate.attempts"));
         lblLoginFailed.setVisible(false);

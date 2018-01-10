@@ -40,8 +40,8 @@
                         <RowConstraints minHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <children>
-                        <TextField fx:id="txtUsername" text ="admin" promptText="%authenticate.userName" GridPane.columnIndex="1" GridPane.columnSpan="2" />
-                        <PasswordField fx:id="txtPassword" text ="password" promptText="%authenticate.password" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+                        <TextField fx:id="txtUsername" promptText="%authenticate.userName" text="admin" GridPane.columnIndex="1" GridPane.columnSpan="2" />
+                        <PasswordField fx:id="txtPassword" promptText="%authenticate.password" text="password" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2" />
                         <Separator GridPane.columnSpan="2147483647" GridPane.rowIndex="1" />
                         <Label text="%authenticate.userName" />
                         <Label text="%authenticate.password" GridPane.rowIndex="2" />
@@ -55,7 +55,7 @@
                 </GridPane>
                 <HBox alignment="CENTER_RIGHT">
                     <children>
-                  <Label fx:id="lblLoginFailed" text="%authenticate.loginFailed" textFill="#f43939">
+                  <Label fx:id="lblLoginFailed" text="%authenticate.loginFailed" textFill="#f87171">
                      <font>
                         <Font name="System Bold" size="13.0" />
                      </font></Label>
@@ -65,12 +65,12 @@
                 </HBox>
             <HBox prefHeight="31.0" prefWidth="400.0">
                <children>
-                        <Label fx:id="lblLoginAttempts" text="%authenticate.attempts" />
+                        <Label fx:id="lblLoginAttempts" text="%authenticate.attempts" textFill="WHITE" />
                         <Label fx:id="lblNumberFreeAttempts" prefHeight="16.0" prefWidth="17.0" />
                </children>
             </HBox>
-            <Label fx:id="lblBlocked" text="%authenticate.blocked" />
-            <Label fx:id="lblContactAdmin" text="%authenticate.contactAdmin" textFill="#f43939">
+            <Label fx:id="lblBlocked" text="%authenticate.blocked" textFill="WHITE" />
+            <Label fx:id="lblContactAdmin" text="%authenticate.contactAdmin" textFill="#f87171">
                <font>
                   <Font size="16.0" />
                </font>
