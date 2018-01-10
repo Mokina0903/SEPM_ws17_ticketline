@@ -1,6 +1,9 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.service.implementation;
 
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.Artist;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Hall;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Location;
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.NotFoundException;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.ArtistRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.EventRepository;
@@ -12,7 +15,9 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SimpleEventService implements EventService {
@@ -57,17 +62,41 @@ public class SimpleEventService implements EventService {
 
     @Override
     public Event publishEvent(Event event) {
-        // TODO; David Implent here
-        System.out.println(event.getHall().getId());
+        // TODO; David Implent here asdf
 
-        if (hallRepository.findOne(event.getHall().getId()) == null)
-            throw new NotFoundException();
-
-
-        if (artistRepository.findOne(event.getArtists().get(0).getId()) == null)
-        {
-            throw new NotFoundException();
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
+
+        // Find Location
+        Location location = locationRepository.findOneByDescription(event.getHall().getLocation().getDescription());
+
+        if (location == null) {
+            throw new NotFoundException("Location " + event.getHall().getLocation().getDescription());
+        }
+
+        // Find Hall
+        Hall hall = hallRepository.findOneByDescriptionAndLocation(location.getId(),event.getHall().getDescription());
+
+        if (hall == null) {
+            throw new NotFoundException("Hall " + event.getHall().getDescription() + " " + location.getDescription());
+        }
+
+        event.setHall(hall);
+
+        List<Artist> newArtistsList = new ArrayList<>();
+
+        for (Artist artist : event.getArtists()) {
+            Artist newArtist = artistRepository.findByArtistFirstNameAndArtistLastName(artist.getArtistFirstName(),artist.getArtistLastName());
+            if (newArtist == null) {
+                throw new NotFoundException("Artist " + artist.getArtistFirstName()+" " +artist.getArtistLastName());
+            }
+            newArtistsList.add(newArtist);
+        }
+
+        event.setArtists(newArtistsList);
 
 
         // TODO: Implement here verification if necessary (two events same Time)
