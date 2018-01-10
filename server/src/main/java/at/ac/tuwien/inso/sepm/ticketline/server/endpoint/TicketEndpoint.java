@@ -3,6 +3,7 @@ package at.ac.tuwien.inso.sepm.ticketline.server.endpoint;
 import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketDTO;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Ticket;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.ticket.TicketMapper;
+import at.ac.tuwien.inso.sepm.ticketline.server.exception.EmptyFieldException;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.EventService;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.TicketService;
 import io.swagger.annotations.Api;
@@ -56,8 +57,8 @@ public class TicketEndpoint {
     @ApiOperation(value = "create ticket entry")
     public List<TicketDTO> create(@RequestBody List<TicketDTO> ticketDTOS) {
 
-        /*if(ticketDTOS==null || ticketDTOS.isEmpty()){
-            return ticketDTOS;
+        if(ticketDTOS==null || ticketDTOS.isEmpty()){
+            throw new EmptyFieldException();
         }
         List<Ticket> tickets = new ArrayList<>();
 
@@ -65,9 +66,9 @@ public class TicketEndpoint {
             Ticket ticket = ticketMapper.ticketDTOtoTicket(ticketDTO);
             ticket.setEvent(eventService.findOne(ticketDTO.getEvent().getId()));
             tickets.add(ticket);
-        }*/
+        }
 
-        List<Ticket> tickets = ticketService.save(ticketMapper.ticketDTOToTicket(ticketDTOS));
+        tickets =ticketService.save(tickets);
         return ticketMapper.ticketToTicketDTO(tickets);
     }
 
