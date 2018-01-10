@@ -30,10 +30,9 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
 
     /**
      *
-     * @param request defienes how to read paged from the database
      * @return a list of customer, though the size of the list is dependent of the pageable object
      */
-    Page<Customer> findAll(Pageable request);
+    List<Customer> findAll();
 
     /**
      *
@@ -45,20 +44,19 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     /**
      *
      * @param name substring of firstname of the wanted costumers
-     * @param surname substring of surname of the wanted costumers
-     * @param request  defienes how to read paged from the database
+     * @param surname  substring of surname of the wanted costumers
      * @return a list of customer,  though the size of the list is dependent of the pageable object
      */
-    Page<Customer> findByNameStartingWithIgnoreCaseOrSurnameStartingWithIgnoreCase(String name, String surname, Pageable request);
+    List<Customer> findByNameStartingWithIgnoreCaseOrSurnameStartingWithIgnoreCase(String name, String surname);
 
 
-    /**
+/*    *//**
      *
      * @param surname surname of the wanted costumers
      * @param request  defienes how to read paged from the database
      * @return a list of customer,  though the size of the list is dependent of the pageable object
-     */
-    Page<Customer> readBySurnameStartingWithIgnoreCase(String surname, Pageable request);
+     *//*
+    Page<Customer> readBySurnameStartingWithIgnoreCase(String surname, Pageable request);*/
 
     /**
      *

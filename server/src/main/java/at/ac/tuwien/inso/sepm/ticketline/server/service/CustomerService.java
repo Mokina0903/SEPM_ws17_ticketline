@@ -7,6 +7,7 @@ import at.ac.tuwien.inso.sepm.ticketline.server.exception.InvalidIdException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.method.P;
 
 
 import java.util.List;
@@ -18,7 +19,7 @@ public interface CustomerService {
      * @param request pageRequest, defining which page and how many items per page will be loaded
      * @return List of costumers, as defined in request
      */
-    List<Customer> findAll(Pageable request);
+    Page<Customer> findAll(Pageable request);
 
     /**
      *
@@ -56,17 +57,17 @@ public interface CustomerService {
      *
      * @param name firstname of the wanted costumer
      * @param request  pageRequest, defining which page and how many items per page will be loaded
-     * @return List of costumers, as defined in request
+     * @return Page of costumers, as defined in request
      */
-    List<Customer> findByName(String name, Pageable request);
+    Page<Customer> findByName(String name, Pageable request);
 
-    /**
+/*    *//**
      *
      * @param surname firstname of the wanted costumer
      * @param request  pageRequest, defining which page and how many items per page will be loaded
      * @return List of costumers, as defined in request
-     */
-    List<Customer> findBySurname(String surname, Pageable request);
+     *//*
+    List<Customer> findBySurname(String surname, Pageable request);*/
 
 
 

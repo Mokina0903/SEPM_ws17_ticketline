@@ -7,6 +7,7 @@ import at.ac.tuwien.inso.sepm.ticketline.server.exception.NotFoundException;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.CustomerRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.CustomerService;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -30,9 +31,11 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<Customer> findAll(Pageable request) {
-        Page<Customer> p = customerRepository.findAll(request);
-        return p.getContent();
+    public Page<Customer> findAll(Pageable request) {
+        List<Customer> customer = customerRepository.findAll();
+        int start = request.getOffset();
+        int end = (start + request.getPageSize()) > customer.size() ? customer.size() : (start + request.getPageSize());
+        return new PageImpl<>(customer.subList(start, end), request, customer.size());
     }
 
     @Override
@@ -88,16 +91,20 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<Customer> findByName(String name, Pageable request) {
-        Page<Customer> p = customerRepository.findByNameStartingWithIgnoreCaseOrSurnameStartingWithIgnoreCase(name, name, request);
-        return p.getContent();
+    public Page<Customer> findByName(String name, Pageable request) {
+        List<Customer> customer = customerRepository.findByNameStartingWithIgnoreCaseOrSurnameStartingWithIgnoreCase(name, name);
+        int start = request.getOffset();
+        int end = (start + request.getPageSize()) > customer.size() ? customer.size() : (start + request.getPageSize());
+        return new PageImpl<>(customer.subList(start, end), request, customer.size());
     }
 
+/*
     @Override
     public List<Customer> findBySurname(String surname, Pageable request) {
         Page<Customer> p = customerRepository.readBySurnameStartingWithIgnoreCase(surname, request);
         return p.getContent();
     }
+*/
 
 
     private boolean validateIdOrKnr(Long id) {

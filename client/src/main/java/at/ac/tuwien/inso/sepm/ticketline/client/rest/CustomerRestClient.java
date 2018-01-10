@@ -3,6 +3,8 @@ package at.ac.tuwien.inso.sepm.ticketline.client.rest;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.SearchNoMatchException;
 import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -15,16 +17,17 @@ public interface CustomerRestClient {
      * @return list of customer entries
      * @throws DataAccessException in case something went wrong
      */
-    List<CustomerDTO> findAll(int pageIndex, int costumerPerPage) throws DataAccessException;
+    Page<CustomerDTO> findAll(Pageable request) throws DataAccessException;
 
     /**
      * Find customer entries by name
      *
      * @param name of Customer entry
-     * @return list of customer entries
+     * @param request for pagination
+     * @return page of customer entries
      * @throws DataAccessException in case something went wrong
      */
-    List<CustomerDTO> findByName(String name, int pageIndex, int costumerPerPage) throws DataAccessException;
+    Page<CustomerDTO> findByName(String name, Pageable request) throws DataAccessException;
 
     /**
      * Find specific customer by customerNumber
