@@ -71,12 +71,5 @@ public interface TicketService {
      */
     int ticketCountForEventForSector(Long event_id,char sector);
 
-    /**
-     * find seats within sector that are still free for the specified event
-     *
-     * @param event_id of the event
-     * @param sector to check for seats
-     * @return list of free seats
-     */
-    List<Seat> findFreeSeatsForEventInSector( Long event_id, char sector);
+
 }

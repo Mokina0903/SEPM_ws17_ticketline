@@ -2,6 +2,7 @@ package at.ac.tuwien.inso.sepm.ticketline.server.service.implementation;
 
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Hall;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Location;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Seat;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.Location.HallRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.Location.LocationRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.Location.SeatRepository;
@@ -42,5 +43,10 @@ public class SimpleLocationService implements LocationService{
     @Override
     public List<Hall> findAllHalls() {
         return hallRepository.findAll();
+    }
+
+    @Override
+    public List<Seat> findFreeSeatsForEventInSector( Long event_id, char sector ) {
+        return seatRepository.findFreeSeatsForEventInSector(event_id,sector);
     }
 }

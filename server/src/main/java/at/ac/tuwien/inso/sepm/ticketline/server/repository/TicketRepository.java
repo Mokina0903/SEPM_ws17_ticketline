@@ -70,18 +70,4 @@ public interface TicketRepository extends JpaRepository<Ticket,Long>{
     int ticketCountForEventForSector( @Param("event_id") Long event_id, @Param("sec") char sector);
 
 
-    /**
-     * find seats within sector that are still free for the specified event
-     *
-     * @param event_id of the event
-     * @param sector to check for seats
-     * @return list of free seats
-     */
-    @Query(value = "Select * from seat s join event e on s.hall_id = e.hall_id" +
-        " where e.id= :event_id and s.sector= :sector " +
-        "and s.id not in " +
-        "( Select seat_id from seat s join ticket t on s.id=t.seat_id join event e on t.event_id=e.id where e.id= :event_id)",
-        nativeQuery = true)
-    List<Seat> findFreeSeatsForEventInSector( @Param("event_id") Long event_id, @Param("sector") char sector);
-
 }

@@ -71,10 +71,7 @@ public class SimpleTicketService implements TicketService {
         return ticketRepository.ticketCountForEventForSector(event_id,sector);
     }
 
-    @Override
-    public List<Seat> findFreeSeatsForEventInSector( Long event_id, char sector ) {
-        return ticketRepository.findFreeSeatsForEventInSector(event_id,sector);
-    }
+
 
     @Override
     public Boolean isBooked(Long eventId,Long seatId){
