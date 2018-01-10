@@ -150,6 +150,8 @@ public class CustomerController extends TabElement implements LocalizationObserv
         btEdit.setGraphic(fontAwesome.create("PENCIL_SQUARE_ALT").size(FONT_SIZE));
         btTickets.setGraphic(fontAwesome.create("TICKET").size(FONT_SIZE));
 
+        lbNoCustomerError.setWrapText(true);
+
         btNext.setDisable(true);
         btNext.setVisible(false);
         btNext.setText(BundleManager.getBundle().getString("customer.next"));
@@ -348,7 +350,7 @@ public class CustomerController extends TabElement implements LocalizationObserv
         tcBirthdate.setText(BundleManager.getBundle().getString("customer.birthdate"));
         tcNumber.setText(BundleManager.getBundle().getString("customer.number"));
         btNext.setText(BundleManager.getBundle().getString("customer.next"));
-        lbNoCustomerError.setText(BundleManager.getBundle().getString("customer.chooseCustomer"+"!"));
+        lbNoCustomerError.setText(BundleManager.getBundle().getString("customer.chooseCustomer")+"!");
         //todo update TVcolumns
     }
 
@@ -399,7 +401,7 @@ public class CustomerController extends TabElement implements LocalizationObserv
         Node root = springFxmlLoader.load("/fxml/ticket/hallplan.fxml");
         HallplanController c = wrapper.getController();
         if(currentTableview.getSelectionModel().getSelectedItem()==null){
-            lbNoCustomerError.setText(BundleManager.getBundle().getString("customer.chooseCustomer"+"!"));
+            lbNoCustomerError.setText(BundleManager.getBundle().getString("customer.chooseCustomer")+"!");
             lbNoCustomerError.setVisible(true);
             return;
         }
