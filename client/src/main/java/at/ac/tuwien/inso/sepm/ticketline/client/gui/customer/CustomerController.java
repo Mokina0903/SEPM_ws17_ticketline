@@ -393,6 +393,7 @@ public class CustomerController extends TabElement implements LocalizationObserv
             springFxmlLoader.loadAndWrap("/fxml/ticket/hallplan.fxml");
         Node root = springFxmlLoader.load("/fxml/ticket/hallplan.fxml");
         HallplanController c = wrapper.getController();
+        mainController.setCutsomer(currentTableview.getSelectionModel().getSelectedItem());
 
         c.initializeData(mainController.getEvent(),currentTableview.getSelectionModel().getSelectedItem(),  customerOverviewRoot);
 
