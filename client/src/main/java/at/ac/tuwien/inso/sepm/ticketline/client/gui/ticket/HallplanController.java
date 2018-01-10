@@ -240,7 +240,7 @@ public class HallplanController {
 
     void initializeSectors() {
 
-        //* ************** Preperation for testing ***************
+        /* ************** Preperation for testing ***************
         DetailedHallDTO hall = new DetailedHallDTO();
         ArrayList<SeatDTO> seatsToAdd = new ArrayList<>();
         int row = 1;
@@ -275,9 +275,19 @@ public class HallplanController {
             if (currentSector == sector) {
                 continue;
             }
+
+            int reservedTickets =0;
+
+            try {
+                reservedTickets = ticketService.ticketCountForEventForSector(event.getId(), sector);
+            } catch (DataAccessException e) {
+                //TODO: Add alert
+                e.printStackTrace();
+            }
+
             SpringFxmlLoader.Wrapper<SectorElementController> wrapper =
                 springFxmlLoader.loadAndWrap("/fxml/ticket/sectorElement.fxml");
-            wrapper.getController().initializeData(2, 20,HallplanController.this);
+            wrapper.getController().initializeData(reservedTickets, 20,HallplanController.this);
             seatsContainerGV.add(wrapper.getController().hBSector, seat.getNr(), seat.getRow());
             if (seat.getNr() == 1) {
                 Label label = new Label();
@@ -285,7 +295,7 @@ public class HallplanController {
                 label.setText(s.toUpperCase());
                 label.setFont(Font.font(16));
                 label.setAlignment(Pos.CENTER);
-                label.setPadding(new Insets(0, 0, 0, 5));
+                label.setPadding(new Insets(0, 0, 0, 7));
                 seatsContainerGV.add(label, 0, seat.getRow());
             }
 
