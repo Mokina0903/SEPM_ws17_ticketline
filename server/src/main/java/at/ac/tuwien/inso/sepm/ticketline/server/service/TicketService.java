@@ -3,6 +3,7 @@ package at.ac.tuwien.inso.sepm.ticketline.server.service;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Customer;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Ticket;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Seat;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -69,4 +70,13 @@ public interface TicketService {
      * @return number of tickets
      */
     int ticketCountForEventForSector(Long event_id,char sector);
+
+    /**
+     * find seats within sector that are still free for the specified event
+     *
+     * @param event_id of the event
+     * @param sector to check for seats
+     * @return list of free seats
+     */
+    List<Seat> findFreeSeatsForEventInSector( Long event_id, char sector);
 }

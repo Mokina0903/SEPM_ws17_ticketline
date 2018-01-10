@@ -3,6 +3,7 @@ package at.ac.tuwien.inso.sepm.ticketline.server.service.implementation;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Customer;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Ticket;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Seat;
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.AlreadyExistsException;
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.EmptyFieldException;
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.NotFoundException;
@@ -68,6 +69,11 @@ public class SimpleTicketService implements TicketService {
     @Override
     public int ticketCountForEventForSector( Long event_id, char sector ) {
         return ticketRepository.ticketCountForEventForSector(event_id,sector);
+    }
+
+    @Override
+    public List<Seat> findFreeSeatsForEventInSector( Long event_id, char sector ) {
+        return ticketRepository.findFreeSeatsForEventInSector(event_id,sector);
     }
 
     @Override
