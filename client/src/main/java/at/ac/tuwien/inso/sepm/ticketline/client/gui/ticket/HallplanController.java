@@ -1,9 +1,7 @@
 package at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket;
 
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
-import at.ac.tuwien.inso.sepm.ticketline.client.gui.MainController;
-import at.ac.tuwien.inso.sepm.ticketline.client.gui.TabElement;
-import at.ac.tuwien.inso.sepm.ticketline.client.gui.TabHeaderController;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.*;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.customer.CustomerController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.event.EventController;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.NewsService;
@@ -50,7 +48,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class HallplanController {
+public class HallplanController implements LocalizationObserver {
     private static final Logger LOGGER = LoggerFactory.getLogger(at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket.TicketController.class);
 
     @Autowired
@@ -96,6 +94,10 @@ public class HallplanController {
     private DetailedHallDTO hall;
     private Node oldContent;
 
+
+    @Autowired
+    private LocalizationSubject localizationSubject;
+
     public HallplanController(MainController mainController, CustomerController customerController, SpringFxmlLoader springFxmlLoader, TicketService ticketService) {
         this.mainController = mainController;
         this.springFxmlLoader = springFxmlLoader;
@@ -127,6 +129,7 @@ public class HallplanController {
         tabHeaderController.setTitle(BundleManager.getBundle().getString("hallplan.chooseYourTickets"));
         ticketCount = 0;
         ticketAmountLb.setText(String.valueOf(ticketCount));
+        localizationSubject.attach(this);
     }
 
     public void initializeData(DetailedEventDTO event, CustomerDTO customer, Node oldContent) {
@@ -347,5 +350,13 @@ public class HallplanController {
         mainController.getEventTab().setContent(root);
         mainController.setCutsomer(null);
         mainController.setEvent(null);
+    }
+
+
+    @Override
+    public void update() {
+        tabHeaderController.setTitle(BundleManager.getBundle().getString("hallplan.chooseYourTickets"));
+        buyBut.setText(BundleManager.getBundle().getString("hallplan.buy"));
+        reserveBut.setText(BundleManager.getBundle().getString("hallplan.reserveTickets"));
     }
 }
