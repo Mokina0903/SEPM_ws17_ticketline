@@ -3,6 +3,7 @@ package at.ac.tuwien.inso.sepm.ticketline.server.entity;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Seat;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "ticket")
@@ -23,9 +24,24 @@ public class Ticket {
     private Seat seat;
 
     @Column(nullable = false)
-    private int price;
+    private Long price;
+
+    private boolean isPaid;
+
+    @Column(nullable = false)
+    private Long reservationNumber;
 
     private boolean isDeleted;
+
+    private LocalDateTime reservationDate;
+
+    public LocalDateTime getReservationDate() {
+        return reservationDate;
+    }
+
+    public void setReservationDate( LocalDateTime reservationDate ) {
+        this.reservationDate = reservationDate;
+    }
 
     public boolean isDeleted() {
         return isDeleted;
@@ -50,11 +66,6 @@ public class Ticket {
     public void setReservationNumber( Long reservationNumber ) {
         this.reservationNumber = reservationNumber;
     }
-
-    private boolean isPaid;
-
-    @Column(nullable = false, updatable = false)
-    private Long reservationNumber;
 
     public Long getId() {
         return id;
@@ -88,11 +99,11 @@ public class Ticket {
         this.seat = seat;
     }
 
-    public int getPrice() {
+    public Long getPrice() {
         return price;
     }
 
-    public void setPrice( int price ) {
+    public void setPrice( Long price ) {
         this.price = price;
     }
 
@@ -108,9 +119,10 @@ public class Ticket {
             ", customer=" + customer +
             ", seat=" + seat +
             ", price=" + price +
-            ", isDeleted=" + isDeleted +
             ", isPaid=" + isPaid +
             ", reservationNumber=" + reservationNumber +
+            ", isDeleted=" + isDeleted +
+            ", reservationDate=" + reservationDate +
             '}';
     }
 
@@ -121,14 +133,15 @@ public class Ticket {
 
         Ticket ticket = (Ticket) o;
 
-        if (getPrice() != ticket.getPrice()) return false;
-        if (isDeleted() != ticket.isDeleted()) return false;
         if (isPaid() != ticket.isPaid()) return false;
+        if (isDeleted() != ticket.isDeleted()) return false;
         if (!getId().equals(ticket.getId())) return false;
         if (!getEvent().equals(ticket.getEvent())) return false;
         if (!getCustomer().equals(ticket.getCustomer())) return false;
         if (!getSeat().equals(ticket.getSeat())) return false;
-        return getReservationNumber().equals(ticket.getReservationNumber());
+        if (!getPrice().equals(ticket.getPrice())) return false;
+        if (!getReservationNumber().equals(ticket.getReservationNumber())) return false;
+        return getReservationDate() != null ? getReservationDate().equals(ticket.getReservationDate()) : ticket.getReservationDate() == null;
     }
 
     @Override
@@ -137,10 +150,11 @@ public class Ticket {
         result = 31 * result + getEvent().hashCode();
         result = 31 * result + getCustomer().hashCode();
         result = 31 * result + getSeat().hashCode();
-        result = 31 * result + getPrice();
-        result = 31 * result + (isDeleted() ? 1 : 0);
+        result = 31 * result + getPrice().hashCode();
         result = 31 * result + (isPaid() ? 1 : 0);
         result = 31 * result + getReservationNumber().hashCode();
+        result = 31 * result + (isDeleted() ? 1 : 0);
+        result = 31 * result + (getReservationDate() != null ? getReservationDate().hashCode() : 0);
         return result;
     }
 
@@ -149,10 +163,11 @@ public class Ticket {
         private Event event;
         private Customer customer;
         private Seat seat;
-        private int price;
+        private Long price;
         private long reservationNumbler;
         private boolean isDeleted;
         private boolean isPaid;
+        private LocalDateTime reservationDate;
 
         public TicketBuilder id(Long id){
             this.id = id;
@@ -170,7 +185,7 @@ public class Ticket {
             this.seat = seat;
             return this;
         }
-        public TicketBuilder price(int price){
+        public TicketBuilder price(Long price){
             this.price = price;
             return this;
         }
@@ -186,6 +201,10 @@ public class Ticket {
             this.isDeleted = isDeleted;
             return this;
         }
+        public TicketBuilder reservationDate(LocalDateTime reservationDate){
+            this.reservationDate = reservationDate;
+            return this;
+        }
 
         public Ticket build(){
             Ticket ticket = new Ticket();
@@ -197,6 +216,7 @@ public class Ticket {
             ticket.setDeleted(isDeleted);
             ticket.setPaid(isPaid);
             ticket.setReservationNumber(reservationNumbler);
+            ticket.setReservationDate(reservationDate);
 
             return ticket;
         }
