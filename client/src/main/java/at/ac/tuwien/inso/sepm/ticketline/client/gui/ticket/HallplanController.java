@@ -144,10 +144,12 @@ public class HallplanController implements LocalizationObserver {
 
         this.oldContent = oldContent;
 
-        //TODO: when implemented, create if,  depending on the event.IsSectorView - then initializeSectors, else initializeSeats
-        initializeSeats();
-        //initializeSectors();
 
+        if(event.getSeatSelection()) {
+            initializeSeats();
+        }else {
+            initializeSectors();
+        }
         setButtonGraphic(backbut, "ARROW_LEFT", Color.DARKGRAY);
 
         lbEventNameHeader.setText(event.getTitle());
@@ -334,7 +336,12 @@ public class HallplanController implements LocalizationObserver {
 
 
         List<TicketDTO> tickets=new ArrayList<>();
-        for(SeatDTO seat:selectedSeats) {
+
+        if(!event.getSeatSelection()) {
+            selectedSeats.clear();
+
+        }
+        for (SeatDTO seat : selectedSeats) {
             tickets.add(new TicketDTO().builder()
                 .customer(mainController.getCutsomer())
                 .event(new SimpleEventDTO().builder()
@@ -349,7 +356,6 @@ public class HallplanController implements LocalizationObserver {
                 .price(event.getPrice().intValue())
                 .seat(seat)
                 .build());
-
         }
         try {
             ticketService.save(tickets);
@@ -365,6 +371,11 @@ public class HallplanController implements LocalizationObserver {
 
             lblError.setText(BundleManager.getBundle().getString("exception.ticketAlreadyExists"));
 
+            if(event.getSeatSelection()){
+                initializeSeats();
+            }else{
+                initializeSectors();
+            }
         } catch (EmptyValueException e) {
             lblError.setText(BundleManager.getBundle().getString("exception.noSeatSelected"));
         }
