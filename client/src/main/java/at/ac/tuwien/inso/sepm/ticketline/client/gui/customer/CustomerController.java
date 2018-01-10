@@ -3,11 +3,13 @@ package at.ac.tuwien.inso.sepm.ticketline.client.gui.customer;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.SearchNoMatchException;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.*;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket.HallplanController;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.CustomerService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.JavaFXUtils;
 import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
+import com.sun.javafx.tools.packager.bundlers.Bundler;
 import javafx.beans.binding.Bindings;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -34,6 +36,10 @@ import java.util.List;
 public class CustomerController extends TabElement implements LocalizationObserver {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(at.ac.tuwien.inso.sepm.ticketline.client.gui.customer.CustomerController.class);
+    @FXML
+    public Button btNext;
+    @FXML
+    public Label lbNoCustomerError;
 
     @FXML
     private TabHeaderController tabHeaderController;
@@ -68,7 +74,9 @@ public class CustomerController extends TabElement implements LocalizationObserv
     private TableColumn<CustomerDTO, String> tcNumber;
 
     private Tab customerTab;
+    private Tab currentTab;
     private final int CUSTOMER_PER_PAGE = 12;
+    private boolean isTicketView;
 
     private final MainController mainController;
     private final SpringFxmlLoader springFxmlLoader;
@@ -90,11 +98,47 @@ public class CustomerController extends TabElement implements LocalizationObserv
         return customerTab;
     }
 
+    public Tab getCurrentTab() {
+        return currentTab;
+    }
 
     public CustomerController(MainController mainController, SpringFxmlLoader springFxmlLoader, CustomerService customerService) {
         this.mainController = mainController;
         this.springFxmlLoader = springFxmlLoader;
         this.customerService = customerService;
+    }
+
+    public void toggleTicketprozessView(boolean fromEvent){
+        btTickets.setVisible(!btTickets.isVisible());
+        btTickets.setDisable(!btTickets.isDisable());
+        btNext.setDisable(!btNext.isDisable());
+        btNext.setVisible(!btNext.isVisible());
+        tabHeaderController.setTitle(BundleManager.getBundle().getString("customer.chooseCustomer"));
+        if(fromEvent){
+            currentTab = mainController.getEventTab();
+        } else {
+           currentTab = customerTab;
+        }
+    }
+
+    public void setNormalTabView(){
+        btTickets.setVisible(true);
+        btTickets.setDisable(false);
+        btNext.setDisable(true);
+        btNext.setVisible(false);
+        tabHeaderController.setTitle(BundleManager.getBundle().getString("customer.customer"));
+        currentTab=customerTab;
+        isTicketView = false;
+        lbNoCustomerError.setVisible(false);
+    }
+    public void setTicketProzessView(){
+        btTickets.setVisible(false);
+        btTickets.setDisable(true);
+        btNext.setDisable(false);
+        btNext.setVisible(true);
+        tabHeaderController.setTitle(BundleManager.getBundle().getString("customer.chooseCustomer"));
+        currentTab = mainController.getEventTab();
+        isTicketView = true;
     }
 
     @FXML
@@ -106,7 +150,14 @@ public class CustomerController extends TabElement implements LocalizationObserv
         btEdit.setGraphic(fontAwesome.create("PENCIL_SQUARE_ALT").size(FONT_SIZE));
         btTickets.setGraphic(fontAwesome.create("TICKET").size(FONT_SIZE));
 
+        lbNoCustomerError.setWrapText(true);
+
+        btNext.setDisable(true);
+        btNext.setVisible(false);
+        btNext.setText(BundleManager.getBundle().getString("customer.next"));
+
         lbNoMatch.setVisible(false);
+        isTicketView = false;
     }
 
 
@@ -252,7 +303,7 @@ public class CustomerController extends TabElement implements LocalizationObserv
 
         wrapper.getController().initializeData(null, customerOverviewRoot);
 
-        customerTab.setContent(wrapper.getLoadedObject());
+        currentTab.setContent(wrapper.getLoadedObject());
     }
 
     @FXML
@@ -266,13 +317,15 @@ public class CustomerController extends TabElement implements LocalizationObserv
                 springFxmlLoader.loadAndWrap("/fxml/customer/customerEdit.fxml");
             wrapper.getController().initializeData(customer, customerOverviewRoot);
             wrapper.getController().setUpdate(true);
-            customerTab.setContent(wrapper.getLoadedObject());
+            currentTab
+                .setContent(wrapper.getLoadedObject());
         }
     }
 
     @FXML
     private void openEventTab(ActionEvent event) {
         if (currentTableview.getSelectionModel().getSelectedItem() != null) {
+            mainController.setCutsomer(currentTableview.getSelectionModel().getSelectedItem());
             mainController.openEventTab();
         }
     }
@@ -281,7 +334,12 @@ public class CustomerController extends TabElement implements LocalizationObserv
     @Override
     public void update() {
 
-        tabHeaderController.setTitle(BundleManager.getBundle().getString("customer.customer"));
+        if(isTicketView){
+            tabHeaderController.setTitle(BundleManager.getBundle().getString("customer.chooseCustomer"));
+        }else{
+            tabHeaderController.setTitle(BundleManager.getBundle().getString("customer.customer"));
+        }
+
         btSearch.setText(BundleManager.getBundle().getString("menu.search"));
         lbSearch.setText(BundleManager.getBundle().getString("menu.search"));
         tfSearch.setPromptText(BundleManager.getBundle().getString("customer.searchField"));
@@ -291,6 +349,8 @@ public class CustomerController extends TabElement implements LocalizationObserv
         tcSurname.setText(BundleManager.getBundle().getString("customer.lname"));
         tcBirthdate.setText(BundleManager.getBundle().getString("customer.birthdate"));
         tcNumber.setText(BundleManager.getBundle().getString("customer.number"));
+        btNext.setText(BundleManager.getBundle().getString("customer.next"));
+        lbNoCustomerError.setText(BundleManager.getBundle().getString("customer.chooseCustomer")+"!");
         //todo update TVcolumns
     }
 
@@ -331,5 +391,24 @@ public class CustomerController extends TabElement implements LocalizationObserv
 
         new Thread(taskLoadCustomer).start();
 
+    }
+
+    public void openHallplan(ActionEvent actionEvent) {
+        lbNoCustomerError.setVisible(false);
+
+        SpringFxmlLoader.Wrapper<HallplanController> wrapper =
+            springFxmlLoader.loadAndWrap("/fxml/ticket/hallplan.fxml");
+        Node root = springFxmlLoader.load("/fxml/ticket/hallplan.fxml");
+        HallplanController c = wrapper.getController();
+        if(currentTableview.getSelectionModel().getSelectedItem()==null){
+            lbNoCustomerError.setText(BundleManager.getBundle().getString("customer.chooseCustomer")+"!");
+            lbNoCustomerError.setVisible(true);
+            return;
+        }
+        mainController.setCutsomer(currentTableview.getSelectionModel().getSelectedItem());
+
+        c.initializeData(mainController.getEvent(),currentTableview.getSelectionModel().getSelectedItem(),  customerOverviewRoot);
+
+        mainController.getEventTab().setContent(root);
     }
 }

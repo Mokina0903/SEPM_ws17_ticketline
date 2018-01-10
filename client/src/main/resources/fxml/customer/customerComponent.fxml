@@ -11,6 +11,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
+<?import javafx.scene.layout.HBox?>
 <BorderPane fx:id="customerOverviewRoot" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.customer.CustomerController">
 
     <top>
@@ -61,11 +62,14 @@
             <Button fx:id="btNew" onAction="#openNewDialog" prefWidth="40.0" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="1" />
             <Button fx:id="btEdit" onAction="#openEditDialog" prefWidth="40.0" GridPane.columnIndex="0" GridPane.rowIndex="2" />
             <Button fx:id="btTickets" onAction="#openEventTab" prefWidth="40.0" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+            <Button fx:id="btNext" text="%customer.next" onAction="#openHallplan" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+            <Label fx:id="lbNoCustomerError" textFill="#cc1d1d" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
             <columnConstraints>
                 <ColumnConstraints />
             </columnConstraints>
             <rowConstraints>
             <RowConstraints minHeight="10.0" prefHeight="100.0" />
+                <RowConstraints />
                 <RowConstraints />
                 <RowConstraints />
                 <RowConstraints />

@@ -40,5 +40,5 @@
     </GridPane>
     <ImageView fx:id="eventImageView" />
     <Label fx:id="lblText" styleClass="eventText" text="&lt;EventText&gt;" wrapText="true" />
-    <Button fx:id="ticketReservationButton" disable="true" onAction="#ticketReservationForEvent" text="%events.tickets" />
+    <Button fx:id="ticketReservationButton" onAction="#ticketReservationForEvent" text="%events.tickets" />
 </VBox>

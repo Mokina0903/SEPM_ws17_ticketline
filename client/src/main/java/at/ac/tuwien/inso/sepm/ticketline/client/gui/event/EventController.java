@@ -10,6 +10,7 @@ import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 import org.controlsfx.glyphfont.FontAwesome;
@@ -31,6 +32,8 @@ public class EventController extends TabElement implements LocalizationObserver 
 
     @FXML
     public Pagination pagination;
+    @FXML
+    public BorderPane bPEventContainer;
     @FXML
     private TabHeaderController tabHeaderController;
 
@@ -158,7 +161,7 @@ public class EventController extends TabElement implements LocalizationObserver 
             for(SimpleEventDTO event : events.getContent()) {
                 SpringFxmlLoader.Wrapper<EventElementController> wrapper =
                     springFxmlLoader.loadAndWrap("/fxml/event/eventElement.fxml");
-                wrapper.getController().initializeData(eventService,event);
+                wrapper.getController().initializeData(eventService,event, bPEventContainer);
                 lvEventElements.getItems().add(wrapper.getController().vbEventElement);
             }
         }

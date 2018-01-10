@@ -16,7 +16,9 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.event.EventController">
+<BorderPane xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.event.EventController"
+fx:id="bPEventContainer">
   <top>
 
       <fx:include source="/fxml/tabHeader.fxml" fx:id="tabHeader"/>

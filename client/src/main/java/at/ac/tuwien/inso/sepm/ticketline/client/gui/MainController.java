@@ -5,12 +5,15 @@ import at.ac.tuwien.inso.sepm.ticketline.client.gui.customer.CustomerController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.event.EventController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.location.LocationController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.news.NewsController;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket.HallplanController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket.TicketController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.user.UserController;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.AuthenticationInformationService;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.UserService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.JavaFXUtils;
+import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
+import at.ac.tuwien.inso.sepm.ticketline.rest.event.DetailedEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.user.DetailedUserDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
 import javafx.application.Platform;
@@ -70,6 +73,8 @@ public class MainController implements LocalizationObserver {
 
     private UserService userService;
     private DetailedUserDTO detailedUserDTO;
+    private CustomerDTO cutsomer;
+    private DetailedEventDTO event;
 
     private Tab newsTab = new Tab();
     private Tab eventTab = new Tab();
@@ -77,6 +82,34 @@ public class MainController implements LocalizationObserver {
     private Tab ticketTab = new Tab();
     private Tab userTab = new Tab();
     private Tab customerTab = new Tab();
+
+    public Tab getEventTab() {
+        return eventTab;
+    }
+
+    public void setEventTab(Tab eventTab) {
+        this.eventTab = eventTab;
+    }
+
+    public CustomerDTO getCutsomer() {
+        return cutsomer;
+    }
+
+    public void setCutsomer(CustomerDTO cutsomer) {
+        this.cutsomer = cutsomer;
+    }
+
+    public DetailedEventDTO getEvent() {
+        return event;
+    }
+
+    public CustomerController getCustomerController() {
+        return customerController;
+    }
+
+    public void setEvent(DetailedEventDTO event) {
+        this.event = event;
+    }
 
     public Tab getNewsTab() {
         return newsTab;
