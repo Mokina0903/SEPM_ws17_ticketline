@@ -9,40 +9,40 @@
 <GridPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket.HallplanCutlineController"
-            prefHeight="400.0" prefWidth="600.0" hgap="5" vgap="10">
+            hgap="5" vgap="10">
 
-    <Label text="Legende" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+    <Label styleClass="seatLbl" text="Legende" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
 
-    <HBox styleClass="sectorA, selected" GridPane.columnIndex="0" GridPane.rowIndex="1">
-        <Label textFill="white" text="1"/>
-    </HBox>
+    <VBox styleClass="sectorA, ticketsAdded" maxWidth="50" GridPane.columnIndex="0" GridPane.rowIndex="1">
+        <Label styleClass="seatLbl" text="1"/>
+    </VBox>
     <Label text="Sector A" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
     <Label fx:id="lbPriceA" GridPane.columnIndex="3" GridPane.rowIndex="1" />
 
-    <HBox styleClass="sectorB, selected" GridPane.columnIndex="0" GridPane.rowIndex="2">
-        <Label textFill="white" text="1"/>
-    </HBox>
+    <VBox styleClass="sectorB, ticketsAdded" GridPane.columnIndex="0" GridPane.rowIndex="2">
+        <Label styleClass="seatLbl" text="1"/>
+    </VBox>
     <Label text="Sector B" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
     <Label fx:id="lbPriceB" GridPane.columnIndex="3" GridPane.rowIndex="2" />
 
 
-    <HBox styleClass="sectorC, selected" GridPane.columnIndex="0" GridPane.rowIndex="3">
-        <Label textFill="white" text="1"/>
-    </HBox>
+    <VBox styleClass="sectorC, ticketsAdded" GridPane.columnIndex="0" GridPane.rowIndex="3">
+        <Label styleClass="seatLbl" text="1"/>
+    </VBox>
     <Label text="Sector C" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
     <Label fx:id="lbPriceC" GridPane.columnIndex="3" GridPane.rowIndex="3" />
 
 
-    <HBox styleClass="sectorD, selected" GridPane.columnIndex="0" GridPane.rowIndex="4">
-        <Label textFill="white" text="1"/>
-    </HBox>
+    <VBox styleClass="sectorD, ticketsAdded" GridPane.columnIndex="0" GridPane.rowIndex="4">
+        <Label styleClass="seatLbl" text="1"/>
+    </VBox>
     <Label text="Sector D" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
     <Label fx:id="lbPriceD" GridPane.columnIndex="3" GridPane.rowIndex="4" />
 
 
-    <HBox styleClass="sectorE, selected" GridPane.columnIndex="0" GridPane.rowIndex="5">
-        <Label textFill="white" text="1"/>
-    </HBox>
+    <VBox styleClass="sectorE, ticketsAdded" GridPane.columnIndex="0" GridPane.rowIndex="5">
+        <Label styleClass="seatLbl" text="1"/>
+    </VBox>
     <Label text="Sector E" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
     <Label fx:id="lbPriceE" GridPane.columnIndex="3" GridPane.rowIndex="5" />
 

@@ -39,12 +39,11 @@
     </center>
     <right>
 
-        <GridPane hgap="10" vgap="10">
+        <VBox>
             <BorderPane.margin>
-                <Insets bottom="5.0" top="100.0" left="20.0" right="200.0"/>
+                <Insets bottom="5.0" top="20.0" left="20.0" right="100.0"/>
             </BorderPane.margin>
-
-
+        <GridPane hgap="5" vgap="7">
             <VBox GridPane.columnIndex="0" GridPane.rowIndex="0">
                 <Label fx:id="lblCustomerDescription" text ="%customer.customerSelected"/>
             </VBox>
@@ -61,8 +60,6 @@
             <Button fx:id="backbut" onAction="#backToEventSelection" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
             <Label fx:id="lblError" textFill="#cc1d1d" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
 
-            <fx:include source="hallplanCutline.fxml" GridPane.columnIndex="0" GridPane.rowIndex="7"/>
-
             <columnConstraints>
                 <ColumnConstraints/>
                 <ColumnConstraints/>
@@ -75,9 +72,11 @@
                 <RowConstraints/>
                 <RowConstraints/>
                 <RowConstraints/>
-                <RowConstraints/>
             </rowConstraints>
         </GridPane>
+
+            <fx:include source="hallplanCutline.fxml"/>
+        </VBox>
     </right>
     <bottom>
         <HBox>
