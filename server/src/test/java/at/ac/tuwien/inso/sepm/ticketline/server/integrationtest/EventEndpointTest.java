@@ -32,6 +32,13 @@ public class EventEndpointTest extends BaseIntegrationTest {
     private static final String EVENT_ARTIST_FIRSTNAME = "Firstname";
     private static final String EVENT_ARTIST_LASTNAME = "Lastname";
 
+    // TODO: Test more beautiful
+    // TODO: Test for Normal
+    // TODO: Test for Hall not Found
+    // TODO: Test for Location not Found
+    // TODO: Test for new Artist
+    // TODO: Test with duplicates
+
     @Test
     public void publishEventUnauthorizedAsUser() {
         LocalDateTime start = LocalDateTime.of(2017, 11, 29, 12, 15, 0, 0);
@@ -113,9 +120,18 @@ public class EventEndpointTest extends BaseIntegrationTest {
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
 
 
-        detailedEventDTO = response.as(DetailedEventDTO.class);
+        response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
+            .body(detailedEventDTO)
+            .when().post(EVENT_ENDPOINT)
+            .then().extract().response();
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.CONFLICT.value()));
 
-        System.out.println(detailedEventDTO.toString());
+        //detailedEventDTO = response.as(DetailedEventDTO.class);
+
+        //System.out.println(detailedEventDTO.toString());
 
         // TODO: David Compare Objects
 
