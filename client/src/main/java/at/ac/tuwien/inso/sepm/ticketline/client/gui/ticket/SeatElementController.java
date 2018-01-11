@@ -49,6 +49,8 @@ public class SeatElementController {
             hallplanController.ticketAmountForEachSector.put(sector, hallplanController.ticketAmountForEachSector.get(sector)-1);
             hallplanController.ticketAmountLb.setText(String.valueOf(hallplanController.getTicketCount()));
             hallplanController.removeSelectedSeat(seat);
+            ticketAmountForEachSectorLabels.get(sector).setText(String.valueOf(hallplanController.ticketAmountForEachSector.get(sector)));
+            priceOfEachSectorLabels.get(sector).setText(String.format("%.2f", hallplanController.ticketAmountForEachSector.get(sector)*priceOfEachSector.get(sector)));
 
         } else if((!vBseat.getStyleClass().contains("selected"))&&(!vBseat.getStyleClass().contains("occupied"))) {
 
@@ -59,7 +61,7 @@ public class SeatElementController {
             hallplanController.addSelectedSeat(seat);
 
             ticketAmountForEachSectorLabels.get(sector).setText(String.valueOf(hallplanController.ticketAmountForEachSector.get(sector)));
-            priceOfEachSectorLabels.get(sector).setText(String.valueOf(hallplanController.ticketAmountForEachSector.get(sector)*priceOfEachSector.get(sector)));
+            priceOfEachSectorLabels.get(sector).setText(String.format("%.2f",hallplanController.ticketAmountForEachSector.get(sector)*priceOfEachSector.get(sector)));
 
         }
 
