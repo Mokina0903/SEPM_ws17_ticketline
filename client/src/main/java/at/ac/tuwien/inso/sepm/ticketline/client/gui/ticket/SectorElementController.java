@@ -14,6 +14,8 @@ import org.controlsfx.glyphfont.GlyphFontRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Map;
+
 public class SectorElementController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(at.ac.tuwien.inso.sepm.ticketline.client.gui.customer.CustomerController.class);
@@ -37,6 +39,9 @@ public class SectorElementController {
     private int capacity;
     private char sector;
 
+    private Map<Character, Label> ticketAmountForEachSectorLabels;
+    private Map<Character, Label> priceOfEachSectorLabels;
+    private Map<Character, Double> priceOfEachSector;
 
     private HallplanController hallplanController;
 
@@ -47,9 +52,11 @@ public class SectorElementController {
         this.seatCount = reservedTickets;
         this.reservedTickets = reservedTickets;
         this.capacity = capacity;
-        sector = defineSector();
         setButtonGraphic(btnIncrease, "PLUS", Color.DARKGRAY);
         setButtonGraphic(btnDecrease, "MINUS", Color.DARKGRAY);
+        ticketAmountForEachSectorLabels = hallplanController.getTicketAmountForEachSectorLabels();
+        priceOfEachSector = hallplanController.getPriceOfEachSector();
+        priceOfEachSectorLabels = hallplanController.getPriceOfEachSectorLabels();
     }
 
     private char defineSector(){
@@ -65,8 +72,11 @@ public class SectorElementController {
         if(hBSector.getStyleClass().contains("sectorD")){
             return 'd';
         }
+        if(hBSector.getStyleClass().contains("sectorE")){
+            return 'e';
+        }
 
-        return 'e';
+        return 'a';
 
     }
 
@@ -79,6 +89,7 @@ public class SectorElementController {
 
     @FXML
     public void increaseSeatCount(ActionEvent actionEvent) {
+        sector = defineSector();
         if(seatCount == capacity){
             return;
         }
@@ -87,6 +98,9 @@ public class SectorElementController {
         hallplanController.ticketAmountLb.setText(String.valueOf(hallplanController.getTicketCount()));
         hallplanController.ticketAmountForEachSector.put(sector, hallplanController.ticketAmountForEachSector.get(sector)+1);
         currentReservedTickets.setText(String.valueOf(seatCount));
+        ticketAmountForEachSectorLabels.get(sector).setText(String.valueOf(hallplanController.ticketAmountForEachSector.get(sector)));
+        priceOfEachSectorLabels.get(sector).setText(String.format("%.2f", hallplanController.ticketAmountForEachSector.get(sector)*priceOfEachSector.get(sector)));
+
         if( !hBSector.getStyleClass().contains("ticketsAdded")){
             hBSector.getStyleClass().add("ticketsAdded");
         }
@@ -95,6 +109,7 @@ public class SectorElementController {
 
     @FXML
     public void decreaseSeatCount(ActionEvent actionEvent) {
+        sector = defineSector();
         if(seatCount == 0 || seatCount == reservedTickets){
             return;
         }
@@ -103,6 +118,10 @@ public class SectorElementController {
         hallplanController.ticketAmountLb.setText(String.valueOf(hallplanController.getTicketCount()));
         hallplanController.ticketAmountForEachSector.put(sector, hallplanController.ticketAmountForEachSector.get(sector)-1);
         currentReservedTickets.setText(String.valueOf(seatCount));
+
+        ticketAmountForEachSectorLabels.get(sector).setText(String.valueOf(hallplanController.ticketAmountForEachSector.get(sector)));
+        priceOfEachSectorLabels.get(sector).setText(String.format("%.2f", hallplanController.ticketAmountForEachSector.get(sector)*priceOfEachSector.get(sector)));
+
         if(seatCount == reservedTickets && hBSector.getStyleClass().contains("ticketsAdded")){
             hBSector.getStyleClass().remove("ticketsAdded");
         }
