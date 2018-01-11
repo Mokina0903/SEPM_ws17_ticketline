@@ -31,15 +31,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
-import javafx.scene.shape.Arc;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-import net.bytebuddy.asm.Advice;
-import org.controlsfx.control.GridView;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.Glyph;
 import org.controlsfx.glyphfont.GlyphFont;
@@ -50,7 +44,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
-import javax.sound.midi.Soundbank;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -123,6 +116,7 @@ public class HallplanController implements LocalizationObserver {
 
     private int ticketCount;
     private ArrayList<SeatDTO> selectedSeats;
+    private double totalSum;
 
     @FXML
     private TabHeaderController tabHeaderController;
@@ -177,6 +171,8 @@ public class HallplanController implements LocalizationObserver {
         this.ticketCount = ticketCount;
     }
 
+
+
     void addSelectedSeat(SeatDTO seat) {
         selectedSeats.add(seat);
     }
@@ -185,6 +181,13 @@ public class HallplanController implements LocalizationObserver {
         selectedSeats.remove(seat);
     }
 
+    public double getTotalSum() {
+        return totalSum;
+    }
+
+    public void setTotalSum(double totalSum) {
+        this.totalSum = totalSum;
+    }
 
     public VBox getLblSectorTicketAmountAndPriceOverview() {
         return lblSectorTicketAmountAndPriceOverview;
@@ -192,6 +195,10 @@ public class HallplanController implements LocalizationObserver {
 
     public void setLblSectorTicketAmountAndPriceOverview(VBox lblSectorTicketAmountAndPriceOverview) {
         this.lblSectorTicketAmountAndPriceOverview = lblSectorTicketAmountAndPriceOverview;
+    }
+
+    void updateTotalSumLbl(){
+        lblTotalSum.setText(String.format("%.2f", totalSum));
     }
 
     @FXML
@@ -205,6 +212,7 @@ public class HallplanController implements LocalizationObserver {
         ticketAmountForEachSectorLabels = new HashMap<>();
         priceOfEachSector = new HashMap<>();
         priceOfEachSectorLabels = new HashMap<>();
+        totalSum = 0;
 
         char sector = 'a';
         for (int i = 0; i < 5; i++) {
@@ -250,7 +258,7 @@ public class HallplanController implements LocalizationObserver {
         }
         setButtonGraphic(backbut, "ARROW_LEFT", Color.DARKGRAY);
 
-        cutlineContainerController.initializeData(20.5); //swich to event.getPriceInEuro(), when implemented
+        cutlineContainerController.initializeData(event.getPriceInEuro());
 
 
         lbEventNameHeader.setText(event.getTitle());
@@ -265,11 +273,11 @@ public class HallplanController implements LocalizationObserver {
         lbSurname.setFont(Font.font(14));
         lbKnr.setFont(Font.font(14));
 
-        priceOfEachSector.put('a', event.getPrice()*1.0);//swich to event.getPriceInEuro(), when implemented
-        priceOfEachSector.put('b', event.getPrice()*1.2);//swich to event.getPriceInEuro(), when implemented
-        priceOfEachSector.put('c', event.getPrice()*1.4);//swich to event.getPriceInEuro(), when implemented
-        priceOfEachSector.put('d', event.getPrice()*1.6);//swich to event.getPriceInEuro(), when implemented
-        priceOfEachSector.put('e', event.getPrice()*1.8);//swich to event.getPriceInEuro(), when implemented
+        priceOfEachSector.put('a', event.getPriceInEuro()*1.0);
+        priceOfEachSector.put('b', event.getPriceInEuro()*1.2);
+        priceOfEachSector.put('c', event.getPriceInEuro()*1.4);
+        priceOfEachSector.put('d', event.getPriceInEuro()*1.6);
+        priceOfEachSector.put('e', event.getPriceInEuro()*1.8);
 
     }
 
@@ -282,6 +290,7 @@ public class HallplanController implements LocalizationObserver {
         } catch (DataAccessException e) {
             //TODO: not able to get tickets
             e.printStackTrace();
+
         }
 
         List<SeatDTO> occupiedSeats = occupiedTickets == null ? new ArrayList<>() : occupiedTickets.stream().map(ticket -> ticket.getSeat()).collect(Collectors.toList());
@@ -387,7 +396,9 @@ public class HallplanController implements LocalizationObserver {
         try {
             ticketService.save(tickets);
             selectedSeats.clear();
+            totalSum = 0;
             backToEventTabBeginning();
+
 
         } catch (DataAccessException e) {
 

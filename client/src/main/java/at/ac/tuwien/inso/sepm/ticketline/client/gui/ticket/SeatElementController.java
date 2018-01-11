@@ -1,5 +1,6 @@
 package at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket;
 
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.MainController;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.seat.SeatDTO;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -51,6 +52,8 @@ public class SeatElementController {
             hallplanController.removeSelectedSeat(seat);
             ticketAmountForEachSectorLabels.get(sector).setText(String.valueOf(hallplanController.ticketAmountForEachSector.get(sector)));
             priceOfEachSectorLabels.get(sector).setText(String.format("%.2f", hallplanController.ticketAmountForEachSector.get(sector)*priceOfEachSector.get(sector)));
+            hallplanController.setTotalSum(hallplanController.getTotalSum()-priceOfEachSector.get(sector));
+            hallplanController.updateTotalSumLbl();
 
         } else if((!vBseat.getStyleClass().contains("selected"))&&(!vBseat.getStyleClass().contains("occupied"))) {
 
@@ -62,6 +65,8 @@ public class SeatElementController {
 
             ticketAmountForEachSectorLabels.get(sector).setText(String.valueOf(hallplanController.ticketAmountForEachSector.get(sector)));
             priceOfEachSectorLabels.get(sector).setText(String.format("%.2f",hallplanController.ticketAmountForEachSector.get(sector)*priceOfEachSector.get(sector)));
+            hallplanController.setTotalSum(hallplanController.getTotalSum()+priceOfEachSector.get(sector));
+            hallplanController.updateTotalSumLbl();
 
         }
 
