@@ -5,7 +5,7 @@ import javax.validation.constraints.Size;
 import java.util.Objects;
 
 @Entity
-@Table(name = "artist")
+@Table(name = "artist", uniqueConstraints={@UniqueConstraint(columnNames = {"artistFirstName" , "artistLastName"})})
 public class Artist {
 
     @Id
