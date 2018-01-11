@@ -34,13 +34,13 @@
  -fx-effect: dropshadow(three-pass-box, derive(	CRIMSON, -20%), 10, 0, 4, 4);
 }
 .sectorC{
- -fx-effect: dropshadow(three-pass-box, derive(DARKMAGENTA, -20%), 10, 0, 4, 4);
+ -fx-effect: dropshadow(three-pass-box, derive(	FUCHSIA, -20%), 10, 0, 4, 4);
 }
 .sectorD{
- -fx-effect: dropshadow(three-pass-box, derive(GREEN, -20%), 10, 0, 4, 4);
+ -fx-effect: dropshadow(three-pass-box, derive(GREENYELLOW, -20%), 10, 0, 4, 4);
 }
 .sectorE{
- -fx-effect: dropshadow(three-pass-box, derive(GREENYELLOW, -20%), 10, 0, 4, 4);
+ -fx-effect: dropshadow(three-pass-box, derive(YELLOW, -20%), 10, 0, 4, 4);
 }
 
 .sectorA.selected{
@@ -52,15 +52,15 @@
 }
 
 .sectorC.selected{
--fx-background-color: derive(DARKMAGENTA, -20%);
+-fx-background-color: derive(FUCHSIA, -20%);
 }
 
 .sectorD.selected{
--fx-background-color: derive(GREEN, -20%);
+-fx-background-color: derive(GREENYELLOW, -20%);
 }
 
 .sectorE.selected{
--fx-background-color: derive(GREENYELLOW, -20%);
+-fx-background-color: derive(YELLOW, -20%);
 }
 
 .sectorA.occupied,  .sectorB.occupied, .sectorC.occupied, .sectorD.occupied,  .sectorE.occupied{
@@ -79,13 +79,13 @@
 }
 
 .sectorC.ticketsAdded{
--fx-background-color: derive(DARKMAGENTA, -20%);
+-fx-background-color: derive(FUCHSIA, -20%);
 }
 
 .sectorD.ticketsAdded{
--fx-background-color: derive(GREEN, -20%);
+-fx-background-color: derive(GREENYELLOW, -20%);
 }
 
 .sectorE.ticketsAdded{
--fx-background-color: derive(GREENYELLOW, -20%);
+-fx-background-color: derive(YELLOW, -20%);
 }
