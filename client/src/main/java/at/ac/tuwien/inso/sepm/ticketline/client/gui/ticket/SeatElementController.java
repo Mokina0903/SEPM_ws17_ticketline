@@ -43,6 +43,7 @@ public class SeatElementController {
 
     @FXML
     public void swichSelectedState(MouseEvent mouseEvent) {
+        hallplanController.setErrorLblUnvisable();
 
         if(vBseat.getStyleClass().contains("selected")){
             vBseat.getStyleClass().remove("selected");

@@ -171,7 +171,9 @@ public class HallplanController implements LocalizationObserver {
         this.ticketCount = ticketCount;
     }
 
-
+    void setErrorLblUnvisable(){
+        lblError.setVisible(false);
+    }
 
     void addSelectedSeat(SeatDTO seat) {
         selectedSeats.add(seat);
@@ -405,16 +407,21 @@ public class HallplanController implements LocalizationObserver {
         } catch (DataAccessException e) {
 
             lblError.setText(BundleManager.getBundle().getString("exception.unexpected"));
+            lblError.setVisible(true);
+            lblError.setWrapText(true);
 
         } catch (TicketAlreadyExistsException e) {
 
             lblError.setText(BundleManager.getBundle().getString("exception.ticketAlreadyExists"));
+            lblError.setVisible(true);
+            lblError.setWrapText(true);
             ticketAmountLb.setText("");
             selectedSeats.clear();
             updateHallplan();
         } catch (EmptyValueException e) {
             lblError.setText(BundleManager.getBundle().getString("exception.noSeatSelected"));
             lblError.setWrapText(true);
+            lblError.setVisible(true);
         }
     }
 

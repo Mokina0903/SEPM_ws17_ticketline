@@ -89,6 +89,7 @@ public class SectorElementController {
 
     @FXML
     public void increaseSeatCount(ActionEvent actionEvent) {
+        hallplanController.setErrorLblUnvisable();
         sector = defineSector();
         if(seatCount == capacity){
             return;
@@ -111,6 +112,7 @@ public class SectorElementController {
 
     @FXML
     public void decreaseSeatCount(ActionEvent actionEvent) {
+        hallplanController.setErrorLblUnvisable();
         sector = defineSector();
         if(seatCount == 0 || seatCount == reservedTickets){
             return;
