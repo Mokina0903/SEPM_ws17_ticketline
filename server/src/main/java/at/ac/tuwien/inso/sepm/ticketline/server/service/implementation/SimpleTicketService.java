@@ -14,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -57,6 +58,7 @@ public class SimpleTicketService implements TicketService {
             }
             ticket.setDeleted(false);
             ticket.setReservationNumber(reservationNR);
+            ticket.setReservationDate(LocalDateTime.now());
         }
         tickets = ticketRepository.save(tickets);
         reservationNR+=+ tickets.get(0).getId();
