@@ -88,7 +88,7 @@
                 </padding>
                 <Rectangle styleClass="scene" width="300" height="30"/>
             </HBox>
-            <fx:include source="hallplanCutline.fxml"/>
+            <fx:include fx:id="cutlineContainer" source="hallplanCutline.fxml"/>
         </VBox>
     </bottom>
 </BorderPane>

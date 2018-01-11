@@ -32,6 +32,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Arc;
@@ -63,6 +64,9 @@ public class HallplanController implements LocalizationObserver {
     @Autowired
     private final MainController mainController;
     private final SpringFxmlLoader springFxmlLoader;
+
+    @FXML
+    private HallplanCutlineController cutlineContainerController;
 
     private CustomerController customerController;
 
@@ -167,6 +171,9 @@ public class HallplanController implements LocalizationObserver {
             initializeSectors();
         }
         setButtonGraphic(backbut, "ARROW_LEFT", Color.DARKGRAY);
+
+        cutlineContainerController.initializeData(20.5); //swich to event.getPriceInEuro(), when implemented
+
 
         lbEventNameHeader.setText(event.getTitle());
         lbEventNameHeader.setFont(Font.font(20));

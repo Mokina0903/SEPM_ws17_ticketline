@@ -21,8 +21,13 @@ public class HallplanCutlineController {
     @FXML
     public Label lbPriceE;
 
-    void initializeData(){
+    void initializeData(double sectorPriceA){
 
+        lbPriceA.setText(String.format("%10.0f",sectorPriceA));
+        lbPriceB.setText(String.format("%10.0f",sectorPriceA*1.2));
+        lbPriceC.setText(String.format("%10.0f",sectorPriceA*1.4));
+        lbPriceD.setText(String.format("%10.0f",sectorPriceA*1.6));
+        lbPriceE.setText(String.format("%10.0f",sectorPriceA*1.8));
     }
 
 
