@@ -80,28 +80,28 @@
 
             <VBox fx:id="lblSectorTicketAmountAndPriceOverview" spacing="10">
                 <HBox spacing="5">
-                    <Label text="Sector A x "/>
                     <Label fx:id="lblAmountOfTicketsInA"/>
+                    <Label text=" x Sector A "/>
                     <Label fx:id="lblPriceOfTicketsInA"/>
                 </HBox>
                 <HBox spacing="5">
-                    <Label text="Sector B x "/>
                     <Label fx:id="lblAmountOfTicketsInB"/>
+                    <Label text=" x Sector B "/>
                     <Label fx:id="lblPriceOfTicketsInB"/>
                 </HBox>
                 <HBox spacing="5">
-                    <Label text="Sector C x "/>
                     <Label fx:id="lblAmountOfTicketsInC"/>
+                    <Label text=" x Sector C "/>
                     <Label fx:id="lblPriceOfTicketsInC"/>
                 </HBox>
                 <HBox spacing="5">
-                    <Label text="Sector D x "/>
                     <Label fx:id="lblAmountOfTicketsInD"/>
+                    <Label text=" x Sector D "/>
                     <Label fx:id="lblPriceOfTicketsInD"/>
                 </HBox>
                 <HBox spacing="5">
-                    <Label text="Sector E x "/>
                     <Label fx:id="lblAmountOfTicketsInE"/>
+                    <Label text=" x Sector E "/>
                     <Label fx:id="lblPriceOfTicketsInE"/>
                 </HBox>
 

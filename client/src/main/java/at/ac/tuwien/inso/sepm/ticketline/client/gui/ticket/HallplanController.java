@@ -135,8 +135,10 @@ public class HallplanController implements LocalizationObserver {
     private DetailedHallDTO hall;
     private Node oldContent;
 
-    Map<Character, Integer> ticketAmountForEachSector;
-
+     Map<Character, Integer> ticketAmountForEachSector;
+    private Map<Character, Double> priceOfEachSector;
+    private Map<Character, Label> ticketAmountForEachSectorLabels;
+    private Map<Character, Label> priceOfEachSectorLabels;
 
     @Autowired
     private LocalizationSubject localizationSubject;
@@ -149,6 +151,23 @@ public class HallplanController implements LocalizationObserver {
         selectedSeats = new ArrayList<>();
     }
 
+
+     Map<Character, Label> getTicketAmountForEachSectorLabels() {
+        return ticketAmountForEachSectorLabels;
+    }
+
+     Map<Character, Label> getPriceOfEachSectorLabels() {
+        return priceOfEachSectorLabels;
+    }
+
+
+     Map<Character, Double> getPriceOfEachSector() {
+        return priceOfEachSector;
+    }
+
+    public Map<Character, Integer> getTicketAmountForEachSector() {
+        return ticketAmountForEachSector;
+    }
 
     int getTicketCount() {
         return ticketCount;
@@ -166,6 +185,7 @@ public class HallplanController implements LocalizationObserver {
         selectedSeats.remove(seat);
     }
 
+
     public VBox getLblSectorTicketAmountAndPriceOverview() {
         return lblSectorTicketAmountAndPriceOverview;
     }
@@ -182,13 +202,38 @@ public class HallplanController implements LocalizationObserver {
         ticketAmountLb.setText(String.valueOf(ticketCount));
         localizationSubject.attach(this);
         ticketAmountForEachSector = new HashMap<>();
-        char sector= 'a';
-        for (int i = 0; i <5 ; i++) {
+        ticketAmountForEachSectorLabels = new HashMap<>();
+        priceOfEachSector = new HashMap<>();
+        priceOfEachSectorLabels = new HashMap<>();
+
+        char sector = 'a';
+        for (int i = 0; i < 5; i++) {
             ticketAmountForEachSector.put(sector, 0);
+
             sector++;
         }
         lblError.setWrapText(true);
         lblError.setMaxWidth(100.0);
+
+        initializeLabelMaps();
+    }
+
+    private void initializeLabelMaps() {
+        ticketAmountForEachSectorLabels.put('a', lblAmountOfTicketsInA);
+        lblAmountOfTicketsInA.setText(String.valueOf(0));
+        ticketAmountForEachSectorLabels.put('b', lblAmountOfTicketsInB);
+        lblAmountOfTicketsInB.setText(String.valueOf(0));
+        ticketAmountForEachSectorLabels.put('c', lblAmountOfTicketsInC);
+        lblAmountOfTicketsInC.setText(String.valueOf(0));
+        ticketAmountForEachSectorLabels.put('d', lblAmountOfTicketsInD);
+        lblAmountOfTicketsInD.setText(String.valueOf(0));
+        ticketAmountForEachSectorLabels.put('e', lblAmountOfTicketsInE);
+        lblAmountOfTicketsInE.setText(String.valueOf(0));
+        priceOfEachSectorLabels.put('a', lblPriceOfTicketsInA);
+        priceOfEachSectorLabels.put('b', lblPriceOfTicketsInB);
+        priceOfEachSectorLabels.put('c', lblPriceOfTicketsInC);
+        priceOfEachSectorLabels.put('d', lblPriceOfTicketsInD);
+        priceOfEachSectorLabels.put('e', lblPriceOfTicketsInE);
     }
 
     public void initializeData(DetailedEventDTO event, CustomerDTO customer, Node oldContent) {
@@ -198,9 +243,9 @@ public class HallplanController implements LocalizationObserver {
         this.oldContent = oldContent;
 
 
-        if(event.getSeatSelection()) {
+        if (event.getSeatSelection()) {
             initializeSeats();
-        }else {
+        } else {
             initializeSectors();
         }
         setButtonGraphic(backbut, "ARROW_LEFT", Color.DARKGRAY);
@@ -220,6 +265,12 @@ public class HallplanController implements LocalizationObserver {
         lbSurname.setFont(Font.font(14));
         lbKnr.setFont(Font.font(14));
 
+        priceOfEachSector.put('a', event.getPrice()*1.0);//swich to event.getPriceInEuro(), when implemented
+        priceOfEachSector.put('b', event.getPrice()*1.2);//swich to event.getPriceInEuro(), when implemented
+        priceOfEachSector.put('c', event.getPrice()*1.4);//swich to event.getPriceInEuro(), when implemented
+        priceOfEachSector.put('d', event.getPrice()*1.6);//swich to event.getPriceInEuro(), when implemented
+        priceOfEachSector.put('e', event.getPrice()*1.8);//swich to event.getPriceInEuro(), when implemented
+
     }
 
     void initializeSeats() {
@@ -233,7 +284,7 @@ public class HallplanController implements LocalizationObserver {
             e.printStackTrace();
         }
 
-        List<SeatDTO> occupiedSeats = occupiedTickets ==null?new ArrayList<>(): occupiedTickets.stream().map(ticket -> ticket.getSeat()).collect(Collectors.toList());
+        List<SeatDTO> occupiedSeats = occupiedTickets == null ? new ArrayList<>() : occupiedTickets.stream().map(ticket -> ticket.getSeat()).collect(Collectors.toList());
 
         for (SeatDTO seat : seats) {
 
@@ -252,7 +303,7 @@ public class HallplanController implements LocalizationObserver {
             if (occupiedSeats.contains(seat)) {
                 wrapper.getController().vBseat.getStyleClass().add("occupied");
             }
-           addSector( wrapper.getController().vBseat, seat.getSector());
+            addSector(wrapper.getController().vBseat, seat.getSector());
         }
     }
 
@@ -265,7 +316,7 @@ public class HallplanController implements LocalizationObserver {
             if (currentSector == sector) {
                 continue;
             }
-            int reservedTickets =0;
+            int reservedTickets = 0;
             try {
                 reservedTickets = ticketService.ticketCountForEventForSector(event.getId(), sector);
             } catch (DataAccessException e) {
@@ -274,7 +325,7 @@ public class HallplanController implements LocalizationObserver {
             }
             SpringFxmlLoader.Wrapper<SectorElementController> wrapper =
                 springFxmlLoader.loadAndWrap("/fxml/ticket/sectorElement.fxml");
-            wrapper.getController().initializeData(reservedTickets, 20,HallplanController.this);
+            wrapper.getController().initializeData(reservedTickets, 20, HallplanController.this);
             seatsContainerGV.add(wrapper.getController().hBSector, seat.getNr(), seat.getRow());
             if (seat.getNr() == 1) {
                 Label label = new Label();
@@ -291,14 +342,14 @@ public class HallplanController implements LocalizationObserver {
 
     }
 
-    private void addSector(Node node, char sector){
+    private void addSector(Node node, char sector) {
 
         switch (sector) {
             case 'a':
                 node.getStyleClass().add("sectorA");
                 break;
             case 'b':
-               node.getStyleClass().add("sectorB");
+                node.getStyleClass().add("sectorB");
                 break;
             case 'c':
                 node.getStyleClass().add("sectorC");
@@ -313,7 +364,6 @@ public class HallplanController implements LocalizationObserver {
     }
 
 
-
     @FXML
     public void backToEventSelection(ActionEvent actionEvent) {
         mainController.getEventTab().setContent(oldContent);
@@ -322,17 +372,17 @@ public class HallplanController implements LocalizationObserver {
     @FXML
     public void reserveTickets(ActionEvent actionEvent) {
 
-        List<TicketDTO> tickets= getTicketsFromSelectedStateAs(false);
+        List<TicketDTO> tickets = getTicketsFromSelectedStateAs(false);
         saveTickets(tickets);
     }
 
     @FXML
     public void buyTickets(ActionEvent actionEvent) {
-        List<TicketDTO> tickets=getTicketsFromSelectedStateAs(true);
+        List<TicketDTO> tickets = getTicketsFromSelectedStateAs(true);
         saveTickets(tickets);
     }
 
-    private void saveTickets(List<TicketDTO> tickets){
+    private void saveTickets(List<TicketDTO> tickets) {
 
         try {
             ticketService.save(tickets);
@@ -357,20 +407,19 @@ public class HallplanController implements LocalizationObserver {
 
 
     /**
-     *
      * @param isPaid defines if tickets will be reserved or buyed
      * @return the list of tickets to be reserved or buyed, from the seats/sectors that are selected
      */
-   private List<TicketDTO> getTicketsFromSelectedStateAs(boolean isPaid){
+    private List<TicketDTO> getTicketsFromSelectedStateAs(boolean isPaid) {
 
-        List<TicketDTO> tickets=new ArrayList<>();
+        List<TicketDTO> tickets = new ArrayList<>();
 
-        if(!event.getSeatSelection()) {
+        if (!event.getSeatSelection()) {
 
             selectedSeats.clear();
             try {
 
-                for (Map.Entry<Character, Integer> entry: ticketAmountForEachSector.entrySet()) {
+                for (Map.Entry<Character, Integer> entry : ticketAmountForEachSector.entrySet()) {
                     addSelectedSeatsFromSector(entry.getValue(), entry.getKey());
                 }
 
@@ -403,11 +452,11 @@ public class HallplanController implements LocalizationObserver {
         try {
             List<SeatDTO> freeSeatsFromSector = ticketService.findFreeSeatsForEventInSector(event.getId(), sector);
 
-            if(anzTickets>freeSeatsFromSector.size()){
+            if (anzTickets > freeSeatsFromSector.size()) {
                 updateHallplan();
-                throw new NotEnoughTicketsFreeException(" not enough tickts in sector: " +sector);
+                throw new NotEnoughTicketsFreeException(" not enough tickts in sector: " + sector);
             }
-            for (int i = 0; i < anzTickets ; i++) {
+            for (int i = 0; i < anzTickets; i++) {
                 selectedSeats.add(freeSeatsFromSector.remove(0));
             }
         } catch (DataAccessException e) {
@@ -417,15 +466,15 @@ public class HallplanController implements LocalizationObserver {
 
     }
 
-    private void updateHallplan(){
-        if(event.getSeatSelection()){
+    private void updateHallplan() {
+        if (event.getSeatSelection()) {
             initializeSeats();
-        }else{
+        } else {
             initializeSectors();
         }
     }
 
-    private void backToEventTabBeginning(){
+    private void backToEventTabBeginning() {
 
 
         customerController.setNormalTabView();
