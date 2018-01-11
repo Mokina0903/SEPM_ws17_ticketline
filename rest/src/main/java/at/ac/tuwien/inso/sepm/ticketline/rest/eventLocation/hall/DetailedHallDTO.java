@@ -68,8 +68,11 @@ public class DetailedHallDTO {
 
         if (!getId().equals(that.getId())) return false;
         if (!getDescription().equals(that.getDescription())) return false;
-        if (!getLocation().equals(that.getLocation())) return false;
-        return getSeats() != null ? getSeats().equals(that.getSeats()) : that.getSeats() == null;
+        if (!getLocation().getId().equals(that.getLocation().getId())) return false;
+        // TODO: Implement before MapperTest
+        //if (!getLocation().equals(that.getLocation())) return false;
+        //return getSeats() != null ? getSeats().equals(that.getSeats()) : that.getSeats() == null;
+        return true;
     }
 
     @Override
@@ -77,6 +80,7 @@ public class DetailedHallDTO {
         int result = getId().hashCode();
         result = 31 * result + getDescription().hashCode();
         result = 31 * result + (getSeats() != null ? getSeats().hashCode() : 0);
+        result = 31 * result + getLocation().getId().hashCode();
         return result;
     }
 
