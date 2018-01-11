@@ -5,15 +5,11 @@ import at.ac.tuwien.inso.sepm.ticketline.client.exception.SearchNoMatchException
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.*;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.EventService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
-import at.ac.tuwien.inso.sepm.ticketline.client.util.JavaFXUtils;
-import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.DetailedEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.hall.DetailedHallDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
-import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
-import javafx.collections.ObservableList;
+import javafx.collections.FXCollections;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -37,10 +33,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.AbstractSet;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 @Component
 public class EventController extends TabElement implements LocalizationObserver {
@@ -53,6 +45,8 @@ public class EventController extends TabElement implements LocalizationObserver 
     public Pagination pagination;
     @FXML
     public Button btnAddEvent;
+ /*   @FXML
+    private ChoiceBox<String> cbSearch;*/
     @FXML
     public BorderPane bPEventContainer;
     @FXML
@@ -94,6 +88,13 @@ public class EventController extends TabElement implements LocalizationObserver 
         tabHeaderController.setIcon(FontAwesome.Glyph.FILM);
         tabHeaderController.setTitle(BundleManager.getBundle().getString("events.events"));
         localizationSubject.attach(this);
+        String searchForAll = BundleManager.getBundle().getString("event.all");
+        String searchForEvent = BundleManager.getBundle().getString("events.events");
+        String searchForLocation = BundleManager.getBundle().getString("location.location");
+
+/*
+        cbSearch.setItems(FXCollections.observableArrayList(searchForAll, searchForEvent, searchForLocation));
+*/
         /*
         lvEventElements.getSelectionModel()
             .selectedIndexProperty()
