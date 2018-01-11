@@ -21,6 +21,12 @@
 -fx-effect: dropshadow(three-pass-box, derive(slategrey, -20%), 10, 0, 4, 4);
 }
 
+.sceneCutline{
+
+-fx-background-color: slategrey;
+-fx-effect: dropshadow(three-pass-box, derive(slategrey, -20%), 10, 0, 4, 4);
+}
+
 .sectorHbox{
 -fx-alignment: center;
 -fx-background-color: #3c3f41;
