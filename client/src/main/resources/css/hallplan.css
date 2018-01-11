@@ -5,7 +5,6 @@
 
 }
 
-
 .seatVbox{
 -fx-alignment: center;
 -fx-background-color: #3c3f41;
@@ -22,11 +21,31 @@
 }
 
 .sceneCutline{
-
+-fx-min-width: 50px;
+-fx-min-heit: 50px;
+-fx-max-width: 50px;
+-fx-max-heit: 50px;
 -fx-background-color: slategrey;
 -fx-effect: dropshadow(three-pass-box, derive(slategrey, -20%), 10, 0, 4, 4);
 }
 
+.cutlineFree{
+-fx-alignment: center;
+-fx-background-color: #3c3f41;
+-fx-min-width: 50px;
+-fx-min-heit: 50px;
+-fx-max-width: 50px;
+-fx-max-heit: 50px;
+-fx-spacing: 10px;
+-fx-effect: dropshadow(three-pass-box, derive(GREENYELLOW, -20%), 10, 0, 4, 4);
+}
+
+.cutlineLbl{
+-fx-min-width: 50px;
+-fx-min-heit: 50px;
+-fx-max-width: 50px;
+-fx-max-heit: 50px;
+}
 .sectorHbox{
 -fx-alignment: center;
 -fx-background-color: #3c3f41;
