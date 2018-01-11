@@ -1,6 +1,5 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.integrationtest.base;
 
-import at.ac.tuwien.inso.sepm.ticketline.rest.artist.SimpleArtistDTO;
 import at.ac.tuwien.inso.sepm.ticketline.server.configuration.JacksonConfiguration;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Artist;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.News;
@@ -42,6 +41,36 @@ public abstract class BaseIntegrationTest {
     protected static final String ADMIN_PASSWORD = "password";
     protected static final String ADMIN_USERNAME = "admin";
 
+    protected static final String NEWS_TEXT = "TestNewsText";
+    protected static final String NEWS_TITLE = "title";
+    protected static final LocalDateTime NEWS_PUBLISHED_AT =
+        LocalDateTime.of(2016, 11, 13, 12, 15, 0, 0);
+    protected static final long NEWS_ID = 1L;
+
+    protected static final Long ARTIST_ID = 1L;
+    protected static final String ARTIST_FIRSTNAME = "Firstname";
+    protected static final String ARTIST_LASTNAME = "Lastname";
+
+    protected static final long LOCATION_ID = 1L;
+    protected static final String LOCATION_DESCRIPTION = "description";
+    protected static final String LOCATION_CITY= "TestCity";
+    protected static final String LOCATION_COUNTRY = "TestCountry";
+    protected static final int LOCATION_HOUSENR = 123;
+    protected static final String LOCATION_STREET = "TestStreet";
+    protected static final int LOCATION_ZIP = 1234;
+
+    protected static final long HALL_ID = 1L;
+    protected static final String HALL_DESCRIPTION = "Test Hall 1";
+
+    protected static final long EVENT_ID = 1L;
+    protected static final String EVENT_DESCRIPTION = "Event Description";
+    protected static final String EVENT_TITLE = "Event Title";
+    protected static final long EVENT_PRICE = 55;
+
+    protected static LocalDateTime EVENT_START =
+        LocalDateTime.of(2017, 11, 29, 12, 15, 0, 0);
+
+
     @Value("${server.context-path}")
     private String contextPath;
 
@@ -81,6 +110,7 @@ public abstract class BaseIntegrationTest {
     protected Location location;
     protected Hall hall;
     protected Artist artist;
+
 
     @Before
     public void beforeBase() throws Exception {
@@ -152,59 +182,51 @@ public abstract class BaseIntegrationTest {
     // TODO: (Tutorin) Is this correct?
     public void setupDefaultNews(){
         // TODO: (David) Start at 1 sequenc
-        String TEST_NEWS_TEXT = "TestNewsText";
-        String TEST_NEWS_TITLE = "title";
-        LocalDateTime TEST_NEWS_PUBLISHED_AT =
-            LocalDateTime.of(2016, 11, 13, 12, 15, 0, 0);
-        long TEST_NEWS_ID = 1L;
-
         if (newsRepository.findAll().size() == 0) {
             newsRepository.save(News.builder()
-                .id(TEST_NEWS_ID)
-                .title(TEST_NEWS_TITLE)
-                .text(TEST_NEWS_TEXT)
-                .publishedAt(TEST_NEWS_PUBLISHED_AT)
+                .id(NEWS_ID)
+                .title(NEWS_TITLE)
+                .text(NEWS_TEXT)
+                .publishedAt(NEWS_PUBLISHED_AT)
                 .build());
         }
-        TEST_NEWS_TEXT = "TestNewsText1";
-        TEST_NEWS_TITLE = "title1";
-        TEST_NEWS_PUBLISHED_AT =
-            LocalDateTime.of(2017, 11, 29, 12, 15, 0, 0);
-        TEST_NEWS_ID = 2L;
 
         if (newsRepository.findAll().size() == 1) {
             newsRepository.save(News.builder()
-                .id(TEST_NEWS_ID)
-                .title(TEST_NEWS_TITLE)
-                .text(TEST_NEWS_TEXT)
-                .publishedAt(TEST_NEWS_PUBLISHED_AT)
+                .id(NEWS_ID+1)
+                .title(NEWS_TITLE+"2")
+                .text(NEWS_TEXT+"2")
+                .publishedAt(NEWS_PUBLISHED_AT)
                 .build());
-
         }
     }
 
     public void setupDefaultLocation(){
-
         location = Location.builder()
-            .description("Test 1")
-            .city("TestCity")
-            .country("TestCountry")
-            .houseNr(1)
-            .street("TestStreet")
-            .zip(1234)
+            .id(LOCATION_ID)
+            .description(LOCATION_DESCRIPTION)
+            .city(LOCATION_CITY)
+            .country(LOCATION_COUNTRY)
+            .houseNr(LOCATION_HOUSENR)
+            .street(LOCATION_STREET)
+            .zip(LOCATION_ZIP)
             .build();
 
         location = locationRepository.save(location);
 
         hall = Hall.builder()
-            .description("Hall1")
+            .id(HALL_ID)
+            .description(HALL_DESCRIPTION)
             .location(location)
             .build();
         hall = hallRepository.save(hall);
+    }
 
+    public void setUpDefaultArtist() {
         artist = Artist.builder()
-            .artistFirstname("Firstname")
-            .artistLastName("Lastname")
+            .id(ARTIST_ID)
+            .artistFirstname(ARTIST_FIRSTNAME)
+            .artistLastName(ARTIST_LASTNAME)
             .build();
 
         artist = artistRepository.save(artist);
