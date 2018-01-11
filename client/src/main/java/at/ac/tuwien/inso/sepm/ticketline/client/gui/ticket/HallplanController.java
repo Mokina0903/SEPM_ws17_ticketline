@@ -2,6 +2,7 @@ package at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket;
 
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.EmptyValueException;
+import at.ac.tuwien.inso.sepm.ticketline.client.exception.NotEnoughTicketsFreeException;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.TicketAlreadyExistsException;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.*;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.customer.CustomerController;
@@ -284,176 +285,21 @@ public class HallplanController implements LocalizationObserver {
     @FXML
     public void reserveTickets(ActionEvent actionEvent) {
 
-        List<TicketDTO> tickets=new ArrayList<>();
-
-        if(!event.getSeatSelection()) {
-            selectedSeats.clear();
-
-            //toDo: get number of tickets for sectors!
-            int ticketCountSectorA = 0;
-            int ticketCountSectorB = 0;
-            int ticketCountSectorC = 0;
-            int ticketCountSectorD = 1;
-            int ticketCountSectorE = 5;
-
-            try {
-                List<SeatDTO> freeSeatsSectorA = ticketService.findFreeSeatsForEventInSector(event.getId(), 'a');
-                List<SeatDTO> freeSeatsSectorB = ticketService.findFreeSeatsForEventInSector(event.getId(), 'b');
-                List<SeatDTO> freeSeatsSectorC = ticketService.findFreeSeatsForEventInSector(event.getId(), 'c');
-                List<SeatDTO> freeSeatsSectorD = ticketService.findFreeSeatsForEventInSector(event.getId(), 'd');
-                List<SeatDTO> freeSeatsSectorE = ticketService.findFreeSeatsForEventInSector(event.getId(), 'e');
-
-                if(freeSeatsSectorA.size()<ticketCountSectorA ||
-                    freeSeatsSectorB.size()<ticketCountSectorB ||
-                    freeSeatsSectorC.size()<ticketCountSectorC ||
-                    freeSeatsSectorD.size()<ticketCountSectorD ||
-                    freeSeatsSectorE.size()<ticketCountSectorE){
-                    lblError.setText(BundleManager.getBundle().getString("exception.ticketAlreadyExists"));
-                    selectedSeats.clear();
-
-                    if(event.getSeatSelection()){
-                        initializeSeats();
-                    }else{
-                        initializeSectors();
-                    }
-                    return;
-                }
-                for(int i=0; i<ticketCountSectorA;i++){
-                    selectedSeats.add(freeSeatsSectorA.remove(0));
-                }
-                for(int i=0; i<ticketCountSectorB;i++){
-                    selectedSeats.add(freeSeatsSectorB.remove(0));
-                }
-                for(int i=0; i<ticketCountSectorC;i++){
-                    selectedSeats.add(freeSeatsSectorC.remove(0));
-                }
-                for(int i=0; i<ticketCountSectorD;i++){
-                    selectedSeats.add(freeSeatsSectorD.remove(0));
-                }
-                for(int i=0; i<ticketCountSectorE;i++){
-                    selectedSeats.add(freeSeatsSectorE.remove(0));
-                }
-            } catch (DataAccessException e) {
-                lblError.setText(BundleManager.getBundle().getString("exception.unexpected"));
-            }
-        }
-        for (SeatDTO seat : selectedSeats) {
-            tickets.add(new TicketDTO().builder()
-                .customer(mainController.getCutsomer())
-                .event(new SimpleEventDTO().builder()
-                    .endOfEvent(event.getEndOfEvent())
-                    .startOfEvent(event.getStartOfEvent())
-                    .artists(event.getArtists())
-                    .id(event.getId())
-                    .price(event.getPrice())
-                    .title(event.getTitle())
-                    .build())
-                .isPaid(false)
-                .price(event.getPrice())
-                .seat(seat)
-                .build());
-        }
-        try {
-            ticketService.save(tickets);
-
-            selectedSeats.clear();
-            backToEventTabBeginning();
-
-        } catch (DataAccessException e) {
-
-            lblError.setText(BundleManager.getBundle().getString("exception.unexpected"));
-
-        } catch (TicketAlreadyExistsException e) {
-
-            lblError.setText(BundleManager.getBundle().getString("exception.ticketAlreadyExists"));
-            selectedSeats.clear();
-
-            if(event.getSeatSelection()){
-                initializeSeats();
-            }else{
-                initializeSectors();
-            }
-        } catch (EmptyValueException e) {
-            lblError.setText(BundleManager.getBundle().getString("exception.noSeatSelected"));
-        }
+        List<TicketDTO> tickets= getTicketsFromSelectedStateAs(false);
+        saveTickets(tickets);
     }
 
     @FXML
     public void buyTickets(ActionEvent actionEvent) {
-        List<TicketDTO> tickets=new ArrayList<>();
+        List<TicketDTO> tickets=getTicketsFromSelectedStateAs(true);
+        saveTickets(tickets);
+    }
 
-        if(!event.getSeatSelection()) {
-            selectedSeats.clear();
+    private void saveTickets(List<TicketDTO> tickets){
 
-            //toDo: get number of tickets for sectors!
-            int ticketCountSectorA = 0;
-            int ticketCountSectorB = 0;
-            int ticketCountSectorC = 0;
-            int ticketCountSectorD = 1;
-            int ticketCountSectorE = 2;
-
-            try {
-                List<SeatDTO> freeSeatsSectorA = ticketService.findFreeSeatsForEventInSector(event.getId(), 'a');
-                List<SeatDTO> freeSeatsSectorB = ticketService.findFreeSeatsForEventInSector(event.getId(), 'b');
-                List<SeatDTO> freeSeatsSectorC = ticketService.findFreeSeatsForEventInSector(event.getId(), 'c');
-                List<SeatDTO> freeSeatsSectorD = ticketService.findFreeSeatsForEventInSector(event.getId(), 'd');
-                List<SeatDTO> freeSeatsSectorE = ticketService.findFreeSeatsForEventInSector(event.getId(), 'e');
-
-                if(freeSeatsSectorA.size()<ticketCountSectorA ||
-                    freeSeatsSectorB.size()<ticketCountSectorB ||
-                    freeSeatsSectorC.size()<ticketCountSectorC ||
-                    freeSeatsSectorD.size()<ticketCountSectorD ||
-                    freeSeatsSectorE.size()<ticketCountSectorE){
-                    lblError.setText(BundleManager.getBundle().getString("exception.ticketAlreadyExists"));
-                    selectedSeats.clear();
-
-                    if(event.getSeatSelection()){
-                        initializeSeats();
-                    }else{
-                        initializeSectors();
-                    }
-                    return;
-                }
-                for(int i=0; i<ticketCountSectorA;i++){
-                    selectedSeats.add(freeSeatsSectorA.remove(0));
-                }
-                for(int i=0; i<ticketCountSectorB;i++){
-                    selectedSeats.add(freeSeatsSectorB.remove(0));
-                }
-                for(int i=0; i<ticketCountSectorC;i++){
-                    selectedSeats.add(freeSeatsSectorC.remove(0));
-                }
-                for(int i=0; i<ticketCountSectorD;i++){
-                    selectedSeats.add(freeSeatsSectorD.remove(0));
-                }
-                for(int i=0; i<ticketCountSectorE;i++){
-                    selectedSeats.add(freeSeatsSectorE.remove(0));
-                }
-            } catch (DataAccessException e) {
-                lblError.setText(BundleManager.getBundle().getString("exception.unexpected"));
-            }
-        }
-        for (SeatDTO seat : selectedSeats) {
-            tickets.add(new TicketDTO().builder()
-                .customer(mainController.getCutsomer())
-                .event(new SimpleEventDTO().builder()
-                    .endOfEvent(event.getEndOfEvent())
-                    .startOfEvent(event.getStartOfEvent())
-                    .artists(event.getArtists())
-                    .id(event.getId())
-                    .price(event.getPrice())
-                    .title(event.getTitle())
-                    .build())
-                .isPaid(true)
-                .price(event.getPrice())
-                .seat(seat)
-                .build());
-        }
         try {
             ticketService.save(tickets);
-
             selectedSeats.clear();
-
             backToEventTabBeginning();
 
         } catch (DataAccessException e) {
@@ -465,14 +311,79 @@ public class HallplanController implements LocalizationObserver {
             lblError.setText(BundleManager.getBundle().getString("exception.ticketAlreadyExists"));
             ticketAmountLb.setText("");
             selectedSeats.clear();
-
-            if(event.getSeatSelection()){
-                initializeSeats();
-            }else{
-                initializeSectors();
-            }
+            updateHallplan();
         } catch (EmptyValueException e) {
             lblError.setText(BundleManager.getBundle().getString("exception.noSeatSelected"));
+        }
+    }
+
+
+    /**
+     *
+     * @param isPaid defines if tickets will be reserved or buyed
+     * @return the list of tickets to be reserved or buyed, from the seats/sectors that are selected
+     */
+    List<TicketDTO> getTicketsFromSelectedStateAs(boolean isPaid){
+
+        List<TicketDTO> tickets=new ArrayList<>();
+
+        if(!event.getSeatSelection()) {
+
+            selectedSeats.clear();
+            try {
+
+                for (Map.Entry<Character, Integer> entry: ticketAmountForEachSector.entrySet()) {
+                    addSelectedSeatsFromSector(entry.getValue(), entry.getKey());
+                }
+
+            } catch (NotEnoughTicketsFreeException e) {
+                lblError.setText(BundleManager.getBundle().getString("exception.notEnoughTickets"));
+            }
+        }
+
+        for (SeatDTO seat : selectedSeats) {
+            tickets.add(new TicketDTO().builder()
+                .customer(mainController.getCutsomer())
+                .event(new SimpleEventDTO().builder()
+                    .endOfEvent(event.getEndOfEvent())
+                    .startOfEvent(event.getStartOfEvent())
+                    .artists(event.getArtists())
+                    .id(event.getId())
+                    .price(event.getPrice())
+                    .title(event.getTitle())
+                    .build())
+                .isPaid(isPaid)
+                .price(event.getPrice())
+                .seat(seat)
+                .build());
+        }
+
+        return tickets;
+    }
+
+    private void addSelectedSeatsFromSector(Integer anzTickets, char sector) throws NotEnoughTicketsFreeException {
+        try {
+            List<SeatDTO> freeSeatsFromSector = ticketService.findFreeSeatsForEventInSector(event.getId(), sector);
+
+            if(anzTickets>freeSeatsFromSector.size()){
+                updateHallplan();
+                throw new NotEnoughTicketsFreeException(" not enough tickts in sector: " +sector);
+            }
+            for (int i = 0; i < anzTickets ; i++) {
+                selectedSeats.add(freeSeatsFromSector.remove(0));
+            }
+        } catch (DataAccessException e) {
+            lblError.setText(BundleManager.getBundle().getString("exception.unexpected"));
+            e.printStackTrace();
+        }
+
+    }
+
+    private void updateHallplan(){
+        if(event.getSeatSelection()){
+            initializeSeats();
+        }else{
+            initializeSectors();
         }
     }
 
@@ -491,7 +402,6 @@ public class HallplanController implements LocalizationObserver {
         mainController.setCutsomer(null);
         mainController.setEvent(null);
     }
-
 
     @Override
     public void update() {
