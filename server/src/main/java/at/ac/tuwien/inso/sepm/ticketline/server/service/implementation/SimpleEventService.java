@@ -84,6 +84,7 @@ public class SimpleEventService implements EventService {
             throw new NotFoundException("Hall " + event.getHall().getDescription() + " " + location.getDescription());
         }
 
+        hall.setLocation(location);
         event.setHall(hall);
 
 
@@ -99,17 +100,13 @@ public class SimpleEventService implements EventService {
             throw new AlreadyExistsException("Event: " + event.getTitle());
 
 
-        List<Artist> newArtistsList = new ArrayList<>();
-
         for (Artist artist : event.getArtists()) {
             Artist newArtist = artistRepository.findByArtistFirstNameAndArtistLastName(artist.getArtistFirstName(),artist.getArtistLastName());
             if (newArtist == null) {
                 artistRepository.save(artist);
             }
-            newArtistsList.add(newArtist);
         }
 
-        event.setArtists(newArtistsList);
 
         Event rEvent = eventRepository.save(event);
 
