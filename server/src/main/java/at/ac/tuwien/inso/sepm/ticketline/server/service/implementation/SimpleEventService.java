@@ -91,7 +91,7 @@ public class SimpleEventService implements EventService {
         for (Artist artist : event.getArtists()) {
             Artist newArtist = artistRepository.findByArtistFirstNameAndArtistLastName(artist.getArtistFirstName(),artist.getArtistLastName());
             if (newArtist == null) {
-                throw new NotFoundException("Artist " + artist.getArtistFirstName()+" " +artist.getArtistLastName());
+                artistRepository.save(artist);
             }
             newArtistsList.add(newArtist);
         }
