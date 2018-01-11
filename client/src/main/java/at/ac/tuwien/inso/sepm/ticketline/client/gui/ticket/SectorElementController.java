@@ -35,6 +35,7 @@ public class SectorElementController {
     private int seatCount;
     private int reservedTickets;
     private int capacity;
+    private char sector;
 
 
     private HallplanController hallplanController;
@@ -46,11 +47,27 @@ public class SectorElementController {
         this.seatCount = reservedTickets;
         this.reservedTickets = reservedTickets;
         this.capacity = capacity;
-
-
-
+        sector = defineSector();
         setButtonGraphic(btnIncrease, "PLUS", Color.DARKGRAY);
         setButtonGraphic(btnDecrease, "MINUS", Color.DARKGRAY);
+    }
+
+    private char defineSector(){
+        if(hBSector.getStyleClass().contains("sectorA")){
+            return 'a';
+        }
+        if(hBSector.getStyleClass().contains("sectorB")){
+            return 'b';
+        }
+        if(hBSector.getStyleClass().contains("sectorC")){
+            return 'c';
+        }
+        if(hBSector.getStyleClass().contains("sectorD")){
+            return 'd';
+        }
+
+        return 'e';
+
     }
 
     private void setButtonGraphic(Button button, String glyphSymbol, Color color) {
@@ -68,6 +85,7 @@ public class SectorElementController {
         seatCount++;
         hallplanController.setTicketCount(hallplanController.getTicketCount()+1);
         hallplanController.ticketAmountLb.setText(String.valueOf(hallplanController.getTicketCount()));
+        hallplanController.ticketAmountForEachSector.put(sector, hallplanController.ticketAmountForEachSector.get(sector)+1);
         currentReservedTickets.setText(String.valueOf(seatCount));
         if( !hBSector.getStyleClass().contains("ticketsAdded")){
             hBSector.getStyleClass().add("ticketsAdded");
@@ -83,6 +101,7 @@ public class SectorElementController {
         seatCount--;
         hallplanController.setTicketCount(hallplanController.getTicketCount()-1);
         hallplanController.ticketAmountLb.setText(String.valueOf(hallplanController.getTicketCount()));
+        hallplanController.ticketAmountForEachSector.put(sector, hallplanController.ticketAmountForEachSector.get(sector)-1);
         currentReservedTickets.setText(String.valueOf(seatCount));
         if(seatCount == reservedTickets && hBSector.getStyleClass().contains("ticketsAdded")){
             hBSector.getStyleClass().remove("ticketsAdded");

@@ -19,6 +19,7 @@ import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventTarget;
 import javafx.fxml.FXML;
@@ -29,6 +30,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Arc;
@@ -48,7 +50,10 @@ import org.springframework.stereotype.Component;
 
 import javax.sound.midi.Soundbank;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 public class HallplanController implements LocalizationObserver {
@@ -100,6 +105,8 @@ public class HallplanController implements LocalizationObserver {
     private DetailedHallDTO hall;
     private Node oldContent;
 
+    Map<Character, Integer> ticketAmountForEachSector;
+
 
     @Autowired
     private LocalizationSubject localizationSubject;
@@ -136,6 +143,12 @@ public class HallplanController implements LocalizationObserver {
         ticketCount = 0;
         ticketAmountLb.setText(String.valueOf(ticketCount));
         localizationSubject.attach(this);
+        ticketAmountForEachSector = new HashMap<>();
+        char sector= 'a';
+        for (int i = 0; i <5 ; i++) {
+            ticketAmountForEachSector.put(sector, 0);
+            sector++;
+        }
     }
 
     public void initializeData(DetailedEventDTO event, CustomerDTO customer, Node oldContent) {
@@ -168,47 +181,18 @@ public class HallplanController implements LocalizationObserver {
 
     void initializeSeats() {
 
-        /* ************** Preperation for testing ***************
-        DetailedHallDTO hall = new DetailedHallDTO();
-        ArrayList<SeatDTO> seatsToAdd = new ArrayList<>();
-        int row = 1;
-        int nr = 1;
-        char sector = 'a';
-        for (int i = 0; i < 74; i++) {
-            SeatDTO seat = new SeatDTO();
-            seat.setNr(nr);
-            seat.setRow(row);
-            seat.setSector(sector);
-            seatsToAdd.add(seat);
-            if (nr == 10) {
-                nr = 0;
-                row++;
-                if (row % 2 == 0) {
-                    sector++;
-                }
-            }
-            nr++;
-        }
-        hall.setSeats(seatsToAdd);
-        //*************** END  *************** */
-
         List<SeatDTO> seats = hall.getSeats();
         List<TicketDTO> occupiedTickets = null;
         try {
             occupiedTickets = ticketService.findByEventId(event.getId());
         } catch (DataAccessException e) {
-            //TODO: add ticktes already reserverd lbl/warning
+            //TODO: not able to get tickets
             e.printStackTrace();
         }
-        List<SeatDTO> occupiedSeats = new ArrayList<>();
-        if (occupiedTickets != null) {
-            for (TicketDTO ticket : occupiedTickets) {
-                occupiedSeats.add(ticket.getSeat());
-            }
-        }
+
+        List<SeatDTO> occupiedSeats = occupiedTickets ==null?new ArrayList<>(): occupiedTickets.stream().map(ticket -> ticket.getSeat()).collect(Collectors.toList());
 
         for (SeatDTO seat : seats) {
-            //show seats
 
             SpringFxmlLoader.Wrapper<SeatElementController> wrapper =
                 springFxmlLoader.loadAndWrap("/fxml/ticket/seatElement.fxml");
@@ -222,63 +206,29 @@ public class HallplanController implements LocalizationObserver {
                 label.setPadding(new Insets(0, 2, 0, 5));
                 seatsContainerGV.add(label, 0, seat.getRow());
             }
-
-           if(!occupiedSeats.isEmpty()) {
-               if (occupiedSeats.contains(seat)) {
-                   wrapper.getController().vBseat.getStyleClass().add("occupied");
-               }
-           }
+            if (occupiedSeats.contains(seat)) {
+                wrapper.getController().vBseat.getStyleClass().add("occupied");
+            }
            addSector( wrapper.getController().vBseat, seat.getSector());
         }
     }
 
     void initializeSectors() {
 
-        /* ************** Preperation for testing ***************
-        DetailedHallDTO hall = new DetailedHallDTO();
-        ArrayList<SeatDTO> seatsToAdd = new ArrayList<>();
-        int row = 1;
-        int nr = 1;
-        char sector1 = 'a';
-        for (int i = 0; i < 74; i++) {
-            SeatDTO seat = new SeatDTO();
-            seat.setNr(nr);
-            seat.setRow(row);
-            seat.setSector(sector1);
-            seatsToAdd.add(seat);
-            if (nr == 10) {
-                nr = 0;
-                row++;
-                if (row % 2 == 0) {
-                    sector1++;
-                }
-            }
-            nr++;
-        }
-        hall.setSeats(seatsToAdd);
-        //*************** END  *************** */
-
         List<SeatDTO> seats = hall.getSeats();
-
         char currentSector = (char) 96;
-
         for (SeatDTO seat : seats) {
-            //show sectors
-
             char sector = seat.getSector();
             if (currentSector == sector) {
                 continue;
             }
-
             int reservedTickets =0;
-
             try {
                 reservedTickets = ticketService.ticketCountForEventForSector(event.getId(), sector);
             } catch (DataAccessException e) {
                 //TODO: Add alert
                 e.printStackTrace();
             }
-
             SpringFxmlLoader.Wrapper<SectorElementController> wrapper =
                 springFxmlLoader.loadAndWrap("/fxml/ticket/sectorElement.fxml");
             wrapper.getController().initializeData(reservedTickets, 20,HallplanController.this);
@@ -295,6 +245,7 @@ public class HallplanController implements LocalizationObserver {
             addSector(wrapper.getController().hBSector, sector);
             currentSector++;
         }
+
     }
 
     private void addSector(Node node, char sector){
