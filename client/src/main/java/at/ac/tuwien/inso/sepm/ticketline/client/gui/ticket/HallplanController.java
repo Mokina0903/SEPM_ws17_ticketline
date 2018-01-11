@@ -150,6 +150,8 @@ public class HallplanController implements LocalizationObserver {
             ticketAmountForEachSector.put(sector, 0);
             sector++;
         }
+        lblError.setWrapText(true);
+        lblError.setMaxWidth(100.0);
     }
 
     public void initializeData(DetailedEventDTO event, CustomerDTO customer, Node oldContent) {
@@ -314,6 +316,7 @@ public class HallplanController implements LocalizationObserver {
             updateHallplan();
         } catch (EmptyValueException e) {
             lblError.setText(BundleManager.getBundle().getString("exception.noSeatSelected"));
+            lblError.setWrapText(true);
         }
     }
 
@@ -323,7 +326,7 @@ public class HallplanController implements LocalizationObserver {
      * @param isPaid defines if tickets will be reserved or buyed
      * @return the list of tickets to be reserved or buyed, from the seats/sectors that are selected
      */
-    List<TicketDTO> getTicketsFromSelectedStateAs(boolean isPaid){
+   private List<TicketDTO> getTicketsFromSelectedStateAs(boolean isPaid){
 
         List<TicketDTO> tickets=new ArrayList<>();
 
