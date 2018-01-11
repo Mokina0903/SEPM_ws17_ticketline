@@ -5,7 +5,7 @@ import javax.validation.constraints.Size;
 import java.util.List;
 
 @Entity
-@Table(name = "hall")
+@Table(name = "hall", uniqueConstraints={@UniqueConstraint(columnNames = {"description" , "location_id"})})
 public class Hall {
 
     @Id
