@@ -332,9 +332,11 @@ public class HallplanController implements LocalizationObserver {
                 //TODO: Add alert
                 e.printStackTrace();
             }
+
+            int capacity = hall.getAmountOfSeatsInSector(seat.getSector());
             SpringFxmlLoader.Wrapper<SectorElementController> wrapper =
                 springFxmlLoader.loadAndWrap("/fxml/ticket/sectorElement.fxml");
-            wrapper.getController().initializeData(reservedTickets, 20, HallplanController.this);
+            wrapper.getController().initializeData(reservedTickets, capacity, HallplanController.this);
             seatsContainerGV.add(wrapper.getController().hBSector, seat.getNr(), seat.getRow());
             if (seat.getNr() == 1) {
                 Label label = new Label();
