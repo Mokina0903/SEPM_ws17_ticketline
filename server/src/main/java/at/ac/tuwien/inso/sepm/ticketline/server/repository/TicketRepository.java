@@ -40,7 +40,7 @@ public interface TicketRepository extends JpaRepository<Ticket,Long>{
      * @param event_Id of the event to find tickets for
      * @return list of tickets
      */
-    List<Ticket> findByEvent_Id(Long event_Id); //todo: check if name is correct
+    List<Ticket> findByEvent_IdAndIsDeletedFalse(Long event_Id);
 
     /**
      * find all tickets of specific customer
@@ -55,7 +55,7 @@ public interface TicketRepository extends JpaRepository<Ticket,Long>{
      * @param seat_id of the seat the ticket is for
      * @return optional containing ticket, if ticket is found the seat is sold, if no ticket found the seat is free
      */
-    Optional<Ticket> findByEvent_idAndSeat_id(Long event_Id, Long seat_id);
+    Optional<Ticket> findByEvent_idAndSeat_idAndIsDeletedFalse(Long event_Id, Long seat_id);
 
     /**
      * get the number of tickets already booked in specific sector for event

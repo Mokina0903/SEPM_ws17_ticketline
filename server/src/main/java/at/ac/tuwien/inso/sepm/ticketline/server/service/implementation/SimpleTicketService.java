@@ -38,7 +38,7 @@ public class SimpleTicketService implements TicketService {
 
     @Override
     public List<Ticket> findByEventId( Long eventId ) {
-        return ticketRepository.findByEvent_Id(eventId);
+        return ticketRepository.findByEvent_IdAndIsDeletedFalse(eventId);
     }
 
     @Override
@@ -77,6 +77,6 @@ public class SimpleTicketService implements TicketService {
 
     @Override
     public Boolean isBooked(Long eventId,Long seatId){
-        return ticketRepository.findByEvent_idAndSeat_id(eventId,seatId).isPresent();
+        return ticketRepository.findByEvent_idAndSeat_idAndIsDeletedFalse(eventId,seatId).isPresent();
     }
 }
