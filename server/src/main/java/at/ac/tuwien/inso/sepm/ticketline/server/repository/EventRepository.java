@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,7 +22,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
      * @param id of the event entry
      * @return Optional containing the event entry
      */
-    Optional<Event> findOneById( Long id);
+    Optional<Event> findOneById(Long id);
 
     /**
      * Find all event entries.
@@ -36,7 +37,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
      *
      * @return list of events
      */
-    @Query(value = "Select * from event where end_of_event > now()",  nativeQuery = true)
+    @Query(value = "Select * from event where end_of_event > now()", nativeQuery = true)
     List<Event> findAllUpcoming();
 
     /**
@@ -54,8 +55,15 @@ public interface EventRepository extends JpaRepository<Event, Long> {
      * @param title of the event
      * @return list of events
      */
-    @Query(value = "Select * from event e where e.end_of_event > now() and e.title = :title",  nativeQuery = true)
+    @Query(value = "Select * from event e where e.end_of_event > now() and e.title = :title", nativeQuery = true)
     List<Event> findAllUpcomingByTitle(@Param("title") String title);
+
+    @Query(value = "SELECT * FROM event WHERE title = :title " +
+        "AND description = :description AND hall_id = :hallId " +
+        "AND start_of_event = :startOfEvent AND end_of_event = :endOfEvent", nativeQuery = true)
+    List<Event> findDuplicates(@Param("title") String title, @Param("description") String description,
+                               @Param("hallId") long hallId, @Param("startOfEvent") String startOfEvent,
+                               @Param("endOfEvent") String endOfEvent);
 
     //todo find by type, implement type in event (enum)
     //todo find by duration (+-30 min)
