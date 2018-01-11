@@ -1,13 +1,11 @@
 package at.ac.tuwien.inso.sepm.ticketline.rest.ticket;
 
 import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
-import at.ac.tuwien.inso.sepm.ticketline.rest.event.DetailedEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.seat.SeatDTO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import javax.naming.event.EventDirContext;
 import java.time.LocalDateTime;
 
 @ApiModel(value = "TicketDTO" , description = "A DTO for ticket entries via rest")
@@ -96,6 +94,7 @@ public class TicketDTO {
         this.seat = seat;
     }
 
+    public double getPriceInEuro(){return(double)price/(double)100;}
 
     public Long getPrice() {
         return price;
