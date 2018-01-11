@@ -66,6 +66,31 @@ public class HallplanController implements LocalizationObserver {
     private final SpringFxmlLoader springFxmlLoader;
 
     @FXML
+    public VBox lblSectorTicketAmountAndPriceOverview;
+    @FXML
+    public Label lblAmountOfTicketsInA;
+    @FXML
+    public Label lblPriceOfTicketsInA;
+    @FXML
+    public Label lblAmountOfTicketsInB;
+    @FXML
+    public Label lblPriceOfTicketsInB;
+    @FXML
+    public Label lblAmountOfTicketsInC;
+    @FXML
+    public Label lblPriceOfTicketsInC;
+    @FXML
+    public Label lblAmountOfTicketsInD;
+    @FXML
+    public Label lblPriceOfTicketsInD;
+    @FXML
+    public Label lblAmountOfTicketsInE;
+    @FXML
+    public Label lblPriceOfTicketsInE;
+    @FXML
+    public Label lblTotalSum;
+
+    @FXML
     private HallplanCutlineController cutlineContainerController;
 
     private CustomerController customerController;
@@ -139,6 +164,14 @@ public class HallplanController implements LocalizationObserver {
 
     void removeSelectedSeat(SeatDTO seat) {
         selectedSeats.remove(seat);
+    }
+
+    public VBox getLblSectorTicketAmountAndPriceOverview() {
+        return lblSectorTicketAmountAndPriceOverview;
+    }
+
+    public void setLblSectorTicketAmountAndPriceOverview(VBox lblSectorTicketAmountAndPriceOverview) {
+        this.lblSectorTicketAmountAndPriceOverview = lblSectorTicketAmountAndPriceOverview;
     }
 
     @FXML
@@ -279,12 +312,7 @@ public class HallplanController implements LocalizationObserver {
         }
     }
 
-    private void setButtonGraphic(Button button, String glyphSymbol, Color color) {
-        Glyph glyph = fontAwesome.create(FontAwesome.Glyph.valueOf(glyphSymbol));
-        glyph.setColor(color);
-        glyph.setFontSize(FONT_SIZE);
-        button.setGraphic(glyph);
-    }
+
 
     @FXML
     public void backToEventSelection(ActionEvent actionEvent) {
@@ -418,5 +446,12 @@ public class HallplanController implements LocalizationObserver {
         tabHeaderController.setTitle(BundleManager.getBundle().getString("hallplan.chooseYourTickets"));
         buyBut.setText(BundleManager.getBundle().getString("hallplan.buy"));
         reserveBut.setText(BundleManager.getBundle().getString("hallplan.reserveTickets"));
+    }
+
+    private void setButtonGraphic(Button button, String glyphSymbol, Color color) {
+        Glyph glyph = fontAwesome.create(FontAwesome.Glyph.valueOf(glyphSymbol));
+        glyph.setColor(color);
+        glyph.setFontSize(FONT_SIZE);
+        button.setGraphic(glyph);
     }
 }

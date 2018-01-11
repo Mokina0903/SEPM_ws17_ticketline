@@ -21,11 +21,13 @@ public class SeatElementController {
 
     private SeatDTO seat;
     private HallplanController hallplanController;
+    private char sector;
 
     void initializeData(SeatDTO seat, HallplanController hallplanController){
         seatNrLbl.setText(String.valueOf(seat.getNr()));
         this.seat = seat;
         this.hallplanController = hallplanController;
+        sector = seat.getSector();
     }
 
     @FXML

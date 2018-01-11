@@ -32,9 +32,9 @@
     <center>
 
         <GridPane fx:id="seatsContainerGV" hgap="10" vgap="10">
-        <BorderPane.margin>
-            <Insets bottom="0.0" top="0.0" left="20.0" right="0.0"/>
-        </BorderPane.margin>
+            <BorderPane.margin>
+                <Insets left="20.0"/>
+            </BorderPane.margin>
         </GridPane>
     </center>
     <right>
@@ -43,38 +43,74 @@
             <BorderPane.margin>
                 <Insets bottom="5.0" top="20.0" left="20.0" right="100.0"/>
             </BorderPane.margin>
-        <GridPane hgap="5" vgap="7">
-            <VBox GridPane.columnIndex="0" GridPane.rowIndex="0">
-                <Label fx:id="lblCustomerDescription" text ="%customer.customerSelected"/>
+            <GridPane hgap="5" vgap="7">
+                <VBox GridPane.columnIndex="0" GridPane.rowIndex="0">
+                    <Label fx:id="lblCustomerDescription" text="%customer.customerSelected"/>
+                </VBox>
+
+                <HBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                    <Label fx:id="lbKnr"/>
+                    <Label fx:id="lbVname"/>
+                    <Label fx:id="lbSurname"/>
+                </HBox>
+                <Label text="%hallplan.amountOfTickets" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                <Label fx:id="ticketAmountLb" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                <Button fx:id="reserveBut" onAction="#reserveTickets" text="%hallplan.reserveTickets"
+                        GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                <Button fx:id="buyBut" onAction="#buyTickets" text="%hallplan.buy" GridPane.columnIndex="0"
+                        GridPane.rowIndex="4"/>
+                <Button fx:id="backbut" onAction="#backToEventSelection" GridPane.columnIndex="0"
+                        GridPane.rowIndex="5"/>
+                <Label fx:id="lblError" textFill="#cc1d1d" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+
+                <columnConstraints>
+                    <ColumnConstraints/>
+                    <ColumnConstraints/>
+                    <ColumnConstraints/>
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints/>
+                    <RowConstraints/>
+                    <RowConstraints/>
+                    <RowConstraints/>
+                    <RowConstraints/>
+                    <RowConstraints/>
+                </rowConstraints>
+            </GridPane>
+
+            <VBox fx:id="lblSectorTicketAmountAndPriceOverview" spacing="10">
+                <HBox spacing="5">
+                    <Label text="Sector A x "/>
+                    <Label fx:id="lblAmountOfTicketsInA"/>
+                    <Label fx:id="lblPriceOfTicketsInA"/>
+                </HBox>
+                <HBox spacing="5">
+                    <Label text="Sector B x "/>
+                    <Label fx:id="lblAmountOfTicketsInB"/>
+                    <Label fx:id="lblPriceOfTicketsInB"/>
+                </HBox>
+                <HBox spacing="5">
+                    <Label text="Sector C x "/>
+                    <Label fx:id="lblAmountOfTicketsInC"/>
+                    <Label fx:id="lblPriceOfTicketsInC"/>
+                </HBox>
+                <HBox spacing="5">
+                    <Label text="Sector D x "/>
+                    <Label fx:id="lblAmountOfTicketsInD"/>
+                    <Label fx:id="lblPriceOfTicketsInD"/>
+                </HBox>
+                <HBox spacing="5">
+                    <Label text="Sector E x "/>
+                    <Label fx:id="lblAmountOfTicketsInE"/>
+                    <Label fx:id="lblPriceOfTicketsInE"/>
+                </HBox>
+
+                <HBox spacing="5">
+                    <Label text="%hallplan.total"/>
+                    <Label fx:id="lblTotalSum"/>
+                </HBox>
+
             </VBox>
-
-            <HBox spacing="4" GridPane.columnIndex="0" GridPane.rowIndex="1">
-                <Label fx:id="lbKnr" />
-                <Label fx:id="lbVname" />
-                <Label fx:id="lbSurname" />
-            </HBox>
-            <Label text="%hallplan.amountOfTickets" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
-            <Label fx:id="ticketAmountLb" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-            <Button fx:id="reserveBut" onAction="#reserveTickets" text="%hallplan.reserveTickets" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
-            <Button fx:id="buyBut" onAction="#buyTickets" text="%hallplan.buy" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
-            <Button fx:id="backbut" onAction="#backToEventSelection" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
-            <Label fx:id="lblError" textFill="#cc1d1d" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
-
-            <columnConstraints>
-                <ColumnConstraints/>
-                <ColumnConstraints/>
-                <ColumnConstraints/>
-            </columnConstraints>
-            <rowConstraints>
-                <RowConstraints/>
-                <RowConstraints/>
-                <RowConstraints/>
-                <RowConstraints/>
-                <RowConstraints/>
-                <RowConstraints/>
-            </rowConstraints>
-        </GridPane>
-
         </VBox>
     </right>
     <bottom>
