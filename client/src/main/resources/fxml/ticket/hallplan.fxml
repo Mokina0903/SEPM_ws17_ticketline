@@ -43,6 +43,8 @@
             <BorderPane.margin>
                 <Insets bottom="5.0" top="100.0" left="20.0" right="200.0"/>
             </BorderPane.margin>
+
+
             <VBox GridPane.columnIndex="0" GridPane.rowIndex="0">
                 <Label fx:id="lblCustomerDescription" text ="%customer.customerSelected"/>
             </VBox>
@@ -58,12 +60,16 @@
             <Button fx:id="buyBut" onAction="#buyTickets" text="%hallplan.buy" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
             <Button fx:id="backbut" onAction="#backToEventSelection" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
             <Label fx:id="lblError" textFill="#cc1d1d" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+
+            <fx:include source="hallplanCutline.fxml" GridPane.columnIndex="0" GridPane.rowIndex="7"/>
+
             <columnConstraints>
                 <ColumnConstraints/>
                 <ColumnConstraints/>
                 <ColumnConstraints/>
             </columnConstraints>
             <rowConstraints>
+                <RowConstraints/>
                 <RowConstraints/>
                 <RowConstraints/>
                 <RowConstraints/>
