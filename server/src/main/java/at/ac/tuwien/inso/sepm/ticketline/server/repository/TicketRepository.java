@@ -76,6 +76,6 @@ public interface TicketRepository extends JpaRepository<Ticket,Long>{
      *
      */
     @Query(value = "select * from ticket t join event e on t.event_id=e.id" +
-        "where TIMESTAMPDIFF('MINUTE',e.start_Of_Event, CURRENT_TIMESTAMP())< 30", nativeQuery = true)
+        "where TIMESTAMPDIFF('MINUTE', CURRENT_TIMESTAMP(), e.start_Of_Event)< 30", nativeQuery = true)
     List<Ticket>setTicketsFreeIf30MinsBeforeEvent();
 }
