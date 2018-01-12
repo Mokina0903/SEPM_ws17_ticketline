@@ -10,59 +10,38 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket.TicketController">
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Label?>
+<BorderPane xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket.TicketController">
     <top>
         <fx:include source="/fxml/tabHeader.fxml" fx:id="tabHeader"/>
     </top>
 
     <center>
         <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
-            <children>
-                <GridPane hgap="5.0" maxHeight="-Infinity" prefHeight="150.0" vgap="5.0" VBox.vgrow="ALWAYS">              <columnConstraints>
-                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                </columnConstraints>
-                    <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                </GridPane>
-                <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="600.0" VBox.vgrow="ALWAYS">
-                    <VBox.margin>
-                        <Insets />
-                    </VBox.margin>
-                    <children>
-                        <Pagination fx:id="pagination" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="600.0" HBox.hgrow="ALWAYS">
-                            <HBox.margin>
-                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                            </HBox.margin>
-                            <padding>
-                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                            </padding></Pagination>
-                        <GridPane hgap="10.0" maxWidth="-Infinity" prefWidth="77.0" vgap="20">
-                            <Button text="search" defaultButton="true" GridPane.columnIndex="0" />
-                            <columnConstraints>
-                                <ColumnConstraints />
-                            </columnConstraints>
-                            <rowConstraints>
-                                <RowConstraints />
-                                <RowConstraints />
-                                <RowConstraints />
-                                <RowConstraints />
-                            </rowConstraints>
-                            <HBox.margin>
-                                <Insets left="5.0" right="5.0" top="5.0" />
-                            </HBox.margin>
-                        </GridPane>
-                    </children>
-                </HBox>
-            </children>
+
+            <HBox>
+            <TextField fx:id="tfSearch" prefHeight="26.0" prefWidth="343.0" promptText="%ticket.searchField"
+                       GridPane.columnIndex="1"/>
+            <Button text="search" defaultButton="true" GridPane.columnIndex="0"/>
+            </HBox>
+            <Label fx:id="lblNoMatch" text="%customer.noMatches" />
+            <Pagination fx:id="pagination" maxHeight="1.7976931348623157E308"
+                                maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="600.0"
+                                HBox.hgrow="ALWAYS">
+            <HBox.margin>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+            </HBox.margin>
+            <padding>
+                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+            </padding>
+        </Pagination>
         </VBox>
     </center>
 
     <padding>
-        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
     </padding>
 
 </BorderPane>
