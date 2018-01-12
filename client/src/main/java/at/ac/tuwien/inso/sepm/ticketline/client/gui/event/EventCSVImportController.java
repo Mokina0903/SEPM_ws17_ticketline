@@ -115,8 +115,6 @@ public class EventCSVImportController implements LocalizationObserver {
     }
 
     public void importCSVFile(ActionEvent actionEvent) {
-       //TODO: (David) import the file if already choosen
-
         if (choosenFile == null) {
             LOGGER.warn("Tried to upload empty csv.");
             mainController.showGeneralError("File was empty. Choose a file before upload.");
@@ -130,8 +128,6 @@ public class EventCSVImportController implements LocalizationObserver {
         Task<Void> workerTask = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
-
-                // TODO: (David) csvFile == Textbox
                 String csvFile = choosenFile.getPath();
                 String cvsSplitBy = ";";
                 BufferedReader br = null;
@@ -143,9 +139,6 @@ public class EventCSVImportController implements LocalizationObserver {
                         //0     1               2       3       4       5       6               7           8       9       10
                         //Titel	Beschreibung	Start	Ende	Price	Sektor	LocationName	HallName	Artist1	Artist2	...
                         String[] column = line.split(cvsSplitBy);
-
-
-                        // TODO: (David) Check input, duplicates?, end before begin?
 
                         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
                         String title = column[0];
