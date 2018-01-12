@@ -71,5 +71,7 @@ public interface TicketService {
      */
     int ticketCountForEventForSector(Long event_id,char sector);
 
+    void setTicketsFreeIf30MinsBeforEvent();
+
 
 }

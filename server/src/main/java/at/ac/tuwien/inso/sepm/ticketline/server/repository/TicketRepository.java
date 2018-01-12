@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -69,5 +70,12 @@ public interface TicketRepository extends JpaRepository<Ticket,Long>{
         " where event_id= :event_id and sector=:sec",nativeQuery = true)
     int ticketCountForEventForSector( @Param("event_id") Long event_id, @Param("sec") char sector);
 
-
+    /**
+     *
+     * @return list of tickets from events when startzeit-now < 30 minuten
+     *
+     */
+    @Query(value = "select * from ticket t join event e on t.event_id=e.id" +
+        "where TIMESTAMPDIFF('MINUTE',e.start_Of_Event, CURRENT_TIMESTAMP())< 30", nativeQuery = true)
+    List<Ticket>setTicketsFreeIf30MinsBeforeEvent();
 }
