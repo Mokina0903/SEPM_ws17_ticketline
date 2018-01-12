@@ -259,6 +259,7 @@ public class MainController implements LocalizationObserver {
                 if (customerController == null) {
                     customerController = (CustomerController) setTabContent(customerController, "customer/customerComponent.fxml", customerTab);
                     customerController.loadCustomer();
+                    customerController.initialzeData(customerTab);
                     // customerController.preparePagination();
                 }
             } else {

@@ -77,7 +77,7 @@ public class CustomerController extends TabElement implements LocalizationObserv
     private TableColumn<CustomerDTO, String> tcMail;
     private TableColumn<CustomerDTO, String> tcNumber;
 
-    private Tab customerTab;
+    private Tab customerTab = new Tab();
     private Tab currentTab;
     private final int CUSTOMER_PER_PAGE = 12;
     private boolean isTicketView;
@@ -112,19 +112,6 @@ public class CustomerController extends TabElement implements LocalizationObserv
         this.customerService = customerService;
     }
 
-    public void toggleTicketprozessView(boolean fromEvent){
-        btTickets.setVisible(!btTickets.isVisible());
-        btTickets.setDisable(!btTickets.isDisable());
-        btNext.setDisable(!btNext.isDisable());
-        btNext.setVisible(!btNext.isVisible());
-        tabHeaderController.setTitle(BundleManager.getBundle().getString("customer.chooseCustomer"));
-        if(fromEvent){
-            currentTab = mainController.getEventTab();
-        } else {
-           currentTab = customerTab;
-        }
-    }
-
     public void setNormalTabView(){
         btTickets.setVisible(true);
         btTickets.setDisable(false);
@@ -145,6 +132,11 @@ public class CustomerController extends TabElement implements LocalizationObserv
         isTicketView = true;
     }
 
+    public void initialzeData(Tab customerTab){
+       this.customerTab = customerTab;
+       currentTab = customerTab;
+    }
+
     @FXML
     private void initialize() {
         tabHeaderController.setIcon(FontAwesome.Glyph.USERS);
@@ -155,6 +147,7 @@ public class CustomerController extends TabElement implements LocalizationObserv
         btTickets.setGraphic(fontAwesome.create("TICKET").size(FONT_SIZE));
 
         lbNoCustomerError.setWrapText(true);
+        currentTab = customerTab;
 
         btNext.setDisable(true);
         btNext.setVisible(false);
@@ -322,8 +315,7 @@ public class CustomerController extends TabElement implements LocalizationObserv
                 springFxmlLoader.loadAndWrap("/fxml/customer/customerEdit.fxml");
             wrapper.getController().initializeData(customer, customerOverviewRoot);
             wrapper.getController().setUpdate(true);
-            currentTab
-                .setContent(wrapper.getLoadedObject());
+            currentTab.setContent(wrapper.getLoadedObject());
         }
     }
 
