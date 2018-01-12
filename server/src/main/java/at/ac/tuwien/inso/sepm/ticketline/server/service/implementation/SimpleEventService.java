@@ -5,6 +5,7 @@ import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Hall;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Location;
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.AlreadyExistsException;
+import at.ac.tuwien.inso.sepm.ticketline.server.exception.IllegalValueException;
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.NotFoundException;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.ArtistRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.EventRepository;
@@ -70,9 +71,12 @@ public class SimpleEventService implements EventService {
             e.printStackTrace();
         }
 
+        if (event.getStartOfEvent().isEqual(event.getEndOfEvent()) || event.getStartOfEvent().isAfter(event.getEndOfEvent())) {
+            throw new IllegalValueException("Enddate before Startdate");
+        }
+
         // Find Location
         Location location = locationRepository.findOneByDescription(event.getHall().getLocation().getDescription());
-
         if (location == null) {
             throw new NotFoundException("Location " + event.getHall().getLocation().getDescription());
         }
