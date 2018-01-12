@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.embedded.LocalServerPort;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -33,6 +34,7 @@ import java.time.LocalDateTime;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("integration-test")
+@Rollback(true)
 public abstract class BaseIntegrationTest {
 
     protected static final String SERVER_HOST = "http://localhost";
@@ -179,9 +181,7 @@ public abstract class BaseIntegrationTest {
         }
     }
 
-    // TODO: (Tutorin) Is this correct?
     public void setupDefaultNews(){
-        // TODO: (David) Start at 1 sequenc
         if (newsRepository.findAll().size() == 0) {
             newsRepository.save(News.builder()
                 .id(NEWS_ID)
@@ -189,9 +189,7 @@ public abstract class BaseIntegrationTest {
                 .text(NEWS_TEXT)
                 .publishedAt(NEWS_PUBLISHED_AT)
                 .build());
-        }
 
-        if (newsRepository.findAll().size() == 1) {
             newsRepository.save(News.builder()
                 .id(NEWS_ID+1)
                 .title(NEWS_TITLE+"2")

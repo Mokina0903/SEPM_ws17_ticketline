@@ -10,6 +10,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.test.annotation.Rollback;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -34,19 +35,6 @@ public class NewsEndpointTest extends BaseIntegrationTest {
 
     @Test
     public void findAllNewsAsUser() {
-        setupDefaultNews();
-        /*
-        BDDMockito.
-            given(newsRepository.findAllByOrderByPublishedAtDesc()).
-            willReturn(Collections.singletonList(
-                News.builder()
-                    .id(TEST_NEWS_ID)
-                    .title(TEST_NEWS_TITLE)
-                    .text(TEST_NEWS_TEXT)
-                    .publishedAt(TEST_NEWS_PUBLISHED_AT)
-                    .build()));
-        */
-
         Response response = RestAssured
             .given()
             .contentType(ContentType.JSON)
@@ -55,7 +43,11 @@ public class NewsEndpointTest extends BaseIntegrationTest {
             .then().extract().response();
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
 
-        Assert.assertThat((response.as(SimpleNewsDTO[].class))[1], is(
+        SimpleNewsDTO[] simpleNewsDTOS = response.as(SimpleNewsDTO[].class);
+
+        Assert.assertThat(simpleNewsDTOS.length,is(2));
+
+        Assert.assertThat(simpleNewsDTOS[0], is(
             SimpleNewsDTO.builder()
                 .id(NEWS_ID)
                 .title(NEWS_TITLE)
@@ -63,6 +55,13 @@ public class NewsEndpointTest extends BaseIntegrationTest {
                 .publishedAt(NEWS_PUBLISHED_AT)
                 .build()));
 
+        Assert.assertThat(simpleNewsDTOS[1], is(
+            SimpleNewsDTO.builder()
+                .id(NEWS_ID + 1)
+                .title(NEWS_TITLE + 2)
+                .summary(NEWS_TEXT + 2)
+                .publishedAt(NEWS_PUBLISHED_AT)
+                .build()));
     }
 
     @Test
@@ -77,18 +76,6 @@ public class NewsEndpointTest extends BaseIntegrationTest {
 
     @Test
     public void findSpecificNewsAsUser() {
-        setupDefaultNews();
-
-        /*
-        BDDMockito.
-            given(newsRepository.findOneById(TEST_NEWS_ID)).
-            willReturn(Optional.of(News.builder()
-                .id(TEST_NEWS_ID)
-                .title(TEST_NEWS_TITLE)
-                .text(TEST_NEWS_TEXT)
-                .publishedAt(TEST_NEWS_PUBLISHED_AT)
-                .build()));
-        */
         Response response = RestAssured
             .given()
             .contentType(ContentType.JSON)
@@ -106,12 +93,6 @@ public class NewsEndpointTest extends BaseIntegrationTest {
 
     @Test
     public void findSpecificNonExistingNewsNotFoundAsUser() {
-        setupDefaultNews();
-        /*
-        BDDMockito.
-            given(newsRepository.findOneById(TEST_NEWS_ID)).
-            willReturn(Optional.empty());
-        */
         Response response = RestAssured
             .given()
             .contentType(ContentType.JSON)
@@ -154,30 +135,15 @@ public class NewsEndpointTest extends BaseIntegrationTest {
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN.value()));
     }
 
-
-    // TODO: Solve this Problem (David)
     @Test
     public void publishNewsAsAdmin() {
-        setupDefaultNews();
-
-        /*
-        BDDMockito.
-            given(newsRepository.save(any(News.class))).
-            willReturn(News.builder()
-                .id(TEST_NEWS_ID)
-                .title(TEST_NEWS_TITLE)
-                .text(TEST_NEWS_TEXT)
-                .publishedAt(TEST_NEWS_PUBLISHED_AT)
-                .build());
-        */
-
         Response response = RestAssured
             .given()
             .contentType(ContentType.JSON)
             .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
             .body(DetailedNewsDTO.builder()
-                .title(NEWS_TITLE)
-                .text(NEWS_TEXT)
+                .title(NEWS_TITLE + 3)
+                .text(NEWS_TEXT + 3)
                 .build())
             .when().post(NEWS_ENDPOINT)
             .then().extract().response();
@@ -187,11 +153,10 @@ public class NewsEndpointTest extends BaseIntegrationTest {
         DetailedNewsDTO detailedNewsDTO = response.as(DetailedNewsDTO.class);
         detailedNewsDTO.setPublishedAt(null);
 
-
         Assert.assertThat(detailedNewsDTO, is(DetailedNewsDTO.builder()
             .id(NEWS_ID+2)
-            .title(NEWS_TITLE)
-            .text(NEWS_TEXT)
+            .title(NEWS_TITLE + 3)
+            .text(NEWS_TEXT + 3)
             .publishedAt(null)
             .build()));
 
@@ -202,11 +167,10 @@ public class NewsEndpointTest extends BaseIntegrationTest {
     // TODO: (TEST) to check if publishNews automatically adds news to users notSeen
     // TODO: (TEST) create new User -> new User has all messages as unseen
 
-    /*
+
     @Test
     public void findNotSeenByUserAsUser(){
-        // TODO: (Test) fix this
-        setupDefaultNews();
+        // TODO: Does not work!!
         Response response = RestAssured
             .given()
             .contentType(ContentType.JSON)
@@ -214,19 +178,31 @@ public class NewsEndpointTest extends BaseIntegrationTest {
             .when().get(NEWS_ENDPOINT+"/notSeen/{userId}",1)
             .then().extract().response();
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
-        Assert.assertThat(Arrays.asList(response.as(SimpleNewsDTO[].class)), is(Collections.singletonList(
+
+        SimpleNewsDTO[] simpleNewsDTOS = response.as(SimpleNewsDTO[].class);
+
+        Assert.assertThat(simpleNewsDTOS.length,is(2));
+
+        Assert.assertThat(simpleNewsDTOS[0], is(
             SimpleNewsDTO.builder()
-                .id(TEST_NEWS_ID)
-                .title(TEST_NEWS_TITLE)
-                .summary(TEST_NEWS_TEXT)
-                .publishedAt(TEST_NEWS_PUBLISHED_AT)
-                .build())));
+                .id(NEWS_ID)
+                .title(NEWS_TITLE)
+                .summary(NEWS_TEXT)
+                .publishedAt(NEWS_PUBLISHED_AT)
+                .build()));
+
+        Assert.assertThat(simpleNewsDTOS[1], is(
+            SimpleNewsDTO.builder()
+                .id(NEWS_ID + 1)
+                .title(NEWS_TITLE + 2)
+                .summary(NEWS_TEXT + 2)
+                .publishedAt(NEWS_PUBLISHED_AT)
+                .build()));
     }
-    */
+
 
     @Test
     public void findOldNewsByUserAsUser(){
-        setupDefaultNews();
         Response response = RestAssured
             .given()
             .contentType(ContentType.JSON)
