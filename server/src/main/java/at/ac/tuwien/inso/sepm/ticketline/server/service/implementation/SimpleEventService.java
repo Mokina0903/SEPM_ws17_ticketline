@@ -4,6 +4,7 @@ import at.ac.tuwien.inso.sepm.ticketline.server.entity.Artist;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Hall;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Location;
+import at.ac.tuwien.inso.sepm.ticketline.server.exception.AlreadyExistsException;
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.NotFoundException;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.ArtistRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.EventRepository;
@@ -15,6 +16,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -62,8 +64,6 @@ public class SimpleEventService implements EventService {
 
     @Override
     public Event publishEvent(Event event) {
-        // TODO; David Implent here asdf
-
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
@@ -84,22 +84,29 @@ public class SimpleEventService implements EventService {
             throw new NotFoundException("Hall " + event.getHall().getDescription() + " " + location.getDescription());
         }
 
+        hall.setLocation(location);
         event.setHall(hall);
 
-        List<Artist> newArtistsList = new ArrayList<>();
+
+        // Duplicates
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+        String start = event.getStartOfEvent().format(formatter);
+        String end = event.getEndOfEvent().format(formatter);
+
+        List<Event> duplicates = eventRepository.findDuplicates(event.getTitle(), event.getDescription(), event.getHall().getId(), start, end);
+
+        if (duplicates.size() > 0)
+            throw new AlreadyExistsException("Event: " + event.getTitle());
+
 
         for (Artist artist : event.getArtists()) {
             Artist newArtist = artistRepository.findByArtistFirstNameAndArtistLastName(artist.getArtistFirstName(),artist.getArtistLastName());
             if (newArtist == null) {
-                throw new NotFoundException("Artist " + artist.getArtistFirstName()+" " +artist.getArtistLastName());
+                artistRepository.save(artist);
             }
-            newArtistsList.add(newArtist);
         }
 
-        event.setArtists(newArtistsList);
-
-
-        // TODO: Implement here verification if necessary (two events same Time)
 
         Event rEvent = eventRepository.save(event);
 
