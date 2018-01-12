@@ -15,7 +15,7 @@ public class UserSimpleProperty {
     private final SimpleStringProperty username;
     private final SimpleBooleanProperty blocked;
     private final SimpleIntegerProperty role;
-    private final SimpleIntegerProperty version;
+    private SimpleIntegerProperty version;
 
 
 
@@ -36,7 +36,9 @@ public class UserSimpleProperty {
     }
 
     public void setVersion(int version) {
-        this.version.set(version);
+        System.out.println(version);
+        this.version = new SimpleIntegerProperty(version);
+        System.out.println(version);
     }
 
     public String getUsername() {
