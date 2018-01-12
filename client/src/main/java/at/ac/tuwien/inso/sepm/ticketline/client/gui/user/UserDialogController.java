@@ -71,6 +71,7 @@ public class UserDialogController implements LocalizationObserver {
     private DetailedUserDTO user;
     private Node oldContent;
     private UserSimpleProperty userSimpleProperty;
+    private int role;
 
     @Autowired
     private LocalizationSubject localizationSubject;
@@ -238,7 +239,7 @@ public class UserDialogController implements LocalizationObserver {
 
         boolean validInput = true;
 
-        int role = roleCombo.getSelectionModel().getSelectedIndex() + 1;
+        role = roleCombo.getSelectionModel().getSelectedIndex() + 1;
         if (userSimpleProperty != null) {
             if ((userSimpleProperty.getRole() == 1) || userSimpleProperty.getRole() == 2) {
                 role = userSimpleProperty.getRole();
@@ -262,21 +263,28 @@ public class UserDialogController implements LocalizationObserver {
             return;
         }
 
-        SimpleUserDTO simpleUserDTO = SimpleUserDTO.builder()
-            .userName(usernameTF.getText())
-            .password(passwordPF.getText())
-            .version(userSimpleProperty.getVersion())
-            .role(role)
-            .build();
 
         Task<Void> workerTask = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
                 if (userSimpleProperty == null) {
                     // Add new User
+
+                    SimpleUserDTO simpleUserDTO = SimpleUserDTO.builder()
+                        .userName(usernameTF.getText())
+                        .password(passwordPF.getText())
+                        .role(role)
+                        .build();
                     userService.addNewUser(simpleUserDTO);
                 } else {
                     // Reset Password
+
+                    SimpleUserDTO simpleUserDTO = SimpleUserDTO.builder()
+                        .userName(usernameTF.getText())
+                        .password(passwordPF.getText())
+                        .version(userSimpleProperty.getVersion())
+                        .role(role)
+                        .build();
                     userService.resetUserPassword(simpleUserDTO);
                 }
                 return null;
@@ -298,8 +306,9 @@ public class UserDialogController implements LocalizationObserver {
                 }
                 else if(getException().getMessage().trim().equals("424")){
                     //Version ist nicht aktuell
-                    //Todo schrift rot machen
+
                     versionLb.setVisible(true);
+                    getUser();
                     return;
                 }
 
@@ -314,6 +323,39 @@ public class UserDialogController implements LocalizationObserver {
 
         new Thread(workerTask).start();
     }
+
+    public void getUser() {
+        Task<Void> workerTask = new Task<Void>() {
+            DetailedUserDTO userHelp;
+            @Override
+            protected Void call() throws Exception {
+                userHelp = userService.findByName(usernameTF.getText());
+
+                return null;
+            }
+
+            @Override
+            protected void succeeded() {
+                super.succeeded();
+                userController.loadUsers();
+                userSimpleProperty.setVersion(userHelp.getVersion());
+            }
+
+            @Override
+            protected void failed() {
+                super.failed();
+                mainController.showGeneralError("Failure at loadUser: " + getException().getMessage());
+            }
+        };
+
+        workerTask.runningProperty().addListener((observable, oldValue, running) ->
+            mainController.setProgressbarProgress(
+                running ? ProgressBar.INDETERMINATE_PROGRESS : 0)
+        );
+
+        new Thread(workerTask).start();
+    }
+
 
     @FXML
     public void goBackWithoutSave(ActionEvent actionEvent) {
