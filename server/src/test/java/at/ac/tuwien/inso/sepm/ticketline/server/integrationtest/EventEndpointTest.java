@@ -165,7 +165,23 @@ public class EventEndpointTest extends BaseIntegrationTest {
             .when().post(EVENT_ENDPOINT)
             .then().extract().response();
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.CONFLICT.value()));
+    }
 
+    @Test
+    public void publishEventAsAdminwrongDate() {
+        DetailedEventDTO detailedEventDTO = setUpDetailedEventDTO();
+
+        detailedEventDTO.setStartOfEvent(EVENT_START);
+        detailedEventDTO.setEndOfEvent(EVENT_START);
+
+        Response response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
+            .body(detailedEventDTO)
+            .when().post(EVENT_ENDPOINT)
+            .then().extract().response();
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.NOT_ACCEPTABLE.value()));
     }
 
 }
