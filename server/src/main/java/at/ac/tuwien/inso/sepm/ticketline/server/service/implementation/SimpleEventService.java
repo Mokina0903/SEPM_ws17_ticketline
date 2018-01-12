@@ -100,13 +100,17 @@ public class SimpleEventService implements EventService {
             throw new AlreadyExistsException("Event: " + event.getTitle());
 
 
+        List<Artist> newartistList = new ArrayList<>();
         for (Artist artist : event.getArtists()) {
             Artist newArtist = artistRepository.findByArtistFirstNameAndArtistLastName(artist.getArtistFirstName(),artist.getArtistLastName());
             if (newArtist == null) {
-                artistRepository.save(artist);
+                artist.setId(0L);
+                newArtist = artistRepository.save(artist);
             }
+            newartistList.add(newArtist);
         }
 
+        event.setArtists(newartistList);
 
         Event rEvent = eventRepository.save(event);
 
