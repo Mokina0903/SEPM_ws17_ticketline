@@ -34,6 +34,7 @@ public class EventEndpointTest extends BaseIntegrationTest {
             .id(HALL_ID)
             .description(HALL_DESCRIPTION)
             .location(locationDTO)
+            .seats(new ArrayList<>())
             .build();
 
         List<SimpleArtistDTO> artists = new ArrayList<>();
