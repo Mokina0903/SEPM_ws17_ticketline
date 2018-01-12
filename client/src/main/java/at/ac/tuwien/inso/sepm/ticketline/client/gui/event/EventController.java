@@ -5,20 +5,15 @@ import at.ac.tuwien.inso.sepm.ticketline.client.exception.SearchNoMatchException
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.*;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.EventService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
-import at.ac.tuwien.inso.sepm.ticketline.client.util.JavaFXUtils;
-import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
-import at.ac.tuwien.inso.sepm.ticketline.rest.event.DetailedEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
-import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.hall.DetailedHallDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
-import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
-import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
+import javafx.scene.control.Pagination;
+import javafx.scene.control.Tab;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
@@ -30,17 +25,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
-
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.AbstractSet;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 @Component
 public class EventController extends TabElement implements LocalizationObserver {
@@ -120,7 +104,8 @@ public class EventController extends TabElement implements LocalizationObserver 
         } catch (DataAccessException e) {
             LOGGER.warn("Could not access total number of customers");
         } catch (SearchNoMatchException e) {
-            noMatchFound();        }
+            noMatchFound();
+        }
     }
 
     public void preparePagination(Page<SimpleEventDTO> events) {
@@ -189,11 +174,11 @@ public class EventController extends TabElement implements LocalizationObserver 
         ListView<VBox> lvEventElements = new ListView<>();
         lvEventElements.setStyle("-fx-background-color: transparent;");
 
-        if(!events.getContent().isEmpty()){
-            for(SimpleEventDTO event : events.getContent()) {
+        if (!events.getContent().isEmpty()) {
+            for (SimpleEventDTO event : events.getContent()) {
                 SpringFxmlLoader.Wrapper<EventElementController> wrapper =
                     springFxmlLoader.loadAndWrap("/fxml/event/eventElement.fxml");
-                wrapper.getController().initializeData(eventService,event, bPEventContainer);
+                wrapper.getController().initializeData(eventService, event, bPEventContainer);
                 lvEventElements.getItems().add(wrapper.getController().vbEventElement);
             }
         }
@@ -218,7 +203,7 @@ public class EventController extends TabElement implements LocalizationObserver 
         eventTab = tab;
     }
 
-    public void loadEvents(){
+    public void loadEvents() {
 
         searchFor = EventSearchFor.ALL; //toDO: Add Searchfunctions
 
@@ -271,102 +256,6 @@ public class EventController extends TabElement implements LocalizationObserver 
 
         new Thread(taskNewNews).start();
         */
-    }
-
-
-
-    public void publishEvent(ActionEvent actionEvent) {
-
-        Task<Void> workerTask = new Task<Void>() {
-            @Override
-            protected Void call() throws Exception {
-
-                // TODO: (David) csvFile == Textbox
-                String csvFile = "import.csv";
-                String cvsSplitBy = ";";
-                BufferedReader br = null;
-                try {
-                    String line = "";
-                    br = new BufferedReader(new FileReader(csvFile));
-                    int cnt = 1;
-                    while ((line = br.readLine()) != null) {
-                        // TITLE;ARTIST_FIRST_NAME;ARTIST_LAST_NAME;DESCRIPTION;START_OF_EVENT;END_OF_EVENT;PRICE;HALL_ID
-                        String[] column = line.split(cvsSplitBy);
-
-                        // Column size = 8
-
-                        /*
-                        System.out.println("---- " + cnt++ + " ----");
-                        for (String s : column) {
-                            System.out.print(s+ "\t");
-                        }
-                        System.out.println();
-                        */
-
-
-                        // TODO: (David) Check input, duplicates?, end before begin?
-
-                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-
-                        String title = column[0];
-                        String firstName = column[1];
-                        String lastName = column[2];
-                        String description = column[3];
-                        LocalDateTime start = LocalDateTime.parse(column[4], formatter);
-                        LocalDateTime end = LocalDateTime.parse(column[5], formatter);
-                        Long price = Long.valueOf(column[6]);
-                        DetailedHallDTO hall = DetailedHallDTO.builder().id(Long.valueOf(column[7])).description("desc").build();
-
-                        DetailedEventDTO detailedEventDTO = DetailedEventDTO.builder()
-                            .title(title)
-                            //.artistFirstname(firstName) TODO: (Von Verena an David) those methods are not implemented jet, when they are remove those comments
-                           // .artistLastName(lastName)
-                            .description(description)
-                            .startOfEvent(start)
-                            .endOfEvent(end)
-                            .price(price)
-                            .hall(hall)
-                            .build();
-
-                        detailedEventDTO = eventService.publishEvent(detailedEventDTO);
-                        //System.out.println("---- " + detailedEventDTO.getId() + " ----");
-                    }
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    if (br != null) {
-                        try {
-                            br.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-                return null;
-            }
-
-            @Override
-            protected void succeeded() {
-                super.succeeded();
-                loadEvents();
-            }
-
-            @Override
-            protected void failed() {
-                super.failed();
-                loadEvents();
-                mainController.showGeneralError("Failure at PublishEvents: " + getException().getMessage());
-            }
-        };
-
-        workerTask.runningProperty().addListener((observable, oldValue, running) ->
-            mainController.setProgressbarProgress(
-                running ? ProgressBar.INDETERMINATE_PROGRESS : 0)
-        );
-
-        new Thread(workerTask).start();
     }
 
 }
