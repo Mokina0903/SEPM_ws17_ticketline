@@ -5,7 +5,7 @@ public class TicketRepresentationClass {
     private String eventName;
     private Long reservationNumber;
     private Long ticket_id;
-    private boolean isPaid;
+    private Boolean isPaid;
     private String customerName;
     private String customerSurname;
 

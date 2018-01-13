@@ -17,11 +17,13 @@ import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketRepresentationClass;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
 import org.controlsfx.glyphfont.FontAwesome;
@@ -53,7 +55,7 @@ public class TicketController extends TabElement implements LocalizationObserver
 
     private TableColumn<TicketRepresentationClass, String> tcName;
     private TableColumn<TicketRepresentationClass, String> tcSurname;
-    private TableColumn<TicketRepresentationClass, Boolean> tcIsPaid;
+    private TableColumn<TicketRepresentationClass, String> tcIsPaid;
     private TableColumn<TicketRepresentationClass, Long> tcNumber;
 
 
@@ -143,7 +145,18 @@ public class TicketController extends TabElement implements LocalizationObserver
         tcName.setCellValueFactory(new PropertyValueFactory<>("customerName"));
         tcSurname.setCellValueFactory(new PropertyValueFactory<>("customerSurname"));
         tcNumber.setCellValueFactory(new PropertyValueFactory<>("reservationNumber"));
-        tcIsPaid.setCellValueFactory(new PropertyValueFactory<>("isPaid"));
+
+        tcIsPaid.setCellValueFactory((cellData -> {
+                boolean isPaid = cellData.getValue().isPaid();
+                String isPaidAsString;
+                if (isPaid) {
+                    isPaidAsString = "YES";
+                } else {
+                    isPaidAsString = "NO";
+                }
+
+                return new ReadOnlyStringWrapper(isPaidAsString);
+            }));
 
         tvTickets.getColumns().addAll(tcNumber, tcName, tcSurname, tcIsPaid);
         tvTickets.getItems().addAll(getRepresentationList(tickets.getContent()));
