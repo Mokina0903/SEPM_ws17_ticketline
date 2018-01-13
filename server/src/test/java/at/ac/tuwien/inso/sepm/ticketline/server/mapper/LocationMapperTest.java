@@ -52,7 +52,7 @@ public class LocationMapperTest {
 
     @Test
     public void shouldMapLocationToSimpleLocationDTO() {
-        Location location = new Location.LocationBuilder()
+        Location location = Location.builder()
             .city(CITY)
             .country(COUNTRY)
             .description(DESCRIPTION)
@@ -99,7 +99,7 @@ public class LocationMapperTest {
 
     @Test
     public void shouldMapLocationToDetailedLocationDTO() {
-        Location location = new Location.LocationBuilder()
+        Location location = Location.builder()
             .city(CITY)
             .country(COUNTRY)
             .description(DESCRIPTION)
