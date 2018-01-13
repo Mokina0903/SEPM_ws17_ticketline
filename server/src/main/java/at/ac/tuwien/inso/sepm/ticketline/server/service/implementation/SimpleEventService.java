@@ -79,7 +79,6 @@ public class SimpleEventService implements EventService {
 
         // Find Location
         Location location = locationRepository.findOneByDescription(event.getHall().getLocation().getDescription());
-
         if (location == null) {
             throw new NotFoundException("Location " + event.getHall().getLocation().getDescription());
         }
