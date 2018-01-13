@@ -91,7 +91,9 @@ public class HallMapperTest {
 
     }
 
-    /*
+/*
+TODo Problem mit Location einmal wird Location erwartet, aber LocationDTO benötigt und umgekehrt
+
     @Test
     public void shouldMapHallToDetailedHallDTO() {
         Hall hall = Hall.builder()

@@ -60,7 +60,7 @@ public class ArtistMapperTest {
     }
 
     @Test
-    public void shouldMapSeatSTOToSeat() {
+    public void shouldMapArtistDTOToSeat() {
         SimpleArtistDTO artistDTO = SimpleArtistDTO.builder()
             .artistFirstname(FIRST)
             .artistLastName(LAST)
