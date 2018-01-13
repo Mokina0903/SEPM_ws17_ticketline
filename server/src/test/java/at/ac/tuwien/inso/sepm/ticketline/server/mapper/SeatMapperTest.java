@@ -19,7 +19,7 @@ import static org.assertj.core.api.Java6Assertions.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class SeatMapperTest {
-    // TODO: Implement here Tests
+
 
     @Configuration
     @ComponentScan(basePackages = "at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper")
@@ -37,7 +37,6 @@ public class SeatMapperTest {
     private static final char SECTOR = 'A';
     private static final Long ID = 1L;
 
-    private static final boolean BLOCKED = false;
 
 
 
