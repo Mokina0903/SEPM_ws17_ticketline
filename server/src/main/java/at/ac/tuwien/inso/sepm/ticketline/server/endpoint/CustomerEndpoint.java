@@ -5,6 +5,7 @@ import at.ac.tuwien.inso.sepm.ticketline.server.entity.Customer;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.customer.CustomerMapper;
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.CustomerNotValidException;
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.InvalidIdException;
+import at.ac.tuwien.inso.sepm.ticketline.server.exception.OldVersionException;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.CustomerService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -82,7 +83,18 @@ public class CustomerEndpoint {
     @ApiOperation(value = "Update and save the given customer")
     public void updateCustomer(@RequestBody CustomerDTO customerDTO){
         try {
-           customerService.updateCustomer(customerMapper.customerDTOToCustomer(customerDTO));
+            //customerDTO.
+
+            Customer customer = customerService.findByKnr(customerDTO.getKnr());
+            if(!customer.correctVersion(customerDTO.getVersion())) {
+
+                if (!customer.equals(customerMapper.customerDTOToCustomer(customerDTO))) {
+                    throw new OldVersionException();
+                }
+            }
+            customerDTO.setVersion(customerDTO.getVersion() + 1);
+            customerService.updateCustomer(customerMapper.customerDTOToCustomer(customerDTO));
+
         } catch (CustomerNotValidException | InvalidIdException e) {
           // e.printStackTrace();
         }
