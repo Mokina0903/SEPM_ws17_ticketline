@@ -2,6 +2,7 @@ package at.ac.tuwien.inso.sepm.ticketline.client.service;
 
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.SearchNoMatchException;
+import at.ac.tuwien.inso.sepm.ticketline.rest.ErrorDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.DetailedEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
 import org.springframework.data.domain.Page;
@@ -37,6 +38,13 @@ public interface EventService {
      */
     Page<SimpleEventDTO> findAllUpcoming(Pageable request) throws DataAccessException,SearchNoMatchException;
 
-    // TODO: (David) Javadoc
-    DetailedEventDTO publishEvent(DetailedEventDTO detailedEventDTO) throws DataAccessException;
+    /**
+     * publishes a new Event
+     *
+     * @param detailedEventDTO to be published
+     * @return DetailedEventDTO of published Event
+     * @throws DataAccessException in case something went wrong
+     * @throws ErrorDTO in case something went wrong (http Status)
+     */
+    DetailedEventDTO publishEvent(DetailedEventDTO detailedEventDTO) throws DataAccessException, ErrorDTO;
 }

@@ -2,6 +2,7 @@ package at.ac.tuwien.inso.sepm.ticketline.client.rest.implementation;
 
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.rest.EventRestClient;
+import at.ac.tuwien.inso.sepm.ticketline.rest.ErrorDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.DetailedEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
 import org.slf4j.Logger;
@@ -94,7 +95,7 @@ public class SimpleEventRestClient implements EventRestClient{
     }
 
     @Override
-    public DetailedEventDTO publishEvent(DetailedEventDTO detailedEventDTO) throws DataAccessException {
+    public DetailedEventDTO publishEvent(DetailedEventDTO detailedEventDTO) throws DataAccessException, ErrorDTO {
         try {
             LOGGER.debug("Publish Event", restClient.getServiceURI(EVENT_URL));
             HttpEntity<DetailedEventDTO> httpEntity = new HttpEntity<>(detailedEventDTO);
@@ -105,11 +106,13 @@ public class SimpleEventRestClient implements EventRestClient{
                 httpEntity,
                 new ParameterizedTypeReference<DetailedEventDTO>() {}
                 );
+
             LOGGER.debug("Result status was {} with content {}", event.getStatusCode(), event.getBody());
             return event.getBody();
         } catch (HttpStatusCodeException e) {
-            throw new DataAccessException("Failed retrieve Event with status code " + e.getStatusCode().toString());
-        } catch (RestClientException e) {
+            throw ErrorDTO.ErrorDTOBuilder(e.getResponseBodyAsString());
+            //throw new DataAccessException("Failed retrieve Event with status code " + e.getStatusCode().toString());
+        } catch (Exception e) {
             throw new DataAccessException(e.getMessage(), e);
         }
     }
