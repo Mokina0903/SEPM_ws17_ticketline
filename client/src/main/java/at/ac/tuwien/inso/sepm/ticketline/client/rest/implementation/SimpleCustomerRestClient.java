@@ -1,6 +1,7 @@
 package at.ac.tuwien.inso.sepm.ticketline.client.rest.implementation;
 
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
+import at.ac.tuwien.inso.sepm.ticketline.client.exception.OldVersionException;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.SearchNoMatchException;
 import at.ac.tuwien.inso.sepm.ticketline.client.rest.CustomerRestClient;
 import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
@@ -113,7 +114,7 @@ public class SimpleCustomerRestClient implements CustomerRestClient{
     }
 
     @Override
-    public void updateCustomer(CustomerDTO customer) throws DataAccessException {
+    public void updateCustomer(CustomerDTO customer) throws DataAccessException, OldVersionException {
         try {
             LOGGER.debug("Update customer");
             HttpEntity<CustomerDTO> entity = new HttpEntity<>(customer);
@@ -123,8 +124,13 @@ public class SimpleCustomerRestClient implements CustomerRestClient{
                 entity,
                 Void.class);
         } catch (HttpStatusCodeException e) {
-            throw new DataAccessException("Failed retrieve customer with status code " + e.getStatusCode().toString());
-        } catch (RestClientException e) {
+            if (e.getStatusCode().value() == 424) {
+                throw new OldVersionException();
+            }
+            else {
+                throw new DataAccessException("Failed retrieve customer with status code " + e.getStatusCode().toString());
+            }
+            } catch (RestClientException e) {
             throw new DataAccessException(e.getMessage(), e);
         }
     }

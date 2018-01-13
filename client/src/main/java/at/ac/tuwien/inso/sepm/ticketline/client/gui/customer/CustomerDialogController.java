@@ -1,6 +1,8 @@
 package at.ac.tuwien.inso.sepm.ticketline.client.gui.customer;
 
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
+import at.ac.tuwien.inso.sepm.ticketline.client.exception.OldVersionException;
+import at.ac.tuwien.inso.sepm.ticketline.client.exception.SearchNoMatchException;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationObserver;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationSubject;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.MainController;
@@ -26,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.management.RuntimeErrorException;
 import java.time.LocalDate;
 
 
@@ -81,6 +84,7 @@ public class CustomerDialogController implements LocalizationObserver {
     private final SpringFxmlLoader springFxmlLoader;
     private final CustomerController customerController;
     private final CustomerService customerService;
+    private Integer version = 1;
 
     private boolean isUpdate;
 
@@ -224,6 +228,7 @@ public class CustomerDialogController implements LocalizationObserver {
         this.oldContent = oldContent;
 
         if (customer != null) {
+            version = customer.getVersion();
             if (customer.getKnr() != null) {
                 lbCustomerNumber.setVisible(true);
                 lbCustomerNumberText.setVisible(true);
@@ -293,6 +298,7 @@ public class CustomerDialogController implements LocalizationObserver {
         builder.name(firstname);
         builder.surname(surname);
         builder.mail(mail);
+        builder.version(version);
         if(knr != null){
             builder.knr(knr);
         }
@@ -319,13 +325,30 @@ public class CustomerDialogController implements LocalizationObserver {
                 customerService.updateCustomer(customer);
                 isUpdate = false;
             }
+            customerController.getCurrentTab().setContent(oldContent);
 
         } catch (DataAccessException e) {
             LOGGER.warn("Customer could not have been saved because of technical issues");
             mainController.showGeneralError("Not able to save Customer!");
            // e.printStackTrace();
         }
-        customerController.getCurrentTab().setContent(oldContent);
+        catch(OldVersionException e){
+            LOGGER.info("Customer has been changed since you started editing.");
+            mainController.showGeneralError("Customer has been changed. Still save?");
+            try {
+                CustomerDTO customerHelp = customerService.findByNumber(customer.getKnr());
+                version = customerHelp.getVersion();
+            } catch (DataAccessException e1) {
+                LOGGER.warn("Customer could not have been saved because of technical issues");
+                mainController.showGeneralError("Not able to save Customer!");
+                customerController.getCurrentTab().setContent(oldContent);
+            } catch (SearchNoMatchException e1) {
+                LOGGER.error("Customer is not in the Database");
+                throw new Error();
+            }
+        }
+
+
     }
 
     @Override
