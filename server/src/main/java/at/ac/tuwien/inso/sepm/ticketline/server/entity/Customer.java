@@ -12,6 +12,7 @@ import java.util.Objects;
 @Table(name="customer")
 public class Customer {
 
+    public static final Integer VERSION = 1;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq_customer_id")
@@ -38,6 +39,9 @@ public class Customer {
 
     @Column(nullable = false, name = "birthdate")
     private LocalDate birthDate;
+
+    @Column(nullable = false)
+    private Integer version = VERSION;
 
     public String getSurname() {
         return surname;
@@ -86,6 +90,14 @@ public class Customer {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public Integer getVersion(){return version;}
+
+    public void setVersion(Integer version){ this.version = version;}
+
+    public void newVersion() {this.version = version + 1;}
+
+    public Boolean correctVersion(Integer checkVersion){return (checkVersion == version);}
 
 
     public static CustomerBuilder builder() {
@@ -181,7 +193,8 @@ public class Customer {
             customer.setSurname(surname);
             customer.setKnr(knr);
             customer.setEmail(mail);
-           customer.setBirthDate(birthDate);
+            customer.setBirthDate(birthDate);
+            customer.setVersion(VERSION);
             return customer;
         }
     }

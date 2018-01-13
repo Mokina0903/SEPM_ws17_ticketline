@@ -78,7 +78,7 @@ public class CustomerServiceImpl implements CustomerService {
             throw new CustomerNotValidException("Customer was not valid!");
         }
 
-        customerRepository.setCustomerInfoByKnr(customer.getName(), customer.getSurname(), customer.getEmail(), Timestamp.valueOf(customer.getBirthDate().atStartOfDay()), customer.getKnr());
+        customerRepository.setCustomerInfoByKnr(customer.getName(), customer.getSurname(), customer.getEmail(), Timestamp.valueOf(customer.getBirthDate().atStartOfDay()), customer.getKnr(),customer.getVersion());
     }
 
     @Override
