@@ -113,6 +113,7 @@ public class CustomerEndpointTest extends BaseIntegrationTest{
                 .surname(TEST_CUSTOMER_SURNAME)
                 .mail(TEST_CUSTOMER_MAIL)
                 .birthDate(TEST_CUSTOMER_BIRTHDATE)
+                .version(1)
                 .build()));
 
     }
