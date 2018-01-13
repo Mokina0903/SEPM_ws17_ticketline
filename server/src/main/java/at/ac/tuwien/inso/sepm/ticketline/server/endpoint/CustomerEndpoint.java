@@ -9,15 +9,13 @@ import at.ac.tuwien.inso.sepm.ticketline.server.exception.OldVersionException;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.CustomerService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import net.bytebuddy.matcher.NullMatcher;
+
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.*;
 import org.springframework.web.bind.annotation.*;
 
-import javax.crypto.Cipher;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
+
 
 @RestController
 @RequestMapping(value = "/customer")
@@ -87,8 +85,10 @@ public class CustomerEndpoint {
 
             Customer customer = customerService.findByKnr(customerDTO.getKnr());
             if(!customer.correctVersion(customerDTO.getVersion())) {
-
-                if (!customer.equals(customerMapper.customerDTOToCustomer(customerDTO))) {
+                System.out.println(customer);
+                System.out.println("This is new");
+                System.out.println(customerMapper.customerDTOToCustomer(customerDTO));
+                if (!customer.equalsUpdate(customerMapper.customerDTOToCustomer(customerDTO))) {
                     throw new OldVersionException();
                 }
             }

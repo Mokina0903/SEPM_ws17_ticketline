@@ -123,6 +123,19 @@ public class Customer {
         return birthDate != null ? birthDate.equals(customer.birthDate) : customer.birthDate == null;
     }
 
+    public boolean equalsUpdate(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Customer customer = (Customer) o;
+
+        if (knr != null ? !knr.equals(customer.knr) : customer.knr != null) return false;
+        if (name != null ? !name.equals(customer.name) : customer.name != null) return false;
+        if (surname != null ? !surname.equals(customer.surname) : customer.surname != null) return false;
+        if (email != null ? !email.equals(customer.email) : customer.email != null) return false;
+        return birthDate != null ? birthDate.equals(customer.birthDate) : customer.birthDate == null;
+    }
+
     @Override
     public int hashCode() {
         int result = id != null ? id.hashCode() : 0;
