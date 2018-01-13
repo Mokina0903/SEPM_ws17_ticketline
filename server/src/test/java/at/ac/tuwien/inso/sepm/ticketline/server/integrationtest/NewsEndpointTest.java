@@ -10,7 +10,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.annotation.Rollback;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -19,6 +18,7 @@ import static org.hamcrest.core.Is.is;
 
 public class NewsEndpointTest extends BaseIntegrationTest {
 
+    private static final String USER_ENDPOINT = "/user";
     private static final String NEWS_ENDPOINT = "/news";
     private static final String SPECIFIC_NEWS_PATH = "/{newsId}";
 
@@ -163,10 +163,56 @@ public class NewsEndpointTest extends BaseIntegrationTest {
 
     }
 
-    // TODO: (TEST) for findNotSeenByUser, findOldNewsByUser,
-    // TODO: (TEST) to check if publishNews automatically adds news to users notSeen
-    // TODO: (TEST) create new User -> new User has all messages as unseen
+    @Test
+    public void findNotSeenbyUserAsUserUpdate(){
+        Response response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .header(HttpHeaders.AUTHORIZATION, validUserTokenWithPrefix)
+            .when().get(NEWS_ENDPOINT+"/notSeen/{userId}",1)
+            .then().extract().response();
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
 
+        SimpleNewsDTO[] simpleNewsDTOS = response.as(SimpleNewsDTO[].class);
+
+        Assert.assertThat(simpleNewsDTOS.length,is(2));
+
+        response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
+            .body("")
+            .when().post(USER_ENDPOINT + "/{userId}/{newsId}",1,2)
+            .then().extract().response();
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
+
+
+        response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
+            .body(DetailedNewsDTO.builder()
+                .title(NEWS_TITLE + 3)
+                .text(NEWS_TEXT + 3)
+                .build())
+            .when().post(NEWS_ENDPOINT)
+            .then().extract().response();
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
+
+        response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .header(HttpHeaders.AUTHORIZATION, validUserTokenWithPrefix)
+            .when().get(NEWS_ENDPOINT+"/old/{userId}",1)
+            .then().extract().response();
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
+
+        simpleNewsDTOS = response.as(SimpleNewsDTO[].class);
+
+        Assert.assertThat(simpleNewsDTOS.length,is(1));
+
+
+    }
 
     @Test
     public void findNotSeenByUserAsUser(){
