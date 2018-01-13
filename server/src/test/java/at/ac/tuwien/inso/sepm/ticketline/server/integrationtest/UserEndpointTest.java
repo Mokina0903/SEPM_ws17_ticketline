@@ -187,7 +187,7 @@ public class UserEndpointTest extends BaseIntegrationTest {
 
 
     @Test
-    public void ResetUserAsAdmin() {
+    public void resetUserAsAdmin() {
         super.setupDefaultUsers();
         Response response = RestAssured
             .given()
@@ -213,7 +213,7 @@ public class UserEndpointTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void ResetUserAsAdminWithOldVersion() {
+    public void resetUserAsAdminWithOldVersion() {
         super.setupDefaultUsers();
         userRepository.findOneByUserName(USER_USERNAME).setVersion(5);
         Response response = RestAssured
@@ -231,7 +231,7 @@ public class UserEndpointTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void ResetUserAsAdminAndCheckVersion() {
+    public void resetUserAsAdminAndCheckVersion() {
         super.setupDefaultUsers();
         Response response = RestAssured
             .given()
@@ -252,7 +252,7 @@ public class UserEndpointTest extends BaseIntegrationTest {
 
 
     @Test
-    public void BlockAdminAsUser() {
+    public void blockAdminAsUser() {
         super.setupDefaultUsers();
         Response response = RestAssured
             .given()
@@ -268,7 +268,7 @@ public class UserEndpointTest extends BaseIntegrationTest {
 
 
     @Test
-    public void BlockUserAsAdmin() {
+    public void blockUserAsAdmin() {
         super.setupDefaultUsers();
         Response response = RestAssured
             .given()
@@ -291,7 +291,7 @@ public class UserEndpointTest extends BaseIntegrationTest {
 
 
     @Test
-    public void AccessUserWithSQLInjection(){
+    public void accessUserWithSQLInjection(){
         String path = "/user/h' or 1=1/isBlocked";
         Response response = RestAssured
             .given()
@@ -304,7 +304,7 @@ public class UserEndpointTest extends BaseIntegrationTest {
 
 
     @Test
-    public void BlockAdminAsSameAdmin() {
+    public void blockAdminAsSameAdmin() {
         super.setupDefaultUsers();
         Response response = RestAssured
             .given()
@@ -318,7 +318,7 @@ public class UserEndpointTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void BlockAdminAsOtherAdmin() {
+    public void blockAdminAsOtherAdmin() {
         super.setupDefaultUsers();
         Response response = RestAssured
             .given()
@@ -341,7 +341,7 @@ public class UserEndpointTest extends BaseIntegrationTest {
 
 
     @Test
-    public void BlockAllAsAdmin() {
+    public void blockAllAsAdmin() {
         super.setupDefaultUsers();
         Response response = RestAssured
             .given()
@@ -354,7 +354,7 @@ public class UserEndpointTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void UnblockUserAsAdmin() {
+    public void unblockUserAsAdmin() {
         super.setupDefaultUsers();
         userRepository.findOneByUserName(USER_USERNAME).setBlocked(true);
         Response response = RestAssured
@@ -377,7 +377,7 @@ public class UserEndpointTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void UnblockUnblockedUserAsAdmin() {
+    public void unblockUnblockedUserAsAdmin() {
         super.setupDefaultUsers();
         Response response = RestAssured
             .given()
