@@ -17,6 +17,11 @@ public interface LocationRepository extends JpaRepository<Location,Long> {
      */
     Optional<Location> findOneById( Long id);
 
-    // TODO: (David) JavaDoc
+    /**
+     * Find a single Location enery by Description
+     *
+     * @param description
+     * @return containing the Location
+     */
     Location findOneByDescription( String description);
 }
