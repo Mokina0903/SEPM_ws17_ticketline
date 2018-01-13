@@ -4,6 +4,7 @@ import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.*;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.EventService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
+import at.ac.tuwien.inso.sepm.ticketline.rest.ErrorDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.artist.SimpleArtistDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.DetailedEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.hall.DetailedHallDTO;
@@ -13,11 +14,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import org.controlsfx.glyphfont.FontAwesome;
-import org.controlsfx.glyphfont.Glyph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -115,6 +114,7 @@ public class EventCSVImportController implements LocalizationObserver {
     }
 
     public void importCSVFile(ActionEvent actionEvent) {
+        mainController.showGeneralError("");
         if (choosenFile == null) {
             LOGGER.warn("Tried to upload empty csv.");
             mainController.showGeneralError("File was empty. Choose a file before upload.");
@@ -127,7 +127,7 @@ public class EventCSVImportController implements LocalizationObserver {
         btnImport.setDisable(true);
         Task<Void> workerTask = new Task<Void>() {
             @Override
-            protected Void call() throws Exception {
+            protected Void call() {
                 String csvFile = choosenFile.getPath();
                 String cvsSplitBy = ";";
                 BufferedReader br = null;
@@ -139,6 +139,18 @@ public class EventCSVImportController implements LocalizationObserver {
                         //0     1               2       3       4       5       6               7           8       9       10
                         //Titel	Beschreibung	Start	Ende	Price	Sektor	LocationName	HallName	Artist1	Artist2	...
                         String[] column = line.split(cvsSplitBy);
+
+                        if (column.length < 8) {
+                            TAlogOutput.setText(TAlogOutput.getText() + "Error: Column not complete < 8" + "\n");
+                            continue;
+                        }
+
+                        for (int i = 0; i < column.length; i++) {
+                            if (column[i].isEmpty()) {
+                                TAlogOutput.setText(TAlogOutput.getText() + "Error: Column not complete empty (" + i + ")\n");
+                                continue;
+                            }
+                        }
 
                         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
                         String title = column[0];
@@ -189,23 +201,23 @@ public class EventCSVImportController implements LocalizationObserver {
                         try {
                             detailedEventDTO = eventService.publishEvent(detailedEventDTO);
                             TAlogOutput.setText(TAlogOutput.getText() + "OK: " + detailedEventDTO.getTitle() +"\n");
-                            System.out.println("---- " + detailedEventDTO.getId() + " ----");
                         } catch (DataAccessException e) {
-                            TAlogOutput.setText(TAlogOutput.getText() + "Error: " + title + e.getMessage() + "\n");
-                            //System.out.println(e.getClass() + " -> " + e.getMessage());
+                            mainController.showGeneralError(e.toString());
+                        } catch (ErrorDTO errorDTO) {
+                            TAlogOutput.setText(TAlogOutput.getText() + "Error: " + title + "->" + errorDTO.getStatus() + ": " + errorDTO.getMessage() + "\n");
                         }
                     }
                 // TODO: (David) Exception handling
                 } catch (FileNotFoundException e) {
-                    e.printStackTrace();
+                    mainController.showGeneralError("File not found " + choosenFile.getPath());
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    mainController.showGeneralError("Error reading file " + choosenFile.getPath());
                 } finally {
                     if (br != null) {
                         try {
                             br.close();
                         } catch (IOException e) {
-                            e.printStackTrace();
+                            mainController.showGeneralError("Error reading file " + choosenFile.getPath());
                         }
                     }
                 }

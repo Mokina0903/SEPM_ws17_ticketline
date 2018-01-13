@@ -5,6 +5,8 @@ import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Hall;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Location;
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.AlreadyExistsException;
+import at.ac.tuwien.inso.sepm.ticketline.server.exception.EmptyFieldException;
+import at.ac.tuwien.inso.sepm.ticketline.server.exception.IllegalValueException;
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.NotFoundException;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.ArtistRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.EventRepository;
@@ -19,7 +21,6 @@ import org.springframework.data.domain.Pageable;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class SimpleEventService implements EventService {
@@ -69,6 +70,12 @@ public class SimpleEventService implements EventService {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+        if (event.getDescription().isEmpty() || event.getTitle().isEmpty())
+            throw new EmptyFieldException("");
+
+        if (event.getPrice() <= 0)
+            throw new IllegalValueException("Price <= 0");
 
         // Find Location
         Location location = locationRepository.findOneByDescription(event.getHall().getLocation().getDescription());
