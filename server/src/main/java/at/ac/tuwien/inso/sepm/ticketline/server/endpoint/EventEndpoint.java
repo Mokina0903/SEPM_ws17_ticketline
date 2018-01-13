@@ -4,6 +4,7 @@ import at.ac.tuwien.inso.sepm.ticketline.rest.event.DetailedEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.event.EventMapper;
+import at.ac.tuwien.inso.sepm.ticketline.server.exception.EmptyFieldException;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.EventService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -60,7 +61,13 @@ public class EventEndpoint {
     @PreAuthorize("hasRole('ADMIN')")
     @ApiOperation(value = "Publish a new Event entry")
     public DetailedEventDTO publishEvent(@RequestBody DetailedEventDTO detailedEventDTO) {
-        Event event = eventMapper.detailedEventDTOToEvent(detailedEventDTO);
+        Event event = null;
+        try {
+            event = eventMapper.detailedEventDTOToEvent(detailedEventDTO);
+        } catch (NullPointerException e) {
+            throw new EmptyFieldException(e.getMessage());
+        }
+
         event = eventService.publishEvent(event);
         return  eventMapper.eventToDetailedEventDTO(event);
     }
