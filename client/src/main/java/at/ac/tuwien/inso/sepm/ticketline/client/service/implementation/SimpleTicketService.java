@@ -9,6 +9,8 @@ import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.seat.SeatDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,6 +29,11 @@ public class SimpleTicketService implements TicketService {
     @Override
     public TicketDTO findOneById( Long id ) throws DataAccessException {
         return ticketRestClient.findOneById(id);
+    }
+
+    @Override
+    public Page<TicketDTO> findAll(Pageable request) throws DataAccessException {
+        return ticketRestClient.findAll(request);
     }
 
     @Override

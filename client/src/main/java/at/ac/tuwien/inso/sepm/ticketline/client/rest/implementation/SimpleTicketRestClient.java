@@ -10,6 +10,8 @@ import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -73,7 +75,12 @@ public class SimpleTicketRestClient implements TicketRestClient {
     }
 
     @Override
-    public List<TicketDTO> findByCustomerId( Long customerId ) throws DataAccessException {
+    public List<TicketDTO> findByCustomerId(Long customerId) throws DataAccessException {
+        return null;
+    }
+
+
+    public List<TicketDTO> findByTicketId( Long customerId ) throws DataAccessException {
         try {
             LOGGER.debug("Retrieving ticket by customerId from {}", restClient.getServiceURI(TICKET_URL));
             ResponseEntity<List<TicketDTO>> tickets =
@@ -90,6 +97,8 @@ public class SimpleTicketRestClient implements TicketRestClient {
         } catch (RestClientException e) {
             throw new DataAccessException(e.getMessage(), e);
         }    }
+
+
 
     @Override
     public Boolean isBooked( Long eventId, Long seatId ) throws DataAccessException {
@@ -171,6 +180,26 @@ public class SimpleTicketRestClient implements TicketRestClient {
             return seats.getBody();
         } catch (HttpStatusCodeException e) {
             throw new DataAccessException("Failed retrieve seats with status code " + e.getStatusCode().toString());
+        } catch (RestClientException e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public Page<TicketDTO> findAll(Pageable request) throws DataAccessException {
+        try {
+            LOGGER.debug("Retrieving all tickets from {}", restClient.getServiceURI(TICKET_URL+"/"+request.getPageNumber()+"/"+request.getPageSize() ));
+            ResponseEntity<RestResponsePage<TicketDTO>> customer =
+                restClient.exchange(
+                    restClient.getServiceURI(TICKET_URL+"/"+request.getPageNumber()+"/"+request.getPageSize()),
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<RestResponsePage<TicketDTO>>() {
+                    });
+            LOGGER.debug("Result status was {} with content {}", customer.getStatusCode(), customer.getBody());
+            return customer.getBody();
+        } catch (HttpStatusCodeException e) {
+            throw new DataAccessException("Failed retrieve tickets with status code " + e.getStatusCode().toString());
         } catch (RestClientException e) {
             throw new DataAccessException(e.getMessage(), e);
         }

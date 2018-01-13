@@ -2,6 +2,7 @@ package at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket;
 
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.SearchNoMatchException;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationObserver;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.MainController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.TabElement;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.TabHeaderController;
@@ -29,12 +30,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import sun.security.krb5.internal.Ticket;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class TicketController extends TabElement{
+public class TicketController extends TabElement implements LocalizationObserver {
 
 
     private static final Logger LOGGER = LoggerFactory.getLogger(at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket.TicketController.class);
@@ -60,9 +60,11 @@ public class TicketController extends TabElement{
 
     private final MainController mainController;
     private final SpringFxmlLoader springFxmlLoader;
-    private Page<TicketDTO> ticketPage;
+    private final TicketService ticketService;
+    private  Page<TicketDTO> ticketPage;
     private TableView<TicketDTO>currentTableview;
     private TicketSearchFor searchFor = TicketSearchFor.ALL;
+
 
 
 
@@ -75,31 +77,32 @@ public class TicketController extends TabElement{
     }
 
 
-    public TicketController(MainController mainController, SpringFxmlLoader springFxmlLoader) {
+    public TicketController(MainController mainController, SpringFxmlLoader springFxmlLoader, TicketService ticketService) {
         this.mainController = mainController;
         this.springFxmlLoader = springFxmlLoader;
+        this.ticketService = ticketService;
     }
 
     @FXML
-    private void initialize() {
+     void initialize() {
         tabHeaderController.setIcon(FontAwesome.Glyph.TICKET);
         tabHeaderController.setTitle("Tickets");
-        initializePagination();
+
     }
 
-   private void initializePagination(){
-
-        Pageable request = new PageRequest(0, 15);
-        //ticketPage = TicketService.findAll(request); todo: check if findAll does work
-        System.out.println("*************************** " + ticketPage.getTotalElements());
-        int amount = ticketPage.getTotalPages();
-        pagination.setPageCount(amount);
-        preparePagination();
+    public void initializePagination(){
+       try {
+           Pageable request = new PageRequest(0, 15);
+           ticketPage = ticketService.findAll(request);
+           int amount = ticketPage.getTotalPages();
+           pagination.setPageCount(amount);
+           preparePagination();
+       } catch (DataAccessException e) {
+           e.printStackTrace();
+       }
     }
 
     private void preparePagination() {
-
-        LOGGER.info("search matches");
 
         lblNoMatch.setVisible(false);
         pagination.setCurrentPageIndex(0);
@@ -214,5 +217,16 @@ public class TicketController extends TabElement{
     @Override
     protected void setTab(Tab tab) {
         ticketTab = tab;
+    }
+
+    @Override
+    public void update() {
+
+        tcName.setText(BundleManager.getBundle().getString("customer.fname"));
+        tcSurname.setText(BundleManager.getBundle().getString("customer.lname"));
+        tcIsPaid.setText(BundleManager.getBundle().getString("ticket.tcIsPaid"));
+        tcNumber.setText(BundleManager.getBundle().getString("ticket.ticketNumber"));
+        lblNoMatch.setText(BundleManager.getBundle().getString("customer.noMatches"));
+
     }
 }
