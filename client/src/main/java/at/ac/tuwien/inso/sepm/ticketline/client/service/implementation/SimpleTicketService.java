@@ -65,4 +65,9 @@ public class SimpleTicketService implements TicketService {
     public List<SeatDTO> findFreeSeatsForEventInSector( Long event_id, char sector ) throws DataAccessException {
         return ticketRestClient.findFreeSeatsForEventInSector(event_id,sector);
     }
+
+    @Override
+    public Page<TicketDTO> findByCustomerName(String name, Pageable request) throws DataAccessException {
+        return ticketRestClient.findByCustomerName(name,request);
+    }
 }

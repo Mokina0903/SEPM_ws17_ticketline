@@ -79,4 +79,12 @@ public interface TicketService {
      * @return list of free seats
      */
     List<SeatDTO> findFreeSeatsForEventInSector( Long event_id, char sector) throws DataAccessException;
+
+    /**
+     *
+     * @param name input of the texfield, which should refer to some customer name
+     * @param request describes the page issues (size, index)
+     * @return list of tickets from a person whos name is described by 'name'
+     */
+    Page<TicketDTO> findByCustomerName(String name, Pageable request) throws DataAccessException;
 }
