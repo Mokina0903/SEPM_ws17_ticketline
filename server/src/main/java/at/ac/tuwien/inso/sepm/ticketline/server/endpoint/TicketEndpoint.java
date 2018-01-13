@@ -1,7 +1,9 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.endpoint;
 
+import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.seat.SeatDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketDTO;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.Customer;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Ticket;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.eventLocation.seat.SeatMapper;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.ticket.TicketMapper;
@@ -11,6 +13,7 @@ import at.ac.tuwien.inso.sepm.ticketline.server.service.LocationService;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.TicketService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.data.domain.*;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -90,5 +93,14 @@ public class TicketEndpoint {
         return seatMapper.seatToSeatDTO(locationService.findFreeSeatsForEventInSector(eventId,sector));
     }
     //todo: getFreeSeatsInSector(Event,Char), getTotalCountOfSeatsInSector(Hall,Char)
+
+    @RequestMapping(value= "/{pageIndex}/{ticketsPerPage}", method = RequestMethod.GET)
+    @ApiOperation(value = "Get list of ticket entries")
+    public Page<TicketDTO> findAll(@PathVariable("pageIndex")int pageIndex, @PathVariable("ticketsPerPage")int ticketsPerPage){
+        Pageable request = new PageRequest(pageIndex, ticketsPerPage, Sort.Direction.ASC, "id");
+        Page<Ticket> customerPage = ticketService.findAll(request);
+        List<TicketDTO> dtos = ticketMapper.ticketToTicketDTO(customerPage.getContent());
+        return new PageImpl<>(dtos, request, customerPage.getTotalElements());
+    }
 
 }

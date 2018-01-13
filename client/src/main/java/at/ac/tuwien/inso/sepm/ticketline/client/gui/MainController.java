@@ -254,6 +254,7 @@ public class MainController implements LocalizationObserver {
             } else if (newValue.equals(ticketTab)) {
                 if (ticketController == null) {
                     ticketController = (TicketController) setTabContent(ticketController, "ticket/ticketComponent.fxml", ticketTab);
+                    ticketController.initializePagination();
                 }
             } else if (newValue.equals(customerTab)) {
                 if (customerController == null) {
