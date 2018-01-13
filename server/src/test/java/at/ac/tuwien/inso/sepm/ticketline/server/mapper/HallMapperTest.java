@@ -10,6 +10,7 @@ import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Location;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Seat;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.eventLocation.hall.HallMapper;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.eventLocation.location.LocationMapper;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.eventLocation.seat.SeatMapper;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,32 +38,57 @@ public class HallMapperTest {
     // Suppress warning cause inspection does not know that the cdi annotations are added in the code generation step
     private HallMapper hallMapper;
 
+    @Autowired
+    @SuppressWarnings("SpringJavaAutowiredMembersInspection")
+    // Suppress warning cause inspection does not know that the cdi annotations are added in the code generation step
+    private SeatMapper seatMapper;
+
+    @Autowired
+    @SuppressWarnings("SpringJavaAutowiredMembersInspection")
+    // Suppress warning cause inspection does not know that the cdi annotations are added in the code generation step
+    private LocationMapper locationMapper;
+
 
     private static final DetailedLocationDTO LOCATIONDTO = new DetailedLocationDTO();
     private static final String DESCRIPTION = "Giant";
-    private static final List<Seat> SEATS = new ArrayList<>();
-    private static final List<SeatDTO> SEATSDTO = new ArrayList<>();
     private static final Long ID = 1L;
     private static final List<Hall> HallList = new ArrayList<>();
-    private Location LOCATION = Location.builder()
-        .city("Wien")
-        .country("Austria")
-        .description("Nice")
-        .street("Gasse")
+    private static Location LOCATION = Location.builder()
+        .id(1L)
+        .description("Description")
+        .country("Country")
+        .city("City")
+        .zip(1234)
+        .street("Street")
         .houseNr(1)
-        .zip(3)
-        .id(ID)
-        .eventHalls(HallList)
         .build();
+
+    private static final Hall HALL = Hall.builder()
+        .id(1L)
+        .description("Description of the hall")
+        .location(LOCATION)
+        .build();
+
+    private Seat SEAT = Seat.builder()
+        .hall(HALL)
+        .nr(2)
+        .row(4)
+        .sector('A')
+        .id(5L)
+        .build();
+
+
 
 
     @Test
     public void shouldMapHallToSimpleHallDTO() {
+        List<Seat> seats = new ArrayList<>();
+        seats.add(SEAT);
         Hall hall = Hall.builder()
             .description(DESCRIPTION)
             .location(LOCATION)
             .id(ID)
-            .seats(SEATS)
+            .seats(seats)
             .build();
 
         List<Hall> hallList = new ArrayList<>();
@@ -91,47 +117,56 @@ public class HallMapperTest {
 
     }
 
-/*
-TODo Problem mit Location einmal wird Location erwartet, aber LocationDTO benötigt und umgekehrt
 
     @Test
     public void shouldMapHallToDetailedHallDTO() {
+        List<Seat> seats = new ArrayList<>();
+        seats.add(SEAT);
         Hall hall = Hall.builder()
             .description(DESCRIPTION)
             .location(LOCATION)
             .id(ID)
-            .seats(SEATS)
+            .seats(seats)
             .build();
 
+        DetailedLocationDTO locationDTO = locationMapper.locationToDetailedLocationDTO(LOCATION);
 
         DetailedHallDTO hallDTO = hallMapper.hallToDetailedHallDTO(hall);
+
+        List <SeatDTO> seatDTO = seatMapper.seatToSeatDTO(seats);
 
         assertThat(hallDTO).isNotNull();
         assertThat(hallDTO.getId()).isEqualTo(ID);
         assertThat(hallDTO.getDescription()).isEqualTo(DESCRIPTION);
-        assertThat(hallDTO.getLocation()).isEqualTo(LOCATION);
-        assertThat(hallDTO.getSeats()).isEqualTo(SEATS);
+        assertThat(hallDTO.getLocation()).isEqualTo(locationDTO);
+        assertThat(hallDTO.getSeats()).isEqualTo(seatDTO);
 
     }
-*/
-    /*
+
+//ToDo Hall und Seat nullpointer
+
     @Test
     public void shouldMapDetailedLocationDTOToLocation() {
+        List<Seat> seats = new ArrayList<>();
+        seats.add(SEAT);
+        List<SeatDTO> seatDTOS = seatMapper.seatToSeatDTO(seats);
         DetailedHallDTO hallDTO = DetailedHallDTO.builder()
             .description(DESCRIPTION)
             .location(LOCATIONDTO)
             .id(ID)
-            .seats(SEATSDTO)
+            .seats(seatDTOS)
             .build();
 
         Hall hall = hallMapper.detailedHallDTOToHall(hallDTO);
 
+
+
         assertThat(hall).isNotNull();
         assertThat(hall.getId()).isEqualTo(ID);
         assertThat(hall.getDescription()).isEqualTo(DESCRIPTION);
-        assertThat(hall.getLocation()).isEqualTo(LOCATION);
-        assertThat(hall.getSeats()).isEqualTo(SEATS);
+        //assertThat(hall.getLocation()).isEqualTo(LOCATION);
+        //assertThat(hall.getSeats()).isEqualTo(seats);
 
     }
-    */
+
 }

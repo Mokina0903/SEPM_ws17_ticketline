@@ -2,6 +2,7 @@ package at.ac.tuwien.inso.sepm.ticketline.server.mapper;
 
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.seat.SeatDTO;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Hall;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Location;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Seat;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.eventLocation.seat.SeatMapper;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.user.UserMapper;
@@ -31,7 +32,20 @@ public class SeatMapperTest {
     // Suppress warning cause inspection does not know that the cdi annotations are added in the code generation step
     private SeatMapper seatMapper;
 
-    private static final Hall HALL = new Hall();
+    private static Location LOCATION = Location.builder()
+        .id(1L)
+        .description("Description")
+        .country("Country")
+        .city("City")
+        .zip(1234)
+        .street("Street")
+        .houseNr(1)
+        .build();
+    private static final Hall HALL = Hall.builder()
+        .id(1L)
+        .description("Description of the hall")
+        .location(LOCATION)
+        .build();
     private static final Integer NUMBER = 1;
     private static final Integer ROW = 3;
     private static final char SECTOR = 'A';
