@@ -48,7 +48,6 @@ public class SimpleEventService implements EventService {
 
     @Override
     public Page<SimpleEventDTO> findAdvanced(Pageable request, String search) throws DataAccessException{
-      //  search = search.replaceAll(" ", "_");
         System.out.println(search);
         return eventRestClient.findAdvanced(request, search);
     }

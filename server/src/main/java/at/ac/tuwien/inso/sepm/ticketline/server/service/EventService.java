@@ -8,6 +8,17 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface EventService {
+
+
+    /**
+     * Find event entries by search parameters.
+     *
+     * @param search list of search parameters
+     * @param request Pagable request
+     * @return Page containing the event entries
+     */
+    Page<Event> findByAdvancedSearch(String search, Pageable request);
+
     /**
      * Find all event entries
      *
@@ -50,5 +61,4 @@ public interface EventService {
      */
     Event publishEvent(Event event);
 
-    Page<Event> findByAdvancedSearch(String search, Pageable request);
 }

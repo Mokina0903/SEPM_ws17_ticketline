@@ -38,6 +38,14 @@ public interface EventRestClient {
     // TODO: (David) Javadoc
     DetailedEventDTO publishEvent(DetailedEventDTO detailedEventDTO) throws DataAccessException;
 
+    /**
+     * Find all events by search parameters ordered by Date ascending
+     *
+     * @param request page to load
+     * @param search search parameters
+     * @return page of events
+     * @throws DataAccessException in case something went wrong
+     */
     Page<SimpleEventDTO> findAdvanced(Pageable request, String search) throws DataAccessException;
 
 }

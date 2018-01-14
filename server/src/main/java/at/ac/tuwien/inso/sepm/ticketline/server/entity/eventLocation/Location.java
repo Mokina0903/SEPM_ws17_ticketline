@@ -1,12 +1,14 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation;
 
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.Predicatable;
+
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.util.List;
 
 @Entity
 @Table(name = "location")
-public class Location {
+public class Location implements Predicatable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq_location_id")

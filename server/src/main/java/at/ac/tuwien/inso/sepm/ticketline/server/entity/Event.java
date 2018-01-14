@@ -10,7 +10,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "event")
-public class Event {
+public class Event implements Predicatable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq_event_id")

@@ -1,21 +1,23 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.repository;
 
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.Predicatable;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.core.types.dsl.StringPath;
 
-public class MyEventPredicate {
+public class MyPredicate {
 
     private SearchCriteria criteria;
 
-    public MyEventPredicate(SearchCriteria criteria) {
+    public MyPredicate(SearchCriteria criteria) {
         this.criteria = criteria;
     }
 
-    public BooleanExpression getPredicate() {
-        PathBuilder<Event> entityPath = new PathBuilder<>(Event.class, "event");
+    public BooleanExpression getPredicate(String pathVariable) {
+
+        PathBuilder<Predicatable> entityPath = new PathBuilder<>(Predicatable.class, pathVariable);
 
         if (isNumeric(criteria.getValue().toString())) {
 

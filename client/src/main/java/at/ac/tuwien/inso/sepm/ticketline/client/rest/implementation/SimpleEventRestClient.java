@@ -120,8 +120,6 @@ public class SimpleEventRestClient implements EventRestClient {
 
     @Override
     public Page<SimpleEventDTO> findAdvanced(Pageable request, String search) throws DataAccessException {
-        //use RestResponsePage instead of Page or PageImpl
-       // ResponseEntity<String> responseEntity = new ResponseEntity<>(search, HttpStatus.OK);
 
         try {
             search = URLEncoder.encode(search, "UTF-8");

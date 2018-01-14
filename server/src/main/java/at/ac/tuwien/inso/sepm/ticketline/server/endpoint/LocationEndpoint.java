@@ -1,15 +1,19 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.endpoint;
 
+import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.hall.DetailedHallDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.hall.SimpleHallDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.location.DetailedLocationDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.location.SimpleLocationDTO;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Location;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.eventLocation.hall.HallMapper;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.eventLocation.location.LocationMapper;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.eventLocation.seat.SeatMapper;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.LocationService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.data.domain.*;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -70,6 +74,15 @@ public class LocationEndpoint {
         List<SimpleHallDTO> halls = hallMapper.hallToSimpleHallDTO(locationService.findAllHalls());
 
         return halls;
+    }
+
+    @RequestMapping(value = "advSearch/{pageIndex}/{locationsPerPage}/{search}", method = RequestMethod.GET)
+    @ApiOperation(value = "Get list of simple location entries")
+    public Page<SimpleLocationDTO> findAdvanced(@PathVariable("pageIndex")int pageIndex, @PathVariable("locationsPerPage")int locationsPerPage, @PathVariable("search") String search) {
+        Pageable request = new PageRequest(pageIndex, locationsPerPage, Sort.Direction.ASC, "city");
+        Page<Location> locationPage = locationService.findByAdvancedSearch(search, request);
+        List<SimpleLocationDTO> dtos = locationMapper.locationToSimpleLocationDTO(locationPage.getContent());
+        return new PageImpl<>(dtos, request, locationPage.getTotalElements());
     }
 
 }

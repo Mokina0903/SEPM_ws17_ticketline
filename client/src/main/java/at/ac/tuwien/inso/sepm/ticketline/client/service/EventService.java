@@ -40,6 +40,13 @@ public interface EventService {
     // TODO: (David) Javadoc
     DetailedEventDTO publishEvent(DetailedEventDTO detailedEventDTO) throws DataAccessException;
 
+    /**
+     * Find all events by search parameters ordered by Date ascending
+     *
+     * @param request page to load
+     * @return Page of upcoming events
+     * @throws DataAccessException in case something went wrong
+     */
     Page<SimpleEventDTO> findAdvanced(Pageable request, String search) throws DataAccessException;
 
     }

@@ -9,7 +9,7 @@ import at.ac.tuwien.inso.sepm.ticketline.server.repository.ArtistRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.EventRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.Location.HallRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.Location.LocationRepository;
-import at.ac.tuwien.inso.sepm.ticketline.server.repository.MyEventPredicatesBuilder;
+import at.ac.tuwien.inso.sepm.ticketline.server.repository.MyPredicatesBuilder;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.EventService;
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;
@@ -69,19 +69,19 @@ public class SimpleEventService implements EventService {
         return null;
     }
 
-    //QueryDsl
+/*    //QueryDsl
     public Page<Event> findAllEventsByName(Pageable request, String title) {
-        MyEventPredicatesBuilder builder = new MyEventPredicatesBuilder().with("title", ":", title);
+        MyPredicatesBuilder builder = new MyPredicatesBuilder("event").with("title", ":", title);
         Iterable<Event> events = eventRepository.findAll(builder.build());
         List<Event> eventList = Lists.newArrayList(events);
         int start = request.getOffset();
         int end = (start + request.getPageSize()) > eventList.size() ? eventList.size() : (start + request.getPageSize());
         return new PageImpl<>(eventList.subList(start, end), request, eventList.size());
-    }
+    }*/
 
     @Override
     public Page<Event> findByAdvancedSearch(String search, Pageable request) {
-        MyEventPredicatesBuilder builder = new MyEventPredicatesBuilder();
+        MyPredicatesBuilder builder = new MyPredicatesBuilder("event");
         if (search != null) {
             try {
                 search = URLDecoder.decode(search, "UTF-8");
@@ -96,10 +96,6 @@ public class SimpleEventService implements EventService {
             }
         }
         Iterable<Event> events = eventRepository.findAll(builder.build());
-
-        for (Event e : events) {
-            System.out.println(e.getTitle() + "," + e.getPrice() + "; ");
-        }
 
         List<Event> eventList = Lists.newArrayList(events);
         return new PageImpl<>(eventList, request, eventList.size());
