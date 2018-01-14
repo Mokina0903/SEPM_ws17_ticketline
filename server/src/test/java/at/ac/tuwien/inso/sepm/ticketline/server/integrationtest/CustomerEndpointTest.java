@@ -37,32 +37,8 @@ public class CustomerEndpointTest extends BaseIntegrationTest{
     private static final String PAGE_INDEX = "/{pageIndex}";
     private static final String CUSTOMER_PER_PAGE = "/{customerPerPage}";
 
-    private static final long TEST_CUSTOMER_ID = 1L;
-    private static final long TEST_CUSTOMER_NUMBER = 9999L;
-    private static final String  TEST_CUSTOMER_NAME = "Max";
-    private static final String  TEST_CUSTOMER_SURNAME = "Mustermann";
-    private static final String  TEST_CUSTOMER_MAIL = "Maxmustermann@gmail.com";
-    private static final LocalDate TEST_CUSTOMER_BIRTHDATE = LocalDate.of(1950, 1, 1);
-    private static final String  TEST_CUSTOMER_NAME_SUBSTRING = "muste";
-
-
-    @Autowired
-    private CustomerRepository customerRepository;
     @Autowired
     private CustomerService customerService;
-
-    @Before
-    public void addCustomer() {
-        Customer customer = Customer.builder()
-            .id(TEST_CUSTOMER_ID)
-            .knr(TEST_CUSTOMER_NUMBER)
-            .name(TEST_CUSTOMER_NAME)
-            .surname(TEST_CUSTOMER_SURNAME)
-            .mail(TEST_CUSTOMER_MAIL)
-            .birthDate(TEST_CUSTOMER_BIRTHDATE)
-            .build();
-        customerRepository.save(customer);
-    }
 
     @Test
     public void findAllCustomerUnauthorizedAsAnonymous() {
