@@ -74,12 +74,12 @@ public abstract class TestDTOs extends BaseIntegrationTest {
 
     public static CustomerDTO setUpCustomerDTO() {
         return CustomerDTO.builder()
-            .id(TEST_CUSTOMER_ID)
-            .knr(TEST_CUSTOMER_NUMBER)
-            .name(TEST_CUSTOMER_NAME)
-            .surname(TEST_CUSTOMER_SURNAME)
-            .mail(TEST_CUSTOMER_MAIL)
-            .birthDate(TEST_CUSTOMER_BIRTHDATE)
+            .id(CUSTOMER_ID)
+            .knr(CUSTOMER_NUMBER)
+            .name(CUSTOMER_NAME)
+            .surname(CUSTOMER_SURNAME)
+            .mail(CUSTOMER_MAIL)
+            .birthDate(CUSTOMER_BIRTHDATE)
             .build();
     }
 
