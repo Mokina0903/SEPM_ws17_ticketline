@@ -39,6 +39,14 @@
         </Pagination>
         </VBox>
     </center>
+    <right>
+        <HBox spacing="5">
+        <BorderPane.margin>
+              <Insets top="81" right="20" />
+          </BorderPane.margin>
+            <Button fx:id="btnStorno"  prefHeight="25.0" prefWidth="50.0"/>
+        </HBox>
+    </right>
 
     <padding>
         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
