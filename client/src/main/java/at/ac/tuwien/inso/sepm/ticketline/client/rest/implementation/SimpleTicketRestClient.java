@@ -2,6 +2,7 @@ package at.ac.tuwien.inso.sepm.ticketline.client.rest.implementation;
 
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.EmptyValueException;
+import at.ac.tuwien.inso.sepm.ticketline.client.exception.SearchNoMatchException;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.TicketAlreadyExistsException;
 import at.ac.tuwien.inso.sepm.ticketline.client.rest.TicketRestClient;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.seat.SeatDTO;
@@ -186,7 +187,7 @@ public class SimpleTicketRestClient implements TicketRestClient {
     }
 
     @Override
-    public Page<TicketDTO> findByCustomerName(String name, Pageable request) throws DataAccessException {
+    public Page<TicketDTO> findByCustomerName(String name, Pageable request) throws DataAccessException, SearchNoMatchException {
         try {
             LOGGER.debug("Retrieving all tickets with a certen customer name from {}", restClient.getServiceURI(TICKET_URL+"/"+request.getPageNumber()+"/"+request.getPageSize() ));
             ResponseEntity<RestResponsePage<TicketDTO>> customer =
@@ -199,6 +200,9 @@ public class SimpleTicketRestClient implements TicketRestClient {
             LOGGER.debug("Result status was {} with content {}", customer.getStatusCode(), customer.getBody());
             return customer.getBody();
         } catch (HttpStatusCodeException e) {
+            if (e.getStatusCode().value() == 404) {
+                throw new SearchNoMatchException();
+            }
             throw new DataAccessException("Failed retrieve tickets with status code " + e.getStatusCode().toString());
         } catch (RestClientException e) {
             throw new DataAccessException(e.getMessage(), e);
@@ -206,7 +210,7 @@ public class SimpleTicketRestClient implements TicketRestClient {
     }
 
     @Override
-    public Page<TicketDTO> findByReservationNumber(Long reservationNumber, Pageable request) throws DataAccessException {
+    public Page<TicketDTO> findByReservationNumber(Long reservationNumber, Pageable request) throws DataAccessException, SearchNoMatchException {
         try {
             LOGGER.debug("Retrieving all tickets from {}", restClient.getServiceURI(TICKET_URL+"/"+request.getPageNumber()+"/"+request.getPageSize() ));
             ResponseEntity<RestResponsePage<TicketDTO>> customer =
@@ -219,6 +223,9 @@ public class SimpleTicketRestClient implements TicketRestClient {
             LOGGER.debug("Result status was {} with content {}", customer.getStatusCode(), customer.getBody());
             return customer.getBody();
         } catch (HttpStatusCodeException e) {
+            if (e.getStatusCode().value() == 404) {
+                throw new SearchNoMatchException();
+            }
             throw new DataAccessException("Failed retrieve tickets with status code " + e.getStatusCode().toString());
         } catch (RestClientException e) {
             throw new DataAccessException(e.getMessage(), e);
@@ -226,7 +233,7 @@ public class SimpleTicketRestClient implements TicketRestClient {
     }
 
     @Override
-    public Page<TicketDTO> findAll(Pageable request) throws DataAccessException {
+    public Page<TicketDTO> findAll(Pageable request) throws DataAccessException, SearchNoMatchException {
         try {
             LOGGER.debug("Retrieving all tickets from {}", restClient.getServiceURI(TICKET_URL+"/"+request.getPageNumber()+"/"+request.getPageSize() ));
             ResponseEntity<RestResponsePage<TicketDTO>> customer =
@@ -239,6 +246,9 @@ public class SimpleTicketRestClient implements TicketRestClient {
             LOGGER.debug("Result status was {} with content {}", customer.getStatusCode(), customer.getBody());
             return customer.getBody();
         } catch (HttpStatusCodeException e) {
+            if (e.getStatusCode().value() == 404) {
+                throw new SearchNoMatchException();
+            }
             throw new DataAccessException("Failed retrieve tickets with status code " + e.getStatusCode().toString());
         } catch (RestClientException e) {
             throw new DataAccessException(e.getMessage(), e);

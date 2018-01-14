@@ -8,14 +8,45 @@ public class TicketRepresentationClass {
     private Boolean isPaid;
     private String customerName;
     private String customerSurname;
+    private String sector;
+    private String seatNr;
+    private Boolean hasSeatSelection;
 
-    public TicketRepresentationClass(String eventName, Long reservationNumber, Long ticket_id, boolean isPaid, String customerName, String customerSurname) {
+
+    public TicketRepresentationClass(String eventName, Long reservationNumber, Long ticket_id, Boolean isPaid, String customerName, String customerSurname, String sector, String seatNr, Boolean hasSeatSelection) {
         this.eventName = eventName;
         this.reservationNumber = reservationNumber;
         this.ticket_id = ticket_id;
         this.isPaid = isPaid;
         this.customerName = customerName;
         this.customerSurname = customerSurname;
+        this.sector = sector == null ? null: sector.toUpperCase();
+        this.seatNr = seatNr;
+        this.hasSeatSelection=hasSeatSelection;
+    }
+
+    public String getSeatNr() {
+        return seatNr;
+    }
+
+    public void setSeatNr(String seatNr) {
+        this.seatNr = seatNr;
+    }
+
+    public Boolean getHasSeatSelection() {
+        return hasSeatSelection;
+    }
+
+    public void setHasSeatSelection(Boolean hasSeatSelection) {
+        this.hasSeatSelection = hasSeatSelection;
+    }
+
+    public String getSector() {
+        return sector;
+    }
+
+    public void setSector(String sector) {
+        this.sector = sector;
     }
 
     public String getEventName() {

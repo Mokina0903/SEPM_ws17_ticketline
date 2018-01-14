@@ -2,6 +2,7 @@ package at.ac.tuwien.inso.sepm.ticketline.client.service.implementation;
 
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.EmptyValueException;
+import at.ac.tuwien.inso.sepm.ticketline.client.exception.SearchNoMatchException;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.TicketAlreadyExistsException;
 import at.ac.tuwien.inso.sepm.ticketline.client.rest.TicketRestClient;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.TicketService;
@@ -32,7 +33,7 @@ public class SimpleTicketService implements TicketService {
     }
 
     @Override
-    public Page<TicketDTO> findAll(Pageable request) throws DataAccessException {
+    public Page<TicketDTO> findAll(Pageable request) throws DataAccessException, SearchNoMatchException {
         return ticketRestClient.findAll(request);
     }
 
@@ -67,11 +68,11 @@ public class SimpleTicketService implements TicketService {
     }
 
     @Override
-    public Page<TicketDTO> findByCustomerName(String name, Pageable request) throws DataAccessException {
+    public Page<TicketDTO> findByCustomerName(String name, Pageable request) throws DataAccessException, SearchNoMatchException {
         return ticketRestClient.findByCustomerName(name,request);
     }
 
-    public Page<TicketDTO> findByReservationNumber(Long reservationNumber, Pageable request) throws DataAccessException {
+    public Page<TicketDTO> findByReservationNumber(Long reservationNumber, Pageable request) throws DataAccessException, SearchNoMatchException {
         return ticketRestClient.findByReservationNumber(reservationNumber, request);
     }
 }

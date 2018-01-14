@@ -57,6 +57,7 @@ public class TicketController extends TabElement implements LocalizationObserver
     private TableColumn<TicketRepresentationClass, String> tcSurname;
     private TableColumn<TicketRepresentationClass, String> tcIsPaid;
     private TableColumn<TicketRepresentationClass, Long> tcNumber;
+    private TableColumn<TicketRepresentationClass, String> tcSelected;
 
 
     @FXML
@@ -105,6 +106,10 @@ public class TicketController extends TabElement implements LocalizationObserver
            preparePagination();
        } catch (DataAccessException e) {
            e.printStackTrace();
+       } catch (SearchNoMatchException e) {
+           LOGGER.debug("There were no search results found when initializeing.");
+           noMatchFound();
+           e.printStackTrace();
        }
     }
 
@@ -136,15 +141,29 @@ public class TicketController extends TabElement implements LocalizationObserver
         tcSurname = new TableColumn<>();
         tcIsPaid = new TableColumn<>();
         tcNumber = new TableColumn<>();
+        tcSelected = new TableColumn<>();
+
 
         tcName.setText(BundleManager.getBundle().getString("customer.fname"));
         tcSurname.setText(BundleManager.getBundle().getString("customer.lname"));
         tcIsPaid.setText(BundleManager.getBundle().getString("ticket.tcIsPaid"));
         tcNumber.setText(BundleManager.getBundle().getString("ticket.ticketNumber"));
+        tcSelected.setText(BundleManager.getBundle().getString("ticket.sector"));
 
         tcName.setCellValueFactory(new PropertyValueFactory<>("customerName"));
         tcSurname.setCellValueFactory(new PropertyValueFactory<>("customerSurname"));
         tcNumber.setCellValueFactory(new PropertyValueFactory<>("reservationNumber"));
+        tcSelected.setCellValueFactory((cellData -> {
+           boolean hasSeatSelection = cellData.getValue().getHasSeatSelection();
+            String selection;
+            if (hasSeatSelection) {
+                selection = cellData.getValue().getSeatNr();
+            } else {
+                selection = cellData.getValue().getSector();
+            }
+
+            return new ReadOnlyStringWrapper(selection);
+        }));
 
         tcIsPaid.setCellValueFactory((cellData -> {
                 boolean isPaid = cellData.getValue().isPaid();
@@ -158,7 +177,7 @@ public class TicketController extends TabElement implements LocalizationObserver
                 return new ReadOnlyStringWrapper(isPaidAsString);
             }));
 
-        tvTickets.getColumns().addAll(tcNumber, tcName, tcSurname, tcIsPaid);
+        tvTickets.getColumns().addAll(tcNumber, tcName, tcSurname, tcSelected, tcIsPaid);
         tvTickets.getItems().addAll(getRepresentationList(tickets.getContent()));
         tvTickets.refresh();
 
@@ -178,8 +197,16 @@ public class TicketController extends TabElement implements LocalizationObserver
             boolean isPaid = ticket.isPaid();
             String name= ticket.getCustomer().getName();
             String surname = ticket.getCustomer().getSurname();
+            String seat = null;
+            String sector = null;
+            if(ticket.getEvent().getSeatSelection()){
+                 seat = "Row "+ticket.getSeat().getRow()+ " Seat "+ ticket.getSeat().getNr();
+            } else {
+                 sector = String.valueOf(ticket.getSeat().getSector());
+            }
 
-            TicketRepresentationClass rep = new TicketRepresentationClass(eventname, reservationNumber, ticketID, isPaid, name, surname);
+
+            TicketRepresentationClass rep = new TicketRepresentationClass(eventname, reservationNumber, ticketID, isPaid, name, surname, sector, seat, ticket.getEvent().getSeatSelection());
             representedTickets.add(rep);
         }
         return representedTickets;
@@ -204,15 +231,15 @@ public class TicketController extends TabElement implements LocalizationObserver
                     pagination.setPageCount(ticketPage.getTotalPages());
                     break;
                 case TICKET_NUMBER:
-                    ticketPage = ticketService.findByReservationNumber(Long.valueOf(tfSearch.getText()), request); //TODO: implemt findByNumber (Reservationnumber)
+                    ticketPage = ticketService.findByReservationNumber(Long.valueOf(tfSearch.getText()), request);
                     pagination.setPageCount(ticketPage.getTotalPages());
                     break;
             }
 
-       } /*catch (SearchNoMatchException e) { -> remove commentars, when belows todos need exceptions to be catched
+       } catch (SearchNoMatchException e) {
             LOGGER.info("No match found");
             noMatchFound();
-        } */catch (DataAccessException e) {
+        } catch (DataAccessException e) {
             LOGGER.warn("Could not access find customers");
         }
 
@@ -227,6 +254,7 @@ public class TicketController extends TabElement implements LocalizationObserver
     @FXML
     private void search(ActionEvent actionEvent) {
         String searchText = tfSearch.getText();
+
 
         if (searchText.isEmpty() || searchText.equals("")) {
             LOGGER.info("Empty search");
@@ -260,6 +288,8 @@ public class TicketController extends TabElement implements LocalizationObserver
         tcIsPaid.setText(BundleManager.getBundle().getString("ticket.tcIsPaid"));
         tcNumber.setText(BundleManager.getBundle().getString("ticket.ticketNumber"));
         lblNoMatch.setText(BundleManager.getBundle().getString("customer.noMatches"));
+        tcSelected.setText(BundleManager.getBundle().getString("ticket.sector"));
+
 
     }
 }

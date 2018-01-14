@@ -2,6 +2,7 @@ package at.ac.tuwien.inso.sepm.ticketline.client.service;
 
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.EmptyValueException;
+import at.ac.tuwien.inso.sepm.ticketline.client.exception.SearchNoMatchException;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.TicketAlreadyExistsException;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.seat.SeatDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketDTO;
@@ -26,7 +27,7 @@ public interface TicketService {
      * @param request defienes how to read paged from the database
      * @return a list of tickets, though the size of the list is dependent of the pageable object
      */
-     Page<TicketDTO> findAll(Pageable request) throws DataAccessException;
+     Page<TicketDTO> findAll(Pageable request) throws DataAccessException, SearchNoMatchException;
 
 
     /**
@@ -86,7 +87,7 @@ public interface TicketService {
      * @param request describes the page issues (size, index)
      * @return list of tickets from a person whos name is described by 'name'
      */
-    Page<TicketDTO> findByCustomerName(String name, Pageable request) throws DataAccessException;
+    Page<TicketDTO> findByCustomerName(String name, Pageable request) throws DataAccessException, SearchNoMatchException;
 
-    Page<TicketDTO> findByReservationNumber(Long reservationNumber, Pageable request) throws  DataAccessException;
+    Page<TicketDTO> findByReservationNumber(Long reservationNumber, Pageable request) throws DataAccessException, SearchNoMatchException;
 }
