@@ -47,6 +47,7 @@ public class CustomerDataGenerator {
                 .mail("anonymous@anonym.an")
                 .birthDate(LocalDate.of(1000, 1, 1))
                 .build();
+            customerRepository.save(anonym);
             for (int i = 1; i < NUMBER_OF_CUSTOMER_TO_GENERATE; i++) {
                 Customer customer = Customer.builder()
                     .knr((long)i)
