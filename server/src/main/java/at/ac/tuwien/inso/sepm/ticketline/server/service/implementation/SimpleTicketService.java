@@ -85,6 +85,12 @@ public class SimpleTicketService implements TicketService {
         }
     }
 
+    @Override
+    public Page<Ticket> findAllByCustomerName(String name, Pageable request) {
+
+        return ticketRepository.findAllByCustomerName("%"+name+"%", request);
+    }
+
 
     @Override
     public Boolean isBooked(Long eventId,Long seatId){

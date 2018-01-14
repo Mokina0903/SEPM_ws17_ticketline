@@ -200,7 +200,7 @@ public class TicketController extends TabElement implements LocalizationObserver
                     pagination.setPageCount(ticketPage.getTotalPages());
                     break;
                 case NAME:
-                   ticketPage = ticketService.findByCustomerName(tfSearch.getText(), request);//TODO: implement findByName (Customername)
+                    ticketPage = ticketService.findByCustomerName(tfSearch.getText(), request);//TODO: implement findByName (Customername)
                     pagination.setPageCount(ticketPage.getTotalPages());
                     break;
                 case TICKET_NUMBER:

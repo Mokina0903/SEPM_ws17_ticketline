@@ -75,7 +75,16 @@ public interface TicketRepository extends JpaRepository<Ticket,Long>{
      * @return list of tickets from events when startzeit-now < 30 minuten
      *
      */
-    @Query(value = "select * from ticket t join event e on t.event_id=e.id" +
+    @Query(value = "select * from ticket t join event e on t.event_id=e.id " +
         "where TIMESTAMPDIFF('MINUTE', CURRENT_TIMESTAMP(), e.start_Of_Event)< 30", nativeQuery = true)
     List<Ticket>setTicketsFreeIf30MinsBeforeEvent();
+
+    @Query(value="SELECT * from ticket t join customer c on t.customer_id = c.id " +
+       "WHERE c.name LIKE :name OR c.surname LIKE :name"+
+        " order by c.surname \n-- #pageable\n",
+        countQuery = "SELECT count(*) from ticket t join customer c on t.customer_id = c.id" +
+            " WHERE c.name LIKE :name OR c.surname LIKE :name "
+        , nativeQuery = true)
+    Page<Ticket> findAllByCustomerName(@Param("name") String name, Pageable request);
+
 }

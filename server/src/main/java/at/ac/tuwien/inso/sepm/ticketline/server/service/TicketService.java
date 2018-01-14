@@ -73,5 +73,6 @@ public interface TicketService {
 
     void setTicketsFreeIf30MinsBeforEvent();
 
+    Page<Ticket>findAllByCustomerName(String name,Pageable request);
 
 }
