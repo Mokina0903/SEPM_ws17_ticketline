@@ -75,4 +75,6 @@ public interface TicketService {
 
     Page<Ticket>findAllByCustomerName(String name,Pageable request);
 
+    Page<Ticket>findAllByReservationNumber(Long reservationNumber, Pageable request);
+
 }

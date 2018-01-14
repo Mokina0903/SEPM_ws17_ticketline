@@ -107,11 +107,20 @@ public class TicketEndpoint {
     @ApiOperation(value = "Get list of ticket entries")
     public Page<TicketDTO> findAllByCustomerName(@PathVariable("customerName") String customerName, @PathVariable("pageIndex")int pageIndex, @PathVariable("ticketsPerPage")int ticketsPerPage){
         Pageable request = new PageRequest(pageIndex, ticketsPerPage);
-        System.out.println("*************name: "+customerName);
         Page<Ticket> tickets = ticketService.findAllByCustomerName(customerName, request);
         List<TicketDTO> dtos = ticketMapper.ticketToTicketDTO(tickets.getContent());
         return new PageImpl<>(dtos, request, tickets.getTotalElements());
     }
+
+    @RequestMapping(value= "/searchResNr/{reservationNumber}/{pageIndex}/{ticketsPerPage}", method = RequestMethod.GET)
+    @ApiOperation(value = "Get list of ticket entries")
+    public Page<TicketDTO> findAllByReservationNumber(@PathVariable("reservationNumber") Long reservationNumber, @PathVariable("pageIndex")int pageIndex, @PathVariable("ticketsPerPage")int ticketsPerPage){
+        Pageable request = new PageRequest(pageIndex, ticketsPerPage);
+        Page<Ticket> tickets = ticketService.findAllByReservationNumber(reservationNumber, request);
+        List<TicketDTO> dtos = ticketMapper.ticketToTicketDTO(tickets.getContent());
+        return new PageImpl<>(dtos, request, tickets.getTotalElements());
+    }
+
 
 
 

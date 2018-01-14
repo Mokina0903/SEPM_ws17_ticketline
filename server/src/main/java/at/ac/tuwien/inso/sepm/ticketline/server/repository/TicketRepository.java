@@ -79,6 +79,12 @@ public interface TicketRepository extends JpaRepository<Ticket,Long>{
         "where TIMESTAMPDIFF('MINUTE', CURRENT_TIMESTAMP(), e.start_Of_Event)< 30", nativeQuery = true)
     List<Ticket>setTicketsFreeIf30MinsBeforeEvent();
 
+    /**
+     *
+     * @param name of the customer
+     * @param request describes the parameters of the page returned
+     * @return a page of tickets
+     */
     @Query(value="SELECT * from ticket t join customer c on t.customer_id = c.id " +
        "WHERE c.name LIKE :name OR c.surname LIKE :name"+
         " order by c.surname \n-- #pageable\n",
@@ -86,5 +92,18 @@ public interface TicketRepository extends JpaRepository<Ticket,Long>{
             " WHERE c.name LIKE :name OR c.surname LIKE :name "
         , nativeQuery = true)
     Page<Ticket> findAllByCustomerName(@Param("name") String name, Pageable request);
+
+    /**
+     *
+     * @param reservationNumber reservation number of the tickets
+     * @param request describes the parameters of the page returned
+     * @return a page of tickets
+     */
+    @Query(value="SELECT * from ticket t " +
+        "WHERE t.reservation_number=:nr \n-- #pageable\n",
+        countQuery = "SELECT count(*) from ticket t" +
+            " WHERE t.reservation_number=:nr "
+        , nativeQuery = true)
+    Page<Ticket> findByReservationNumberAndIsDeletedFalse(@Param("nr") Long reservationNumber, Pageable request);
 
 }

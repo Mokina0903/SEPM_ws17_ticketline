@@ -211,7 +211,7 @@ public class SimpleTicketRestClient implements TicketRestClient {
             LOGGER.debug("Retrieving all tickets from {}", restClient.getServiceURI(TICKET_URL+"/"+request.getPageNumber()+"/"+request.getPageSize() ));
             ResponseEntity<RestResponsePage<TicketDTO>> customer =
                 restClient.exchange(
-                    restClient.getServiceURI(TICKET_URL+"/"+reservationNumber+"/"+request.getPageNumber()+"/"+request.getPageSize()),
+                    restClient.getServiceURI(TICKET_URL+"/searchResNr"+"/"+reservationNumber+"/"+request.getPageNumber()+"/"+request.getPageSize()),
                     HttpMethod.GET,
                     null,
                     new ParameterizedTypeReference<RestResponsePage<TicketDTO>>() {

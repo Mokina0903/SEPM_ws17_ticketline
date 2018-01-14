@@ -91,6 +91,11 @@ public class SimpleTicketService implements TicketService {
         return ticketRepository.findAllByCustomerName("%"+name+"%", request);
     }
 
+    @Override
+    public Page<Ticket> findAllByReservationNumber(Long reservationNumber, Pageable request) {
+        return ticketRepository.findByReservationNumberAndIsDeletedFalse(reservationNumber, request);
+    }
+
 
     @Override
     public Boolean isBooked(Long eventId,Long seatId){
