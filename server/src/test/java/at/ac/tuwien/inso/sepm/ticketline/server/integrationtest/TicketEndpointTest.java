@@ -1,9 +1,8 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.integrationtest;
 
-import at.ac.tuwien.inso.sepm.ticketline.rest.news.DetailedNewsDTO;
-import at.ac.tuwien.inso.sepm.ticketline.rest.news.SimpleNewsDTO;
-import at.ac.tuwien.inso.sepm.ticketline.server.entity.Ticket;
+import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketDTO;
 import at.ac.tuwien.inso.sepm.ticketline.server.integrationtest.base.BaseIntegrationTest;
+import at.ac.tuwien.inso.sepm.ticketline.server.integrationtest.base.TestDTOs;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
@@ -13,8 +12,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.hamcrest.core.Is.is;
 
@@ -24,8 +23,6 @@ public class TicketEndpointTest extends BaseIntegrationTest {
     private static final String TICKET_EVENT_PATH = "/event";
     private static final String TICKET_CUSTOMER_PATH = "/customer";
 
-    // TODO: Buy ticket Normal
-    // TODO: Buy same Ticket twice
     // TODO: Remove reservation 30 min before
     // TODO: Reversal of Reservation
     // TODO: Sell book ticket
@@ -43,22 +40,81 @@ public class TicketEndpointTest extends BaseIntegrationTest {
 
 
     @Test
-    public void createTicketasUser() {
-        /*
+    public void createTicketAsUser() {
+        setUpDefaultEvent();
+
+        List<TicketDTO> ticketDTOList = TestDTOs.setUpTicketDTO();
+
         Response response = RestAssured
             .given()
             .contentType(ContentType.JSON)
             .header(HttpHeaders.AUTHORIZATION, validUserTokenWithPrefix)
-            .body(DetailedNewsDTO.builder()
-                .id(TEST_NEWS_ID)
-                .title(TEST_NEWS_TITLE)
-                .text(TEST_NEWS_TEXT)
-                .publishedAt(TEST_NEWS_PUBLISHED_AT)
-                .build())
-            .when().post(NEWS_ENDPOINT)
+            .body(ticketDTOList)
+            .when().post(TICKET_ENDPOINT)
             .then().extract().response();
-        Assert.assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN.value()));
-        */
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
     }
+
+    @Test
+    public void createTwoTicketsAsUser() {
+        setUpDefaultEvent();
+
+        List<TicketDTO> ticketDTOList = TestDTOs.setUpTicketDTO();
+
+        Response response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .header(HttpHeaders.AUTHORIZATION, validUserTokenWithPrefix)
+            .body(ticketDTOList)
+            .when().post(TICKET_ENDPOINT)
+            .then().extract().response();
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
+
+        response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .header(HttpHeaders.AUTHORIZATION, validUserTokenWithPrefix)
+            .body(ticketDTOList)
+            .when().post(TICKET_ENDPOINT)
+            .then().extract().response();
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.CONFLICT.value()));
+    }
+
+    @Test
+    public void loseReservationAfterTime() {
+        setUpDefaultEvent(LocalDateTime.now().plusMinutes(20));
+
+        List<TicketDTO> ticketDTOList = TestDTOs.setUpTicketDTO();
+
+        Response response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .header(HttpHeaders.AUTHORIZATION, validUserTokenWithPrefix)
+            .body(ticketDTOList)
+            .when().post(TICKET_ENDPOINT)
+            .then().extract().response();
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
+
+        Assert.assertThat(ticketRepository.findAll().size(),is(1));
+
+
+        // TODO: Implement here
+        /*
+        response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .header(HttpHeaders.AUTHORIZATION, validUserTokenWithPrefix)
+            .body(ticketDTOList)
+            .when().post(TICKET_ENDPOINT)
+            .then().extract().response();
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
+
+
+        List<TicketDTO> ticketDTOListNew = response.as(ArrayList.class);
+        */
+
+    }
+
+
 
 }
