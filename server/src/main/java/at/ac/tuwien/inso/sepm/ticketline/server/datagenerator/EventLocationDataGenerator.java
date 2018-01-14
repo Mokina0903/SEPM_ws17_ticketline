@@ -58,7 +58,7 @@ public class EventLocationDataGenerator {
             LOGGER.info("locations already generated");
         } else {
             Location[] locationArray = new Location[]{
-                new Location("Stadhalle Wien", "Austria", "Wien", 1150, "Roland-Rainer-Platz", 1),
+                new Location("Stadthalle Wien", "Austria", "Wien", 1150, "Roland-Rainer-Platz", 1),
                 new Location("TipsArena Linz", "Austria", "Linz", 4020, "Ziegeleistrasse", 76),
                 new Location("GLOBE WIEN", "Austria", "Wien", 1030, "Karl Farkas Gasse", 19),
                 new Location("MuseumsQuartier Wien", "Austria", "Wien", 1070, "Museumsplatz", 1),
