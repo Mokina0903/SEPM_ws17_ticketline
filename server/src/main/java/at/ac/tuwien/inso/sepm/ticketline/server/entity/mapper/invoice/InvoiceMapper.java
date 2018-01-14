@@ -9,9 +9,9 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface InvoiceMapper {
 
-    Invoice InvoiceDTOToInvoice( InvoiceDTO one);
+    Invoice invoiceDTOToInvoice( InvoiceDTO one);
 
-    InvoiceDTO InvoiceToInvoiceDTO( Invoice one);
+    InvoiceDTO invoiceToInvoiceDTO( Invoice one);
 
-    List<InvoiceDTO> InvoiceToInvoiceDTO(List<Invoice> all);
+    List<InvoiceDTO> invoiceToInvoiceDTO(List<Invoice> all);
 }
