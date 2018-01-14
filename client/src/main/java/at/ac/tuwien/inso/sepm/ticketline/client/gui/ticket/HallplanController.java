@@ -267,7 +267,7 @@ public class HallplanController implements LocalizationObserver {
         lbEventNameHeader.setFont(Font.font(20));
         lbEventNameHeader.setAlignment(Pos.CENTER);
         lbEventNameHeader.setPadding(new Insets(0, 0, 0, 25));
-        lbKnr.setText(String.valueOf(customer.getKnr()));
+        lbKnr.setText(customer.getKnr()==null? "xxxxxxxx":String.valueOf(customer.getKnr()));
         lbSurname.setText(customer.getSurname());
         lbVname.setText(customer.getName());
         lblCustomerDescription.setFont(Font.font(16));

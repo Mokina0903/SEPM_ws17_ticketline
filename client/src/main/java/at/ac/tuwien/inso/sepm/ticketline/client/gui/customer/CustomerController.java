@@ -44,6 +44,8 @@ public class CustomerController extends TabElement implements LocalizationObserv
     public Button btNext;
     @FXML
     public Label lbNoCustomerError;
+    @FXML
+    public Button btnAnonymous;
 
     @FXML
     private TabHeaderController tabHeaderController;
@@ -117,6 +119,8 @@ public class CustomerController extends TabElement implements LocalizationObserv
         btTickets.setDisable(false);
         btNext.setDisable(true);
         btNext.setVisible(false);
+        btnAnonymous.setDisable(true);
+        btnAnonymous.setVisible(false);
         tabHeaderController.setTitle(BundleManager.getBundle().getString("customer.customer"));
         currentTab=customerTab;
         isTicketView = false;
@@ -127,6 +131,8 @@ public class CustomerController extends TabElement implements LocalizationObserv
         btTickets.setDisable(true);
         btNext.setDisable(false);
         btNext.setVisible(true);
+        btnAnonymous.setDisable(false);
+        btnAnonymous.setVisible(true);
         tabHeaderController.setTitle(BundleManager.getBundle().getString("customer.chooseCustomer"));
         currentTab = mainController.getEventTab();
         isTicketView = true;
@@ -399,14 +405,25 @@ public class CustomerController extends TabElement implements LocalizationObserv
             springFxmlLoader.loadAndWrap("/fxml/ticket/hallplan.fxml");
         Node root = springFxmlLoader.load("/fxml/ticket/hallplan.fxml");
         HallplanController c = wrapper.getController();
-        if(currentTableview.getSelectionModel().getSelectedItem()==null){
+        if(!(actionEvent.getSource()== btnAnonymous) && currentTableview.getSelectionModel().getSelectedItem()==null){
             lbNoCustomerError.setText(BundleManager.getBundle().getString("customer.chooseCustomer")+"!");
             lbNoCustomerError.setVisible(true);
             return;
         }
-        mainController.setCutsomer(currentTableview.getSelectionModel().getSelectedItem());
+        CustomerDTO customer;
+        if(actionEvent.getSource()==btnAnonymous){
+            CustomerDTO anonymousCustomer = new CustomerDTO();
+            anonymousCustomer.setName("Anonym");
+            anonymousCustomer.setSurname("Anonoym");
+            mainController.setCutsomer(anonymousCustomer);
+            customer=anonymousCustomer;
+        }else{
+            mainController.setCutsomer(currentTableview.getSelectionModel().getSelectedItem());
+            customer= currentTableview.getSelectionModel().getSelectedItem();
+        }
 
-        c.initializeData(mainController.getEvent(),currentTableview.getSelectionModel().getSelectedItem(),  customerOverviewRoot);
+
+        c.initializeData(mainController.getEvent(),customer,  customerOverviewRoot);
 
         mainController.getEventTab().setContent(root);
     }
