@@ -10,6 +10,7 @@ import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -33,6 +34,12 @@ public class CustomerEndpointTest extends BaseIntegrationTest{
 
     @Autowired
     private CustomerService customerService;
+
+    @Before
+    public void setUp() {
+        setUpDefaultCustomers();
+    }
+
 
     @Test
     public void findAllCustomerUnauthorizedAsAnonymous() {
