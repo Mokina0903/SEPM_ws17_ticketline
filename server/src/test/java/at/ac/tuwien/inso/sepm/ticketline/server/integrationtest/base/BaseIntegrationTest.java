@@ -47,7 +47,7 @@ public abstract class BaseIntegrationTest {
     protected static final String NEWS_TEXT = "TestNewsText";
     protected static final String NEWS_TITLE = "title";
     protected static final LocalDateTime NEWS_PUBLISHED_AT =
-        LocalDateTime.of(2016, 11, 13, 12, 15, 0, 0);
+        LocalDateTime.of(2017, 11, 13, 12, 15, 0, 0);
     protected static final long NEWS_ID = 1L;
 
     protected static final Long ARTIST_ID = 1L;
@@ -73,13 +73,13 @@ public abstract class BaseIntegrationTest {
     protected static LocalDateTime EVENT_START =
         LocalDateTime.of(2017, 11, 29, 12, 15, 0, 0);
 
-    protected static final long TEST_CUSTOMER_ID = 1L;
-    protected static final long TEST_CUSTOMER_NUMBER = 9999L;
-    protected static final String  TEST_CUSTOMER_NAME = "Max";
-    protected static final String  TEST_CUSTOMER_SURNAME = "Mustermann";
-    protected static final String  TEST_CUSTOMER_MAIL = "Maxmustermann@gmail.com";
-    protected static final LocalDate TEST_CUSTOMER_BIRTHDATE = LocalDate.of(1950, 1, 1);
-    protected static final String  TEST_CUSTOMER_NAME_SUBSTRING = "muste";
+    protected static final long CUSTOMER_ID = 1L;
+    protected static final long CUSTOMER_NUMBER = 9999L;
+    protected static final String  CUSTOMER_NAME = "Max";
+    protected static final String  CUSTOMER_SURNAME = "Mustermann";
+    protected static final String  CUSTOMER_MAIL = "Maxmustermann@gmail.com";
+    protected static final LocalDate CUSTOMER_BIRTHDATE = LocalDate.of(1950, 1, 1);
+    protected static final String  CUSTOMER_NAME_SUBSTRING = "muste";
 
     protected static final Long SEAT_ID = 1L;
     protected static final int SEAT_NR = 1;
@@ -294,12 +294,12 @@ public abstract class BaseIntegrationTest {
 
     public void setUpDefaultCustomers() {
         Customer customer = Customer.builder()
-            .id(TEST_CUSTOMER_ID)
-            .knr(TEST_CUSTOMER_NUMBER)
-            .name(TEST_CUSTOMER_NAME)
-            .surname(TEST_CUSTOMER_SURNAME)
-            .mail(TEST_CUSTOMER_MAIL)
-            .birthDate(TEST_CUSTOMER_BIRTHDATE)
+            .id(CUSTOMER_ID)
+            .knr(CUSTOMER_NUMBER)
+            .name(CUSTOMER_NAME)
+            .surname(CUSTOMER_SURNAME)
+            .mail(CUSTOMER_MAIL)
+            .birthDate(CUSTOMER_BIRTHDATE)
             .build();
         customerRepository.save(customer);
     }

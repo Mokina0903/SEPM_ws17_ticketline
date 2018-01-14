@@ -5,23 +5,17 @@ import at.ac.tuwien.inso.sepm.ticketline.server.entity.Customer;
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.CustomerNotValidException;
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.InvalidIdException;
 import at.ac.tuwien.inso.sepm.ticketline.server.integrationtest.base.BaseIntegrationTest;
-import at.ac.tuwien.inso.sepm.ticketline.server.repository.CustomerRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.CustomerService;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 import static junit.framework.TestCase.fail;
 import static org.hamcrest.core.Is.is;
@@ -63,12 +57,12 @@ public class CustomerEndpointTest extends BaseIntegrationTest{
         //todo customerEndpoint returns Page instead of list, but dont know how to change code to page
       /*  Assert.assertThat(Arrays.asList(response.as(CustomerDTO[].class)), is(Collections.singletonList(
             CustomerDTO.builder()
-                .id(TEST_CUSTOMER_ID)
-                .knr(TEST_CUSTOMER_NUMBER)
-                .name(TEST_CUSTOMER_NAME)
-                .surname(TEST_CUSTOMER_SURNAME)
-                .mail(TEST_CUSTOMER_MAIL)
-                .birthDate(TEST_CUSTOMER_BIRTHDATE)
+                .id(CUSTOMER_ID)
+                .knr(CUSTOMER_NUMBER)
+                .name(CUSTOMER_NAME)
+                .surname(CUSTOMER_SURNAME)
+                .mail(CUSTOMER_MAIL)
+                .birthDate(CUSTOMER_BIRTHDATE)
                 .build())));*/
     }
 
@@ -78,17 +72,17 @@ public class CustomerEndpointTest extends BaseIntegrationTest{
             .given()
             .contentType(ContentType.JSON)
             .header(HttpHeaders.AUTHORIZATION, validUserTokenWithPrefix)
-            .when().get(CUSTOMER_ENDPOINT + CUSTOMER_BY_NUMBER_PATH, TEST_CUSTOMER_NUMBER)
+            .when().get(CUSTOMER_ENDPOINT + CUSTOMER_BY_NUMBER_PATH, CUSTOMER_NUMBER)
             .then().extract().response();
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
 
         Assert.assertThat(response.as(CustomerDTO.class), is(CustomerDTO.builder()
-                .id(TEST_CUSTOMER_ID)
-                .knr(TEST_CUSTOMER_NUMBER)
-                .name(TEST_CUSTOMER_NAME)
-                .surname(TEST_CUSTOMER_SURNAME)
-                .mail(TEST_CUSTOMER_MAIL)
-                .birthDate(TEST_CUSTOMER_BIRTHDATE)
+                .id(CUSTOMER_ID)
+                .knr(CUSTOMER_NUMBER)
+                .name(CUSTOMER_NAME)
+                .surname(CUSTOMER_SURNAME)
+                .mail(CUSTOMER_MAIL)
+                .birthDate(CUSTOMER_BIRTHDATE)
                 .build()));
 
     }
@@ -99,18 +93,18 @@ public class CustomerEndpointTest extends BaseIntegrationTest{
             .given()
             .contentType(ContentType.JSON)
             .header(HttpHeaders.AUTHORIZATION, validUserTokenWithPrefix)
-            .when().get(CUSTOMER_ENDPOINT + CUSTOMER_BY_NAME_PATH, 0, Integer.MAX_VALUE, TEST_CUSTOMER_NAME)
+            .when().get(CUSTOMER_ENDPOINT + CUSTOMER_BY_NAME_PATH, 0, Integer.MAX_VALUE, CUSTOMER_NAME)
             .then().extract().response();
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
 
       /*  Assert.assertThat(Arrays.asList(response.as(CustomerDTO[].class)), is(Collections.singletonList(
             CustomerDTO.builder()
-                .id(TEST_CUSTOMER_ID)
-                .knr(TEST_CUSTOMER_NUMBER)
-                .name(TEST_CUSTOMER_NAME)
-                .surname(TEST_CUSTOMER_SURNAME)
-                .mail(TEST_CUSTOMER_MAIL)
-                .birthDate(TEST_CUSTOMER_BIRTHDATE)
+                .id(CUSTOMER_ID)
+                .knr(CUSTOMER_NUMBER)
+                .name(CUSTOMER_NAME)
+                .surname(CUSTOMER_SURNAME)
+                .mail(CUSTOMER_MAIL)
+                .birthDate(CUSTOMER_BIRTHDATE)
                 .build())));*/
     }
 
@@ -120,17 +114,17 @@ public class CustomerEndpointTest extends BaseIntegrationTest{
             .given()
             .contentType(ContentType.JSON)
             .header(HttpHeaders.AUTHORIZATION, validUserTokenWithPrefix)
-            .when().get(CUSTOMER_ENDPOINT + CUSTOMER_BY_NAME_PATH, 0, Integer.MAX_VALUE, TEST_CUSTOMER_SURNAME)
+            .when().get(CUSTOMER_ENDPOINT + CUSTOMER_BY_NAME_PATH, 0, Integer.MAX_VALUE, CUSTOMER_SURNAME)
             .then().extract().response();
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
 
 /*        Assert.assertTrue(Arrays.asList(response.as(CustomerDTO[].class)).contains(CustomerDTO.builder()
-                .id(TEST_CUSTOMER_ID)
-                .knr(TEST_CUSTOMER_NUMBER)
-                .name(TEST_CUSTOMER_NAME)
-                .surname(TEST_CUSTOMER_SURNAME)
-                .mail(TEST_CUSTOMER_MAIL)
-                .birthDate(TEST_CUSTOMER_BIRTHDATE)
+                .id(CUSTOMER_ID)
+                .knr(CUSTOMER_NUMBER)
+                .name(CUSTOMER_NAME)
+                .surname(CUSTOMER_SURNAME)
+                .mail(CUSTOMER_MAIL)
+                .birthDate(CUSTOMER_BIRTHDATE)
                 .build()));*/
     }
 
@@ -140,18 +134,18 @@ public class CustomerEndpointTest extends BaseIntegrationTest{
             .given()
             .contentType(ContentType.JSON)
             .header(HttpHeaders.AUTHORIZATION, validUserTokenWithPrefix)
-            .when().get(CUSTOMER_ENDPOINT + CUSTOMER_BY_NAME_PATH, 0, Integer.MAX_VALUE, TEST_CUSTOMER_NAME_SUBSTRING)
+            .when().get(CUSTOMER_ENDPOINT + CUSTOMER_BY_NAME_PATH, 0, Integer.MAX_VALUE, CUSTOMER_NAME_SUBSTRING)
             .then().extract().response();
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
 
        /* Assert.assertTrue(Arrays.asList(response.as(CustomerDTO[].class)).contains(
             CustomerDTO.builder()
-                .id(TEST_CUSTOMER_ID)
-                .knr(TEST_CUSTOMER_NUMBER)
-                .name(TEST_CUSTOMER_NAME)
-                .surname(TEST_CUSTOMER_SURNAME)
-                .mail(TEST_CUSTOMER_MAIL)
-                .birthDate(TEST_CUSTOMER_BIRTHDATE)
+                .id(CUSTOMER_ID)
+                .knr(CUSTOMER_NUMBER)
+                .name(CUSTOMER_NAME)
+                .surname(CUSTOMER_SURNAME)
+                .mail(CUSTOMER_MAIL)
+                .birthDate(CUSTOMER_BIRTHDATE)
                 .build()));*/
     }
 
@@ -160,12 +154,12 @@ public class CustomerEndpointTest extends BaseIntegrationTest{
     @Test(expected = CustomerNotValidException.class)
     public void createCustomerWithInvalidName() throws CustomerNotValidException {
         Customer customer = Customer.builder()
-            .id(TEST_CUSTOMER_ID)
-            .knr(TEST_CUSTOMER_NUMBER)
+            .id(CUSTOMER_ID)
+            .knr(CUSTOMER_NUMBER)
             .name("")
-            .surname(TEST_CUSTOMER_SURNAME)
-            .mail(TEST_CUSTOMER_MAIL)
-            .birthDate(TEST_CUSTOMER_BIRTHDATE)
+            .surname(CUSTOMER_SURNAME)
+            .mail(CUSTOMER_MAIL)
+            .birthDate(CUSTOMER_BIRTHDATE)
             .build();
             customerService.createCustomer(customer);
             fail("CustomerNotValidException expected.");
@@ -174,12 +168,12 @@ public class CustomerEndpointTest extends BaseIntegrationTest{
     @Test(expected = CustomerNotValidException.class)
     public void createCustomerWithInvalidSurname() throws CustomerNotValidException {
         Customer customer = Customer.builder()
-            .id(TEST_CUSTOMER_ID)
-            .knr(TEST_CUSTOMER_NUMBER)
-            .name(TEST_CUSTOMER_NAME)
+            .id(CUSTOMER_ID)
+            .knr(CUSTOMER_NUMBER)
+            .name(CUSTOMER_NAME)
             .surname("")
-            .mail(TEST_CUSTOMER_MAIL)
-            .birthDate(TEST_CUSTOMER_BIRTHDATE)
+            .mail(CUSTOMER_MAIL)
+            .birthDate(CUSTOMER_BIRTHDATE)
             .build();
         customerService.createCustomer(customer);
         fail("CustomerNotValidException expected.");
@@ -188,12 +182,12 @@ public class CustomerEndpointTest extends BaseIntegrationTest{
     @Test(expected = CustomerNotValidException.class)
     public void createCustomerWithInvalidEmail() throws CustomerNotValidException {
         Customer customer = Customer.builder()
-            .id(TEST_CUSTOMER_ID)
-            .knr(TEST_CUSTOMER_NUMBER)
-            .name(TEST_CUSTOMER_NAME)
-            .surname(TEST_CUSTOMER_SURNAME)
+            .id(CUSTOMER_ID)
+            .knr(CUSTOMER_NUMBER)
+            .name(CUSTOMER_NAME)
+            .surname(CUSTOMER_SURNAME)
             .mail("invalid.Email")
-            .birthDate(TEST_CUSTOMER_BIRTHDATE)
+            .birthDate(CUSTOMER_BIRTHDATE)
             .build();
         customerService.createCustomer(customer);
         fail("CustomerNotValidException expected.");
@@ -202,11 +196,11 @@ public class CustomerEndpointTest extends BaseIntegrationTest{
     @Test(expected = CustomerNotValidException.class)
     public void createCustomerWithInvalidBirthdate() throws CustomerNotValidException {
         Customer customer = Customer.builder()
-            .id(TEST_CUSTOMER_ID)
-            .knr(TEST_CUSTOMER_NUMBER)
-            .name(TEST_CUSTOMER_NAME)
-            .surname(TEST_CUSTOMER_SURNAME)
-            .mail(TEST_CUSTOMER_MAIL)
+            .id(CUSTOMER_ID)
+            .knr(CUSTOMER_NUMBER)
+            .name(CUSTOMER_NAME)
+            .surname(CUSTOMER_SURNAME)
+            .mail(CUSTOMER_MAIL)
             .birthDate(LocalDate.now())
             .build();
         customerService.createCustomer(customer);
@@ -216,12 +210,12 @@ public class CustomerEndpointTest extends BaseIntegrationTest{
     @Test(expected = CustomerNotValidException.class)
     public void updateCustomerWithInvalidName() throws InvalidIdException, CustomerNotValidException {
         Customer customer = Customer.builder()
-            .id(TEST_CUSTOMER_ID)
-            .knr(TEST_CUSTOMER_NUMBER)
+            .id(CUSTOMER_ID)
+            .knr(CUSTOMER_NUMBER)
             .name("")
-            .surname(TEST_CUSTOMER_SURNAME)
-            .mail(TEST_CUSTOMER_MAIL)
-            .birthDate(TEST_CUSTOMER_BIRTHDATE)
+            .surname(CUSTOMER_SURNAME)
+            .mail(CUSTOMER_MAIL)
+            .birthDate(CUSTOMER_BIRTHDATE)
             .build();
         customerService.updateCustomer(customer);
         fail("CustomerNotValidException expected.");
@@ -230,12 +224,12 @@ public class CustomerEndpointTest extends BaseIntegrationTest{
     @Test(expected = CustomerNotValidException.class)
     public void updateCustomerWithInvalidSurname() throws InvalidIdException, CustomerNotValidException {
         Customer customer = Customer.builder()
-            .id(TEST_CUSTOMER_ID)
-            .knr(TEST_CUSTOMER_NUMBER)
-            .name(TEST_CUSTOMER_NAME)
+            .id(CUSTOMER_ID)
+            .knr(CUSTOMER_NUMBER)
+            .name(CUSTOMER_NAME)
             .surname("")
-            .mail(TEST_CUSTOMER_MAIL)
-            .birthDate(TEST_CUSTOMER_BIRTHDATE)
+            .mail(CUSTOMER_MAIL)
+            .birthDate(CUSTOMER_BIRTHDATE)
             .build();
         customerService.updateCustomer(customer);
         fail("CustomerNotValidException expected.");
@@ -244,12 +238,12 @@ public class CustomerEndpointTest extends BaseIntegrationTest{
     @Test(expected = CustomerNotValidException.class)
     public void updateCustomerWithInvalidEmail() throws InvalidIdException, CustomerNotValidException {
         Customer customer = Customer.builder()
-            .id(TEST_CUSTOMER_ID)
-            .knr(TEST_CUSTOMER_NUMBER)
-            .name(TEST_CUSTOMER_NAME)
-            .surname(TEST_CUSTOMER_SURNAME)
+            .id(CUSTOMER_ID)
+            .knr(CUSTOMER_NUMBER)
+            .name(CUSTOMER_NAME)
+            .surname(CUSTOMER_SURNAME)
             .mail("invalid.Email")
-            .birthDate(TEST_CUSTOMER_BIRTHDATE)
+            .birthDate(CUSTOMER_BIRTHDATE)
             .build();
         customerService.updateCustomer(customer);
         fail("CustomerNotValidException expected.");
@@ -258,11 +252,11 @@ public class CustomerEndpointTest extends BaseIntegrationTest{
     @Test(expected = CustomerNotValidException.class)
     public void updateCustomerWithInvalidBirthdate() throws InvalidIdException, CustomerNotValidException {
         Customer customer = Customer.builder()
-            .id(TEST_CUSTOMER_ID)
-            .knr(TEST_CUSTOMER_NUMBER)
-            .name(TEST_CUSTOMER_NAME)
-            .surname(TEST_CUSTOMER_SURNAME)
-            .mail(TEST_CUSTOMER_MAIL)
+            .id(CUSTOMER_ID)
+            .knr(CUSTOMER_NUMBER)
+            .name(CUSTOMER_NAME)
+            .surname(CUSTOMER_SURNAME)
+            .mail(CUSTOMER_MAIL)
             .birthDate(LocalDate.now())
             .build();
         customerService.updateCustomer(customer);
