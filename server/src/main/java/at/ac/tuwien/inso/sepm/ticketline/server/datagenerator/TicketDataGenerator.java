@@ -56,6 +56,7 @@ public class TicketDataGenerator {
                 int numbTickets = faker.number ().numberBetween(20,seats.size()-1);
 
                 for (int i = 0; i < numbTickets; i++) {
+                    // TODO: (David) reservationNR is ok?
                     long reservationNR = (LocalDate.now().getYear()%100)*100000000 + event.getId()  *10000000  + i;
 
                     Seat seat = seats.remove(faker.number().numberBetween(0, seats.size() -1 ));
