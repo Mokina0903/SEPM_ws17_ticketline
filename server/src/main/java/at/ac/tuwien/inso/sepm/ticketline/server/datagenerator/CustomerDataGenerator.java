@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -38,7 +39,15 @@ public class CustomerDataGenerator {
             LOGGER.info("customer already generated");
         } else {
             LOGGER.info("generating {} news entries", NUMBER_OF_CUSTOMER_TO_GENERATE);
-            for (int i = 0; i < NUMBER_OF_CUSTOMER_TO_GENERATE; i++) {
+            Customer anonym = Customer.builder()
+                .id((long)0)
+                .name("Anonymous")
+                .surname("Name")
+                .knr((long) 0)
+                .mail("anonymous@anonym.an")
+                .birthDate(LocalDate.of(1000, 1, 1))
+                .build();
+            for (int i = 1; i < NUMBER_OF_CUSTOMER_TO_GENERATE; i++) {
                 Customer customer = Customer.builder()
                     .knr((long)i)
                     .surname(faker.name().lastName())
