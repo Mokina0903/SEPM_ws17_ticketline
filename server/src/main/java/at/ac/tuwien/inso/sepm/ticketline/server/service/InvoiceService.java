@@ -22,4 +22,12 @@ public interface InvoiceService {
      */
     Invoice findOneById( Long id);
 
+    /**
+     * save invoice
+     *
+     * @param invoice to be saved
+     * @return saved invoice with created values
+     */
+    Invoice save(Invoice invoice);
+
 }
