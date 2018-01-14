@@ -6,17 +6,15 @@ import at.ac.tuwien.inso.sepm.ticketline.rest.user.SimpleUserDTO;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.News;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.User;
 import at.ac.tuwien.inso.sepm.ticketline.server.integrationtest.base.BaseIntegrationTest;
-import at.ac.tuwien.inso.sepm.ticketline.server.security.AuthenticationConstants;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
-import org.assertj.core.util.Strings;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
-import javax.validation.constraints.AssertTrue;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -39,9 +37,13 @@ public class UserEndpointTest extends BaseIntegrationTest {
         LocalDateTime.of(2016, 11, 13, 12, 15, 0, 0);
     private static final long TEST_USER_ID = 1L;
 
+    @Before
+    public void setUp() {
+
+    }
+
     @Test
     public void loginAsAnonymous() {
-        super.setupDefaultUsers();
         Response response = RestAssured
             .given()
             .contentType(ContentType.JSON)
@@ -53,7 +55,6 @@ public class UserEndpointTest extends BaseIntegrationTest {
 
     @Test
     public void loginBlockwhenAttempsZero() {
-        super.setupDefaultUsers();
 
         for (int i = 1; i <= User.LOGIN_ATTEMPTS; i++) {
             try {
@@ -63,7 +64,7 @@ public class UserEndpointTest extends BaseIntegrationTest {
             }
 
             Assert.assertFalse("Failure at run " + i + " is allready blocked",
-                    userRepository.findOneByUserName(ADMIN_USERNAME).isBlocked());
+                userRepository.findOneByUserName(ADMIN_USERNAME).isBlocked());
         }
 
         try {
@@ -72,20 +73,18 @@ public class UserEndpointTest extends BaseIntegrationTest {
 
         }
 
-        Assert.assertTrue("Failure at run " + User.LOGIN_ATTEMPTS+1 + " is not blocked",
+        Assert.assertTrue("Failure at run " + User.LOGIN_ATTEMPTS + 1 + " is not blocked",
             userRepository.findOneByUserName(ADMIN_USERNAME).isBlocked());
     }
 
 
     @Test
     public void loginnerlyBlocked() {
-        super.setupDefaultUsers();
 
         for (int i = 1; i < User.LOGIN_ATTEMPTS; i++) {
             try {
                 super.simpleHeaderTokenAuthenticationService.authenticate(ADMIN_USERNAME, ADMIN_PASSWORD.substring(2));
             } catch (Exception e) {
-
 
             }
 
@@ -106,8 +105,7 @@ public class UserEndpointTest extends BaseIntegrationTest {
 
 
     @Test
-    public void loginResetAttemps(){
-        super.setupDefaultUsers();
+    public void loginResetAttemps() {
         try {
             super.simpleHeaderTokenAuthenticationService.authenticate(ADMIN_USERNAME, ADMIN_PASSWORD.substring(2));
         } catch (Exception e) {
@@ -120,24 +118,12 @@ public class UserEndpointTest extends BaseIntegrationTest {
 
         int afterLogin = userRepository.findOneByUserName(ADMIN_USERNAME).getAttempts();
 
-        //System.out.println(beforeLogin + "David" + afterLogin);
-        Assert.assertTrue("Attemptreset does not work correct",beforeLogin < afterLogin);
+        Assert.assertTrue("Attemptreset does not work correct", beforeLogin < afterLogin);
 
     }
 
-    // NOT Possible: (TEST) Add Test for Logout US 1
-    // DONE: (TEST) Add Test Admin unlock US 1
-    // DONE: (TEST) Test correct privileges at REST US 1
-    // Done: (TEST) Show Users US 1
-    // DONE: (TEST) Admin can not lock himself BUS
-    // DONE: (TEST) Add New Users (Admin/Seller) (1/2) BUS
-    // DONE: (TEST) Block/Unblock Users BUS
-    // DONE: (TEST) SetPassword: Login with old -> reset Password -> login with new Password BUS
-    // DONE: (TEST) AddNewUser(<bereits angelegter User>) darf nicht möglich sein
-
     @Test
     public void resetAdminAsUser() {
-        super.setupDefaultUsers();
         Response response = RestAssured
             .given()
             .contentType(ContentType.JSON)
@@ -153,7 +139,6 @@ public class UserEndpointTest extends BaseIntegrationTest {
 
     @Test
     public void resetUserAsAnonym() {
-        super.setupDefaultUsers();
         Response response = RestAssured
             .given()
             .contentType(ContentType.JSON)
@@ -168,11 +153,8 @@ public class UserEndpointTest extends BaseIntegrationTest {
     }
 
 
-
     @Test
-    public void blockUser(){
-        super.setupDefaultUsers();
-
+    public void blockUser() {
         super.simpleHeaderTokenAuthenticationService.authenticate(ADMIN_USERNAME, ADMIN_PASSWORD).getCurrentToken();
 
         User blockUser = userRepository.findOneByUserName(USER_USERNAME);
@@ -185,10 +167,8 @@ public class UserEndpointTest extends BaseIntegrationTest {
     }
 
 
-
     @Test
     public void ResetUserAsAdmin() {
-        super.setupDefaultUsers();
         Response response = RestAssured
             .given()
             .contentType(ContentType.JSON)
@@ -208,13 +188,11 @@ public class UserEndpointTest extends BaseIntegrationTest {
             .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
             .when().get(USER_ENDPOINT_FIND, USER_USERNAME)
             .then().extract().response();
-            //Assert.assertTrue(response.asString().contains(USER_PASSWORD + "neu"));
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
     }
 
     @Test
     public void ResetUserAsAdminWithOldVersion() {
-        super.setupDefaultUsers();
         userRepository.findOneByUserName(USER_USERNAME).setVersion(5);
         Response response = RestAssured
             .given()
@@ -232,7 +210,6 @@ public class UserEndpointTest extends BaseIntegrationTest {
 
     @Test
     public void ResetUserAsAdminAndCheckVersion() {
-        super.setupDefaultUsers();
         Response response = RestAssured
             .given()
             .contentType(ContentType.JSON)
@@ -249,11 +226,8 @@ public class UserEndpointTest extends BaseIntegrationTest {
     }
 
 
-
-
     @Test
     public void BlockAdminAsUser() {
-        super.setupDefaultUsers();
         Response response = RestAssured
             .given()
             .contentType(ContentType.JSON)
@@ -269,7 +243,6 @@ public class UserEndpointTest extends BaseIntegrationTest {
 
     @Test
     public void BlockUserAsAdmin() {
-        super.setupDefaultUsers();
         Response response = RestAssured
             .given()
             .contentType(ContentType.JSON)
@@ -291,7 +264,7 @@ public class UserEndpointTest extends BaseIntegrationTest {
 
 
     @Test
-    public void AccessUserWithSQLInjection(){
+    public void AccessUserWithSQLInjection() {
         String path = "/user/h' or 1=1/isBlocked";
         Response response = RestAssured
             .given()
@@ -305,7 +278,6 @@ public class UserEndpointTest extends BaseIntegrationTest {
 
     @Test
     public void BlockAdminAsSameAdmin() {
-        super.setupDefaultUsers();
         Response response = RestAssured
             .given()
             .contentType(ContentType.JSON)
@@ -319,7 +291,6 @@ public class UserEndpointTest extends BaseIntegrationTest {
 
     @Test
     public void BlockAdminAsOtherAdmin() {
-        super.setupDefaultUsers();
         Response response = RestAssured
             .given()
             .contentType(ContentType.JSON)
@@ -342,7 +313,6 @@ public class UserEndpointTest extends BaseIntegrationTest {
 
     @Test
     public void BlockAllAsAdmin() {
-        super.setupDefaultUsers();
         Response response = RestAssured
             .given()
             .contentType(ContentType.JSON)
@@ -355,7 +325,6 @@ public class UserEndpointTest extends BaseIntegrationTest {
 
     @Test
     public void UnblockUserAsAdmin() {
-        super.setupDefaultUsers();
         userRepository.findOneByUserName(USER_USERNAME).setBlocked(true);
         Response response = RestAssured
             .given()
@@ -378,7 +347,6 @@ public class UserEndpointTest extends BaseIntegrationTest {
 
     @Test
     public void UnblockUnblockedUserAsAdmin() {
-        super.setupDefaultUsers();
         Response response = RestAssured
             .given()
             .contentType(ContentType.JSON)
@@ -399,10 +367,8 @@ public class UserEndpointTest extends BaseIntegrationTest {
     }
 
 
-
     @Test
     public void newUserAsAdmin() {
-        super.setupDefaultUsers();
         Response response = RestAssured
             .given()
             .contentType(ContentType.JSON)
@@ -430,7 +396,6 @@ public class UserEndpointTest extends BaseIntegrationTest {
 
     @Test
     public void newAdminAsAdmin() {
-        super.setupDefaultUsers();
         Response response = RestAssured
             .given()
             .contentType(ContentType.JSON)
@@ -438,7 +403,6 @@ public class UserEndpointTest extends BaseIntegrationTest {
             .body(DetailedUserDTO.builder()
                 .userName(ADMIN_USERNAME + 1)
                 .password(encoder.encode(ADMIN_PASSWORD))
-                //.notSeen(newsRepository.findAllByOrderByPublishedAtDesc())
                 .blocked(false)
                 .role(1)
                 .build())
@@ -458,7 +422,6 @@ public class UserEndpointTest extends BaseIntegrationTest {
 
     @Test
     public void newUserAsUser() {
-        super.setupDefaultUsers();
         Response response = RestAssured
             .given()
             .contentType(ContentType.JSON)
@@ -466,7 +429,6 @@ public class UserEndpointTest extends BaseIntegrationTest {
             .body(DetailedUserDTO.builder()
                 .userName(USER_USERNAME + 2)
                 .password(encoder.encode(USER_PASSWORD))
-                //.notSeen(newsRepository.findAllByOrderByPublishedAtDesc())
                 .blocked(false)
                 .role(2)
                 .build())
@@ -477,7 +439,6 @@ public class UserEndpointTest extends BaseIntegrationTest {
 
     @Test
     public void newExistingUserAsAdmin() {
-        super.setupDefaultUsers();
         Response response = RestAssured
             .given()
             .contentType(ContentType.JSON)
@@ -485,7 +446,6 @@ public class UserEndpointTest extends BaseIntegrationTest {
             .body(DetailedUserDTO.builder()
                 .userName(USER_USERNAME)
                 .password(encoder.encode(USER_PASSWORD))
-                //.notSeen(newsRepository.findAllByOrderByPublishedAtDesc())
                 .blocked(false)
                 .role(2)
                 .build())
@@ -497,13 +457,14 @@ public class UserEndpointTest extends BaseIntegrationTest {
 
     @Test
     public void newNewsForNewUserAsAdmin() {
-        super.setupDefaultUsers();
+        setupDefaultNews();
+
         Response response = RestAssured
             .given()
             .contentType(ContentType.JSON)
             .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
             .body(DetailedUserDTO.builder()
-                .userName(USER_USERNAME + 2)
+                .userName(USER_USERNAME + 1)
                 .password(encoder.encode(USER_PASSWORD))
                 .blocked(false)
                 .role(2)
@@ -512,29 +473,27 @@ public class UserEndpointTest extends BaseIntegrationTest {
             .then().extract().response();
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
 
-        List<News> news = newsRepository.findNotSeenByUser(userRepository.findOneByUserName(USER_USERNAME + 2).getId());
+        List<News> news = newsRepository.findNotSeenByUser(userRepository.findOneByUserName(USER_USERNAME + 1).getId());
         Assert.assertTrue(news != null);
-        if(news != null){
+        if (news != null) {
             Assert.assertTrue(news.size() > 0);
         }
     }
 
     @Test
     public void showUserAsAdmin() {
-        super.setupDefaultUsers();
         Response response = RestAssured
             .given()
             .contentType(ContentType.JSON)
             .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
             .when().get(USER_ENDPOINT_NEW_USER)
             .then().extract().response();
-        Assert.assertTrue((response.asString().contains("user")&&response.asString().contains("admin")));
+        Assert.assertTrue((response.asString().contains("user") && response.asString().contains("admin")));
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
     }
 
     @Test
     public void showUserAsUser() {
-        super.setupDefaultUsers();
         Response response = RestAssured
             .given()
             .contentType(ContentType.JSON)
@@ -543,7 +502,4 @@ public class UserEndpointTest extends BaseIntegrationTest {
             .then().extract().response();
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN.value()));
     }
-
-
-
 }

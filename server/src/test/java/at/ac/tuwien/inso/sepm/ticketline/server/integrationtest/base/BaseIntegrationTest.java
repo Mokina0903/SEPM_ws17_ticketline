@@ -143,9 +143,11 @@ public abstract class BaseIntegrationTest {
     public void beforeBase() throws Exception {
         setupDefaultNews();
         setupDefaultUsers();
-        setupDefaultLocation();
-        setUpDefaultArtist();
-        setUpDefaultCustomers();
+        //setupDefaultNews();
+
+        //setupDefaultLocation();
+        //setUpDefaultArtist();
+        //setUpDefaultCustomers();
 
         RestAssured.baseURI = SERVER_HOST;
         RestAssured.basePath = contextPath;
