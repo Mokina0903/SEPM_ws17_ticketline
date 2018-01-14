@@ -105,3 +105,5 @@
     -fx-background-insets: 0;
     -fx-padding: 0.0em 0.0em 0.0em 0.0em;
 }
+
+.choice-box .menu-item > .label { -fx-text-fill: white; }

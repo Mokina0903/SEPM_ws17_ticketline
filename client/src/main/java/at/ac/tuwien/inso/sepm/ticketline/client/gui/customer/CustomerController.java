@@ -150,6 +150,8 @@ public class CustomerController extends TabElement implements LocalizationObserv
         tabHeaderController.setIcon(FontAwesome.Glyph.USERS);
         tabHeaderController.setTitle(BundleManager.getBundle().getString("customer.customer"));
         localizationSubject.attach(this);
+
+        btSearch.setGraphic(fontAwesome.create("SEARCH").size(FONT_SIZE));
         btNew.setGraphic(fontAwesome.create("USER_PLUS").size(FONT_SIZE));
         btEdit.setGraphic(fontAwesome.create("PENCIL_SQUARE_ALT").size(FONT_SIZE));
         btTickets.setGraphic(fontAwesome.create("TICKET").size(FONT_SIZE));
@@ -346,7 +348,6 @@ public class CustomerController extends TabElement implements LocalizationObserv
         }
 
         btSearch.setText(BundleManager.getBundle().getString("menu.search"));
-        lbSearch.setText(BundleManager.getBundle().getString("menu.search"));
         tfSearch.setPromptText(BundleManager.getBundle().getString("customer.searchField"));
         lbNoMatch.setText(BundleManager.getBundle().getString("customer.noMatches"));
 

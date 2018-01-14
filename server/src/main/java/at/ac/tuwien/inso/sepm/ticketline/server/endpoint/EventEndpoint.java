@@ -4,7 +4,9 @@ import at.ac.tuwien.inso.sepm.ticketline.rest.event.DetailedEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.event.EventMapper;
+import at.ac.tuwien.inso.sepm.ticketline.server.repository.MyEventPredicatesBuilder;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.EventService;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.data.domain.PageRequest;
@@ -18,7 +20,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping(value = "/event")
@@ -63,6 +70,22 @@ public class EventEndpoint {
         Event event = eventMapper.detailedEventDTOToEvent(detailedEventDTO);
         event = eventService.publishEvent(event);
         return  eventMapper.eventToDetailedEventDTO(event);
+    }
+
+/*    @RequestMapping(method = RequestMethod.GET, value = "/advSearch/{pageIndex}/{eventsPerPage}\"")
+    @ResponseBody
+    public Page<Event> search(@RequestParam(value = "search") String search,@PathVariable("pageIndex")int pageIndex, @PathVariable("eventsPerPage")int eventsPerPage) {
+        Pageable request = new PageRequest(pageIndex, eventsPerPage, Sort.Direction.ASC, "start_of_event");
+        return eventService.findByAdvancedSearch(search, request);
+    }*/
+
+    @RequestMapping(value = "advSearch/{pageIndex}/{eventsPerPage}/{search}", method = RequestMethod.GET)
+    @ApiOperation(value = "Get list of simple upcoming event entries")
+    public Page<SimpleEventDTO> findAdvanced(@PathVariable("pageIndex")int pageIndex, @PathVariable("eventsPerPage")int eventsPerPage, @PathVariable("search") String search) {
+        Pageable request = new PageRequest(pageIndex, eventsPerPage, Sort.Direction.ASC, "start_of_event");
+        Page<Event> eventPage = eventService.findByAdvancedSearch(search, request);
+        List<SimpleEventDTO> dtos = eventMapper.eventToSimpleEventDTO(eventPage.getContent());
+        return new PageImpl<>(dtos, request, eventPage.getTotalElements());
     }
 
 }

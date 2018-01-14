@@ -6,8 +6,6 @@ import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.core.types.dsl.PathBuilder;
 import com.querydsl.core.types.dsl.StringPath;
 
-import static org.hibernate.jpa.criteria.ValueHandlerFactory.isNumeric;
-
 public class MyEventPredicate {
 
     private SearchCriteria criteria;
@@ -17,9 +15,10 @@ public class MyEventPredicate {
     }
 
     public BooleanExpression getPredicate() {
-        PathBuilder<Event> entityPath = new PathBuilder<>(Event.class, "user");
+        PathBuilder<Event> entityPath = new PathBuilder<>(Event.class, "event");
 
         if (isNumeric(criteria.getValue().toString())) {
+
             NumberPath<Integer> path = entityPath.getNumber(criteria.getKey(), Integer.class);
             int value = Integer.parseInt(criteria.getValue().toString());
             switch (criteria.getOperation()) {
@@ -30,13 +29,18 @@ public class MyEventPredicate {
                 case "<":
                     return path.loe(value);
             }
-        }
-        else {
+
+        } else {
             StringPath path = entityPath.getString(criteria.getKey());
             if (criteria.getOperation().equalsIgnoreCase(":")) {
                 return path.containsIgnoreCase(criteria.getValue().toString());
+
             }
         }
         return null;
+    }
+
+    public boolean isNumeric(String s) {
+        return s != null && s.matches("[-+]?\\d*\\.?\\d+");
     }
 }

@@ -39,4 +39,7 @@ public interface EventService {
 
     // TODO: (David) Javadoc
     DetailedEventDTO publishEvent(DetailedEventDTO detailedEventDTO) throws DataAccessException;
-}
+
+    Page<SimpleEventDTO> findAdvanced(Pageable request, String search) throws DataAccessException;
+
+    }

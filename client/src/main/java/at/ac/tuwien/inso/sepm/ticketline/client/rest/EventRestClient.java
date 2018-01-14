@@ -24,7 +24,7 @@ public interface EventRestClient {
      * @return Detailed event
      * @throws DataAccessException in case something went wrong
      */
-    DetailedEventDTO findById( Long id) throws DataAccessException;
+    DetailedEventDTO findById(Long id) throws DataAccessException;
 
     /**
      * Find all upcoming events(that has not yet ended) ordered by Date ascending
@@ -37,4 +37,7 @@ public interface EventRestClient {
 
     // TODO: (David) Javadoc
     DetailedEventDTO publishEvent(DetailedEventDTO detailedEventDTO) throws DataAccessException;
+
+    Page<SimpleEventDTO> findAdvanced(Pageable request, String search) throws DataAccessException;
+
 }

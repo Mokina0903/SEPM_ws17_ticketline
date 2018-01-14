@@ -9,7 +9,14 @@ import at.ac.tuwien.inso.sepm.ticketline.rest.event.DetailedEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.hall.DetailedHallDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
+import javafx.beans.Observable;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -19,6 +26,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 import org.controlsfx.glyphfont.FontAwesome;
+import org.controlsfx.glyphfont.GlyphFont;
+import org.controlsfx.glyphfont.GlyphFontRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +42,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class EventController extends TabElement implements LocalizationObserver {
@@ -44,9 +55,15 @@ public class EventController extends TabElement implements LocalizationObserver 
     @FXML
     public Pagination pagination;
     @FXML
+    private Button btSearch;
+    @FXML
+    private Button btAdvSearch;
+    @FXML
     public Button btnAddEvent;
- /*   @FXML
-    private ChoiceBox<String> cbSearch;*/
+    @FXML
+    private TextField tfSearchFor;
+    @FXML
+    private ChoiceBox<String> cbSearch;
     @FXML
     public BorderPane bPEventContainer;
     @FXML
@@ -58,9 +75,16 @@ public class EventController extends TabElement implements LocalizationObserver 
 
     private Page<SimpleEventDTO> events;
 
+    private String searchForAll = BundleManager.getBundle().getString("event.all");
+    private String searchForEvent = BundleManager.getBundle().getString("events.events");
+    private String searchForLocation = BundleManager.getBundle().getString("location.location");
+    private ObservableList<String> searchForList = FXCollections.observableArrayList();
     private final MainController mainController;
     private final SpringFxmlLoader springFxmlLoader;
     private final EventService eventService;
+
+    private GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
+    private final int FONT_SIZE = 16;
 
     private final int EVENTS_PER_PAGE = 7;
     private EventSearchFor searchFor;
@@ -86,16 +110,18 @@ public class EventController extends TabElement implements LocalizationObserver 
     @FXML
     private void initialize() {
         tabHeaderController.setIcon(FontAwesome.Glyph.FILM);
-        tabHeaderController.setTitle(BundleManager.getBundle().getString("events.events"));
         localizationSubject.attach(this);
-        String searchForAll = BundleManager.getBundle().getString("event.all");
-        String searchForEvent = BundleManager.getBundle().getString("events.events");
-        String searchForLocation = BundleManager.getBundle().getString("location.location");
+        searchForList.add(searchForAll);
+        searchForList.add(searchForEvent);
+        searchForList.add(searchForLocation);
+        update();
+        //todo choicebox doesnt update language of items
+
+        btSearch.setGraphic(fontAwesome.create("SEARCH").size(FONT_SIZE));
+
+    }
 
 /*
-        cbSearch.setItems(FXCollections.observableArrayList(searchForAll, searchForEvent, searchForLocation));
-*/
-        /*
         lvEventElements.getSelectionModel()
             .selectedIndexProperty()
             .addListener((observable, oldvalue, newValue) -> {
@@ -106,7 +132,7 @@ public class EventController extends TabElement implements LocalizationObserver 
 
             });
             */
-    }
+
 
     public void preparePagination() {
         //all customer at start or searchfield is empty
@@ -211,6 +237,12 @@ public class EventController extends TabElement implements LocalizationObserver 
     @Override
     public void update() {
         tabHeaderController.setTitle(BundleManager.getBundle().getString("events.events"));
+        btAdvSearch.setText(BundleManager.getBundle().getString("events.advSearch"));
+        tfSearchFor.setPromptText(BundleManager.getBundle().getString("events.searchFor"));
+        searchForAll = BundleManager.getBundle().getString("event.all");
+        searchForEvent = BundleManager.getBundle().getString("events.events");
+        searchForLocation = BundleManager.getBundle().getString("location.location");
+        cbSearch.setItems(searchForList);
     }
 
 
@@ -272,6 +304,13 @@ public class EventController extends TabElement implements LocalizationObserver 
 
         new Thread(taskNewNews).start();
         */
+    }
+
+    //just for testing: starts with advanced search button
+    public void testSearch(ActionEvent actionEvent) throws DataAccessException {
+        Pageable request = new PageRequest(0, EVENTS_PER_PAGE);
+
+        eventService.findAdvanced(request, "price<42,title:violin");
     }
 
 

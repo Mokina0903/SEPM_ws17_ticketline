@@ -45,4 +45,11 @@ public class SimpleEventService implements EventService {
     public DetailedEventDTO publishEvent(DetailedEventDTO detailedEventDTO) throws DataAccessException {
         return eventRestClient.publishEvent(detailedEventDTO);
     }
+
+    @Override
+    public Page<SimpleEventDTO> findAdvanced(Pageable request, String search) throws DataAccessException{
+      //  search = search.replaceAll(" ", "_");
+        System.out.println(search);
+        return eventRestClient.findAdvanced(request, search);
+    }
 }
