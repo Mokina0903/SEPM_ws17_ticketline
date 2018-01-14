@@ -18,10 +18,10 @@ public class Invoice {
     @OneToMany
     private List<Ticket> tickets;
 
-    @Column(nullable = false)
+    @ManyToOne
     private Customer customer;
 
-    @Column(nullable = false)
+    @ManyToOne
     private User vendor;
 
     @Column(nullable = false)
