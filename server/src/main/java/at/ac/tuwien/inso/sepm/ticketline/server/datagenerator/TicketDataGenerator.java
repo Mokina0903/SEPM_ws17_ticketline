@@ -43,41 +43,50 @@ public class TicketDataGenerator {
     }
 
     @PostConstruct
-    private void generateNews() {
+    private void generateTickets() {
         if (ticketRepository.count() > 0) {
             LOGGER.info("tickets already generated");
         } else {
             LOGGER.info("generating ticket entries");
             List<Event> events = eventRepository.findAll();
-            List<Customer> customers = customerRepository.findAll();
+
             for (Event event : events) {
                 List<Seat> seats = seatRepository.findAllByHallId(event.getHall().getId());
+                List<Customer> customers = customerRepository.findAll();
+                int numbTickets = faker.number ().numberBetween(30,seats.size()-1);
 
-                int numbTickets = faker.number ().numberBetween(20,seats.size()-1);
-
-                for (int i = 0; i < numbTickets; i++) {
+                int ticketCNT = 1;
+                while (0 < numbTickets && customers.size() > 0) {
                     // TODO: (David) reservationNR is ok?
-                    long reservationNR = (LocalDate.now().getYear()%100)*100000000 + event.getId()  *10000000  + i;
+                    long reservationNR = (LocalDate.now().getYear()%100)*100000000 + event.getId()  *10000000  + ticketCNT++;
 
-                    Seat seat = seats.remove(faker.number().numberBetween(0, seats.size() -1 ));
-                    Customer customer = customers.get(faker.number().numberBetween(0, customers.size()-1));
-                    // TODO: (David) Pricecalculation
-                    int price = (int) ((seat.getSector() - 96) * event.getPrice());
+                    Customer customer = customers.remove(faker.number().numberBetween(0, customers.size()-1));
 
+                    int numbTicketsCustomer = faker.number().numberBetween(1, (numbTickets < 10) ? numbTickets : 10);
 
-                    Ticket ticket= Ticket.builder()
-                        .customer(customer)
-                        .event(event)
-                        .seat(seat)
-                        .price(price)
-                        .isPaid(true)
-                        .reservationNumber(reservationNR)
-                        .build();
+                    boolean isPaid = (faker.number().numberBetween(0,1) == 0 ? false : true);
+
+                    for (int i = 0; i < numbTicketsCustomer; i++) {
+                        Seat seat = seats.remove(faker.number().numberBetween(0, seats.size() -1 ));
+
+                        // TODO: (David) Pricecalculation
+                        int price = (int) ((seat.getSector() - 96) * event.getPrice());
 
 
-                    LOGGER.debug("saving ticket {}", reservationNR);
-                    ticketRepository.save(ticket);
+                        Ticket ticket= Ticket.builder()
+                            .customer(customer)
+                            .event(event)
+                            .seat(seat)
+                            .price(price)
+                            .isPaid(isPaid)
+                            .reservationNumber(reservationNR)
+                            .build();
 
+                        LOGGER.debug("saving ticket {}", reservationNR);
+                        ticketRepository.save(ticket);
+
+                        numbTickets--;
+                    }
                 }
             }
         }
