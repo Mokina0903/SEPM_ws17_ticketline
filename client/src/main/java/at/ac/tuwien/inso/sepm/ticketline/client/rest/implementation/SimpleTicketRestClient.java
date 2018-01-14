@@ -206,6 +206,26 @@ public class SimpleTicketRestClient implements TicketRestClient {
     }
 
     @Override
+    public Page<TicketDTO> findByReservationNumber(Long reservationNumber, Pageable request) throws DataAccessException {
+        try {
+            LOGGER.debug("Retrieving all tickets from {}", restClient.getServiceURI(TICKET_URL+"/"+request.getPageNumber()+"/"+request.getPageSize() ));
+            ResponseEntity<RestResponsePage<TicketDTO>> customer =
+                restClient.exchange(
+                    restClient.getServiceURI(TICKET_URL+"/"+reservationNumber+"/"+request.getPageNumber()+"/"+request.getPageSize()),
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<RestResponsePage<TicketDTO>>() {
+                    });
+            LOGGER.debug("Result status was {} with content {}", customer.getStatusCode(), customer.getBody());
+            return customer.getBody();
+        } catch (HttpStatusCodeException e) {
+            throw new DataAccessException("Failed retrieve tickets with status code " + e.getStatusCode().toString());
+        } catch (RestClientException e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+    }
+
+    @Override
     public Page<TicketDTO> findAll(Pageable request) throws DataAccessException {
         try {
             LOGGER.debug("Retrieving all tickets from {}", restClient.getServiceURI(TICKET_URL+"/"+request.getPageNumber()+"/"+request.getPageSize() ));

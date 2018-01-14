@@ -200,16 +200,12 @@ public class TicketController extends TabElement implements LocalizationObserver
                     pagination.setPageCount(ticketPage.getTotalPages());
                     break;
                 case NAME:
-                    ticketPage = ticketService.findByCustomerName(tfSearch.getText(), request);//TODO: implement findByName (Customername)
+                    ticketPage = ticketService.findByCustomerName(tfSearch.getText(), request);
                     pagination.setPageCount(ticketPage.getTotalPages());
                     break;
                 case TICKET_NUMBER:
-                    long ticketNumber = Long.parseLong(tfSearch.getText());
-                  //  CustomerDTO c = ticketPage.findByNumber(customerNumber); TODO: implemt findByNumber (Reservationnumber)
-                    List<TicketDTO> ticketToList = new ArrayList<>();
-                   // ticketToList.add(c);
-                    ticketPage = new PageImpl<>(ticketToList);
-                    pagination.setPageCount(1);
+                    ticketPage = ticketService.findByReservationNumber(Long.valueOf(tfSearch.getText()), request); //TODO: implemt findByNumber (Reservationnumber)
+                    pagination.setPageCount(ticketPage.getTotalPages());
                     break;
             }
 

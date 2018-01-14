@@ -88,4 +88,6 @@ public interface TicketRestClient {
      */
     Page<TicketDTO> findByCustomerName(String name, Pageable request) throws DataAccessException;
 
+    Page<TicketDTO> findByReservationNumber(Long reservationNumber, Pageable request) throws DataAccessException;
+
 }

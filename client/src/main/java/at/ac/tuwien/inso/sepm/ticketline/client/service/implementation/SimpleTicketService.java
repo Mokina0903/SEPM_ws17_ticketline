@@ -70,4 +70,8 @@ public class SimpleTicketService implements TicketService {
     public Page<TicketDTO> findByCustomerName(String name, Pageable request) throws DataAccessException {
         return ticketRestClient.findByCustomerName(name,request);
     }
+
+    public Page<TicketDTO> findByReservationNumber(Long reservationNumber, Pageable request) throws DataAccessException {
+        return ticketRestClient.findByReservationNumber(reservationNumber, request);
+    }
 }

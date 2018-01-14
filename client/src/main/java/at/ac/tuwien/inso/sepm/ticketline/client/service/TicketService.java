@@ -87,4 +87,6 @@ public interface TicketService {
      * @return list of tickets from a person whos name is described by 'name'
      */
     Page<TicketDTO> findByCustomerName(String name, Pageable request) throws DataAccessException;
+
+    Page<TicketDTO> findByReservationNumber(Long reservationNumber, Pageable request) throws  DataAccessException;
 }
