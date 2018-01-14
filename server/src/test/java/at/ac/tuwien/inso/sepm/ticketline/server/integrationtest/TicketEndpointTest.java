@@ -7,12 +7,12 @@ import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.core.Is.is;
@@ -38,6 +38,10 @@ public class TicketEndpointTest extends BaseIntegrationTest {
     // TODO: get /tickets/{pageIndex}/{ticketsPerPage} Get list of ticket entries
     // TODO: get /tickets/{ticketId} Get information about a specific ticket entry
 
+    @Before
+    public void setUp() {
+
+    }
 
     @Test
     public void createTicketAsUser() {
@@ -94,6 +98,8 @@ public class TicketEndpointTest extends BaseIntegrationTest {
             .when().post(TICKET_ENDPOINT)
             .then().extract().response();
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
+
+        System.out.println(response.asString());
 
         Assert.assertThat(ticketRepository.findAll().size(),is(1));
 

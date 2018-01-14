@@ -7,6 +7,7 @@ import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,11 @@ import static org.hamcrest.core.Is.is;
 
 public class EventEndpointTest extends BaseIntegrationTest {
     private static final String EVENT_ENDPOINT = "/event";
+
+    @Before
+    public void setUp() {
+        setUpDefaultEvent();
+    }
 
     @Test
     public void publishEventUnauthorizedAsUser() {
@@ -33,6 +39,8 @@ public class EventEndpointTest extends BaseIntegrationTest {
     @Test
     public void publishEventAsAdmin() {
         DetailedEventDTO detailedEventDTO = TestDTOs.setUpDetailedEventDTO();
+
+        detailedEventDTO.setDescription(detailedEventDTO.getDescription() + " NEW");
 
         Response response = RestAssured
             .given()
@@ -109,17 +117,6 @@ public class EventEndpointTest extends BaseIntegrationTest {
             .body(detailedEventDTO)
             .when().post(EVENT_ENDPOINT)
             .then().extract().response();
-        Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
-
-        detailedEventDTO.setId(99L);
-
-        response = RestAssured
-            .given()
-            .contentType(ContentType.JSON)
-            .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
-            .body(detailedEventDTO)
-            .when().post(EVENT_ENDPOINT)
-            .then().extract().response();
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.CONFLICT.value()));
     }
 
@@ -127,6 +124,7 @@ public class EventEndpointTest extends BaseIntegrationTest {
     public void publishEventAsAdminwrongDate() {
         DetailedEventDTO detailedEventDTO = TestDTOs.setUpDetailedEventDTO();
 
+        detailedEventDTO.setDescription("Wrong Date");
         detailedEventDTO.setStartOfEvent(EVENT_START);
         detailedEventDTO.setEndOfEvent(EVENT_START);
 

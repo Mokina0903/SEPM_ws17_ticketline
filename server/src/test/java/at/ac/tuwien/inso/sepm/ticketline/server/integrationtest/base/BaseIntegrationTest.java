@@ -143,11 +143,6 @@ public abstract class BaseIntegrationTest {
     public void beforeBase() throws Exception {
         setupDefaultNews();
         setupDefaultUsers();
-        //setupDefaultNews();
-
-        //setupDefaultLocation();
-        //setUpDefaultArtist();
-        //setUpDefaultCustomers();
 
         RestAssured.baseURI = SERVER_HOST;
         RestAssured.basePath = contextPath;
@@ -229,11 +224,11 @@ public abstract class BaseIntegrationTest {
         }
     }
 
-    public void setupDefaultLocation(){
-        Location location;
-        Hall hall;
+    public void setupDefaultLocation() {
+        if (locationRepository.count() > 0)
+            return;
 
-        location = Location.builder()
+        Location location = Location.builder()
             .id(LOCATION_ID)
             .description(LOCATION_DESCRIPTION)
             .city(LOCATION_CITY)
@@ -245,7 +240,7 @@ public abstract class BaseIntegrationTest {
 
         location = locationRepository.save(location);
 
-        hall = Hall.builder()
+        Hall hall = Hall.builder()
             .id(HALL_ID)
             .description(HALL_DESCRIPTION)
             .location(location)
@@ -263,6 +258,7 @@ public abstract class BaseIntegrationTest {
         seatRepository.save(seat);
 
         /*
+        Maybe not necessary
         // Seats
         int columns = 5;
         int rows = 5;
@@ -285,16 +281,22 @@ public abstract class BaseIntegrationTest {
     }
 
     public void setUpDefaultArtist() {
+        if (artistRepository.count() > 0 )
+            return;
+
         Artist artist = Artist.builder()
             .id(ARTIST_ID)
             .artistFirstname(ARTIST_FIRSTNAME)
             .artistLastName(ARTIST_LASTNAME)
             .build();
 
-        artist = artistRepository.save(artist);
+        artistRepository.save(artist);
     }
 
     public void setUpDefaultCustomers() {
+        if (customerRepository.count() > 0)
+            return;
+
         Customer customer = Customer.builder()
             .id(CUSTOMER_ID)
             .knr(CUSTOMER_NUMBER)
@@ -307,6 +309,13 @@ public abstract class BaseIntegrationTest {
     }
 
     public void setUpDefaultEvent() {
+        if (eventRepository.count() > 0)
+            return;
+
+        setupDefaultLocation();
+        setUpDefaultArtist();
+        setUpDefaultCustomers();
+
         Hall hall = hallRepository.findOne(HALL_ID);
 
         List<Artist> artists = new ArrayList<>();
@@ -329,6 +338,10 @@ public abstract class BaseIntegrationTest {
     }
 
     public void setUpDefaultEvent(LocalDateTime startOfEvent) {
+        setupDefaultLocation();
+        setUpDefaultArtist();
+        setUpDefaultCustomers();
+
         Hall hall = hallRepository.findOne(HALL_ID);
 
         List<Artist> artists = new ArrayList<>();
