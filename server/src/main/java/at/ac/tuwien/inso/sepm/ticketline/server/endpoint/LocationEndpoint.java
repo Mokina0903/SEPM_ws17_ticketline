@@ -76,9 +76,10 @@ public class LocationEndpoint {
         return halls;
     }
 
-    @RequestMapping(value = "advSearch/{pageIndex}/{locationsPerPage}/{search}", method = RequestMethod.GET)
+    @RequestMapping(value = "/location/advSearch/{pageIndex}/{locationsPerPage}/{search}", method = RequestMethod.GET)
     @ApiOperation(value = "Get list of simple location entries")
     public Page<SimpleLocationDTO> findAdvanced(@PathVariable("pageIndex")int pageIndex, @PathVariable("locationsPerPage")int locationsPerPage, @PathVariable("search") String search) {
+        System.out.println("******************* Found the loc endpoint ******************");
         Pageable request = new PageRequest(pageIndex, locationsPerPage, Sort.Direction.ASC, "city");
         Page<Location> locationPage = locationService.findByAdvancedSearch(search, request);
         List<SimpleLocationDTO> dtos = locationMapper.locationToSimpleLocationDTO(locationPage.getContent());

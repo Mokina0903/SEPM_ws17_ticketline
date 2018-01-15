@@ -1,5 +1,6 @@
 package at.ac.tuwien.inso.sepm.ticketline.rest.event;
 
+import at.ac.tuwien.inso.sepm.ticketline.rest.PageableDAO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.artist.SimpleArtistDTO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -8,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @ApiModel(value = "SimpleEventDTO", description = "A simple DTO for event entries via rest")
-public class SimpleEventDTO {
+public class SimpleEventDTO implements PageableDAO{
     @ApiModelProperty(readOnly = true, name = "The automatically generated database id")
     private Long id;
 
