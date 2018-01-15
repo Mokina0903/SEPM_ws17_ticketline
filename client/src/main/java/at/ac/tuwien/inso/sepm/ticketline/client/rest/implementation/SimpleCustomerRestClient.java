@@ -101,10 +101,10 @@ public class SimpleCustomerRestClient implements CustomerRestClient{
             LOGGER.debug("Save customer");
             HttpEntity<CustomerDTO> entity = new HttpEntity<>(customerDTO);
             restClient.exchange(
-                    restClient.getServiceURI(CUSTOMER_URL+"/create"),
-                    HttpMethod.POST,
-                    entity,
-                    Void.class);
+                restClient.getServiceURI(CUSTOMER_URL+"/create"),
+                HttpMethod.POST,
+                entity,
+                Void.class);
         } catch (HttpStatusCodeException e) {
             throw new DataAccessException("Failed retrieve customer with status code " + e.getStatusCode().toString());
         } catch (RestClientException e) {
