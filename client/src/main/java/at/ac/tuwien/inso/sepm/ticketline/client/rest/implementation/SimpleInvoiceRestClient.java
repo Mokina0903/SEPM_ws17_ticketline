@@ -11,9 +11,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestClientException;
 
+@Component
 public class SimpleInvoiceRestClient implements InvoiceRestClient{
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SimpleInvoiceRestClient.class);
