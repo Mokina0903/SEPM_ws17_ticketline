@@ -124,12 +124,12 @@ public class SimpleTicketRestClient implements TicketRestClient {
     public List<TicketDTO> save( List<TicketDTO> ticketDTOS ) throws DataAccessException, TicketAlreadyExistsException, EmptyValueException {
         try {
             LOGGER.debug("Save tickets");
-            HttpEntity<List<TicketDTO>> tickets = new HttpEntity<>(ticketDTOS);
-            restClient.exchange(
+            HttpEntity<List<TicketDTO>> httpEntity = new HttpEntity<>(ticketDTOS);
+            ResponseEntity<List<TicketDTO>> tickets = restClient.exchange(
                 restClient.getServiceURI(TICKET_URL),
                 HttpMethod.POST,
-                tickets,
-                Void.class);
+                httpEntity,
+                new ParameterizedTypeReference<List<TicketDTO>>() {});
             return tickets.getBody();
         } catch (HttpStatusCodeException e) {
             if(e.getStatusCode()== HttpStatus.CONFLICT){

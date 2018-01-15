@@ -72,12 +72,13 @@ public class SimpleInvoiceRestClient implements InvoiceRestClient{
         try {
             LOGGER.debug("save invoice");
             HttpEntity<InvoiceDTO> entity = new HttpEntity<>(invoice);
-            restClient.exchange(
+            ResponseEntity<InvoiceDTO> invoiceResponse =
+                restClient.exchange(
                 restClient.getServiceURI(INVOICE_URL+"/create"),
                 HttpMethod.POST,
                 entity,
-                Void.class);
-            return entity.getBody();
+                    new ParameterizedTypeReference<InvoiceDTO>() {});
+            return invoiceResponse.getBody();
         } catch (HttpStatusCodeException e) {
             throw new DataAccessException("Failed save invoice with status code " + e.getStatusCode().toString());
         } catch (RestClientException e) {

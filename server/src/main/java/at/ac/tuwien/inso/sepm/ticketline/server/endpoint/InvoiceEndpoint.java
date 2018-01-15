@@ -2,7 +2,9 @@ package at.ac.tuwien.inso.sepm.ticketline.server.endpoint;
 
 import at.ac.tuwien.inso.sepm.ticketline.rest.invoice.InvoiceDTO;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Invoice;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.Ticket;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.invoice.InvoiceMapper;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.ticket.TicketMapper;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.InvoiceService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -18,10 +20,12 @@ public class InvoiceEndpoint {
 
     private final InvoiceService invoiceService;
     private final InvoiceMapper invoiceMapper;
+    private final TicketMapper ticketMapper;
 
-    public InvoiceEndpoint( InvoiceService invoiceService, InvoiceMapper invoiceMapper ) {
+    public InvoiceEndpoint( InvoiceService invoiceService, InvoiceMapper invoiceMapper, TicketMapper ticketMapper ) {
         this.invoiceService = invoiceService;
         this.invoiceMapper = invoiceMapper;
+        this.ticketMapper = ticketMapper;
     }
 
     @RequestMapping(value= "/{pageIndex}/{invoicesPerPage}", method = RequestMethod.GET)
@@ -42,6 +46,10 @@ public class InvoiceEndpoint {
     @RequestMapping(value="/create", method = RequestMethod.POST)
     @ApiOperation(value = "Create and save the given invoice")
     public InvoiceDTO createInvoice(@RequestBody InvoiceDTO invoiceDTO){
-        return invoiceMapper.invoiceToInvoiceDTO(invoiceService.save(invoiceMapper.invoiceDTOToInvoice(invoiceDTO)));
+
+        List<Ticket> tickets = ticketMapper.ticketDTOToTicket(invoiceDTO.getTickets());
+        Invoice invoice = invoiceMapper.invoiceDTOToInvoice(invoiceDTO);
+        invoice.setTickets(tickets);
+        return invoiceMapper.invoiceToInvoiceDTO(invoiceService.save(invoice));
     }
 }

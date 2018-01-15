@@ -2,10 +2,17 @@ package at.ac.tuwien.inso.sepm.ticketline.rest.invoice;
 
 import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketDTO;
+import at.ac.tuwien.inso.sepm.ticketline.rest.user.DetailedUserDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.user.SimpleUserDTO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDFont;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -25,7 +32,7 @@ public class InvoiceDTO {
     private CustomerDTO customer;
 
     @ApiModelProperty( name = "The User who sold the tickets")
-    private SimpleUserDTO vendor;
+    private DetailedUserDTO vendor;
 
     @ApiModelProperty(readOnly = true, name = "The date and time the invoice was created")
     private LocalDateTime invoiceDate;
@@ -65,11 +72,11 @@ public class InvoiceDTO {
         this.customer = customer;
     }
 
-    public SimpleUserDTO getVendor() {
+    public DetailedUserDTO getVendor() {
         return vendor;
     }
 
-    public void setVendor( SimpleUserDTO vendor ) {
+    public void setVendor( DetailedUserDTO vendor ) {
         this.vendor = vendor;
     }
 
@@ -88,6 +95,30 @@ public class InvoiceDTO {
     public void setStorno( boolean storno ) {
         isStorno = storno;
     }
+
+    /*public PDDocument getInvoicePdf(){
+        PDDocument doc = new PDDocument();
+
+        PDPage page = new PDPage();
+        doc.addPage(page);
+        PDFont font = PDType1Font.HELVETICA_BOLD;
+        try (PDPageContentStream contents = new PDPageContentStream(doc, page)) {
+            contents.beginText();
+            contents.setFont(font, 12);
+            contents.newLineAtOffset(100, 700);
+            contents.showText("Invoice NR:" +invoiceNumber);
+            contents.endText();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            doc.save("Invoice"+invoiceNumber);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return doc;
+    }*/
 
     @Override
     public boolean equals( Object o ) {
@@ -137,7 +168,7 @@ public class InvoiceDTO {
         private Long invoiceNumber;
         private List<TicketDTO> tickets;
         private CustomerDTO customer;
-        private SimpleUserDTO vendor;
+        private DetailedUserDTO vendor;
         private LocalDateTime invoiceDate;
         private boolean isStorno;
 
@@ -157,7 +188,7 @@ public class InvoiceDTO {
             this.customer = customer;
             return this;
         }
-        public InvoiceDTOBuilder vendor(SimpleUserDTO user){
+        public InvoiceDTOBuilder vendor(DetailedUserDTO user){
             this.vendor = user;
             return this;
         }
