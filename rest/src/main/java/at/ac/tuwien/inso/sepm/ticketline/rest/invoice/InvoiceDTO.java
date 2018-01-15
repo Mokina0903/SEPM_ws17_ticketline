@@ -3,16 +3,9 @@ package at.ac.tuwien.inso.sepm.ticketline.rest.invoice;
 import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.user.DetailedUserDTO;
-import at.ac.tuwien.inso.sepm.ticketline.rest.user.SimpleUserDTO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.font.PDFont;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -96,29 +89,6 @@ public class InvoiceDTO {
         isStorno = storno;
     }
 
-    /*public PDDocument getInvoicePdf(){
-        PDDocument doc = new PDDocument();
-
-        PDPage page = new PDPage();
-        doc.addPage(page);
-        PDFont font = PDType1Font.HELVETICA_BOLD;
-        try (PDPageContentStream contents = new PDPageContentStream(doc, page)) {
-            contents.beginText();
-            contents.setFont(font, 12);
-            contents.newLineAtOffset(100, 700);
-            contents.showText("Invoice NR:" +invoiceNumber);
-            contents.endText();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            doc.save("Invoice"+invoiceNumber);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return doc;
-    }*/
 
     @Override
     public boolean equals( Object o ) {

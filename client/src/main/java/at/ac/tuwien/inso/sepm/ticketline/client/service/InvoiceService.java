@@ -2,6 +2,7 @@ package at.ac.tuwien.inso.sepm.ticketline.client.service;
 
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.rest.invoice.InvoiceDTO;
+import org.apache.pdfbox.pdmodel.PDDocument;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -29,4 +30,6 @@ public interface InvoiceService {
      * @return saved invoice with created values
      */
     InvoiceDTO create(InvoiceDTO invoice) throws DataAccessException;
+
+    PDDocument invoiceToPdf( InvoiceDTO invoiceDTO);
 }

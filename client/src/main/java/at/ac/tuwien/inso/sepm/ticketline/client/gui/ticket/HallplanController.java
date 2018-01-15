@@ -408,7 +408,7 @@ public class HallplanController implements LocalizationObserver {
 
             invoice= invoiceService.create(invoice);
 
-           // invoice.getInvoicePdf();
+            invoiceService.invoiceToPdf(invoice);
 
             backToEventTabBeginning();
 
