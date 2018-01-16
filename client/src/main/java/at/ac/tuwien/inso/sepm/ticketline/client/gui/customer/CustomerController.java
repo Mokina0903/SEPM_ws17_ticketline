@@ -412,9 +412,17 @@ public class CustomerController extends TabElement implements LocalizationObserv
         }
         CustomerDTO customer;
         if(actionEvent.getSource()==btnAnonymous){
-            CustomerDTO anonymousCustomer = new CustomerDTO();
-            anonymousCustomer.setName("Anonym");
-            anonymousCustomer.setSurname("Anonoym");
+            long l = 0;
+            CustomerDTO anonymousCustomer = null;
+            try {
+                anonymousCustomer = customerService.findByNumber(l);
+            } catch (DataAccessException e) {
+                LOGGER.debug("anonymous customer not available.");
+                e.printStackTrace();
+            } catch (SearchNoMatchException e) {
+                LOGGER.debug("anonymous customer does not exist!");
+                e.printStackTrace();
+            }
             mainController.setCutsomer(anonymousCustomer);
             customer=anonymousCustomer;
         }else{
