@@ -6,10 +6,12 @@ import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Seat;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -50,6 +52,26 @@ public interface TicketRepository extends JpaRepository<Ticket,Long>{
      * @return list of tickets
      */
     List<Ticket> findByCustomer_Id(Long customer_Id);
+
+    /**
+     * deletes a ticket with a certain ID
+     *
+     * @param ticket_Id of the ticket that should be deletet
+     */
+    @Modifying
+    @Transactional
+    @Query(value = "Delete from ticket where :ticket_Id = id", nativeQuery = true)
+    void deleteTicketByTicket_Id(@Param("ticket_Id") Long ticket_Id);
+
+    /**
+     * deletes a ticket with a certain ID
+     *
+     * @param ticket_Id of the ticket that should be deletet
+     */
+    @Modifying
+    @Transactional
+    @Query(value = "update ticket set is_deleted = true where id = :ticket_Id", nativeQuery = true)
+    void deleteFlagTicketByTicket_Id(@Param("ticket_Id") Long ticket_Id);
 
     /**
      * @param event_Id of the event the ticket is for
