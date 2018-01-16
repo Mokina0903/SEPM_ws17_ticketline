@@ -59,10 +59,19 @@ public class SimpleInvoiceService implements InvoiceService{
                    SimpleEventDTO event= invoiceDTO.getTickets().get(0).getEvent();
                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
+
                    PDTextField field = (PDTextField) acroForm.getFields().get(0);
-                   field.setValue("INVOICE");
+                   field.setValue("Ticketline 3 - "+(invoiceDTO.isStorno()?"REVERSAL":"INVOICE"));
+
+
                    field = (PDTextField) acroForm.getFields().get(1);
                    field.setValue("Ticketline 3");
+                   field = (PDTextField) acroForm.getFields().get(2);
+                   field.setValue("");
+                   field = (PDTextField) acroForm.getFields().get(3);
+                   field.setValue("");
+                   field = (PDTextField) acroForm.getFields().get(4);
+                   field.setValue("");
 
                    field = (PDTextField) acroForm.getFields().get(5);
                    field.setValue(invoiceDTO.getCustomer().getName()+" "+ invoiceDTO.getCustomer().getSurname());
@@ -73,6 +82,8 @@ public class SimpleInvoiceService implements InvoiceService{
                    field.setValue("");
                    field = (PDTextField) acroForm.getFields().get(8);
                    field.setValue("");
+
+                   //todo: insert id to 9
 
                    field = (PDTextField) acroForm.getFields().get(10);
                    field.setValue(invoiceDTO.getInvoiceDate().format(formatter));
@@ -99,35 +110,57 @@ public class SimpleInvoiceService implements InvoiceService{
                    allSectors.add(secE);
 
                    for(TicketDTO ticketDTO:invoiceDTO.getTickets()){
-                       switch(ticketDTO.getSeat().getSector()){
-                           case 'a':secA.add(ticketDTO);break;
-                           case 'b':secB.add(ticketDTO);break;
-                           case 'c':secC.add(ticketDTO);break;
-                           case 'd':secD.add(ticketDTO);break;
-                           case 'e':secE.add(ticketDTO);break;
+                       if((invoiceDTO.isStorno()&&ticketDTO.isDeleted()) || (!invoiceDTO.isStorno() && !ticketDTO.isDeleted())) {
+                           switch (ticketDTO.getSeat().getSector()) {
+                               case 'a':
+                                   secA.add(ticketDTO);
+                                   break;
+                               case 'b':
+                                   secB.add(ticketDTO);
+                                   break;
+                               case 'c':
+                                   secC.add(ticketDTO);
+                                   break;
+                               case 'd':
+                                   secD.add(ticketDTO);
+                                   break;
+                               case 'e':
+                                   secE.add(ticketDTO);
+                                   break;
+                           }
                        }
                    }
 
                    int line=0;
                    for(List<TicketDTO> sec:allSectors) {
 
-                       if (!sec.isEmpty()) {
+                       if (!sec.isEmpty() && !invoiceDTO.isStorno()) {
                            field = (PDTextField) acroForm.getFields().get(14+(line*4));
-                           field.setValue(event.getTitle() + " Ticket(s) in Sector \""+sec.get(0).getSeat().getSector()+"\"");
+                           field.setValue(invoiceDTO.isStorno()?"-":""+event.getTitle() + " Ticket(s) in Sector \""+sec.get(0).getSeat().getSector()+"\"");
                            field = (PDTextField) acroForm.getFields().get(15+(line*4));
                            field.setValue(sec.size() + "");
                            field = (PDTextField) acroForm.getFields().get(16+(line*4));
-                           field.setValue(sec.get(0).getPriceInEuro() + " \u20ac");
+                           field.setValue(invoiceDTO.isStorno()?"-":""+sec.get(0).getPriceInEuro() + " \u20ac");
                            field = (PDTextField) acroForm.getFields().get(17+(line*4));
-                           field.setValue(Math.round((100D*sec.get(0).getPriceInEuro()) * sec.size())/100D + " \u20ac");
+                           field.setValue(invoiceDTO.isStorno()?"-":""+Math.round((100D*sec.get(0).getPriceInEuro()) * sec.size())/100D + " \u20ac");
+                           if(line==2){
+                               field = (PDTextField) acroForm.getFields().get(14+(line*4));
+                               field.setValue(invoiceDTO.isStorno()?"-":""+event.getTitle() + " Ticket(s) in Sector \""+sec.get(0).getSeat().getSector()+"\"");
+                               field = (PDTextField) acroForm.getFields().get(16+(line*4));
+                               field.setValue(sec.size() + "");
+                               field = (PDTextField) acroForm.getFields().get(17+(line*4));
+                               field.setValue(invoiceDTO.isStorno()?"-":""+sec.get(0).getPriceInEuro() + " \u20ac");
+                               field = (PDTextField) acroForm.getFields().get(15+(line*4));
+                               field.setValue(invoiceDTO.isStorno()?"-":""+Math.round((100D*sec.get(0).getPriceInEuro()) * sec.size())/100D + " \u20ac");
+                           }
                            line++;
                        }
                    }
 
                    field = (PDTextField) acroForm.getFields().get(38);
-                   field.setValue(invoiceDTO.getTotalPriceInEuro()+"");
+                   field.setValue(invoiceDTO.isStorno()?"-":""+invoiceDTO.getTotalPriceInEuro()+"");
                    field = (PDTextField) acroForm.getFields().get(40);
-                   field.setValue(invoiceDTO.getTotalPriceInEuro()+"\u20ac");
+                   field.setValue(invoiceDTO.isStorno()?"-":""+invoiceDTO.getTotalPriceInEuro()+"\u20ac");
 
                }
 
