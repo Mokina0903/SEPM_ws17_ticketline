@@ -9,6 +9,8 @@ import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.eventLocation.seat
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.ticket.TicketMapper;
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.EmptyFieldException;
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.InvalidIdException;
+import at.ac.tuwien.inso.sepm.ticketline.server.exception.NotFoundException;
+import at.ac.tuwien.inso.sepm.ticketline.server.exception.OldVersionException;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.EventService;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.LocationService;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.TicketService;
@@ -125,9 +127,7 @@ public class TicketEndpoint {
 
     @RequestMapping(value= "/deleteTicket/{ticketID}", method = RequestMethod.POST)
     @ApiOperation(value = "Delete one ticket with a certain ID")
-    public void deleteTicket(@PathVariable Long ticketID) throws InvalidIdException {
-        System.out.println("Hier");
-
+    public void deleteTicket(@PathVariable Long ticketID) throws OldVersionException, NotFoundException {
         ticketService.deleteTicketByTicket_Id(ticketID);
     }
 

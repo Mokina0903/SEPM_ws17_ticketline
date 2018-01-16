@@ -5,6 +5,8 @@ import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Ticket;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Seat;
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.InvalidIdException;
+import at.ac.tuwien.inso.sepm.ticketline.server.exception.NotFoundException;
+import at.ac.tuwien.inso.sepm.ticketline.server.exception.OldVersionException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -53,7 +55,7 @@ public interface TicketService {
      *
      * @param ticket_Id of the ticket that should be deletet
      */
-    void deleteTicketByTicket_Id(Long ticket_Id) throws InvalidIdException;
+    void deleteTicketByTicket_Id(Long ticket_Id) throws NotFoundException, OldVersionException;
 
     /**
      * check if seat is already sold

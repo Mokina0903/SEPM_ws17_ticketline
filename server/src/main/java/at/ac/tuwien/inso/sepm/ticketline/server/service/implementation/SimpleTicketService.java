@@ -4,10 +4,7 @@ import at.ac.tuwien.inso.sepm.ticketline.server.entity.Customer;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Ticket;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Seat;
-import at.ac.tuwien.inso.sepm.ticketline.server.exception.AlreadyExistsException;
-import at.ac.tuwien.inso.sepm.ticketline.server.exception.EmptyFieldException;
-import at.ac.tuwien.inso.sepm.ticketline.server.exception.InvalidIdException;
-import at.ac.tuwien.inso.sepm.ticketline.server.exception.NotFoundException;
+import at.ac.tuwien.inso.sepm.ticketline.server.exception.*;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.TicketRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.TicketService;
 import org.springframework.data.domain.Page;
@@ -48,10 +45,18 @@ public class SimpleTicketService implements TicketService {
     }
 
     @Override
-    public void deleteTicketByTicket_Id(Long ticket_Id) {
+    public void deleteTicketByTicket_Id(Long ticket_Id) throws NotFoundException, OldVersionException {
 
         Ticket ticket = ticketRepository.getOne(ticket_Id);
         if(ticket.isPaid()) {
+            Ticket ticket1 = ticketRepository.findOne(ticket_Id);
+            if(ticket1 == null){
+                throw new NotFoundException();
+            }
+            if(ticket1.isDeleted()){
+                throw new OldVersionException();
+            }
+
             ticketRepository.deleteFlagTicketByTicket_Id(ticket_Id);
 
         }
