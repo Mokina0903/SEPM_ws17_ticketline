@@ -114,13 +114,19 @@ public class SimpleInvoiceService implements InvoiceService{
                            field = (PDTextField) acroForm.getFields().get(14+(line*4));
                            field.setValue(event.getTitle() + " Ticket(s) in Sector \""+sec.get(0).getSeat().getSector()+"\"");
                            field = (PDTextField) acroForm.getFields().get(15+(line*4));
-                           field.setValue(secA.size() + "");
+                           field.setValue(sec.size() + "");
                            field = (PDTextField) acroForm.getFields().get(16+(line*4));
-                           field.setValue(secA.get(0).getPrice() + " \u20ac");
+                           field.setValue(sec.get(0).getPriceInEuro() + " \u20ac");
                            field = (PDTextField) acroForm.getFields().get(17+(line*4));
-                           field.setValue(secA.get(0).getPrice() * secA.size() + " \u20ac");
+                           field.setValue(sec.get(0).getPriceInEuro() * sec.size() + " \u20ac");
+                           line++;
                        }
                    }
+
+                   field = (PDTextField) acroForm.getFields().get(38);
+                   field.setValue(invoiceDTO.getTotalPriceInEuro()+"");
+                   field = (PDTextField) acroForm.getFields().get(40);
+                   field.setValue(invoiceDTO.getTotalPriceInEuro()+"\u20ac");
                    // If a field is nested within the form tree a fully qualified name
                    // might be provided to access the field.
                    //field = (PDTextField) acroForm.getField("fieldsContainer.nestedSampleField");

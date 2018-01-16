@@ -90,7 +90,7 @@ public class InvoiceDTO {
     }
 
     public double getTotalPriceInEuro(){
-        int sum=0;
+        double sum=0;
         for (TicketDTO ticketDTO:tickets){
             sum+=ticketDTO.getPriceInEuro();
         }
