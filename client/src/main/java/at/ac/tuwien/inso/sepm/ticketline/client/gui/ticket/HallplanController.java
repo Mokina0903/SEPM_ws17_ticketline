@@ -402,17 +402,18 @@ public class HallplanController implements LocalizationObserver {
             selectedSeats.clear();
             totalSum = 0;
 
-            //create invoice
-            InvoiceDTO invoice = new InvoiceDTO.InvoiceDTOBuilder()
-                .isStorno(false)
-                .tickets(ticketsSaved)
-                .vendor(mainController.getUser())
-                .customer(mainController.getCutsomer())
-                .build();
+            //create invoice if tickets are bought
+            if(tickets.get(0).isPaid()) {
+                InvoiceDTO invoice = new InvoiceDTO.InvoiceDTOBuilder()
+                    .isStorno(false)
+                    .tickets(ticketsSaved)
+                    .vendor(mainController.getUser())
+                    .customer(mainController.getCutsomer())
+                    .build();
 
-            invoice= invoiceService.create(invoice);
-            invoiceService.invoiceToPdf(invoice);
-
+                invoice = invoiceService.create(invoice);
+                invoiceService.invoiceToPdf(invoice);
+            }
 
 
             backToEventTabBeginning();
