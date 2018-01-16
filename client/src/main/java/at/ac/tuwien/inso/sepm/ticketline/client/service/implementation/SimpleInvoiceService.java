@@ -45,7 +45,8 @@ public class SimpleInvoiceService implements InvoiceService{
         return invoiceRestClient.create(invoice);
     }
 
-    public PDDocument invoiceToPdf(InvoiceDTO invoiceDTO) throws DataAccessException {
+    @Override
+    public File invoiceToPdf(InvoiceDTO invoiceDTO) throws DataAccessException {
 
         URL formTemplate = getClass().getResource("/invoice_template/Invoice_Template.pdf") ;
            try (PDDocument pdfDocument = PDDocument.load(new File(formTemplate.getPath()))) {
@@ -59,7 +60,9 @@ public class SimpleInvoiceService implements InvoiceService{
                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
                    PDTextField field = (PDTextField) acroForm.getFields().get(0);
-                   field.setValue("TicketLine 3");
+                   field.setValue("INVOICE");
+                   field = (PDTextField) acroForm.getFields().get(1);
+                   field.setValue("Ticketline 3");
 
                    field = (PDTextField) acroForm.getFields().get(5);
                    field.setValue(invoiceDTO.getCustomer().getName()+" "+ invoiceDTO.getCustomer().getSurname());
@@ -125,24 +128,27 @@ public class SimpleInvoiceService implements InvoiceService{
                    field.setValue(invoiceDTO.getTotalPriceInEuro()+"");
                    field = (PDTextField) acroForm.getFields().get(40);
                    field.setValue(invoiceDTO.getTotalPriceInEuro()+"\u20ac");
-                   // If a field is nested within the form tree a fully qualified name
-                   // might be provided to access the field.
-                   //field = (PDTextField) acroForm.getField("fieldsContainer.nestedSampleField");
-                   //field.setValue("Text Entry");
+
                }
 
-               // Save and close the filled out form.
+               // Save the filled out form.
 
                File template =  new File(getClass().getResource("/invoice_template/Invoice_Template.pdf").getPath()) ;
                File parent= template.getParentFile();
-              // File file = new File(("C:\\Users\\stefa\\Documents\\Informatik\\sepm\\Gruppenphase\\ticketline\\client\\src\\main\\resources\\invoice_template\\Invoice"+invoiceDTO.getInvoiceNumber()+".pdf"));
                File doc = new File(parent.getPath()+"/Invoice"+invoiceDTO.getInvoiceNumber()+".pdf");
                pdfDocument.save(doc);
 
                invoiceRestClient.saveInvoicePdf(doc);
 
+               //open pdf
+               try {
+                   Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + doc);
+               } catch (IOException e) {
+                   //todo: new exception
+                   e.printStackTrace();
+               }
 
-               return pdfDocument;
+               return doc;
 
            } catch (InvalidPasswordException e) {
                e.printStackTrace();

@@ -6,6 +6,8 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.io.File;
+
 public interface InvoiceService {
     /**
      *find all invoices
@@ -31,5 +33,5 @@ public interface InvoiceService {
      */
     InvoiceDTO create(InvoiceDTO invoice) throws DataAccessException;
 
-    PDDocument invoiceToPdf( InvoiceDTO invoiceDTO) throws DataAccessException;
+    File invoiceToPdf( InvoiceDTO invoiceDTO) throws DataAccessException;
 }

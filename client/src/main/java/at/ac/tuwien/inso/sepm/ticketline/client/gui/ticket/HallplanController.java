@@ -29,6 +29,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import org.apache.pdfbox.pdmodel.PDDocument;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.Glyph;
 import org.controlsfx.glyphfont.GlyphFont;
@@ -39,6 +40,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
+import java.awt.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -399,6 +402,7 @@ public class HallplanController implements LocalizationObserver {
             selectedSeats.clear();
             totalSum = 0;
 
+            //create invoice
             InvoiceDTO invoice = new InvoiceDTO.InvoiceDTOBuilder()
                 .isStorno(false)
                 .tickets(ticketsSaved)
@@ -407,8 +411,9 @@ public class HallplanController implements LocalizationObserver {
                 .build();
 
             invoice= invoiceService.create(invoice);
-
             invoiceService.invoiceToPdf(invoice);
+
+
 
             backToEventTabBeginning();
 
