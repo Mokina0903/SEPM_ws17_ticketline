@@ -2,6 +2,7 @@ package at.ac.tuwien.inso.sepm.ticketline.server.service.implementation;
 
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Artist;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.QEvent;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Hall;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Location;
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.NotFoundException;
@@ -12,6 +13,7 @@ import at.ac.tuwien.inso.sepm.ticketline.server.repository.Location.LocationRepo
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.MyPredicatesBuilder;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.EventService;
 import com.google.common.collect.Lists;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -21,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -69,15 +72,23 @@ public class SimpleEventService implements EventService {
         return null;
     }
 
-/*    //QueryDsl
-    public Page<Event> findAllEventsByName(Pageable request, String title) {
-        MyPredicatesBuilder builder = new MyPredicatesBuilder("event").with("title", ":", title);
-        Iterable<Event> events = eventRepository.findAll(builder.build());
+
+    // https://spring.io/blog/2011/04/26/advanced-spring-data-jpa-specifications-and-querydsl/
+    // http://www.baeldung.com/rest-api-search-language-spring-data-specifications
+    private QEvent event = QEvent.event;
+    private BooleanExpression eventHasTitle = event.title.eq("test");
+    private BooleanExpression eventInFuture = event.startOfEvent.after(LocalDateTime.now());
+
+/*    private Page<Event> findByTitleInFuture() {
+        Iterable<Event> list = eventRepository.findAll(eventHasTitle.and(eventInFuture));
         List<Event> eventList = Lists.newArrayList(events);
-        int start = request.getOffset();
-        int end = (start + request.getPageSize()) > eventList.size() ? eventList.size() : (start + request.getPageSize());
-        return new PageImpl<>(eventList.subList(start, end), request, eventList.size());
+        return new PageImpl<>(eventList, request, eventList.size());
     }*/
+
+ /* join:
+ * https://stackoverflow.com/questions/23837988/querydsl-jpql-how-to-build-a-join-query
+ * */
+
 
     @Override
     public Page<Event> findByAdvancedSearch(String search, Pageable request) {

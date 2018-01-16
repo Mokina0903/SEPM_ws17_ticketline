@@ -47,7 +47,7 @@
                                         <ChoiceBox fx:id="cbSearch" maxWidth="-Infinity" minWidth="30.0" prefWidth="30.0" />
                                     </children>
                                 </HBox>
-                                <Button fx:id="btAdvSearch" onAction="#testSearch" minHeight="64.0" minWidth="110.0" mnemonicParsing="false" prefHeight="64.0" text="%events.advSearch" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.valignment="TOP" />
+                                <Button fx:id="btAdvSearch" onAction="#openAdvancedSearch" minHeight="64.0" minWidth="110.0" mnemonicParsing="false" prefHeight="64.0" text="%events.advSearch" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.valignment="TOP" />
                                 <Button fx:id="btSearch" onAction="#search" defaultButton="true" minWidth="40.0" prefWidth="40.0" GridPane.columnIndex="1" />
                             </children>
                             <HBox.margin>

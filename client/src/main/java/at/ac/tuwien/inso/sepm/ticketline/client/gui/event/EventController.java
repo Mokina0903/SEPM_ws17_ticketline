@@ -207,6 +207,16 @@ public class EventController extends TabElement implements LocalizationObserver 
     }
 
 
+    @FXML
+    public void openAdvancedSearch(ActionEvent actionEvent) throws DataAccessException {
+            LOGGER.info("opening the advanced event search dialog.");
+
+                SpringFxmlLoader.Wrapper<EventAdvancedSearchController> wrapper =
+                    springFxmlLoader.loadAndWrap("/fxml/event/eventAdvancedSearchComponent.fxml");
+                wrapper.getController().initializeData(eventRootContainer);
+                eventTab.setContent(wrapper.getLoadedObject());
+    }
+
     @Override
     protected void setTab(Tab tab) {
         eventTab = tab;
@@ -214,64 +224,43 @@ public class EventController extends TabElement implements LocalizationObserver 
 
     public void loadEvents(){
 
-        searchFor = EventSearchFor.ALL; //toDO: Add Searchfunctions
-
+        searchFor = EventSearchFor.ALL;
         preparePagination();
 
-
-/*
-        ObservableList<VBox> lvEventsChildren = lvEventElements.getItems();
-        lvEventsChildren.clear();
-
-
-        Task<List<SimpleEventDTO>> taskNewNews = new Task<>() {
+        Task<Page<SimpleEventDTO>> taskLoadEvents = new Task<>() {
             @Override
-            protected List<SimpleEventDTO> call() throws DataAccessException, InterruptedException {
-
-                return eventService.findAll();
+            protected Page<SimpleEventDTO> call() throws DataAccessException {
+                try {
+                    Pageable request = new PageRequest(0, EVENTS_PER_PAGE);
+                    return eventService.findAllUpcoming(request);
+                } catch (SearchNoMatchException e) {
+                    e.printStackTrace();
+                }
+                return null;
             }
 
             @Override
             protected void succeeded() {
                 super.succeeded();
-                if (!getValue().isEmpty() ) {
-                    for (SimpleEventDTO event : getValue()) {
-
-                        SpringFxmlLoader.Wrapper<EventElementController> wrapper =
-                            springFxmlLoader.loadAndWrap("/fxml/event/eventElement.fxml");
-                        wrapper.getController().initializeData(eventService,event);
-
-                        lvEventsChildren.add(wrapper.getController().vbLocationElement);
-                    }
-
-                }
-
+                preparePagination();
             }
 
             @Override
             protected void failed() {
-                if(getValue()==null || getValue().isEmpty()) {
+                if (getValue() == null || getValue().getContent().isEmpty()) {
                     super.failed();
-                    JavaFXUtils.createExceptionDialog(getException(),
-                        lvEventElements.getScene().getWindow()).showAndWait();
+                    mainController.showGeneralError("Failure at load events: " + getException().getMessage());
                 }
             }
         };
-        taskNewNews.runningProperty().addListener((observable, oldValue, running) ->
+        taskLoadEvents.runningProperty().addListener((observable, oldValue, running) ->
             mainController.setProgressbarProgress(
                 running ? ProgressBar.INDETERMINATE_PROGRESS : 0)
         );
 
 
-        new Thread(taskNewNews).start();
-        */
-    }
+        new Thread(taskLoadEvents).start();
 
-    //just for testing: starts with advanced search button
-    public void testSearch(ActionEvent actionEvent) throws DataAccessException {
-        Pageable request = new PageRequest(0, EVENTS_PER_PAGE);
-
-        eventService.findAdvanced(request, "all");
     }
 
 
