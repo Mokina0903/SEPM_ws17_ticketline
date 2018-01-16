@@ -75,4 +75,9 @@ public class SimpleTicketService implements TicketService {
     public Page<TicketDTO> findByReservationNumber(Long reservationNumber, Pageable request) throws DataAccessException, SearchNoMatchException {
         return ticketRestClient.findByReservationNumber(reservationNumber, request);
     }
+
+    @Override
+    public void deleteTicketByTicket_Id(Long ticket_Id) throws DataAccessException {
+        ticketRestClient.deleteTicketByTicket_Id(ticket_Id);
+    }
 }

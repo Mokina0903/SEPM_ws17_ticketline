@@ -233,6 +233,26 @@ public class SimpleTicketRestClient implements TicketRestClient {
     }
 
     @Override
+    public void deleteTicketByTicket_Id(Long ticket_Id) throws DataAccessException {
+        //try {
+            LOGGER.debug("removing news from users notSeen from {}", restClient.getServiceURI(TICKET_URL));
+            ResponseEntity ticket =
+                restClient.exchange(
+                    restClient.getServiceURI(TICKET_URL + "/" + "deleteTicket" + "/" + ticket_Id),
+                    HttpMethod.POST,
+                    null,
+                    new ParameterizedTypeReference<Long>() {
+                    }
+                );
+            LOGGER.debug("Result status was {} with content {}", ticket.getStatusCode(), ticket.getBody());
+        /*} catch (HttpStatusCodeException e) {
+            throw new DataAccessException("Failed to update user with status code " + e.getStatusCode().toString());
+        } catch (RestClientException e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }*/
+    }
+
+    @Override
     public Page<TicketDTO> findAll(Pageable request) throws DataAccessException, SearchNoMatchException {
         try {
             LOGGER.debug("Retrieving all tickets from {}", restClient.getServiceURI(TICKET_URL+"/"+request.getPageNumber()+"/"+request.getPageSize() ));

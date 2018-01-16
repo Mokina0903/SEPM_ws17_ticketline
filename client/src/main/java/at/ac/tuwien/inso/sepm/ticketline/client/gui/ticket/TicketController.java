@@ -19,6 +19,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -50,14 +51,21 @@ public class TicketController extends TabElement implements LocalizationObserver
 
     @FXML
     public Pagination pagination;
+
     @FXML
     public Label lblNoMatch;
+
+    @FXML
+    public Button btnStorno;
+
+
 
     private TableColumn<TicketRepresentationClass, String> tcName;
     private TableColumn<TicketRepresentationClass, String> tcSurname;
     private TableColumn<TicketRepresentationClass, String> tcIsPaid;
     private TableColumn<TicketRepresentationClass, Long> tcNumber;
     private TableColumn<TicketRepresentationClass, String> tcSelected;
+    private TableColumn<TicketRepresentationClass, String> tcIsDeleted;
 
 
     @FXML
@@ -142,6 +150,7 @@ public class TicketController extends TabElement implements LocalizationObserver
         tcIsPaid = new TableColumn<>();
         tcNumber = new TableColumn<>();
         tcSelected = new TableColumn<>();
+        tcIsDeleted = new TableColumn<>();
 
 
         tcName.setText(BundleManager.getBundle().getString("customer.fname"));
@@ -149,6 +158,7 @@ public class TicketController extends TabElement implements LocalizationObserver
         tcIsPaid.setText(BundleManager.getBundle().getString("ticket.tcIsPaid"));
         tcNumber.setText(BundleManager.getBundle().getString("ticket.ticketNumber"));
         tcSelected.setText(BundleManager.getBundle().getString("ticket.sector"));
+        tcIsDeleted.setText(BundleManager.getBundle().getString("ticket.isDeleted"));
 
         tcName.setCellValueFactory(new PropertyValueFactory<>("customerName"));
         tcSurname.setCellValueFactory(new PropertyValueFactory<>("customerSurname"));
@@ -177,7 +187,19 @@ public class TicketController extends TabElement implements LocalizationObserver
                 return new ReadOnlyStringWrapper(isPaidAsString);
             }));
 
-        tvTickets.getColumns().addAll(tcNumber, tcName, tcSurname, tcSelected, tcIsPaid);
+        tcIsDeleted.setCellValueFactory((cellData -> {
+            boolean isDeleted = cellData.getValue().getIsDeleted();
+            String isDeletedAsString;
+            if (isDeleted) {
+                isDeletedAsString = "YES";
+            } else {
+                isDeletedAsString = "NO";
+            }
+
+            return new ReadOnlyStringWrapper(isDeletedAsString);
+        }));
+
+        tvTickets.getColumns().addAll(tcNumber, tcName, tcSurname, tcSelected, tcIsPaid, tcIsDeleted);
         tvTickets.getItems().addAll(getRepresentationList(tickets.getContent()));
         tvTickets.refresh();
 
@@ -195,6 +217,7 @@ public class TicketController extends TabElement implements LocalizationObserver
             Long reservationNumber = ticket.getReservationNumber();
             Long ticketID = ticket.getId();
             boolean isPaid = ticket.isPaid();
+            boolean isDeleted = ticket.isDeleted();
             String name= ticket.getCustomer().getName();
             String surname = ticket.getCustomer().getSurname();
             String seat = null;
@@ -206,7 +229,7 @@ public class TicketController extends TabElement implements LocalizationObserver
             }
 
 
-            TicketRepresentationClass rep = new TicketRepresentationClass(eventname, reservationNumber, ticketID, isPaid, name, surname, sector, seat, ticket.getEvent().getSeatSelection());
+            TicketRepresentationClass rep = new TicketRepresentationClass(eventname, reservationNumber, ticketID, isPaid, isDeleted, name, surname, sector, seat, ticket.getEvent().getSeatSelection());
             representedTickets.add(rep);
         }
         return representedTickets;
@@ -275,6 +298,56 @@ public class TicketController extends TabElement implements LocalizationObserver
 
     }
 
+    @FXML
+    private void storno(ActionEvent actionEvent){
+
+
+        Task<Void> workerTask = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                //ToDo fragen wie ich hier die exception abfangen kann
+                if(currentTableview.getSelectionModel().getSelectedItem() != null) {
+                    TicketRepresentationClass ticket = currentTableview.getSelectionModel().getSelectedItem();
+                    if (!(ticket == null)) {
+                        ticketService.deleteTicketByTicket_Id(ticket.getTicket_id());
+                    } else {
+                        mainController.showGeneralError("You have to choose a Ticket!");
+                    }
+                }
+                else{
+                    mainController.showGeneralError("You have to choose a Ticket!");
+                }
+                return null;
+            }
+
+            @Override
+            protected void succeeded() {
+                super.succeeded();
+            }
+            //ToDo update
+            @Override
+            protected void failed() {
+                if (getException().getMessage().trim().equals("424")) {
+                    mainController.showGeneralError("Ticket has allready been canceled.");
+                }
+                else if (getException().getMessage().trim().equals("500")) {
+                    mainController.showGeneralError("Sorry your ticked could not be found!");
+                }
+                else {
+                    mainController.showGeneralError(getException().toString());
+                }
+            }
+        };
+
+        workerTask.runningProperty().addListener((observable, oldValue, running) ->
+            mainController.setProgressbarProgress(
+                running ? ProgressBar.INDETERMINATE_PROGRESS : 0)
+        );
+
+        new Thread(workerTask).start();
+
+    }
+
     @Override
     protected void setTab(Tab tab) {
         ticketTab = tab;
@@ -282,7 +355,7 @@ public class TicketController extends TabElement implements LocalizationObserver
 
     @Override
     public void update() {
-
+        btnStorno.setText(BundleManager.getBundle().getString("ticket.storno"));
         tcName.setText(BundleManager.getBundle().getString("customer.fname"));
         tcSurname.setText(BundleManager.getBundle().getString("customer.lname"));
         tcIsPaid.setText(BundleManager.getBundle().getString("ticket.tcIsPaid"));

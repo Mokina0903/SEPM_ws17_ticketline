@@ -44,7 +44,7 @@
         <BorderPane.margin>
               <Insets top="81" right="20" />
           </BorderPane.margin>
-            <Button fx:id="btnStorno"  prefHeight="25.0" prefWidth="50.0"/>
+            <Button fx:id="btnStorno" text="%ticket.storno" prefHeight="25.0" prefWidth="80.0" onAction="#storno"/>
         </HBox>
     </right>
 

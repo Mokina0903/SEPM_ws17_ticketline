@@ -90,4 +90,12 @@ public interface TicketService {
     Page<TicketDTO> findByCustomerName(String name, Pageable request) throws DataAccessException, SearchNoMatchException;
 
     Page<TicketDTO> findByReservationNumber(Long reservationNumber, Pageable request) throws DataAccessException, SearchNoMatchException;
+
+    /**
+     * deletes a ticket with a certain ID
+     *
+     * @param ticket_Id of the ticket that should be deletet
+     */
+    void deleteTicketByTicket_Id(Long ticket_Id) throws DataAccessException;
+
 }
