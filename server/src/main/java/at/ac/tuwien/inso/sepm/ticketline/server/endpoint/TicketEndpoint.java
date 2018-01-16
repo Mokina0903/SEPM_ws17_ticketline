@@ -8,6 +8,7 @@ import at.ac.tuwien.inso.sepm.ticketline.server.entity.Ticket;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.eventLocation.seat.SeatMapper;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.ticket.TicketMapper;
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.EmptyFieldException;
+import at.ac.tuwien.inso.sepm.ticketline.server.exception.InvalidIdException;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.EventService;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.LocationService;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.TicketService;
@@ -119,6 +120,15 @@ public class TicketEndpoint {
         Page<Ticket> tickets = ticketService.findAllByReservationNumber(reservationNumber, request);
         List<TicketDTO> dtos = ticketMapper.ticketToTicketDTO(tickets.getContent());
         return new PageImpl<>(dtos, request, tickets.getTotalElements());
+    }
+
+
+    @RequestMapping(value= "/deleteTicket/{ticketID}", method = RequestMethod.POST)
+    @ApiOperation(value = "Delete one ticket with a certain ID")
+    public void deleteTicket(@PathVariable Long ticketID) throws InvalidIdException {
+        System.out.println("Hier");
+
+        ticketService.deleteTicketByTicket_Id(ticketID);
     }
 
 
