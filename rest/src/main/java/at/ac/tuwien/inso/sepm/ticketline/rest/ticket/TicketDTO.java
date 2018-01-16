@@ -94,7 +94,27 @@ public class TicketDTO {
         this.seat = seat;
     }
 
-    public double getPriceInEuro(){return(double)price/(double)100;}
+    public double getPriceInEuro(){
+        char sec=seat.getSector();
+        double faktor=1;
+        switch (sec) {
+            case 'a':
+                faktor=1;
+                break;
+            case 'b':
+                faktor=1.2;
+                break;
+            case 'c':
+                faktor=1.4;
+                break;
+            case 'd':
+                faktor=1.6;
+                break;
+            case 'e':
+                faktor=1.8;
+                break;
+        }
+        return((double)price/(double)100)*faktor;}
 
     public Long getPrice() {
         return price;
