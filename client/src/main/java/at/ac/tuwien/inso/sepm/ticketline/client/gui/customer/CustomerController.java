@@ -158,7 +158,8 @@ public class CustomerController extends TabElement implements LocalizationObserv
         btNext.setDisable(true);
         btNext.setVisible(false);
         btNext.setText(BundleManager.getBundle().getString("customer.next"));
-
+        btnAnonymous.setVisible(false);
+        btnAnonymous.setDisable(true);
         lbNoMatch.setVisible(false);
         isTicketView = false;
     }
