@@ -1,8 +1,11 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.service;
 
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Invoice;
+import org.apache.pdfbox.pdmodel.PDDocument;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
+import java.io.IOException;
 
 public interface InvoiceService {
 
@@ -30,4 +33,5 @@ public interface InvoiceService {
      */
     Invoice save(Invoice invoice);
 
+    void saveInvoicePDF( PDDocument document) throws IOException;
 }

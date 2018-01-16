@@ -12,6 +12,7 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.springframework.data.domain.*;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
@@ -58,13 +59,10 @@ public class InvoiceEndpoint {
     }
     @RequestMapping(value="/newPdf", method = RequestMethod.POST)
     @ApiOperation(value = "save the given invoice pdf")
-    public void createInvoice( @RequestBody PDDocument document ) {
-
-        String template = getClass().getResource(
-            "/invoice").getPath() ;
+    public void createInvoice( @RequestBody File document ) {
 
         try {
-            document.save(template+"/Invoice"+document.getDocumentCatalog().getAcroForm().getFields().get(11));
+            invoiceService.saveInvoicePDF(PDDocument.load(document));
         } catch (IOException e) {
             e.printStackTrace();
         }

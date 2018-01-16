@@ -45,7 +45,7 @@ public class SimpleInvoiceService implements InvoiceService{
         return invoiceRestClient.create(invoice);
     }
 
-    public PDDocument invoiceToPdf(InvoiceDTO invoiceDTO){
+    public PDDocument invoiceToPdf(InvoiceDTO invoiceDTO) throws DataAccessException {
 
         URL formTemplate = getClass().getResource("/invoice_template/Invoice_Template.pdf") ;
            try (PDDocument pdfDocument = PDDocument.load(new File(formTemplate.getPath()))) {
@@ -133,8 +133,13 @@ public class SimpleInvoiceService implements InvoiceService{
 
                // Save and close the filled out form.
 
-               pdfDocument.save("C:\\Users\\stefa\\Documents\\Informatik\\sepm\\Gruppenphase\\ticketline\\client\\src\\main\\resources\\invoice_template\\Invoice"+invoiceDTO.getInvoiceNumber()+".pdf");
+               File template =  new File(getClass().getResource("/invoice_template/Invoice_Template.pdf").getPath()) ;
+               File parent= template.getParentFile();
+              // File file = new File(("C:\\Users\\stefa\\Documents\\Informatik\\sepm\\Gruppenphase\\ticketline\\client\\src\\main\\resources\\invoice_template\\Invoice"+invoiceDTO.getInvoiceNumber()+".pdf"));
+               File doc = new File(parent.getPath()+"/Invoice"+invoiceDTO.getInvoiceNumber()+".pdf");
+               pdfDocument.save(doc);
 
+               invoiceRestClient.saveInvoicePdf(doc);
 
 
                return pdfDocument;

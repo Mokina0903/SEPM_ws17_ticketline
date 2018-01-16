@@ -3,6 +3,8 @@ package at.ac.tuwien.inso.sepm.ticketline.client.rest.implementation;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.rest.InvoiceRestClient;
 import at.ac.tuwien.inso.sepm.ticketline.rest.invoice.InvoiceDTO;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.common.PDStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
@@ -14,6 +16,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestClientException;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 
 @Component
 public class SimpleInvoiceRestClient implements InvoiceRestClient{
@@ -81,6 +87,24 @@ public class SimpleInvoiceRestClient implements InvoiceRestClient{
             return invoiceResponse.getBody();
         } catch (HttpStatusCodeException e) {
             throw new DataAccessException("Failed save invoice with status code " + e.getStatusCode().toString());
+        } catch (RestClientException e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void saveInvoicePdf( File document ) throws DataAccessException, IOException {
+        try {
+            LOGGER.debug("save invoice pdf");
+
+            HttpEntity<File> entity = new HttpEntity<>(document);
+                restClient.exchange(
+                    restClient.getServiceURI(INVOICE_URL+"/newPdf"),
+                    HttpMethod.POST,
+                    entity,
+                    Void.class);
+        } catch (HttpStatusCodeException e) {
+            throw new DataAccessException("Failed save invoice pdf with status code " + e.getStatusCode().toString());
         } catch (RestClientException e) {
             throw new DataAccessException(e.getMessage(), e);
         }

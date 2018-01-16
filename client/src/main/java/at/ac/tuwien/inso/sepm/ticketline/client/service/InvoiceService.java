@@ -31,5 +31,5 @@ public interface InvoiceService {
      */
     InvoiceDTO create(InvoiceDTO invoice) throws DataAccessException;
 
-    PDDocument invoiceToPdf( InvoiceDTO invoiceDTO);
+    PDDocument invoiceToPdf( InvoiceDTO invoiceDTO) throws DataAccessException;
 }
