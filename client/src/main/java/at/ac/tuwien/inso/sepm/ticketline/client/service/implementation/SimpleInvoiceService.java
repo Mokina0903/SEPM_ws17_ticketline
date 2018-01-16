@@ -7,11 +7,7 @@ import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.invoice.InvoiceDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketDTO;
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.encryption.InvalidPasswordException;
-import org.apache.pdfbox.pdmodel.font.PDFont;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
 import org.apache.pdfbox.pdmodel.interactive.form.PDTextField;
 import org.springframework.data.domain.Page;
@@ -19,8 +15,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.net.URL;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -51,8 +47,8 @@ public class SimpleInvoiceService implements InvoiceService{
 
     public PDDocument invoiceToPdf(InvoiceDTO invoiceDTO){
 
-        String formTemplate = "C:\\Users\\stefa\\Documents\\Informatik\\sepm\\Gruppenphase\\ticketline\\client\\src\\main\\resources\\invoice_template\\Invoice_Template.pdf";
-           try (PDDocument pdfDocument = PDDocument.load(new File(formTemplate))) {
+        URL formTemplate = getClass().getResource("/invoice_template/Invoice_Template.pdf") ;
+           try (PDDocument pdfDocument = PDDocument.load(new File(formTemplate.getPath()))) {
 
                PDAcroForm acroForm = pdfDocument.getDocumentCatalog().getAcroForm();
 
@@ -136,6 +132,7 @@ public class SimpleInvoiceService implements InvoiceService{
                }
 
                // Save and close the filled out form.
+
                pdfDocument.save("C:\\Users\\stefa\\Documents\\Informatik\\sepm\\Gruppenphase\\ticketline\\client\\src\\main\\resources\\invoice_template\\Invoice"+invoiceDTO.getInvoiceNumber()+".pdf");
 
 

@@ -8,9 +8,13 @@ import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.ticket.TicketMappe
 import at.ac.tuwien.inso.sepm.ticketline.server.service.InvoiceService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.pdfbox.pdmodel.PDDocument;
 import org.springframework.data.domain.*;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.net.URL;
+import java.nio.file.Path;
 import java.util.List;
 
 @RestController
@@ -51,5 +55,18 @@ public class InvoiceEndpoint {
         Invoice invoice = invoiceMapper.invoiceDTOToInvoice(invoiceDTO);
         invoice.setTickets(tickets);
         return invoiceMapper.invoiceToInvoiceDTO(invoiceService.save(invoice));
+    }
+    @RequestMapping(value="/newPdf", method = RequestMethod.POST)
+    @ApiOperation(value = "save the given invoice pdf")
+    public void createInvoice( @RequestBody PDDocument document ) {
+
+        String template = getClass().getResource(
+            "/invoice").getPath() ;
+
+        try {
+            document.save(template+"/Invoice"+document.getDocumentCatalog().getAcroForm().getFields().get(11));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
