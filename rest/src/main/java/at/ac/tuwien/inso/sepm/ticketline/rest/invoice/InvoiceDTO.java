@@ -89,6 +89,14 @@ public class InvoiceDTO {
         isStorno = storno;
     }
 
+    public double getTotalPriceInEuro(){
+        int sum=0;
+        for (TicketDTO ticketDTO:tickets){
+            sum+=ticketDTO.getPriceInEuro();
+        }
+        return sum;
+    }
+
 
     @Override
     public boolean equals( Object o ) {
