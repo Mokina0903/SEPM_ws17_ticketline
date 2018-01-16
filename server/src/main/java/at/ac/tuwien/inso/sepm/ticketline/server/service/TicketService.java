@@ -4,8 +4,10 @@ import at.ac.tuwien.inso.sepm.ticketline.server.entity.Customer;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Ticket;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Seat;
+import at.ac.tuwien.inso.sepm.ticketline.server.exception.InvalidIdException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 import java.util.Optional;
@@ -44,6 +46,14 @@ public interface TicketService {
      * @return list of tickets
      */
     List<Ticket> findByCustomerId(Long customerId);
+
+
+    /**
+     * deletes a ticket with a certain ID
+     *
+     * @param ticket_Id of the ticket that should be deletet
+     */
+    void deleteTicketByTicket_Id(Long ticket_Id) throws InvalidIdException;
 
     /**
      * check if seat is already sold

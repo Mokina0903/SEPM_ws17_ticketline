@@ -6,6 +6,7 @@ import at.ac.tuwien.inso.sepm.ticketline.server.entity.Ticket;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Seat;
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.AlreadyExistsException;
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.EmptyFieldException;
+import at.ac.tuwien.inso.sepm.ticketline.server.exception.InvalidIdException;
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.NotFoundException;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.TicketRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.TicketService;
@@ -45,6 +46,20 @@ public class SimpleTicketService implements TicketService {
     public List<Ticket> findByCustomerId( Long customerId ) {
         return ticketRepository.findByCustomer_Id(customerId);
     }
+
+    @Override
+    public void deleteTicketByTicket_Id(Long ticket_Id) {
+
+        Ticket ticket = ticketRepository.getOne(ticket_Id);
+        if(ticket.isPaid()) {
+            ticketRepository.deleteFlagTicketByTicket_Id(ticket_Id);
+
+        }
+        else{
+            ticketRepository.deleteTicketByTicket_Id(ticket_Id);
+        }
+    }
+
 
     @Override
     public List<Ticket> save( List<Ticket> tickets ) {
