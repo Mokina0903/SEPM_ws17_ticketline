@@ -114,7 +114,8 @@ public class TicketDTO {
                 faktor=1.8;
                 break;
         }
-        return((double)price/(double)100)*faktor;}
+        double priced = Math.round((((double)price/(double)100)*faktor)*100d)/100d;
+        return priced;}
 
     public Long getPrice() {
         return price;
