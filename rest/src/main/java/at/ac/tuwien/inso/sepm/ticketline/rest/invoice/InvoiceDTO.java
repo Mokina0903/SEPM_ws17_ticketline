@@ -94,7 +94,7 @@ public class InvoiceDTO {
         for (TicketDTO ticketDTO:tickets){
             sum+=ticketDTO.getPriceInEuro();
         }
-        return sum;
+        return Math.round(sum*100D)/100D;
     }
 
 

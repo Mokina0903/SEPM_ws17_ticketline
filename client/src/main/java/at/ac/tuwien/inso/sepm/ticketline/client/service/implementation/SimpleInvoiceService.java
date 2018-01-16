@@ -120,7 +120,7 @@ public class SimpleInvoiceService implements InvoiceService{
                            field = (PDTextField) acroForm.getFields().get(16+(line*4));
                            field.setValue(sec.get(0).getPriceInEuro() + " \u20ac");
                            field = (PDTextField) acroForm.getFields().get(17+(line*4));
-                           field.setValue(sec.get(0).getPriceInEuro() * sec.size() + " \u20ac");
+                           field.setValue(Math.round((100D*sec.get(0).getPriceInEuro()) * sec.size())/100D + " \u20ac");
                            line++;
                        }
                    }
