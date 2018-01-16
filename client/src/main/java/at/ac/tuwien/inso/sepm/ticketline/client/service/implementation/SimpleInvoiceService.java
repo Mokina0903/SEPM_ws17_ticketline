@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,6 +60,7 @@ public class SimpleInvoiceService implements InvoiceService{
                    // Retrieve an individual field and set its value.
 
                    SimpleEventDTO event= invoiceDTO.getTickets().get(0).getEvent();
+                   DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
                    PDTextField field = (PDTextField) acroForm.getFields().get(0);
                    field.setValue("TicketLine 3");
@@ -74,15 +76,15 @@ public class SimpleInvoiceService implements InvoiceService{
                    field.setValue("");
 
                    field = (PDTextField) acroForm.getFields().get(10);
-                   field.setValue(invoiceDTO.getInvoiceDate().toString());
+                   field.setValue(invoiceDTO.getInvoiceDate().format(formatter));
                    field = (PDTextField) acroForm.getFields().get(11);
                    field.setValue(invoiceDTO.getInvoiceNumber()+"");
                    field = (PDTextField) acroForm.getFields().get(12);
-                   field.setValue(event.getEndOfEvent()+"");
+                   field.setValue(event.getEndOfEvent().format(formatter));
 
                    field = (PDTextField) acroForm.getFields().get(13);
                    field.setValue(invoiceDTO.isStorno()?"Ticket-Reversal(Storno)":
-                       "Tickets bought for: "+event.getTitle());
+                       "Tickets bought for  "+event.getTitle());
 
                    List<TicketDTO> secA=new ArrayList<>();
                    List<TicketDTO> secB=new ArrayList<>();
