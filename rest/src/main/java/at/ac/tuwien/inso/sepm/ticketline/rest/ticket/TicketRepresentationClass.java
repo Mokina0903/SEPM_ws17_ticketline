@@ -6,6 +6,7 @@ public class TicketRepresentationClass {
     private Long reservationNumber;
     private Long ticket_id;
     private Boolean isPaid;
+    private Boolean isDeleted;
     private String customerName;
     private String customerSurname;
     private String sector;
@@ -13,11 +14,12 @@ public class TicketRepresentationClass {
     private Boolean hasSeatSelection;
 
 
-    public TicketRepresentationClass(String eventName, Long reservationNumber, Long ticket_id, Boolean isPaid, String customerName, String customerSurname, String sector, String seatNr, Boolean hasSeatSelection) {
+    public TicketRepresentationClass(String eventName, Long reservationNumber, Long ticket_id, Boolean isPaid, Boolean isDeleted, String customerName, String customerSurname, String sector, String seatNr, Boolean hasSeatSelection) {
         this.eventName = eventName;
         this.reservationNumber = reservationNumber;
         this.ticket_id = ticket_id;
         this.isPaid = isPaid;
+        this.isDeleted = isDeleted;
         this.customerName = customerName;
         this.customerSurname = customerSurname;
         this.sector = sector == null ? null: sector.toUpperCase();
@@ -96,4 +98,9 @@ public class TicketRepresentationClass {
     public void setCustomerSurname(String customerSurname) {
         this.customerSurname = customerSurname;
     }
+
+    public Boolean getIsDeleted(){return isDeleted;}
+
+    public void setIsDeleted(Boolean isDeleted){this.isDeleted = isDeleted;}
+
 }
