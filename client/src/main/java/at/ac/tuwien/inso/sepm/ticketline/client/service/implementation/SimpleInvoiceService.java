@@ -144,7 +144,7 @@ public class SimpleInvoiceService implements InvoiceService{
                            field = (PDTextField) acroForm.getFields().get(16+(line*4));
                            field.setValue(invoiceDTO.isStorno()?"-":""+sec.get(0).getPriceInEuro() + " \u20ac");
                            field = (PDTextField) acroForm.getFields().get(17+(line*4));
-                           field.setValue(invoiceDTO.isStorno()?"-":""+Math.round((100D*sec.get(0).getPriceInEuro()) * sec.size())/100D + " \u20ac");
+                           field.setValue(invoiceDTO.isStorno()?"-":""+getTotalPriceForTickets(sec.get(0).getPrice(),sec.size()) + " \u20ac");
                            if(line==3 || line==4){
                                field = (PDTextField) acroForm.getFields().get(17+(line*4));
                                field.setValue(invoiceDTO.isStorno()?"-":""+event.getTitle() + " Ticket(s) in Sector \""+sec.get(0).getSeat().getSector()+"\"");
@@ -153,7 +153,7 @@ public class SimpleInvoiceService implements InvoiceService{
                                field = (PDTextField) acroForm.getFields().get(15+(line*4));
                                field.setValue(invoiceDTO.isStorno()?"-":""+sec.get(0).getPriceInEuro() + " \u20ac");
                                field = (PDTextField) acroForm.getFields().get(16+(line*4));
-                               field.setValue(invoiceDTO.isStorno()?"-":""+Math.round((100D*sec.get(0).getPriceInEuro()) * sec.size())/100D + " \u20ac");
+                               field.setValue(invoiceDTO.isStorno()?"-":""+getTotalPriceForTickets(sec.get(0).getPrice(),sec.size()) + " \u20ac");
                            }
                            line++;
                        }
@@ -212,5 +212,11 @@ public class SimpleInvoiceService implements InvoiceService{
         }
         */
         return null;
+    }
+
+    public String getTotalPriceForTickets(long price, int count){
+        double total = price*count;
+        total=total/100;
+        return String.format("%.2f",total);
     }
 }

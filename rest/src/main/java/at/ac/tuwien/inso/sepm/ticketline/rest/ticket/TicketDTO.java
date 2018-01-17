@@ -94,28 +94,10 @@ public class TicketDTO {
         this.seat = seat;
     }
 
-    public double getPriceInEuro(){
-        char sec=seat.getSector();
-        double faktor=1;
-        switch (sec) {
-            case 'a':
-                faktor=1;
-                break;
-            case 'b':
-                faktor=1.2;
-                break;
-            case 'c':
-                faktor=1.4;
-                break;
-            case 'd':
-                faktor=1.6;
-                break;
-            case 'e':
-                faktor=1.8;
-                break;
-        }
-        double priced = Math.round((((double)price/(double)100)*faktor)*100d)/100d;
-        return priced;}
+    public String getPriceInEuro(){
+
+        double priced = (double)price/100d;
+        return String.format("%.2f",priced);}
 
     public Long getPrice() {
         return price;

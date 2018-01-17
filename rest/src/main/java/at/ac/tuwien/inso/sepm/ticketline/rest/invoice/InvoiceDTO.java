@@ -94,7 +94,23 @@ public class InvoiceDTO {
         for (TicketDTO ticketDTO:tickets){
             sum+=ticketDTO.getPrice();
         }
-        return String.format("%10.0f",((float)sum)/100f);
+        return String.format("%.2f",((double)sum)/100d);
+    }
+    public String getTotalTaxInEuro(){
+        long sum=0;
+        for (TicketDTO ticketDTO:tickets){
+            sum+=ticketDTO.getPrice();
+        }
+        Double tax = (double)sum*(1d-(100d/113d));
+        return String.format("%.2f",tax/100d);
+    }
+    public String getTotalPriceWithoutTaxInEuro(){
+        long sum=0;
+        for (TicketDTO ticketDTO:tickets){
+            sum+=ticketDTO.getPrice();
+        }
+        Double tax = (double)sum*(100d/113d);
+        return String.format("%.2f",tax/100d);
     }
 
 
