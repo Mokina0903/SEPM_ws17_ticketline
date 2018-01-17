@@ -1,5 +1,6 @@
 package at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket;
 
+import at.ac.tuwien.inso.sepm.ticketline.client.exception.BlockedUserException;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.SearchNoMatchException;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationObserver;
@@ -37,6 +38,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 
+import java.rmi.activation.ActivateFailedException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,6 +59,9 @@ public class TicketController extends TabElement implements LocalizationObserver
 
     @FXML
     public Button btnStorno;
+
+    @FXML
+    public Label lblStorno;
 
 
 
@@ -81,7 +86,9 @@ public class TicketController extends TabElement implements LocalizationObserver
     private TicketSearchFor searchFor = TicketSearchFor.ALL;
 
 
-
+    void setErrorLblUnvisable(){
+        lblStorno.setVisible(false);
+    }
 
     public Tab getTicketTab() {
         return ticketTab;
@@ -102,6 +109,8 @@ public class TicketController extends TabElement implements LocalizationObserver
      void initialize() {
         tabHeaderController.setIcon(FontAwesome.Glyph.TICKET);
         tabHeaderController.setTitle("Tickets");
+        lblStorno.setWrapText(true);
+        lblStorno.setMaxWidth(100.0);
 
     }
 
@@ -124,6 +133,7 @@ public class TicketController extends TabElement implements LocalizationObserver
     private void preparePagination() {
 
         lblNoMatch.setVisible(false);
+        lblStorno.setVisible(false);
         pagination.setCurrentPageIndex(0);
         pagination.setPageFactory(new Callback<Integer, Node>() {
 
@@ -300,23 +310,31 @@ public class TicketController extends TabElement implements LocalizationObserver
 
     @FXML
     private void storno(ActionEvent actionEvent){
-
+        lblStorno.setVisible(false);
+        if(currentTableview.getSelectionModel() != null) {
+            TicketRepresentationClass ticket = currentTableview.getSelectionModel().getSelectedItem();
+            if ((ticket == null)) {
+                lblStorno.setText(BundleManager.getBundle().getString("ticket.chooseOne"));
+                lblStorno.setVisible(true);
+                lblStorno.setWrapText(true);
+                return;
+            }
+        }
+        else{
+            lblStorno.setText(BundleManager.getBundle().getString("ticket.chooseOne"));
+            lblStorno.setVisible(true);
+            lblStorno.setWrapText(true);
+            return;
+        }
 
         Task<Void> workerTask = new Task<Void>() {
+
             @Override
             protected Void call() throws Exception {
                 //ToDo fragen wie ich hier die exception abfangen kann
-                if(currentTableview.getSelectionModel().getSelectedItem() != null) {
-                    TicketRepresentationClass ticket = currentTableview.getSelectionModel().getSelectedItem();
-                    if (!(ticket == null)) {
-                        ticketService.deleteTicketByTicket_Id(ticket.getTicket_id());
-                    } else {
-                        mainController.showGeneralError("You have to choose a Ticket!");
-                    }
-                }
-                else{
-                    mainController.showGeneralError("You have to choose a Ticket!");
-                }
+                TicketRepresentationClass ticket = currentTableview.getSelectionModel().getSelectedItem();
+                ticketService.deleteTicketByTicket_Id(ticket.getTicket_id());
+
                 return null;
             }
 
@@ -328,15 +346,17 @@ public class TicketController extends TabElement implements LocalizationObserver
             @Override
             protected void failed() {
                 if (getException().getMessage().trim().equals("424")) {
-                    mainController.showGeneralError("Ticket has allready been canceled.");
-                }
-                else if (getException().getMessage().trim().equals("500")) {
+                    lblStorno.setText(BundleManager.getBundle().getString("ticket.allready"));
+                    lblStorno.setVisible(true);
+                    lblStorno.setWrapText(true);
+                } else if (getException().getMessage().trim().equals("500")) {
+
                     mainController.showGeneralError("Sorry your ticked could not be found!");
-                }
-                else {
+                } else {
                     mainController.showGeneralError(getException().toString());
                 }
             }
+
         };
 
         workerTask.runningProperty().addListener((observable, oldValue, running) ->
@@ -362,6 +382,7 @@ public class TicketController extends TabElement implements LocalizationObserver
         tcNumber.setText(BundleManager.getBundle().getString("ticket.ticketNumber"));
         lblNoMatch.setText(BundleManager.getBundle().getString("customer.noMatches"));
         tcSelected.setText(BundleManager.getBundle().getString("ticket.sector"));
+
 
 
     }

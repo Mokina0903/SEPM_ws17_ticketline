@@ -45,7 +45,9 @@
               <Insets top="81" right="20" />
           </BorderPane.margin>
             <Button fx:id="btnStorno" text="%ticket.storno" prefHeight="25.0" prefWidth="80.0" onAction="#storno"/>
+            <Label fx:id= "lblStorno" textFill="#cc1d1d" prefHeight="40.0" prefWidth="100.0"/>
         </HBox>
+
     </right>
 
     <padding>
