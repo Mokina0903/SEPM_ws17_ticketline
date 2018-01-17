@@ -97,7 +97,8 @@ public class SimpleTicketService implements TicketService {
         ticketRestClient.deleteTicketByTicket_Id(ticket_Id);
     }
 
-    public void reservationPdf( List<TicketDTO> tickets, Window window) throws DataAccessException {
+    @Override
+    public void reservationPdf( List<TicketDTO> tickets, Window window) {
 
         URL formTemplate = getClass().getResource("/invoice_template/Invoice_Template_new.pdf") ;
         try (PDDocument pdfDocument = PDDocument.load(new File(formTemplate.getPath()))) {

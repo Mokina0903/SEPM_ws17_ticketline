@@ -415,6 +415,9 @@ public class HallplanController implements LocalizationObserver {
 
                 javafx.stage.Window window = this.seatsContainerGV.getParent().getScene().getWindow();
                 invoiceService.invoiceToPdf(invoice,window);
+            }else{
+                javafx.stage.Window window = this.seatsContainerGV.getParent().getScene().getWindow();
+                ticketService.reservationPdf(ticketsSaved,window);
             }
 
 

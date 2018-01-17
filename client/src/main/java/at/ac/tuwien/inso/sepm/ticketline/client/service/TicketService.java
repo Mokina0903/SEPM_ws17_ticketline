@@ -6,6 +6,7 @@ import at.ac.tuwien.inso.sepm.ticketline.client.exception.SearchNoMatchException
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.TicketAlreadyExistsException;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.seat.SeatDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketDTO;
+import javafx.stage.Window;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -98,4 +99,5 @@ public interface TicketService {
      */
     void deleteTicketByTicket_Id(Long ticket_Id) throws DataAccessException;
 
+    void reservationPdf( List<TicketDTO> tickets, Window window);
 }
