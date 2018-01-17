@@ -19,9 +19,9 @@ import java.util.concurrent.TimeUnit;
 
 @Profile("generateData")
 @Component
-public class UserDataGenerator {
+public class AUserDataGenerator {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(NewsDataGenerator.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AUserDataGenerator.class);
     private static final int NUMBER_OF_USER_TO_GENERATE = 3;
 
     private final UserRepository userRepository;
@@ -30,7 +30,7 @@ public class UserDataGenerator {
 
     PasswordEncoder encoder = new BCryptPasswordEncoder(10);
 
-    public UserDataGenerator(UserRepository userRepository, NewsRepository newsRepository) {
+    public AUserDataGenerator(UserRepository userRepository, NewsRepository newsRepository) {
         this.userRepository = userRepository;
         this.newsRepository = newsRepository;
         faker = new Faker();
