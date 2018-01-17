@@ -223,7 +223,8 @@ public class HallplanController implements LocalizationObserver {
             sector++;
         }
         lblError.setWrapText(true);
-        lblError.setMaxWidth(100.0);
+        lblError.setMaxWidth(100);
+        lblError.setMinHeight(50);
 
         initializeLabelMaps();
     }
