@@ -2,13 +2,11 @@ package at.ac.tuwien.inso.sepm.ticketline.server.datagenerator;
 
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Customer;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.Invoice;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Ticket;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Seat;
-import at.ac.tuwien.inso.sepm.ticketline.server.repository.CustomerRepository;
-import at.ac.tuwien.inso.sepm.ticketline.server.repository.EventRepository;
+import at.ac.tuwien.inso.sepm.ticketline.server.repository.*;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.Location.SeatRepository;
-import at.ac.tuwien.inso.sepm.ticketline.server.repository.TicketRepository;
-import at.ac.tuwien.inso.sepm.ticketline.server.service.TicketService;
 import com.github.javafaker.Faker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +18,7 @@ import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -35,13 +34,17 @@ public class TicketDataGenerator {
     private final EventRepository eventRepository;
     private final CustomerRepository customerRepository;
     private final SeatRepository seatRepository;
+    private final InvoiceRepository invoiceRepository;
+    private final UserRepository userRepository;
     private final Faker faker;
 
-    public TicketDataGenerator( TicketRepository ticketRepository, EventRepository eventRepository, CustomerRepository customerRepository, SeatRepository seatRepository ) {
+    public TicketDataGenerator( TicketRepository ticketRepository, EventRepository eventRepository, CustomerRepository customerRepository, SeatRepository seatRepository, InvoiceRepository invoiceRepository, UserRepository userRepository ) {
         this.ticketRepository = ticketRepository;
         this.eventRepository = eventRepository;
         this.customerRepository = customerRepository;
         this.seatRepository = seatRepository;
+        this.invoiceRepository = invoiceRepository;
+        this.userRepository = userRepository;
         this.faker = new Faker();
     }
 
@@ -61,6 +64,7 @@ public class TicketDataGenerator {
                 // TODO (David) Reservation Date
 
                 int ticketCNT = 1;
+                
                 while (0 < numbTickets && customers.size() > 0) {
                     // TODO: (David) reservationNR is ok?
                     long reservationNR = (LocalDate.now().getYear()%100)*100000000 + event.getId()  *10000000  + ticketCNT++;
@@ -71,6 +75,7 @@ public class TicketDataGenerator {
 
                     boolean isPaid = (faker.number().numberBetween(0,1) == 0 ? false : true);
 
+                    List<Ticket> tickets = new ArrayList();
                     for (int i = 0; i < numbTicketsCustomer; i++) {
                         Seat seat = seats.remove(faker.number().numberBetween(0, seats.size() -1 ));
 
@@ -91,8 +96,30 @@ public class TicketDataGenerator {
                         ticketRepository.save(ticket);
 
                         numbTickets--;
+                        tickets.add(ticket);
                     }
+                    
+                    // TODO (David)
+                    
+                                    LOGGER.debug("saving tickets {}", tickets);
+
+                Ticket ticket = tickets.get(0);
+
+                Invoice invoice = new Invoice.InvoiceBuilder()
+                    .invoiceDate(ticket.getReservationDate())
+                    .invoiceNumber(ticket.getReservationNumber())
+                    .customer(ticket.getCustomer())
+                    .isStorno(false)
+                    .vendor(userRepository.findOne(1l))
+                    .tickets(tickets)
+                    .build();
+
+                LOGGER.debug("saving invoice {}", tickets);
+                invoiceRepository.save(invoice);
+
+                    
                 }
+
             }
         }
     }

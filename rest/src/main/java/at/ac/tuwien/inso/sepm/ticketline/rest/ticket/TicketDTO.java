@@ -94,7 +94,10 @@ public class TicketDTO {
         this.seat = seat;
     }
 
-    public double getPriceInEuro(){return(double)price/(double)100;}
+    public String getPriceInEuro(){
+
+        double priced = (double)price/100d;
+        return String.format("%.2f",priced);}
 
     public Long getPrice() {
         return price;

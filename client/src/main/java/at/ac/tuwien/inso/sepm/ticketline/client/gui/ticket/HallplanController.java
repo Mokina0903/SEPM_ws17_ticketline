@@ -7,29 +7,24 @@ import at.ac.tuwien.inso.sepm.ticketline.client.exception.TicketAlreadyExistsExc
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.*;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.customer.CustomerController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.event.EventController;
-import at.ac.tuwien.inso.sepm.ticketline.client.service.NewsService;
+import at.ac.tuwien.inso.sepm.ticketline.client.service.InvoiceService;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.TicketService;
-import at.ac.tuwien.inso.sepm.ticketline.client.service.UserService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
 import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.DetailedEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.hall.DetailedHallDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.seat.SeatDTO;
+import at.ac.tuwien.inso.sepm.ticketline.rest.invoice.InvoiceDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventTarget;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.Tab;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -44,6 +39,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
+import java.awt.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -123,6 +120,7 @@ public class HallplanController implements LocalizationObserver {
 
 
     private TicketService ticketService;
+    private final InvoiceService invoiceService;
     private DetailedEventDTO event;
 
 
@@ -137,11 +135,12 @@ public class HallplanController implements LocalizationObserver {
     @Autowired
     private LocalizationSubject localizationSubject;
 
-    public HallplanController(MainController mainController, CustomerController customerController, SpringFxmlLoader springFxmlLoader, TicketService ticketService) {
+    public HallplanController( MainController mainController, CustomerController customerController, SpringFxmlLoader springFxmlLoader, TicketService ticketService, InvoiceService invoiceService ) {
         this.mainController = mainController;
         this.springFxmlLoader = springFxmlLoader;
         this.customerController = customerController;
         this.ticketService = ticketService;
+        this.invoiceService = invoiceService;
         selectedSeats = new ArrayList<>();
     }
 
@@ -399,9 +398,26 @@ public class HallplanController implements LocalizationObserver {
     private void saveTickets(List<TicketDTO> tickets) {
 
         try {
-            ticketService.save(tickets);
+            List<TicketDTO> ticketsSaved = ticketService.save(tickets);
             selectedSeats.clear();
             totalSum = 0;
+
+            //create invoice if tickets are bought
+            if(tickets.get(0).isPaid()) {
+                InvoiceDTO invoice = new InvoiceDTO.InvoiceDTOBuilder()
+                    .isStorno(false)
+                    .tickets(ticketsSaved)
+                    .vendor(mainController.getUser())
+                    .customer(mainController.getCutsomer())
+                    .build();
+
+                invoice = invoiceService.create(invoice);
+
+                javafx.stage.Window window = this.seatsContainerGV.getParent().getScene().getWindow();
+                invoiceService.invoiceToPdf(invoice,window);
+            }
+
+
             backToEventTabBeginning();
 
 

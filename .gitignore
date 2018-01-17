@@ -123,3 +123,6 @@ Temporary Items
 Icon
 
 
+!/client/src/main/resources/invoice_template/Invoice_Template.pdf
+!/server/src/main/resources/invoice/Invoice.pdf
+!/client/src/main/resources/invoice_template/Invoice_Template_new.pdf

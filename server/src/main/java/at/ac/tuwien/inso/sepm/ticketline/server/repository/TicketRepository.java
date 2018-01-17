@@ -17,6 +17,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+@Transactional
 @Repository
 public interface TicketRepository extends JpaRepository<Ticket,Long>{
 
