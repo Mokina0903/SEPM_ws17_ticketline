@@ -95,14 +95,14 @@ public class SimpleTicketService implements TicketService {
 
     @Override
     public void setTicketsFreeIf30MinsBeforEvent() {
-        List<Ticket> stillReservedTickets = ticketRepository.setTicketsFreeIf30MinsBeforeEvent();
+       /* List<Ticket> stillReservedTickets = ticketRepository.setTicketsFreeIf30MinsBeforeEvent();
         if(stillReservedTickets.isEmpty()){
             return;
         }
 
         for (Ticket ticket : stillReservedTickets) {
             ticketRepository.delete(ticket);
-        }
+        }*/
     }
 
     @Override

@@ -216,7 +216,7 @@ public class SimpleInvoiceService implements InvoiceService{
         return null;
     }
 
-    public String getTotalPriceForTickets(long price, int count){
+    private String getTotalPriceForTickets(long price, int count){
         double total = price*count;
         total=total/100;
         return String.format("%.2f",total);
