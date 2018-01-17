@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<BorderPane prefHeight="400.0" prefWidth="664.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.event.EventAdvancedSearchController">
+<BorderPane prefHeight="400.0" prefWidth="664.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.event.EventAdvancedSearchController">
 
     <top>
         <fx:include fx:id="tabHeader" source="/fxml/tabHeader.fxml" />
@@ -35,15 +35,15 @@
                 <buttons>
                     <Button fx:id="btCancel" maxWidth="-Infinity" mnemonicParsing="false" onAction="#handleCancel" prefWidth="40.0" ButtonBar.buttonData="LEFT" />
 
-                    <Button fx:id="btOk" maxWidth="-Infinity" prefWidth="40.0" ButtonBar.buttonData="LEFT" />
+                    <Button fx:id="btOk" onAction="#handleOk" maxWidth="-Infinity" prefWidth="40.0" ButtonBar.buttonData="LEFT" />
                 </buttons>
             </ButtonBar>
          <TextField fx:id="tfEventTitle" GridPane.columnIndex="2" />
          <HBox GridPane.columnIndex="2" GridPane.rowIndex="2">
             <children>
-               <TextField promptText="min" />
+               <TextField fx:id="tfEventPriceFrom" promptText="min" />
                <Label alignment="CENTER" maxWidth="-Infinity" prefWidth="30.0" text="-" textAlignment="CENTER" />
-               <TextField promptText="max" />
+               <TextField fx:id="tfEventPriceTo" promptText="max" />
             </children>
          </HBox>
          <Label text="Type:" GridPane.columnIndex="7" />
@@ -67,7 +67,7 @@
          <Slider GridPane.columnIndex="5" GridPane.rowIndex="2" />
          <CheckBox mnemonicParsing="false" GridPane.columnIndex="7" GridPane.rowIndex="3" />
          <CheckBox mnemonicParsing="false" GridPane.columnIndex="8" GridPane.rowIndex="3" />
-         <TextField fx:id="tfEventContent" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+         <TextField fx:id="tfEventDescription" GridPane.columnIndex="2" GridPane.rowIndex="1" />
          <Label text="%events.events" />
          <Label text="%events.artist" GridPane.rowIndex="3" />
             <columnConstraints>
@@ -85,6 +85,10 @@
             <rowConstraints>
             <RowConstraints minHeight="10.0" prefHeight="30.0" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
             </rowConstraints>
             <BorderPane.margin>
                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

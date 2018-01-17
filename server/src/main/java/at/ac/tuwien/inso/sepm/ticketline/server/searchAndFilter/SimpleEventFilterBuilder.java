@@ -19,7 +19,7 @@ public class SimpleEventFilterBuilder implements EventFilterBuilder {
             .notEmptyAnd(EVENT.title::containsIgnoreCase, filter.getTitle())
             .notEmptyAnd(EVENT.description::containsIgnoreCase, filter.getDescription())
             .notNullAnd(EVENT.price::loe, filter.getPriceTo())
-            .notNullAnd(EVENT.price::gt, filter.getPriceFrom())
+            .notNullAnd(EVENT.price::goe, filter.getPriceFrom())
             //todo filter time
             /*.notNullAnd(EVENT.startOfEvent::between, filter.getTimeStart(), filter.getTimeStart())
             .notNullAnd(EVENT.duration::before, filter.getDuration())*/

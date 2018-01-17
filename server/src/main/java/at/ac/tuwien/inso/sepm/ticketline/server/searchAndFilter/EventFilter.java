@@ -1,11 +1,5 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.searchAndFilter;
 
-
-import lombok.Data;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
-
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -28,7 +22,19 @@ public class EventFilter {
             System.out.println("Has title **************************");
             this.title = parameters.get("title");
         }
-        System.out.println("_____ in EventFilter:" +parameters.values());
+        if (parameters.containsKey("description")){
+            System.out.println("Has descr **************************");
+            this.description = parameters.get("description");
+        }
+        if (parameters.containsKey("priceFrom")){
+            System.out.println("Has priceFrom **************************");
+            this.priceFrom = Long.parseLong(parameters.get("priceFrom"));
+        }
+        if (parameters.containsKey("priceTo")){
+            System.out.println("Has priceTo **************************");
+            this.priceTo = Long.parseLong(parameters.get("priceTo"));
+        }
+        System.out.println("_____ in EventFilter price max:" + priceTo);
         //todo
 
     }

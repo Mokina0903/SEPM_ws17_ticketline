@@ -206,6 +206,7 @@ public class EventController extends TabElement implements LocalizationObserver 
     @FXML
     public void openAdvancedSearch(ActionEvent actionEvent) {
         LOGGER.info("opening the advanced event search dialog.");
+        searchFor = EventSearchFor.EVENT;
 
         SpringFxmlLoader.Wrapper<EventAdvancedSearchController> wrapper =
             springFxmlLoader.loadAndWrap("/fxml/event/eventAdvancedSearchComponent.fxml");
