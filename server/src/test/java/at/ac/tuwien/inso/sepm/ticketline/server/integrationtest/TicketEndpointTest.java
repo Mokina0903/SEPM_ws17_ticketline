@@ -125,6 +125,27 @@ public class TicketEndpointTest extends BaseIntegrationTest {
     }
 
     @Test
+    public void wrongPrice() {
+        // TODO: (David) Edit this
+        setUpDefaultEvent();
+
+        List<TicketDTO> ticketDTOList = TestDTOs.setUpTicketDTO();
+
+        ticketDTOList.get(0).setPrice(123);
+
+        Response response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .header(HttpHeaders.AUTHORIZATION, validUserTokenWithPrefix)
+            .body(ticketDTOList)
+            .when().post(TICKET_ENDPOINT)
+            .then().extract().response();
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
+
+
+    }
+
+    @Test
     public void calculatePrice() {
         Event event = Event.builder()
             .price(10000L)
@@ -160,6 +181,4 @@ public class TicketEndpointTest extends BaseIntegrationTest {
         seat.setSector('f');
         Assert.assertThat(ticket.calculatePrice(),is(20000L));
     }
-
-
 }

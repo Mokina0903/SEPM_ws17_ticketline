@@ -68,7 +68,7 @@ public abstract class BaseIntegrationTest {
     protected static final long EVENT_ID = 1L;
     protected static final String EVENT_DESCRIPTION = "Event Description";
     protected static final String EVENT_TITLE = "Event Title";
-    protected static final long EVENT_PRICE = 55;
+    protected static final long EVENT_PRICE = 100;
 
     protected static LocalDateTime EVENT_START =
         LocalDateTime.of(2017, 11, 29, 12, 15, 0, 0);
@@ -88,7 +88,7 @@ public abstract class BaseIntegrationTest {
 
     protected static final Long TICKET_RESERVATIONNR = 10001L;
     protected static final Long TICKET_ID = 1L;
-    protected static final int TICKET_PRICE = 12300;
+    protected static final int TICKET_PRICE = 100;
 
     @Value("${server.context-path}")
     private String contextPath;
