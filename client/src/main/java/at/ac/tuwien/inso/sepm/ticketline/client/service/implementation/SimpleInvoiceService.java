@@ -6,6 +6,8 @@ import at.ac.tuwien.inso.sepm.ticketline.client.service.InvoiceService;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.invoice.InvoiceDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketDTO;
+import javafx.stage.FileChooser;
+import javafx.stage.Window;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.encryption.InvalidPasswordException;
 import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
@@ -46,7 +48,7 @@ public class SimpleInvoiceService implements InvoiceService{
     }
 
     @Override
-    public File invoiceToPdf(InvoiceDTO invoiceDTO) throws DataAccessException {
+    public File invoiceToPdf(InvoiceDTO invoiceDTO, Window window) throws DataAccessException {
 
         URL formTemplate = getClass().getResource("/invoice_template/Invoice_Template.pdf") ;
            try (PDDocument pdfDocument = PDDocument.load(new File(formTemplate.getPath()))) {
@@ -165,7 +167,7 @@ public class SimpleInvoiceService implements InvoiceService{
                }
 
                // Save the filled out form.
-
+/*
                File template =  new File(getClass().getResource("/invoice_template/Invoice_Template.pdf").getPath()) ;
                File parent= template.getParentFile();
                File doc = new File(parent.getPath()+"/Invoice"+invoiceDTO.getInvoiceNumber()+".pdf");
@@ -179,9 +181,14 @@ public class SimpleInvoiceService implements InvoiceService{
                } catch (IOException e) {
                    //todo: new exception
                    e.printStackTrace();
-               }
+               }*/
 
-               return doc;
+               FileChooser fileChooser = new FileChooser();
+               fileChooser.setInitialFileName("Invoice"+invoiceDTO.getInvoiceNumber()+".pdf");
+               File file= fileChooser.showSaveDialog(window);
+               pdfDocument.save(file);
+
+               return file;
 
            } catch (InvalidPasswordException e) {
                e.printStackTrace();

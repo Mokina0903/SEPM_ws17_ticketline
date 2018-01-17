@@ -29,7 +29,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import org.apache.pdfbox.pdmodel.PDDocument;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.Glyph;
 import org.controlsfx.glyphfont.GlyphFont;
@@ -412,7 +411,9 @@ public class HallplanController implements LocalizationObserver {
                     .build();
 
                 invoice = invoiceService.create(invoice);
-                invoiceService.invoiceToPdf(invoice);
+
+                javafx.stage.Window window = this.seatsContainerGV.getParent().getScene().getWindow();
+                invoiceService.invoiceToPdf(invoice,window);
             }
 
 

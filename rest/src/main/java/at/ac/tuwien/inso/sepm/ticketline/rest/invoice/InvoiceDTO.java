@@ -89,12 +89,12 @@ public class InvoiceDTO {
         isStorno = storno;
     }
 
-    public double getTotalPriceInEuro(){
-        double sum=0;
+    public String getTotalPriceInEuro(){
+        long sum=0;
         for (TicketDTO ticketDTO:tickets){
-            sum+=ticketDTO.getPriceInEuro();
+            sum+=ticketDTO.getPrice();
         }
-        return Math.round(sum*100D)/100D;
+        return String.format("%10.0f",((float)sum)/100f);
     }
 
 
