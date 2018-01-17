@@ -1,5 +1,6 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.datagenerator;
 
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.Customer;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Ticket;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Seat;
@@ -45,35 +46,53 @@ public class TicketDataGenerator {
     }
 
     @PostConstruct
-    private void generateNews() {
+    private void generateTickets() {
         if (ticketRepository.count() > 0) {
             LOGGER.info("tickets already generated");
         } else {
-            LOGGER.info("generating {} ticket entries", NUMBER_OF_TICKETSPEREVENT_TO_GENERATE*eventRepository.count());
-            for (Event event: eventRepository.findAll()) {
-                List<Seat> seats= seatRepository.findAllByHallId(event.getHall().getId());
+            LOGGER.info("generating ticket entries");
+            List<Event> events = eventRepository.findAll();
 
-                for (int i=0;i<NUMBER_OF_TICKETSPEREVENT_TO_GENERATE;i++){
-                    long reservationNR = (LocalDate.now().getYear()%100)*100000000 + i/10 +event.getId();
+            for (Event event : events) {
+                List<Seat> seats = seatRepository.findAllByHallId(event.getHall().getId());
+                List<Customer> customers = customerRepository.findAll();
+                int numbTickets = faker.number ().numberBetween(30,seats.size()-1);
+                
+                // TODO (David) Reservation Date
 
-                    Ticket ticket= Ticket.builder()
-                        .customer(customerRepository.findAll().get(1))
-                        .event(event)
-                        .seat(seats.remove(0))
-                        .price(faker.number().numberBetween(event.getPrice(),event.getPrice()*2))
-                        .isPaid(true)
-                        .reservationNumber(reservationNR)
-                        .reservationDate(
-                            LocalDateTime.ofInstant(
-                                faker.date().past(100, TimeUnit.DAYS).toInstant(),
-                                ZoneId.systemDefault()))
-                        .build();
+                int ticketCNT = 1;
+                while (0 < numbTickets && customers.size() > 0) {
+                    // TODO: (David) reservationNR is ok?
+                    long reservationNR = (LocalDate.now().getYear()%100)*100000000 + event.getId()  *10000000  + ticketCNT++;
 
-                    LOGGER.debug("saving ticket {}", ticket);
-                    ticketRepository.save(ticket);
+                    Customer customer = customers.remove(faker.number().numberBetween(0, customers.size()-1));
 
+                    int numbTicketsCustomer = faker.number().numberBetween(1, (numbTickets < 10) ? numbTickets : 10);
+
+                    boolean isPaid = (faker.number().numberBetween(0,1) == 0 ? false : true);
+
+                    for (int i = 0; i < numbTicketsCustomer; i++) {
+                        Seat seat = seats.remove(faker.number().numberBetween(0, seats.size() -1 ));
+
+                        // TODO: (David) Pricecalculation
+                        int price = (int) ((seat.getSector() - 96) * event.getPrice());
+
+
+                        Ticket ticket= Ticket.builder()
+                            .customer(customer)
+                            .event(event)
+                            .seat(seat)
+                            .price(price)
+                            .isPaid(isPaid)
+                            .reservationNumber(reservationNR)
+                            .build();
+
+                        LOGGER.debug("saving ticket {}", reservationNR);
+                        ticketRepository.save(ticket);
+
+                        numbTickets--;
+                    }
                 }
-
             }
         }
     }

@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 public class CustomerDataGenerator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NewsDataGenerator.class);
-    private static final int NUMBER_OF_CUSTOMER_TO_GENERATE = 50;
+    private static final int NUMBER_OF_CUSTOMER_TO_GENERATE = 1000;
 
     private final CustomerRepository customerRepository;
     private final Faker faker;

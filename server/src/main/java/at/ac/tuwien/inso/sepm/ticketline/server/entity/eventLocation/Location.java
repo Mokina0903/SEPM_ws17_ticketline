@@ -100,6 +100,18 @@ public class Location {
 
     public static LocationBuilder builder(){return new LocationBuilder();}
 
+    public Location() {
+    }
+
+    public Location(String description, String country, String city, int zip, String street, int houseNr) {
+        this.description = description;
+        this.country = country;
+        this.city = city;
+        this.zip = zip;
+        this.street = street;
+        this.houseNr = houseNr;
+    }
+
     @Override
     public String toString() {
         return "Location{" +

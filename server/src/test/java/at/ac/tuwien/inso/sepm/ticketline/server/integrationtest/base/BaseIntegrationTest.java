@@ -1,16 +1,14 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.integrationtest.base;
 
 import at.ac.tuwien.inso.sepm.ticketline.server.configuration.JacksonConfiguration;
-import at.ac.tuwien.inso.sepm.ticketline.server.entity.Artist;
-import at.ac.tuwien.inso.sepm.ticketline.server.entity.News;
-import at.ac.tuwien.inso.sepm.ticketline.server.entity.User;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.*;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Hall;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Location;
-import at.ac.tuwien.inso.sepm.ticketline.server.repository.ArtistRepository;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Seat;
+import at.ac.tuwien.inso.sepm.ticketline.server.repository.*;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.Location.HallRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.Location.LocationRepository;
-import at.ac.tuwien.inso.sepm.ticketline.server.repository.NewsRepository;
-import at.ac.tuwien.inso.sepm.ticketline.server.repository.UserRepository;
+import at.ac.tuwien.inso.sepm.ticketline.server.repository.Location.SeatRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.security.AuthenticationConstants;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.UserService;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.implementation.SimpleHeaderTokenAuthenticationService;
@@ -29,7 +27,10 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -46,7 +47,7 @@ public abstract class BaseIntegrationTest {
     protected static final String NEWS_TEXT = "TestNewsText";
     protected static final String NEWS_TITLE = "title";
     protected static final LocalDateTime NEWS_PUBLISHED_AT =
-        LocalDateTime.of(2016, 11, 13, 12, 15, 0, 0);
+        LocalDateTime.of(2017, 11, 13, 12, 15, 0, 0);
     protected static final long NEWS_ID = 1L;
 
     protected static final Long ARTIST_ID = 1L;
@@ -67,11 +68,27 @@ public abstract class BaseIntegrationTest {
     protected static final long EVENT_ID = 1L;
     protected static final String EVENT_DESCRIPTION = "Event Description";
     protected static final String EVENT_TITLE = "Event Title";
-    protected static final long EVENT_PRICE = 55;
+    protected static final long EVENT_PRICE = 100;
 
     protected static LocalDateTime EVENT_START =
         LocalDateTime.of(2017, 11, 29, 12, 15, 0, 0);
 
+    protected static final long CUSTOMER_ID = 1L;
+    protected static final long CUSTOMER_NUMBER = 9999L;
+    protected static final String  CUSTOMER_NAME = "Max";
+    protected static final String  CUSTOMER_SURNAME = "Mustermann";
+    protected static final String  CUSTOMER_MAIL = "Maxmustermann@gmail.com";
+    protected static final LocalDate CUSTOMER_BIRTHDATE = LocalDate.of(1950, 1, 1);
+    protected static final String  CUSTOMER_NAME_SUBSTRING = "muste";
+
+    protected static final Long SEAT_ID = 1L;
+    protected static final int SEAT_NR = 1;
+    protected static final char SEAT_SECTOR = 'a';
+    protected static final int SEAT_ROW = 1;
+
+    protected static final Long TICKET_RESERVATIONNR = 10001L;
+    protected static final Long TICKET_ID = 1L;
+    protected static final int TICKET_PRICE = 100;
 
     @Value("${server.context-path}")
     private String contextPath;
@@ -105,21 +122,27 @@ public abstract class BaseIntegrationTest {
     protected HallRepository hallRepository;
 
     @Autowired
+    protected SeatRepository seatRepository;
+
+    @Autowired
     protected ArtistRepository artistRepository;
+
+    @Autowired
+    protected CustomerRepository customerRepository;
+
+    @Autowired
+    protected EventRepository eventRepository;
+
+    @Autowired
+    protected TicketRepository ticketRepository;
 
     protected String validUserTokenWithPrefix;
     protected String validAdminTokenWithPrefix;
-    protected Location location;
-    protected Hall hall;
-    protected Artist artist;
-
 
     @Before
     public void beforeBase() throws Exception {
         setupDefaultNews();
         setupDefaultUsers();
-        setupDefaultLocation();
-        setUpDefaultArtist();
 
         RestAssured.baseURI = SERVER_HOST;
         RestAssured.basePath = contextPath;
@@ -201,8 +224,11 @@ public abstract class BaseIntegrationTest {
         }
     }
 
-    public void setupDefaultLocation(){
-        location = Location.builder()
+    public void setupDefaultLocation() {
+        if (locationRepository.count() > 0)
+            return;
+
+        Location location = Location.builder()
             .id(LOCATION_ID)
             .description(LOCATION_DESCRIPTION)
             .city(LOCATION_CITY)
@@ -214,21 +240,126 @@ public abstract class BaseIntegrationTest {
 
         location = locationRepository.save(location);
 
-        hall = Hall.builder()
+        Hall hall = Hall.builder()
             .id(HALL_ID)
             .description(HALL_DESCRIPTION)
             .location(location)
             .build();
         hall = hallRepository.save(hall);
+
+        Seat seat = Seat.builder()
+            .id(SEAT_ID)
+            .hall(hall)
+            .nr(SEAT_NR)
+            .sector(SEAT_SECTOR)
+            .row(SEAT_ROW)
+            .build();
+
+        seatRepository.save(seat);
+
+        /*
+        Maybe not necessary
+        // Seats
+        int columns = 5;
+        int rows = 5;
+        int sectors = 3;
+        int secRows = columns / sectors;
+        List<Seat> seats = new ArrayList<>();
+
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < columns; col++) {
+                Seat seat = Seat.builder()
+                    .nr(col + 1)
+                    .row(row + 1)
+                    .sector((char) (((row) / secRows) + 97))
+                    .hall(hall)
+                    .build();
+                seats.add(seat);
+            }
+        }
+        */
     }
 
     public void setUpDefaultArtist() {
-        artist = Artist.builder()
+        if (artistRepository.count() > 0 )
+            return;
+
+        Artist artist = Artist.builder()
             .id(ARTIST_ID)
             .artistFirstname(ARTIST_FIRSTNAME)
             .artistLastName(ARTIST_LASTNAME)
             .build();
 
-        artist = artistRepository.save(artist);
+        artistRepository.save(artist);
+    }
+
+    public void setUpDefaultCustomers() {
+        if (customerRepository.count() > 0)
+            return;
+
+        Customer customer = Customer.builder()
+            .id(CUSTOMER_ID)
+            .knr(CUSTOMER_NUMBER)
+            .name(CUSTOMER_NAME)
+            .surname(CUSTOMER_SURNAME)
+            .mail(CUSTOMER_MAIL)
+            .birthDate(CUSTOMER_BIRTHDATE)
+            .build();
+        customerRepository.save(customer);
+    }
+
+    public void setUpDefaultEvent() {
+        if (eventRepository.count() > 0)
+            return;
+
+        setupDefaultLocation();
+        setUpDefaultArtist();
+        setUpDefaultCustomers();
+
+        Hall hall = hallRepository.findOne(HALL_ID);
+
+        List<Artist> artists = new ArrayList<>();
+
+        artists.add(artistRepository.findOne(ARTIST_ID));
+
+        Event event = Event.builder()
+            .id(EVENT_ID)
+            .startOfEvent(EVENT_START)
+            .endOfEvent(EVENT_START.plusHours(2))
+            .artists(artists)
+            .price(EVENT_PRICE)
+            .description(EVENT_DESCRIPTION)
+            .title(EVENT_TITLE)
+            .hall(hall)
+            .seatSelection(true)
+            .build();
+
+        eventRepository.save(event);
+    }
+
+    public void setUpDefaultEvent(LocalDateTime startOfEvent) {
+        setupDefaultLocation();
+        setUpDefaultArtist();
+        setUpDefaultCustomers();
+
+        Hall hall = hallRepository.findOne(HALL_ID);
+
+        List<Artist> artists = new ArrayList<>();
+
+        artists.add(artistRepository.findOne(ARTIST_ID));
+
+        Event event = Event.builder()
+            .id(EVENT_ID + 1)
+            .startOfEvent(startOfEvent)
+            .endOfEvent(startOfEvent.plusHours(2))
+            .artists(artists)
+            .price(EVENT_PRICE)
+            .description(EVENT_DESCRIPTION)
+            .title(EVENT_TITLE)
+            .hall(hall)
+            .seatSelection(true)
+            .build();
+
+        eventRepository.save(event);
     }
 }

@@ -57,6 +57,13 @@ public class Hall {
 
     public static HallBuilder builder(){return new HallBuilder();}
 
+    public Hall() {
+    }
+
+    public Hall(String description, Location location) {
+        this.description = description;
+        this.location = location;
+    }
 
     @Override
     public boolean equals( Object o ) {

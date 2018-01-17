@@ -135,7 +135,7 @@ public class EventCSVImportController implements LocalizationObserver {
                     String line = "";
                     br = new BufferedReader(new FileReader(csvFile));
                     int cnt = 1;
-                    while ((line = br.readLine()) != null) {
+                    outer: while ((line = br.readLine()) != null) {
                         //0     1               2       3       4       5       6               7           8       9       10
                         //Titel	Beschreibung	Start	Ende	Price	Sektor	LocationName	HallName	Artist1	Artist2	...
                         String[] column = line.split(cvsSplitBy);
@@ -148,7 +148,7 @@ public class EventCSVImportController implements LocalizationObserver {
                         for (int i = 0; i < column.length; i++) {
                             if (column[i].isEmpty()) {
                                 TAlogOutput.setText(TAlogOutput.getText() + "Error: Column not complete empty (" + i + ")\n");
-                                continue;
+                                continue outer;
                             }
                         }
 

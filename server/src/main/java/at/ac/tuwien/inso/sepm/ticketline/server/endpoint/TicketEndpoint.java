@@ -71,7 +71,6 @@ public class TicketEndpoint {
     @RequestMapping(method = RequestMethod.POST)
     @ApiOperation(value = "create ticket entry")
     public List<TicketDTO> create(@RequestBody List<TicketDTO> ticketDTOS) {
-
         if(ticketDTOS==null || ticketDTOS.isEmpty()){
             throw new EmptyFieldException();
         }
@@ -80,6 +79,7 @@ public class TicketEndpoint {
         for (TicketDTO ticketDTO : ticketDTOS){
             Ticket ticket = ticketMapper.ticketDTOtoTicket(ticketDTO);
             ticket.setEvent(eventService.findOne(ticketDTO.getEvent().getId()));
+            ticket.calculatePrice();
             tickets.add(ticket);
         }
 
