@@ -96,6 +96,18 @@ public class Ticket {
         this.price = price;
     }
 
+    public Long calculatePrice() {
+        if (event == null || seat == null)
+            return 0L;
+
+        if (((int) seat.getSector()) < 97)
+            return event.getPrice();
+
+        long priceSector = 100 + (((int) seat.getSector()) - 97) * 20;
+
+        return (event.getPrice() * priceSector) / 100;
+    }
+
     public static TicketBuilder builder(){
         return new TicketBuilder();
     }
