@@ -30,9 +30,9 @@ public class EventLocationDataGenerator {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EventLocationDataGenerator.class);
     private static final int NUMBER_OF_LOCATIONS_TO_GENERATE = 10;
-    private static final int NUMBER_OF_EVENTS_TO_GENERATE = 200;
+    private static final int NUMBER_OF_EVENTS_TO_GENERATE = 500;
     private static final int NUMBER_OF_ARTISTS = 20;
-    private static final int NUMBER_OF_ARTISTS_PER_EVENT = 3;
+    private static final int NUMBER_OF_ARTISTS_PER_EVENT = 5;
 
     private final LocationRepository locationRepository;
     private final SeatRepository seatRepository;
