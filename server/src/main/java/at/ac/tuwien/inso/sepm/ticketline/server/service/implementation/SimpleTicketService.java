@@ -3,9 +3,8 @@ package at.ac.tuwien.inso.sepm.ticketline.server.service.implementation;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Customer;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Ticket;
-import at.ac.tuwien.inso.sepm.ticketline.server.exception.AlreadyExistsException;
-import at.ac.tuwien.inso.sepm.ticketline.server.exception.EmptyFieldException;
-import at.ac.tuwien.inso.sepm.ticketline.server.exception.NotFoundException;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Seat;
+import at.ac.tuwien.inso.sepm.ticketline.server.exception.*;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.TicketRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.TicketService;
 import org.springframework.data.domain.Page;
@@ -13,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -36,7 +36,7 @@ public class SimpleTicketService implements TicketService {
 
     @Override
     public List<Ticket> findByEventId( Long eventId ) {
-        return ticketRepository.findByEvent_Id(eventId);
+        return ticketRepository.findByEvent_IdAndIsDeletedFalse(eventId);
     }
 
     @Override
@@ -45,10 +45,32 @@ public class SimpleTicketService implements TicketService {
     }
 
     @Override
+    public void deleteTicketByTicket_Id(Long ticket_Id) throws NotFoundException, OldVersionException {
+
+        Ticket ticket = ticketRepository.getOne(ticket_Id);
+        if(ticket.isPaid()) {
+            Ticket ticket1 = ticketRepository.findOne(ticket_Id);
+            if(ticket1 == null){
+                throw new NotFoundException();
+            }
+            if(ticket1.isDeleted()){
+                throw new OldVersionException();
+            }
+
+            ticketRepository.deleteFlagTicketByTicket_Id(ticket_Id);
+
+        }
+        else{
+            ticketRepository.deleteTicketByTicket_Id(ticket_Id);
+        }
+    }
+
+
+    @Override
     public List<Ticket> save( List<Ticket> tickets ) {
         if(tickets==null || tickets.isEmpty()){throw new EmptyFieldException();}
 
-        long reservationNR = (LocalDate.now().getYear() % 100) * 100000000 + tickets.get(0).getId();
+        long reservationNR = (LocalDate.now().getYear() % 100) * 100000000 ;
 
         for(Ticket ticket : tickets) {
             if (isBooked(ticket.getEvent().getId(), ticket.getSeat().getId())) {
@@ -56,8 +78,13 @@ public class SimpleTicketService implements TicketService {
             }
             ticket.setDeleted(false);
             ticket.setReservationNumber(reservationNR);
+            ticket.setReservationDate(LocalDateTime.now());
         }
-
+        tickets = ticketRepository.save(tickets);
+        reservationNR+=+ tickets.get(0).getId();
+        for(Ticket ticket: tickets){
+            ticket.setReservationNumber(reservationNR);
+        }
         return ticketRepository.save(tickets);
     }
 
@@ -67,7 +94,31 @@ public class SimpleTicketService implements TicketService {
     }
 
     @Override
+    public void setTicketsFreeIf30MinsBeforEvent() {
+        List<Ticket> stillReservedTickets = ticketRepository.setTicketsFreeIf30MinsBeforeEvent();
+        if(stillReservedTickets.isEmpty()){
+            return;
+        }
+
+        for (Ticket ticket : stillReservedTickets) {
+            ticketRepository.delete(ticket);
+        }
+    }
+
+    @Override
+    public Page<Ticket> findAllByCustomerName(String name, Pageable request) {
+
+        return ticketRepository.findAllByCustomerName("%"+name+"%", request);
+    }
+
+    @Override
+    public Page<Ticket> findAllByReservationNumber(Long reservationNumber, Pageable request) {
+        return ticketRepository.findByReservationNumberAndIsDeletedFalse(reservationNumber, request);
+    }
+
+
+    @Override
     public Boolean isBooked(Long eventId,Long seatId){
-        return ticketRepository.findByEvent_idAndSeat_id(eventId,seatId).isPresent();
+        return ticketRepository.findByEvent_idAndSeat_idAndIsDeletedFalse(eventId,seatId).isPresent();
     }
 }

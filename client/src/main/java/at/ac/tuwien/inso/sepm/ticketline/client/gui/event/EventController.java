@@ -37,8 +37,7 @@ public class EventController extends TabElement implements LocalizationObserver 
     public Pagination pagination;
     @FXML
     public Button btnAddEvent;
-    @FXML
-    public BorderPane bPEventContainer;
+
     @FXML
     public BorderPane eventRootContainer;
     @FXML
@@ -178,7 +177,7 @@ public class EventController extends TabElement implements LocalizationObserver 
             for (SimpleEventDTO event : events.getContent()) {
                 SpringFxmlLoader.Wrapper<EventElementController> wrapper =
                     springFxmlLoader.loadAndWrap("/fxml/event/eventElement.fxml");
-                wrapper.getController().initializeData(eventService, event, bPEventContainer);
+                wrapper.getController().initializeData(eventService,event, eventRootContainer);
                 lvEventElements.getItems().add(wrapper.getController().vbEventElement);
             }
         }

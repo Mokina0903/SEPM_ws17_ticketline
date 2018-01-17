@@ -17,7 +17,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Profile("generateData")
 @Component
@@ -57,9 +60,13 @@ public class TicketDataGenerator {
                         .customer(customerRepository.findAll().get(1))
                         .event(event)
                         .seat(seats.remove(0))
-                        .price(faker.number().numberBetween((int)event.getPrice(),(int)event.getPrice()*2))
+                        .price(faker.number().numberBetween(event.getPrice(),event.getPrice()*2))
                         .isPaid(true)
                         .reservationNumber(reservationNR)
+                        .reservationDate(
+                            LocalDateTime.ofInstant(
+                                faker.date().past(100, TimeUnit.DAYS).toInstant(),
+                                ZoneId.systemDefault()))
                         .build();
 
                     LOGGER.debug("saving ticket {}", ticket);

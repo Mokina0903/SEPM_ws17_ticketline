@@ -57,6 +57,16 @@ public class DetailedHallDTO {
         this.seats = seats;
     }
 
+    public int getAmountOfSeatsInSector(char sector){
+        int count = 0;
+        if(seats==null || seats.isEmpty()){return 0;}
+        for(SeatDTO seat:seats){
+            if(seat.getSector()==sector){
+                count++;
+            }
+        }
+        return count;
+    }
 
 
     @Override

@@ -2,8 +2,12 @@ package at.ac.tuwien.inso.sepm.ticketline.client.rest;
 
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.EmptyValueException;
+import at.ac.tuwien.inso.sepm.ticketline.client.exception.SearchNoMatchException;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.TicketAlreadyExistsException;
+import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.seat.SeatDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -23,7 +27,7 @@ public interface TicketRestClient {
      * @param request defienes how to read paged from the database
      * @return a list of tickets, though the size of the list is dependent of the pageable object
      */
-    // Page<TicketDTO> findAll( Pageable request);
+     Page<TicketDTO> findAll( Pageable request) throws DataAccessException, SearchNoMatchException;
 
 
     /**
@@ -67,4 +71,30 @@ public interface TicketRestClient {
      * @return number of tickets
      */
     int ticketCountForEventForSector(Long event_id,char sector) throws DataAccessException;
+
+    /**
+     * find seats within sector that are still free for the specified event
+     *
+     * @param event_id of the event
+     * @param sector to check for seats
+     * @return list of free seats
+     */
+    List<SeatDTO> findFreeSeatsForEventInSector( Long event_id, char sector) throws DataAccessException;
+
+    /**
+     *
+     * @param name input of the texfield, which should refer to some customer name
+     * @param request describes the page issues (size, index)
+     * @return list of tickets from a person whos name is described by 'name'
+     */
+    Page<TicketDTO> findByCustomerName(String name, Pageable request) throws DataAccessException, SearchNoMatchException;
+
+    Page<TicketDTO> findByReservationNumber(Long reservationNumber, Pageable request) throws DataAccessException, SearchNoMatchException;
+
+    /**
+     * deletes a ticket with a certain ID
+     *
+     * @param ticket_Id of the ticket that should be deletet
+     */
+    void deleteTicketByTicket_Id(Long ticket_Id) throws DataAccessException;
 }

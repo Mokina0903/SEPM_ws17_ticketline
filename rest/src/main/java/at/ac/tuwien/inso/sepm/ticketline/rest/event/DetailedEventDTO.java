@@ -74,6 +74,8 @@ public class DetailedEventDTO{
         return price;
     }
 
+    public double getPriceInEuro(){return(double)price/(double)100;}
+
     public void setPrice( Long price ) {
         this.price = price;
     }

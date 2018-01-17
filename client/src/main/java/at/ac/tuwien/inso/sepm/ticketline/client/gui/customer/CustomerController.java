@@ -44,6 +44,10 @@ public class CustomerController extends TabElement implements LocalizationObserv
     public Button btNext;
     @FXML
     public Label lbNoCustomerError;
+    @FXML
+    public Button btnAnonymous;
+    @FXML
+    public Button btnBackToEvent;
 
     @FXML
     private TabHeaderController tabHeaderController;
@@ -77,10 +81,12 @@ public class CustomerController extends TabElement implements LocalizationObserv
     private TableColumn<CustomerDTO, String> tcMail;
     private TableColumn<CustomerDTO, String> tcNumber;
 
-    private Tab customerTab;
+    private Tab customerTab = new Tab();
     private Tab currentTab;
     private final int CUSTOMER_PER_PAGE = 12;
     private boolean isTicketView;
+
+    private Node oldContent;
 
     private final MainController mainController;
     private final SpringFxmlLoader springFxmlLoader;
@@ -112,24 +118,15 @@ public class CustomerController extends TabElement implements LocalizationObserv
         this.customerService = customerService;
     }
 
-    public void toggleTicketprozessView(boolean fromEvent){
-        btTickets.setVisible(!btTickets.isVisible());
-        btTickets.setDisable(!btTickets.isDisable());
-        btNext.setDisable(!btNext.isDisable());
-        btNext.setVisible(!btNext.isVisible());
-        tabHeaderController.setTitle(BundleManager.getBundle().getString("customer.chooseCustomer"));
-        if(fromEvent){
-            currentTab = mainController.getEventTab();
-        } else {
-           currentTab = customerTab;
-        }
-    }
-
     public void setNormalTabView(){
         btTickets.setVisible(true);
         btTickets.setDisable(false);
         btNext.setDisable(true);
         btNext.setVisible(false);
+        btnAnonymous.setDisable(true);
+        btnAnonymous.setVisible(false);
+        btnBackToEvent.setVisible(false);
+        btnBackToEvent.setDisable(true);
         tabHeaderController.setTitle(BundleManager.getBundle().getString("customer.customer"));
         currentTab=customerTab;
         isTicketView = false;
@@ -140,9 +137,22 @@ public class CustomerController extends TabElement implements LocalizationObserv
         btTickets.setDisable(true);
         btNext.setDisable(false);
         btNext.setVisible(true);
+        btnBackToEvent.setVisible(true);
+        btnBackToEvent.setDisable(false);
+        btnAnonymous.setDisable(false);
+        btnAnonymous.setVisible(true);
         tabHeaderController.setTitle(BundleManager.getBundle().getString("customer.chooseCustomer"));
         currentTab = mainController.getEventTab();
         isTicketView = true;
+    }
+
+    public void initialzeData(Tab customerTab){
+       this.customerTab = customerTab;
+       currentTab = customerTab;
+    }
+
+    public void setOldContent(Node oldContent){
+        this.oldContent = oldContent;
     }
 
     @FXML
@@ -153,12 +163,20 @@ public class CustomerController extends TabElement implements LocalizationObserv
         btNew.setGraphic(fontAwesome.create("USER_PLUS").size(FONT_SIZE));
         btEdit.setGraphic(fontAwesome.create("PENCIL_SQUARE_ALT").size(FONT_SIZE));
         btTickets.setGraphic(fontAwesome.create("TICKET").size(FONT_SIZE));
+        btnBackToEvent.setGraphic(fontAwesome.create("ARROW_LEFT").size(FONT_SIZE));
+
 
         lbNoCustomerError.setWrapText(true);
+        lbNoCustomerError.setVisible(false);
+        currentTab = customerTab;
 
         btNext.setDisable(true);
         btNext.setVisible(false);
         btNext.setText(BundleManager.getBundle().getString("customer.next"));
+        btnAnonymous.setVisible(false);
+        btnAnonymous.setDisable(true);
+        btnBackToEvent.setVisible(false);
+        btnBackToEvent.setDisable(true);
 
         lbNoMatch.setVisible(false);
         isTicketView = false;
@@ -322,8 +340,7 @@ public class CustomerController extends TabElement implements LocalizationObserv
                 springFxmlLoader.loadAndWrap("/fxml/customer/customerEdit.fxml");
             wrapper.getController().initializeData(customer, customerOverviewRoot);
             wrapper.getController().setUpdate(true);
-            currentTab
-                .setContent(wrapper.getLoadedObject());
+            currentTab.setContent(wrapper.getLoadedObject());
         }
     }
 
@@ -355,8 +372,9 @@ public class CustomerController extends TabElement implements LocalizationObserv
         tcBirthdate.setText(BundleManager.getBundle().getString("customer.birthdate"));
         tcNumber.setText(BundleManager.getBundle().getString("customer.number"));
         btNext.setText(BundleManager.getBundle().getString("customer.next"));
-        lbNoCustomerError.setText(BundleManager.getBundle().getString("customer.chooseCustomer")+"!");
-        //todo update TVcolumns
+        if(lbNoCustomerError.isVisible()){
+            lbNoCustomerError.setText(BundleManager.getBundle().getString("customer.chooseCustomer")+"!");
+        }
     }
 
     @Override
@@ -407,15 +425,41 @@ public class CustomerController extends TabElement implements LocalizationObserv
             springFxmlLoader.loadAndWrap("/fxml/ticket/hallplan.fxml");
         Node root = springFxmlLoader.load("/fxml/ticket/hallplan.fxml");
         HallplanController c = wrapper.getController();
-        if(currentTableview.getSelectionModel().getSelectedItem()==null){
+        if(!(actionEvent.getSource()== btnAnonymous) && currentTableview.getSelectionModel().getSelectedItem()==null){
             lbNoCustomerError.setText(BundleManager.getBundle().getString("customer.chooseCustomer")+"!");
             lbNoCustomerError.setVisible(true);
             return;
         }
-        mainController.setCutsomer(currentTableview.getSelectionModel().getSelectedItem());
+        CustomerDTO customer;
+        if(actionEvent.getSource()==btnAnonymous){
+            long l = 0;
+            CustomerDTO anonymousCustomer = null;
+            try {
+                anonymousCustomer = customerService.findByNumber(l);
+            } catch (DataAccessException e) {
+                LOGGER.debug("anonymous customer not available.");
+                e.printStackTrace();
+            } catch (SearchNoMatchException e) {
+                LOGGER.debug("anonymous customer does not exist!");
+                e.printStackTrace();
+            }
+            mainController.setCutsomer(anonymousCustomer);
+            customer=anonymousCustomer;
+        }else{
+            mainController.setCutsomer(currentTableview.getSelectionModel().getSelectedItem());
+            customer= currentTableview.getSelectionModel().getSelectedItem();
+        }
 
-        c.initializeData(mainController.getEvent(),currentTableview.getSelectionModel().getSelectedItem(),  customerOverviewRoot);
+
+        c.initializeData(mainController.getEvent(),customer,  customerOverviewRoot);
 
         mainController.getEventTab().setContent(root);
+    }
+
+    public void backToEventTab(ActionEvent actionEvent) {
+        mainController.getEventTab().setContent(oldContent);
+        setNormalTabView();
+        mainController.setCutsomer(null);
+
     }
 }

@@ -2,12 +2,16 @@ package at.ac.tuwien.inso.sepm.ticketline.client.service.implementation;
 
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.EmptyValueException;
+import at.ac.tuwien.inso.sepm.ticketline.client.exception.SearchNoMatchException;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.TicketAlreadyExistsException;
 import at.ac.tuwien.inso.sepm.ticketline.client.rest.TicketRestClient;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.TicketService;
+import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.seat.SeatDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,6 +30,11 @@ public class SimpleTicketService implements TicketService {
     @Override
     public TicketDTO findOneById( Long id ) throws DataAccessException {
         return ticketRestClient.findOneById(id);
+    }
+
+    @Override
+    public Page<TicketDTO> findAll(Pageable request) throws DataAccessException, SearchNoMatchException {
+        return ticketRestClient.findAll(request);
     }
 
     @Override
@@ -51,5 +60,24 @@ public class SimpleTicketService implements TicketService {
     @Override
     public int ticketCountForEventForSector( Long event_id, char sector ) throws DataAccessException {
         return ticketRestClient.ticketCountForEventForSector(event_id,sector);
+    }
+
+    @Override
+    public List<SeatDTO> findFreeSeatsForEventInSector( Long event_id, char sector ) throws DataAccessException {
+        return ticketRestClient.findFreeSeatsForEventInSector(event_id,sector);
+    }
+
+    @Override
+    public Page<TicketDTO> findByCustomerName(String name, Pageable request) throws DataAccessException, SearchNoMatchException {
+        return ticketRestClient.findByCustomerName(name,request);
+    }
+
+    public Page<TicketDTO> findByReservationNumber(Long reservationNumber, Pageable request) throws DataAccessException, SearchNoMatchException {
+        return ticketRestClient.findByReservationNumber(reservationNumber, request);
+    }
+
+    @Override
+    public void deleteTicketByTicket_Id(Long ticket_Id) throws DataAccessException {
+        ticketRestClient.deleteTicketByTicket_Id(ticket_Id);
     }
 }

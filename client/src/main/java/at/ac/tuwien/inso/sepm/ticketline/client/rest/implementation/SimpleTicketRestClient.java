@@ -2,13 +2,17 @@ package at.ac.tuwien.inso.sepm.ticketline.client.rest.implementation;
 
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.EmptyValueException;
+import at.ac.tuwien.inso.sepm.ticketline.client.exception.SearchNoMatchException;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.TicketAlreadyExistsException;
 import at.ac.tuwien.inso.sepm.ticketline.client.rest.TicketRestClient;
+import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.seat.SeatDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.news.DetailedNewsDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -72,7 +76,12 @@ public class SimpleTicketRestClient implements TicketRestClient {
     }
 
     @Override
-    public List<TicketDTO> findByCustomerId( Long customerId ) throws DataAccessException {
+    public List<TicketDTO> findByCustomerId(Long customerId) throws DataAccessException {
+        return null;
+    }
+
+
+    public List<TicketDTO> findByTicketId( Long customerId ) throws DataAccessException {
         try {
             LOGGER.debug("Retrieving ticket by customerId from {}", restClient.getServiceURI(TICKET_URL));
             ResponseEntity<List<TicketDTO>> tickets =
@@ -89,6 +98,8 @@ public class SimpleTicketRestClient implements TicketRestClient {
         } catch (RestClientException e) {
             throw new DataAccessException(e.getMessage(), e);
         }    }
+
+
 
     @Override
     public Boolean isBooked( Long eventId, Long seatId ) throws DataAccessException {
@@ -150,6 +161,115 @@ public class SimpleTicketRestClient implements TicketRestClient {
             return count.getBody();
         } catch (HttpStatusCodeException e) {
             throw new DataAccessException("Failed retrieve count of tickets with status code " + e.getStatusCode().toString());
+        } catch (RestClientException e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<SeatDTO> findFreeSeatsForEventInSector( Long event_id, char sector ) throws DataAccessException {
+        try {
+            LOGGER.debug("Retrieving free seats for event in sector from {}", restClient.getServiceURI(TICKET_URL));
+            ResponseEntity<List<SeatDTO>> seats =
+                restClient.exchange(
+                    restClient.getServiceURI(TICKET_URL+"/isFree/"+event_id+"/"+sector),
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<List<SeatDTO>>() {}
+                );
+            LOGGER.debug("Result status was {} with content {}", seats.getStatusCode(), seats.getBody());
+            return seats.getBody();
+        } catch (HttpStatusCodeException e) {
+            throw new DataAccessException("Failed retrieve seats with status code " + e.getStatusCode().toString());
+        } catch (RestClientException e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public Page<TicketDTO> findByCustomerName(String name, Pageable request) throws DataAccessException, SearchNoMatchException {
+        try {
+            LOGGER.debug("Retrieving all tickets with a certen customer name from {}", restClient.getServiceURI(TICKET_URL+"/"+request.getPageNumber()+"/"+request.getPageSize() ));
+            ResponseEntity<RestResponsePage<TicketDTO>> customer =
+                restClient.exchange(
+                    restClient.getServiceURI(TICKET_URL+"/"+name+"/"+request.getPageNumber()+"/"+request.getPageSize()),
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<RestResponsePage<TicketDTO>>() {
+                    });
+            LOGGER.debug("Result status was {} with content {}", customer.getStatusCode(), customer.getBody());
+            return customer.getBody();
+        } catch (HttpStatusCodeException e) {
+            if (e.getStatusCode().value() == 404) {
+                throw new SearchNoMatchException();
+            }
+            throw new DataAccessException("Failed retrieve tickets with status code " + e.getStatusCode().toString());
+        } catch (RestClientException e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public Page<TicketDTO> findByReservationNumber(Long reservationNumber, Pageable request) throws DataAccessException, SearchNoMatchException {
+        try {
+            LOGGER.debug("Retrieving all tickets from {}", restClient.getServiceURI(TICKET_URL+"/"+request.getPageNumber()+"/"+request.getPageSize() ));
+            ResponseEntity<RestResponsePage<TicketDTO>> customer =
+                restClient.exchange(
+                    restClient.getServiceURI(TICKET_URL+"/searchResNr"+"/"+reservationNumber+"/"+request.getPageNumber()+"/"+request.getPageSize()),
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<RestResponsePage<TicketDTO>>() {
+                    });
+            LOGGER.debug("Result status was {} with content {}", customer.getStatusCode(), customer.getBody());
+            return customer.getBody();
+        } catch (HttpStatusCodeException e) {
+            if (e.getStatusCode().value() == 404) {
+                throw new SearchNoMatchException();
+            }
+            throw new DataAccessException("Failed retrieve tickets with status code " + e.getStatusCode().toString());
+        } catch (RestClientException e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void deleteTicketByTicket_Id(Long ticket_Id) throws DataAccessException {
+        //try {
+            LOGGER.debug("removing news from users notSeen from {}", restClient.getServiceURI(TICKET_URL));
+            ResponseEntity ticket =
+                restClient.exchange(
+                    restClient.getServiceURI(TICKET_URL + "/" + "deleteTicket" + "/" + ticket_Id),
+                    HttpMethod.POST,
+                    null,
+                    new ParameterizedTypeReference<Long>() {
+                    }
+                );
+            LOGGER.debug("Result status was {} with content {}", ticket.getStatusCode(), ticket.getBody());
+        /*} catch (HttpStatusCodeException e) {
+            throw new DataAccessException("Failed to update user with status code " + e.getStatusCode().toString());
+        } catch (RestClientException e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }*/
+    }
+
+    @Override
+    public Page<TicketDTO> findAll(Pageable request) throws DataAccessException, SearchNoMatchException {
+        try {
+            LOGGER.debug("Retrieving all tickets from {}", restClient.getServiceURI(TICKET_URL+"/"+request.getPageNumber()+"/"+request.getPageSize() ));
+            ResponseEntity<RestResponsePage<TicketDTO>> customer =
+                restClient.exchange(
+                    restClient.getServiceURI(TICKET_URL+"/"+request.getPageNumber()+"/"+request.getPageSize()),
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<RestResponsePage<TicketDTO>>() {
+                    });
+            LOGGER.debug("Result status was {} with content {}", customer.getStatusCode(), customer.getBody());
+            return customer.getBody();
+        } catch (HttpStatusCodeException e) {
+            if (e.getStatusCode().value() == 404) {
+                throw new SearchNoMatchException();
+            }
+            throw new DataAccessException("Failed retrieve tickets with status code " + e.getStatusCode().toString());
         } catch (RestClientException e) {
             throw new DataAccessException(e.getMessage(), e);
         }

@@ -22,4 +22,18 @@ public interface SeatRepository extends JpaRepository<Seat,Long> {
 
     @Query(value = "Select * from seat where hall_id = :id", nativeQuery = true)
     List<Seat> findAllByHallId( @Param("id") Long id);
+
+    /**
+     * find seats within sector that are still free for the specified event
+     *
+     * @param event_id of the event
+     * @param sector to check for seats
+     * @return list of free seats
+     */
+    @Query(value = "Select * from seat s where s.id in (Select s.id from seat s join event e on s.hall_id = e.hall_id" +
+        " where e.id= :event_id and s.sector= :sector " +
+        "and s.id not in " +
+        "( Select seat_id from seat s join ticket t on s.id=t.seat_id join event e on t.event_id=e.id where e.id= :event_id))",
+        nativeQuery = true)
+    List<Seat> findFreeSeatsForEventInSector( @Param("event_id") Long event_id, @Param("sector") char sector);
 }
