@@ -50,7 +50,7 @@ public class SimpleInvoiceService implements InvoiceService{
     @Override
     public File invoiceToPdf(InvoiceDTO invoiceDTO, Window window) throws DataAccessException {
 
-        URL formTemplate = getClass().getResource("/invoice_template/Invoice_Template.pdf") ;
+        URL formTemplate = getClass().getResource("/invoice_template/Invoice_Template_new.pdf") ;
            try (PDDocument pdfDocument = PDDocument.load(new File(formTemplate.getPath()))) {
 
                PDAcroForm acroForm = pdfDocument.getDocumentCatalog().getAcroForm();
@@ -78,18 +78,18 @@ public class SimpleInvoiceService implements InvoiceService{
                    field = (PDTextField) acroForm.getFields().get(5);
                    field.setValue(invoiceDTO.getCustomer().getName()+" "+ invoiceDTO.getCustomer().getSurname());
 
-                   field = (PDTextField) acroForm.getFields().get(6);
-                   field.setValue("");
                    field = (PDTextField) acroForm.getFields().get(7);
                    field.setValue("");
-                   field = (PDTextField) acroForm.getFields().get(8);
+                   field = (PDTextField) acroForm.getFields().get(9);
+                   field.setValue("");
+                   field = (PDTextField) acroForm.getFields().get(11);
                    field.setValue("");
 
-                   //todo: insert id to 9
+                   //todo: insert id to 6
 
-                   field = (PDTextField) acroForm.getFields().get(10);
+                   field = (PDTextField) acroForm.getFields().get(8);
                    field.setValue(invoiceDTO.getInvoiceDate().format(formatter));
-                   field = (PDTextField) acroForm.getFields().get(11);
+                   field = (PDTextField) acroForm.getFields().get(10);
                    field.setValue(invoiceDTO.getInvoiceNumber()+"");
                    field = (PDTextField) acroForm.getFields().get(12);
                    field.setValue(event.getEndOfEvent().format(formatter));
@@ -145,14 +145,14 @@ public class SimpleInvoiceService implements InvoiceService{
                            field.setValue(invoiceDTO.isStorno()?"-":""+sec.get(0).getPriceInEuro() + " \u20ac");
                            field = (PDTextField) acroForm.getFields().get(17+(line*4));
                            field.setValue(invoiceDTO.isStorno()?"-":""+Math.round((100D*sec.get(0).getPriceInEuro()) * sec.size())/100D + " \u20ac");
-                           if(line==2){
-                               field = (PDTextField) acroForm.getFields().get(14+(line*4));
-                               field.setValue(invoiceDTO.isStorno()?"-":""+event.getTitle() + " Ticket(s) in Sector \""+sec.get(0).getSeat().getSector()+"\"");
-                               field = (PDTextField) acroForm.getFields().get(16+(line*4));
-                               field.setValue(sec.size() + "");
+                           if(line==3 || line==4){
                                field = (PDTextField) acroForm.getFields().get(17+(line*4));
-                               field.setValue(invoiceDTO.isStorno()?"-":""+sec.get(0).getPriceInEuro() + " \u20ac");
+                               field.setValue(invoiceDTO.isStorno()?"-":""+event.getTitle() + " Ticket(s) in Sector \""+sec.get(0).getSeat().getSector()+"\"");
+                               field = (PDTextField) acroForm.getFields().get(14+(line*4));
+                               field.setValue(sec.size() + "");
                                field = (PDTextField) acroForm.getFields().get(15+(line*4));
+                               field.setValue(invoiceDTO.isStorno()?"-":""+sec.get(0).getPriceInEuro() + " \u20ac");
+                               field = (PDTextField) acroForm.getFields().get(16+(line*4));
                                field.setValue(invoiceDTO.isStorno()?"-":""+Math.round((100D*sec.get(0).getPriceInEuro()) * sec.size())/100D + " \u20ac");
                            }
                            line++;
