@@ -12,6 +12,7 @@ import java.util.Objects;
 @Table(name="customer")
 public class Customer {
 
+    public static final Integer VERSION = 1;
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq_customer_id")
@@ -38,6 +39,9 @@ public class Customer {
 
     @Column(nullable = false, name = "birthdate")
     private LocalDate birthDate;
+
+    @Column(nullable = false)
+    private Integer version = VERSION;
 
     public String getSurname() {
         return surname;
@@ -87,6 +91,14 @@ public class Customer {
         this.email = email;
     }
 
+    public Integer getVersion(){return version;}
+
+    public void setVersion(Integer version){ this.version = version;}
+
+    public void newVersion() {this.version = version + 1;}
+
+    public Boolean correctVersion(Integer checkVersion){return (checkVersion == version);}
+
 
     public static CustomerBuilder builder() {
         return new CustomerBuilder();
@@ -104,6 +116,19 @@ public class Customer {
         Customer customer = (Customer) o;
 
         if (id != null ? !id.equals(customer.id) : customer.id != null) return false;
+        if (knr != null ? !knr.equals(customer.knr) : customer.knr != null) return false;
+        if (name != null ? !name.equals(customer.name) : customer.name != null) return false;
+        if (surname != null ? !surname.equals(customer.surname) : customer.surname != null) return false;
+        if (email != null ? !email.equals(customer.email) : customer.email != null) return false;
+        return birthDate != null ? birthDate.equals(customer.birthDate) : customer.birthDate == null;
+    }
+
+    public boolean equalsUpdate(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Customer customer = (Customer) o;
+
         if (knr != null ? !knr.equals(customer.knr) : customer.knr != null) return false;
         if (name != null ? !name.equals(customer.name) : customer.name != null) return false;
         if (surname != null ? !surname.equals(customer.surname) : customer.surname != null) return false;
@@ -181,7 +206,8 @@ public class Customer {
             customer.setSurname(surname);
             customer.setKnr(knr);
             customer.setEmail(mail);
-           customer.setBirthDate(birthDate);
+            customer.setBirthDate(birthDate);
+            customer.setVersion(VERSION);
             return customer;
         }
     }

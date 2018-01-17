@@ -121,13 +121,12 @@ public class UserEndpoint {
     public DetailedUserDTO resetUserPassword(@RequestBody SimpleUserDTO simpleUserDTO) {
         User user = userService.findByUsername(simpleUserDTO.getUserName());
         if(user.correctVersion(simpleUserDTO.getVersion())){
-            System.out.println("Server " + simpleUserDTO.getVersion());
             user.setPassword(simpleUserDTO.getPassword());
             user.newVersion();
             user = userService.resetPassword(user);
         }
         else{
-            System.out.println("Server unten " + simpleUserDTO.getVersion());
+
             throw new OldVersionException();
         }
         return userMapper.userToDetailedUserDTO(user);

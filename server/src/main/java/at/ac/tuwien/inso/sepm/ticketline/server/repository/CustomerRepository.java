@@ -65,10 +65,11 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
      * @param email to be updated
      * @param birthDate to be upated
      * @param knr of the customer, wohms data needs to be edited
+     * @param version ot the customer
      */
     @Modifying
     @Transactional
-    @Query(value = "update Customer u set u.name = ?1, u.surname = ?2, u.email = ?3, u.birthdate = ?4 where u.knr = ?5", nativeQuery = true)
-    void setCustomerInfoByKnr(String name, String surname, String email, Timestamp birthDate, Long knr);
+    @Query(value = "update Customer u set u.name = ?1, u.surname = ?2, u.email = ?3, u.birthdate = ?4, u.version = ?6 where u.knr = ?5", nativeQuery = true)
+    void setCustomerInfoByKnr(String name, String surname, String email, Timestamp birthDate, Long knr, Integer version);
 
 }

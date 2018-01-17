@@ -26,6 +26,9 @@ public class CustomerDTO {
     @ApiModelProperty(required = true, name = "The birthdate of the customer")
     private LocalDate birthDate;
 
+    @ApiModelProperty(required = true, name = "The current version of the customer")
+    private Integer version;
+
 
     public Long getKnr() {
         return knr;
@@ -74,6 +77,13 @@ public class CustomerDTO {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public Integer getVersion(){return version;}
+
+    public void setVersion(Integer version){this.version = version;}
+
+
+
 
 
     @Override
@@ -125,6 +135,7 @@ public class CustomerDTO {
         private String mail;
         private Long knr;
         private String surname;
+        private Integer version;
 
 
         public CustomerDTOBuilder() {
@@ -155,6 +166,10 @@ public class CustomerDTO {
             this.birthDate = date;
             return this;
         }
+        public CustomerDTOBuilder version(Integer version){
+            this.version = version;
+            return this;
+        }
 
         public CustomerDTO build() {
 
@@ -165,6 +180,7 @@ public class CustomerDTO {
             customer.setSurname(surname);
             customer.setKnr(knr);
             customer.setBirthDate(birthDate);
+            customer.setVersion(version);
             return customer;
         }
     }

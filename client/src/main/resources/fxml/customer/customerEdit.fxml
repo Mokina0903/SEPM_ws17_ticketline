@@ -50,6 +50,7 @@
                     <Button fx:id="btOk" maxWidth="-Infinity" onAction="#handleOk" prefWidth="40.0" ButtonBar.buttonData="LEFT" />
                 </buttons>
             </ButtonBar>
+            <Label fx:id="lblVersionException" textFill="crimson" text="%customer.version" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="7" />
          <TextField fx:id="tfLname" GridPane.columnIndex="1" GridPane.rowIndex="1" />
          <columnConstraints>
             <ColumnConstraints />
