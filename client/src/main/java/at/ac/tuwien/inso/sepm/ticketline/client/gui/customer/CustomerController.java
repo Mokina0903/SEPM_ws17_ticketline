@@ -46,6 +46,8 @@ public class CustomerController extends TabElement implements LocalizationObserv
     public Label lbNoCustomerError;
     @FXML
     public Button btnAnonymous;
+    @FXML
+    public Button btnBackToEvent;
 
     @FXML
     private TabHeaderController tabHeaderController;
@@ -84,6 +86,8 @@ public class CustomerController extends TabElement implements LocalizationObserv
     private final int CUSTOMER_PER_PAGE = 12;
     private boolean isTicketView;
 
+    private Node oldContent;
+
     private final MainController mainController;
     private final SpringFxmlLoader springFxmlLoader;
     private final CustomerService customerService;
@@ -121,6 +125,8 @@ public class CustomerController extends TabElement implements LocalizationObserv
         btNext.setVisible(false);
         btnAnonymous.setDisable(true);
         btnAnonymous.setVisible(false);
+        btnBackToEvent.setVisible(false);
+        btnBackToEvent.setDisable(true);
         tabHeaderController.setTitle(BundleManager.getBundle().getString("customer.customer"));
         currentTab=customerTab;
         isTicketView = false;
@@ -131,6 +137,8 @@ public class CustomerController extends TabElement implements LocalizationObserv
         btTickets.setDisable(true);
         btNext.setDisable(false);
         btNext.setVisible(true);
+        btnBackToEvent.setVisible(true);
+        btnBackToEvent.setDisable(false);
         btnAnonymous.setDisable(false);
         btnAnonymous.setVisible(true);
         tabHeaderController.setTitle(BundleManager.getBundle().getString("customer.chooseCustomer"));
@@ -143,6 +151,10 @@ public class CustomerController extends TabElement implements LocalizationObserv
        currentTab = customerTab;
     }
 
+    public void setOldContent(Node oldContent){
+        this.oldContent = oldContent;
+    }
+
     @FXML
     private void initialize() {
         tabHeaderController.setIcon(FontAwesome.Glyph.USERS);
@@ -151,6 +163,8 @@ public class CustomerController extends TabElement implements LocalizationObserv
         btNew.setGraphic(fontAwesome.create("USER_PLUS").size(FONT_SIZE));
         btEdit.setGraphic(fontAwesome.create("PENCIL_SQUARE_ALT").size(FONT_SIZE));
         btTickets.setGraphic(fontAwesome.create("TICKET").size(FONT_SIZE));
+        btnBackToEvent.setGraphic(fontAwesome.create("ARROW_LEFT").size(FONT_SIZE));
+
 
         lbNoCustomerError.setWrapText(true);
         lbNoCustomerError.setVisible(false);
@@ -161,6 +175,9 @@ public class CustomerController extends TabElement implements LocalizationObserv
         btNext.setText(BundleManager.getBundle().getString("customer.next"));
         btnAnonymous.setVisible(false);
         btnAnonymous.setDisable(true);
+        btnBackToEvent.setVisible(false);
+        btnBackToEvent.setDisable(true);
+
         lbNoMatch.setVisible(false);
         isTicketView = false;
     }
@@ -437,5 +454,11 @@ public class CustomerController extends TabElement implements LocalizationObserv
         c.initializeData(mainController.getEvent(),customer,  customerOverviewRoot);
 
         mainController.getEventTab().setContent(root);
+    }
+
+    public void backToEventTab(ActionEvent actionEvent) {
+        mainController.getEventTab().setContent(oldContent);
+        setNormalTabView();
+
     }
 }
