@@ -1,6 +1,9 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.integrationtest;
 
 import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketDTO;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.Ticket;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Seat;
 import at.ac.tuwien.inso.sepm.ticketline.server.integrationtest.base.BaseIntegrationTest;
 import at.ac.tuwien.inso.sepm.ticketline.server.integrationtest.base.TestDTOs;
 import com.jayway.restassured.RestAssured;
@@ -121,6 +124,42 @@ public class TicketEndpointTest extends BaseIntegrationTest {
 
     }
 
+    @Test
+    public void calculatePrice() {
+        Event event = Event.builder()
+            .price(10000L)
+            .build();
+
+        Seat seat = Seat.builder()
+            .build();
+
+        Ticket ticket = Ticket.builder()
+            .seat(seat)
+            .event(event)
+            .build();
+
+
+        seat.setSector((char) 96);
+        Assert.assertThat(ticket.calculatePrice(),is(10000L));
+
+        seat.setSector('a');
+        Assert.assertThat(ticket.calculatePrice(),is(10000L));
+
+        seat.setSector('b');
+        Assert.assertThat(ticket.calculatePrice(),is(12000L));
+
+        seat.setSector('c');
+        Assert.assertThat(ticket.calculatePrice(),is(14000L));
+
+        seat.setSector('d');
+        Assert.assertThat(ticket.calculatePrice(),is(16000L));
+
+        seat.setSector('e');
+        Assert.assertThat(ticket.calculatePrice(),is(18000L));
+
+        seat.setSector('f');
+        Assert.assertThat(ticket.calculatePrice(),is(20000L));
+    }
 
 
 }
