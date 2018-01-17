@@ -64,7 +64,7 @@
             <Button fx:id="btTickets" onAction="#openEventTab" prefWidth="40.0" GridPane.columnIndex="0" GridPane.rowIndex="3" />
             <Button fx:id="btNext" text="%customer.next" onAction="#openHallplan" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
             <Button fx:id="btnAnonymous" text="Anonym" onAction="#openHallplan" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
-            <Label fx:id="lbNoCustomerError" textFill="#cc1d1d" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+            <Label fx:id="lbNoCustomerError" textFill="#cc1d1d" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
             <columnConstraints>
                 <ColumnConstraints />
             </columnConstraints>

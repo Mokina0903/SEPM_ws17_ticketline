@@ -153,6 +153,7 @@ public class CustomerController extends TabElement implements LocalizationObserv
         btTickets.setGraphic(fontAwesome.create("TICKET").size(FONT_SIZE));
 
         lbNoCustomerError.setWrapText(true);
+        lbNoCustomerError.setVisible(false);
         currentTab = customerTab;
 
         btNext.setDisable(true);
@@ -354,8 +355,9 @@ public class CustomerController extends TabElement implements LocalizationObserv
         tcBirthdate.setText(BundleManager.getBundle().getString("customer.birthdate"));
         tcNumber.setText(BundleManager.getBundle().getString("customer.number"));
         btNext.setText(BundleManager.getBundle().getString("customer.next"));
-        lbNoCustomerError.setText(BundleManager.getBundle().getString("customer.chooseCustomer")+"!");
-        //todo update TVcolumns
+        if(lbNoCustomerError.isVisible()){
+            lbNoCustomerError.setText(BundleManager.getBundle().getString("customer.chooseCustomer")+"!");
+        }
     }
 
     @Override
