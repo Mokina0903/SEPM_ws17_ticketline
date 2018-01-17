@@ -459,6 +459,7 @@ public class CustomerController extends TabElement implements LocalizationObserv
     public void backToEventTab(ActionEvent actionEvent) {
         mainController.getEventTab().setContent(oldContent);
         setNormalTabView();
+        mainController.setCutsomer(null);
 
     }
 }
