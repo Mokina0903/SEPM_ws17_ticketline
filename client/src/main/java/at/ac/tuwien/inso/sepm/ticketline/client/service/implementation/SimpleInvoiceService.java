@@ -160,7 +160,9 @@ public class SimpleInvoiceService implements InvoiceService{
                    }
 
                    field = (PDTextField) acroForm.getFields().get(38);
-                   field.setValue(invoiceDTO.isStorno()?"-":""+invoiceDTO.getTotalPriceInEuro()+"");
+                   field.setValue(invoiceDTO.isStorno()?"-":""+invoiceDTO.getTotalPriceWithoutTaxInEuro());
+                   field = (PDTextField) acroForm.getFields().get(39);
+                   field.setValue(invoiceDTO.isStorno()?"-":""+invoiceDTO.getTotalTaxInEuro());
                    field = (PDTextField) acroForm.getFields().get(40);
                    field.setValue(invoiceDTO.isStorno()?"-":""+invoiceDTO.getTotalPriceInEuro()+"\u20ac");
 
