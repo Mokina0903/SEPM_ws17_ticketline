@@ -105,7 +105,11 @@ public class Ticket {
 
         long priceSector = 100 + (((int) seat.getSector()) - 97) * 20;
 
-        return (event.getPrice() * priceSector) / 100;
+        long calcPrice = (event.getPrice() * priceSector) / 100;
+
+        setPrice((int) calcPrice);
+
+        return calcPrice;
     }
 
     public static TicketBuilder builder(){
