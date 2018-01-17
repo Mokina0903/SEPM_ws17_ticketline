@@ -38,6 +38,9 @@ public class CustomerDialogController implements LocalizationObserver {
     private static final Logger LOGGER = LoggerFactory.getLogger(CustomerDialogController.class);
 
     @FXML
+    public Label lblVersionException;
+
+    @FXML
     private TabHeaderController tabHeaderController;
 
 
@@ -266,6 +269,7 @@ public class CustomerDialogController implements LocalizationObserver {
     public void handleOk(ActionEvent actionEvent) {
         LOGGER.info("Creating or saving customer.");
         mainController.setGeneralErrorUnvisable();
+        lblVersionException.setVisible(false);
 
         String mail = tfEmail.getText();
         String surname = tfLname.getText();
@@ -333,11 +337,18 @@ public class CustomerDialogController implements LocalizationObserver {
            // e.printStackTrace();
         }
         catch(OldVersionException e){
+            System.out.println("Hallo1");
             LOGGER.info("Customer has been changed since you started editing.");
-            mainController.showGeneralError("Customer has been changed. Still save?");
+            lblVersionException.setVisible(true);
+            System.out.println("Hallo2");
+            lblVersionException.setText(BundleManager.getBundle().getString("customer.version"));
+            System.out.println("Hallo3");
             try {
+                System.out.println("Hallo4");
                 CustomerDTO customerHelp = customerService.findByNumber(customer.getKnr());
+                System.out.println("Hallo5");
                 version = customerHelp.getVersion();
+                System.out.println("Hallo6");
             } catch (DataAccessException e1) {
                 LOGGER.warn("Customer could not have been saved because of technical issues");
                 mainController.showGeneralError("Not able to save Customer!");
@@ -354,6 +365,7 @@ public class CustomerDialogController implements LocalizationObserver {
     @Override
     public void update() {
 
+        lblVersionException.setText(BundleManager.getBundle().getString("customer.verson"));
         lbCustomerNumberText.setText(BundleManager.getBundle().getString("customer.number"));
         lbCustomerName.setText(BundleManager.getBundle().getString("customer.lname_"));
         lbCustomerBirthdate.setText(BundleManager.getBundle().getString("customer.birthdate_"));
