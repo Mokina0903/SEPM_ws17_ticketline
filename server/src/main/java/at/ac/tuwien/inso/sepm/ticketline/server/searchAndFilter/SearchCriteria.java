@@ -1,3 +1,4 @@
+/*
 package at.ac.tuwien.inso.sepm.ticketline.server.repository;
 
 public class SearchCriteria {
@@ -36,3 +37,4 @@ public class SearchCriteria {
         this.value = value;
     }
 }
+*/

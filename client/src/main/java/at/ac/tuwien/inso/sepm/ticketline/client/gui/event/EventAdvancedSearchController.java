@@ -22,6 +22,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 @Component
 public class EventAdvancedSearchController implements LocalizationObserver {
@@ -54,6 +56,7 @@ public class EventAdvancedSearchController implements LocalizationObserver {
     private final EventService eventService;
     private final LocationService locationService;
     private Node oldContent;
+    private MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
 
 
     private GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");

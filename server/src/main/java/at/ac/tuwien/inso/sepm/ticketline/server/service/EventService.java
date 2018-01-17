@@ -2,9 +2,10 @@ package at.ac.tuwien.inso.sepm.ticketline.server.service;
 
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
 
-import com.querydsl.core.types.dsl.BooleanExpression;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
+import java.util.HashMap;
 import java.util.List;
 
 public interface EventService {
@@ -17,7 +18,7 @@ public interface EventService {
      * @param request Pagable request
      * @return Page containing the event entries
      */
-    Page<Event> findByAdvancedSearch(String search, Pageable request);
+    //Page<Event> findByAdvancedSearch(String search, Pageable request);
 
     /**
      * Find all event entries
@@ -52,6 +53,8 @@ public interface EventService {
      * @return page of events
      */
     Page<Event> findAllUpcomingByTitle(Pageable request, String title);
+
+    Page<Event> findByAdvancedSearch(HashMap<String, String> parameters, Pageable request);
 
     /**
      * Publish new Event

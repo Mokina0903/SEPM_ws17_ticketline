@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.MultiValueMap;
 
 import java.util.List;
 
@@ -47,8 +48,7 @@ public class SimpleEventService implements EventService {
     }
 
     @Override
-    public Page<SimpleEventDTO> findAdvanced(Pageable request, String search) throws DataAccessException{
-        System.out.println(search);
-        return eventRestClient.findAdvanced(request, search);
+    public Page<SimpleEventDTO> findAdvanced(Pageable request, MultiValueMap<String, String> parameters) throws DataAccessException{
+        return eventRestClient.findAdvanced(request, parameters);
     }
 }

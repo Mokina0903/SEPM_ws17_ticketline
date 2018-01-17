@@ -1,9 +1,11 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.entity;
 
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Hall;
+import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +35,10 @@ public class Event implements Predicatable{
 
     @Column(nullable = false)
     private LocalDateTime endOfEvent;
+
+    @Transient
+    @Formula("minute(endOfEvent)-minute(startOfEvent)")
+    private long duration;
 
     @Column(nullable = false)
     private Boolean seatSelection;
@@ -103,6 +109,15 @@ public class Event implements Predicatable{
         this.endOfEvent = endOfEvent;
     }
 
+    public long getDuration() {
+        return duration;
+    }
+
+    public void setDuration(long duration) {
+        this.duration = Duration.between(endOfEvent, startOfEvent).getSeconds();
+
+    }
+
     public Hall getHall() {
         return hall;
     }
@@ -118,6 +133,7 @@ public class Event implements Predicatable{
     public void setArtists(List<Artist> artists) {
         this.artists = artists;
     }
+
 
     public static EventBuilder builder(){return new EventBuilder();}
 

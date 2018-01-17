@@ -3,7 +3,6 @@ package at.ac.tuwien.inso.sepm.ticketline.client.gui.event;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.SearchNoMatchException;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.*;
-import at.ac.tuwien.inso.sepm.ticketline.client.gui.location.LocationElementController;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.EventService;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.LocationService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
@@ -17,11 +16,8 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
-import javafx.util.Callback;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.GlyphFont;
 import org.controlsfx.glyphfont.GlyphFontRegistry;
@@ -32,6 +28,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -117,11 +115,10 @@ public class EventController extends TabElement implements LocalizationObserver 
         update();
         //todo choicebox doesnt update language of items
 
-        cbSearch.getSelectionModel().selectedItemProperty().addListener( (options, oldValue, newValue) -> {
+        cbSearch.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
                 if (newValue.equals(searchForEvent)) {
                     searchFor = EventSearchFor.EVENT;
-                }
-                else if (newValue.equals(searchForLocation)) {
+                } else if (newValue.equals(searchForLocation)) {
                     searchFor = EventSearchFor.LOCATION;
                 } else {
                     searchFor = EventSearchFor.ARTIST;
@@ -136,7 +133,6 @@ public class EventController extends TabElement implements LocalizationObserver 
     }
 
 
-
     public void preparePagination() {
         //all customer at start or searchfield is empty
         LOGGER.info("prepareing Pagination for the event overview");
@@ -147,7 +143,8 @@ public class EventController extends TabElement implements LocalizationObserver 
         } catch (DataAccessException e) {
             LOGGER.warn("Could not access total number of events");
         } catch (SearchNoMatchException e) {
-            noMatchFound();        }
+            noMatchFound();
+        }
     }
 
 
@@ -156,19 +153,18 @@ public class EventController extends TabElement implements LocalizationObserver 
         String searchText = tfSearchFor.getText();
         String searchParam;
         Pageable request = new PageRequest(0, EVENTS_PER_PAGE);
-
+        MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
         if (searchFor.equals(EventSearchFor.EVENT)) {
-            searchParam = "title:" + searchText;
             try {
-                Page<SimpleEventDTO> events = eventService.findAdvanced(request, searchParam);
+                parameters.add("title", tfSearchFor.getText());
+                Page<SimpleEventDTO> events = eventService.findAdvanced(request, parameters);
                 paginationHelper.setUpPagination(events);
             } catch (DataAccessException e) {
-                LOGGER.warn("Could not access total number of events");
+                LOGGER.warn("Could not access search of events");
             }
-        }
-        else if (searchFor.equals(EventSearchFor.LOCATION)) {
+        } else if (searchFor.equals(EventSearchFor.LOCATION)) {
             LOGGER.info("prepareing Pagination for the locations overview");
-            searchParam ="description:" + searchText;
+            searchParam = "description:" + searchText;
             try {
                 Page<SimpleLocationDTO> locations = locationService.findAdvanced(request, searchParam);
                 paginationHelper.setUpPagination(locations);
@@ -208,13 +204,13 @@ public class EventController extends TabElement implements LocalizationObserver 
 
 
     @FXML
-    public void openAdvancedSearch(ActionEvent actionEvent) throws DataAccessException {
-            LOGGER.info("opening the advanced event search dialog.");
+    public void openAdvancedSearch(ActionEvent actionEvent) {
+        LOGGER.info("opening the advanced event search dialog.");
 
-                SpringFxmlLoader.Wrapper<EventAdvancedSearchController> wrapper =
-                    springFxmlLoader.loadAndWrap("/fxml/event/eventAdvancedSearchComponent.fxml");
-                wrapper.getController().initializeData(eventRootContainer);
-                eventTab.setContent(wrapper.getLoadedObject());
+        SpringFxmlLoader.Wrapper<EventAdvancedSearchController> wrapper =
+            springFxmlLoader.loadAndWrap("/fxml/event/eventAdvancedSearchComponent.fxml");
+        wrapper.getController().initializeData(eventRootContainer);
+        eventTab.setContent(wrapper.getLoadedObject());
     }
 
     @Override
@@ -222,7 +218,7 @@ public class EventController extends TabElement implements LocalizationObserver 
         eventTab = tab;
     }
 
-    public void loadEvents(){
+    public void loadEvents() {
 
         searchFor = EventSearchFor.ALL;
         preparePagination();
@@ -262,7 +258,6 @@ public class EventController extends TabElement implements LocalizationObserver 
         new Thread(taskLoadEvents).start();
 
     }
-
 
 
     public void publishEvent(ActionEvent actionEvent) {
@@ -310,7 +305,7 @@ public class EventController extends TabElement implements LocalizationObserver 
                         DetailedEventDTO detailedEventDTO = DetailedEventDTO.builder()
                             .title(title)
                             //.artistFirstname(firstName) TODO: (Von Verena an David) those methods are not implemented jet, when they are remove those comments
-                           // .artistLastName(lastName)
+                            // .artistLastName(lastName)
                             .description(description)
                             .startOfEvent(start)
                             .endOfEvent(end)

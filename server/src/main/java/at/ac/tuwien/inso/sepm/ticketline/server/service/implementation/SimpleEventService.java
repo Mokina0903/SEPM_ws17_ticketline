@@ -6,28 +6,27 @@ import at.ac.tuwien.inso.sepm.ticketline.server.entity.QEvent;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Hall;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Location;
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.NotFoundException;
-import at.ac.tuwien.inso.sepm.ticketline.server.repository.ArtistRepository;
-import at.ac.tuwien.inso.sepm.ticketline.server.repository.EventRepository;
+import at.ac.tuwien.inso.sepm.ticketline.server.repository.*;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.Location.HallRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.Location.LocationRepository;
-import at.ac.tuwien.inso.sepm.ticketline.server.repository.MyPredicatesBuilder;
+import at.ac.tuwien.inso.sepm.ticketline.server.searchAndFilter.EventFilter;
+import at.ac.tuwien.inso.sepm.ticketline.server.searchAndFilter.SimpleEventFilterBuilder;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.EventService;
 import com.google.common.collect.Lists;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Service
 public class SimpleEventService implements EventService {
@@ -40,12 +39,16 @@ public class SimpleEventService implements EventService {
     private final HallRepository hallRepository;
     private final ArtistRepository artistRepository;
 
+    @Autowired
+    SimpleEventFilterBuilder filterBuilder;
+
     public SimpleEventService(EventRepository eventRepository, LocationRepository locationRepository, HallRepository hallRepository, ArtistRepository artistRepository) {
         this.eventRepository = eventRepository;
         this.locationRepository = locationRepository;
         this.hallRepository = hallRepository;
         this.artistRepository = artistRepository;
     }
+
 
     @Override
     public List<Event> findAll() {
@@ -59,7 +62,6 @@ public class SimpleEventService implements EventService {
 
     @Override
     public Page<Event> findAllUpcomingAsc(Pageable request) {
-        //get whole list of repository and create a page
         List<Event> events = eventRepository.findAllUpcoming();
         int start = request.getOffset();
         int end = (start + request.getPageSize()) > events.size() ? events.size() : (start + request.getPageSize());
@@ -89,8 +91,19 @@ public class SimpleEventService implements EventService {
  * https://stackoverflow.com/questions/23837988/querydsl-jpql-how-to-build-a-join-query
  * */
 
+    //todo implement search with or
 
     @Override
+    public Page<Event> findByAdvancedSearch(HashMap<String, String> parameters, Pageable request) {
+        Predicate predicate = filterBuilder.build(new EventFilter(parameters));
+        System.out.println("Service: Predicate *******" + predicate.toString() );
+        Iterable<Event> events = eventRepository.findAll(predicate);
+        List<Event> eventList = Lists.newArrayList(events);
+        System.out.println("ListSIze: :::::::::::::" + eventList.size());
+        return new PageImpl<>(eventList, request, eventList.size());
+    }
+
+   /* @Override
     public Page<Event> findByAdvancedSearch(String search, Pageable request) {
         MyPredicatesBuilder builder = new MyPredicatesBuilder("event");
         if (search != null) {
@@ -111,7 +124,7 @@ public class SimpleEventService implements EventService {
         List<Event> eventList = Lists.newArrayList(events);
         return new PageImpl<>(eventList, request, eventList.size());
     }
-
+*/
 
     @Override
     public Event publishEvent(Event event) {

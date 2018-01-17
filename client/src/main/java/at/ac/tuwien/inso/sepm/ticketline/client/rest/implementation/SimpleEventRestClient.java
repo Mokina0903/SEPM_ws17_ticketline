@@ -11,12 +11,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestClientException;
+import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.List;
 
 @Component
@@ -118,10 +121,53 @@ public class SimpleEventRestClient implements EventRestClient {
     }
 
 
-    @Override
-    public Page<SimpleEventDTO> findAdvanced(Pageable request, String search) throws DataAccessException {
+// https://stackoverflow.com/questions/8297215/spring-resttemplate-get-with-parameters
 
-        try {
+/*    HttpHeaders headers = new HttpHeaders();
+    headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+
+    UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+        .queryParam("title", title)
+        ...
+
+    HttpEntity<?> entity = new HttpEntity<>(headers);
+
+    HttpEntity<String> response = restTemplate.exchange(
+        builder.build().encode().toUri(),
+        HttpMethod.GET,
+        entity,
+        String.class);*/
+
+//https://docs.spring.io/spring-data/commons/docs/current/reference/html/#core.web.type-safe
+
+
+    @Override
+    public Page<SimpleEventDTO> findAdvanced(Pageable request, MultiValueMap<String, String> parameters) throws DataAccessException {
+    try {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+
+        String url = EVENT_URL + "/advSearch/" + request.getPageNumber() + "/" + request.getPageSize();
+
+        UriComponents builder = UriComponentsBuilder.fromPath(url)
+            .queryParams(parameters).build();
+        HttpEntity<?> entity = new HttpEntity<>(headers);
+
+        ResponseEntity<RestResponsePage<SimpleEventDTO>> events =
+            restClient.exchange(
+            restClient.getServiceURI(builder.toUriString()),
+            HttpMethod.GET,
+            entity,
+            new ParameterizedTypeReference<RestResponsePage<SimpleEventDTO>>() {
+            });
+        return events.getBody();
+    } catch (HttpStatusCodeException e) {
+        throw new DataAccessException("Failed retrieve events with status code " + e.getStatusCode().toString());
+    } catch (RestClientException e) {
+        throw new DataAccessException(e.getMessage(), e);
+    }
+
+        /*try {
             search = URLEncoder.encode(search, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             LOGGER.warn("Error while encoding search path");
@@ -141,7 +187,7 @@ public class SimpleEventRestClient implements EventRestClient {
             throw new DataAccessException("Failed retrieve events with status code " + e.getStatusCode().toString());
         } catch (RestClientException e) {
             throw new DataAccessException(e.getMessage(), e);
-        }
+        }*/
     }
 
 }

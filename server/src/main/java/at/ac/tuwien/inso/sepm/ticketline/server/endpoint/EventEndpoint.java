@@ -5,12 +5,16 @@ import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.event.EventMapper;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.EventService;
+import com.querydsl.core.types.Predicate;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.querydsl.binding.MultiValueBinding;
+import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.*;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -72,12 +77,16 @@ public class EventEndpoint {
         return eventService.findByAdvancedSearch(search, request);
     }*/
 
-    @RequestMapping(value = "advSearch/{pageIndex}/{eventsPerPage}/{search}", method = RequestMethod.GET)
+    @RequestMapping(value = "advSearch/{pageIndex}/{eventsPerPage}", method = RequestMethod.GET)
     @ApiOperation(value = "Get list of simple upcoming event entries")
-    public Page<SimpleEventDTO> findAdvanced(@PathVariable("pageIndex")int pageIndex, @PathVariable("eventsPerPage")int eventsPerPage, @PathVariable("search") String search) {
+    public Page<SimpleEventDTO> findAdvanced(@PathVariable("pageIndex")int pageIndex, @PathVariable("eventsPerPage")int eventsPerPage,
+                                             @QuerydslPredicate(root = Event.class)Predicate predicate,
+                                             @RequestParam HashMap<String,String> parameters) {
         Pageable request = new PageRequest(pageIndex, eventsPerPage, Sort.Direction.ASC, "start_of_event");
-        Page<Event> eventPage = eventService.findByAdvancedSearch(search, request);
+        System.out.println("PARAMS: " + parameters.toString());
+        Page<Event> eventPage = eventService.findByAdvancedSearch(parameters, request);
         List<SimpleEventDTO> dtos = eventMapper.eventToSimpleEventDTO(eventPage.getContent());
+        System.out.println("LIST::: " +dtos.size());
         return new PageImpl<>(dtos, request, eventPage.getTotalElements());
     }
 

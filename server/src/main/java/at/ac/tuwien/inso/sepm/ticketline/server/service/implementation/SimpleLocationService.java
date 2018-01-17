@@ -1,26 +1,18 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.service.implementation;
 
-import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Hall;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Location;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.Location.HallRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.Location.LocationRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.Location.SeatRepository;
-import at.ac.tuwien.inso.sepm.ticketline.server.repository.MyPredicatesBuilder;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.LocationService;
-import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
 
 @Service
 public class SimpleLocationService implements LocationService{
@@ -40,7 +32,7 @@ public class SimpleLocationService implements LocationService{
 
     @Override
     public Page<Location> findByAdvancedSearch(String search, Pageable request) {
-        MyPredicatesBuilder builder = new MyPredicatesBuilder("location");
+       /* MyPredicatesBuilder builder = new MyPredicatesBuilder("location");
         if (search != null) {
             try {
                 search = URLDecoder.decode(search, "UTF-8");
@@ -57,7 +49,8 @@ public class SimpleLocationService implements LocationService{
         Iterable<Location> locations = locationRepository.findAll(builder.build());
 
         List<Location> locationList = Lists.newArrayList(locations);
-        return new PageImpl<>(locationList, request, locationList.size());
+        return new PageImpl<>(locationList, request, locationList.size());*/
+       return null;
     }
 
     @Override

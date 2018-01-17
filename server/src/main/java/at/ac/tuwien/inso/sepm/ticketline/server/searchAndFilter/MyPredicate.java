@@ -1,6 +1,6 @@
+/*
 package at.ac.tuwien.inso.sepm.ticketline.server.repository;
 
-import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Predicatable;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.NumberPath;
@@ -46,3 +46,4 @@ public class MyPredicate {
         return s != null && s.matches("[-+]?\\d*\\.?\\d+");
     }
 }
+*/

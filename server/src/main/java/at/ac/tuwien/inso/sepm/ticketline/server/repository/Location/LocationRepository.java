@@ -18,9 +18,6 @@ import java.util.Optional;
 @Repository
 public interface LocationRepository extends JpaRepository<Location,Long>,
     QueryDslPredicateExecutor<Location>, QuerydslBinderCustomizer<QLocation> {
-
-    //siehe: http://www.baeldung.com/rest-api-search-language-spring-data-querydsl
-
     @Override
     default public void customize(
         QuerydslBindings bindings, QLocation root) {

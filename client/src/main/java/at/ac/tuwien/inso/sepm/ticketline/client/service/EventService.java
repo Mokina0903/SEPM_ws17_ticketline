@@ -6,6 +6,7 @@ import at.ac.tuwien.inso.sepm.ticketline.rest.event.DetailedEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.util.MultiValueMap;
 
 import java.util.List;
 
@@ -44,9 +45,10 @@ public interface EventService {
      * Find all events by search parameters ordered by Date ascending
      *
      * @param request page to load
+     * @param parameters for filter and search
      * @return Page of upcoming events
      * @throws DataAccessException in case something went wrong
      */
-    Page<SimpleEventDTO> findAdvanced(Pageable request, String search) throws DataAccessException;
+    Page<SimpleEventDTO> findAdvanced(Pageable request, MultiValueMap<String, String> parameters) throws DataAccessException;
 
     }
