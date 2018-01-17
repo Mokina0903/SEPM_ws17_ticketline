@@ -17,10 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 @Profile("generateData")
 @Component
@@ -38,7 +36,7 @@ public class TicketDataGenerator {
     private final UserRepository userRepository;
     private final Faker faker;
 
-    public TicketDataGenerator( TicketRepository ticketRepository, EventRepository eventRepository, CustomerRepository customerRepository, SeatRepository seatRepository, InvoiceRepository invoiceRepository, UserRepository userRepository ) {
+    public TicketDataGenerator(TicketRepository ticketRepository, EventRepository eventRepository, CustomerRepository customerRepository, SeatRepository seatRepository, InvoiceRepository invoiceRepository, UserRepository userRepository) {
         this.ticketRepository = ticketRepository;
         this.eventRepository = eventRepository;
         this.customerRepository = customerRepository;
@@ -59,37 +57,38 @@ public class TicketDataGenerator {
             for (Event event : events) {
                 List<Seat> seats = seatRepository.findAllByHallId(event.getHall().getId());
                 List<Customer> customers = customerRepository.findAll();
-                int numbTickets = faker.number ().numberBetween(30,seats.size()-1);
+                int numbTickets = faker.number().numberBetween(30, seats.size() - 1);
 
                 // TODO (David) Reservation Date
 
                 int ticketCNT = 1;
-                
+
                 while (0 < numbTickets && customers.size() > 0) {
                     // TODO: (David) reservationNR is ok?
-                    long reservationNR = (LocalDate.now().getYear()%100)*100000000 + event.getId()  *10000000  + ticketCNT++;
+                    long reservationNR = (LocalDate.now().getYear() % 100) * 100000000 + event.getId() * 10000000 + ticketCNT++;
 
-                    Customer customer = customers.remove(faker.number().numberBetween(0, customers.size()-1));
+                    Customer customer = customers.remove(faker.number().numberBetween(0, customers.size() - 1));
 
                     int numbTicketsCustomer = faker.number().numberBetween(1, (numbTickets < 10) ? numbTickets : 10);
 
-                    boolean isPaid = (faker.number().numberBetween(0,1) == 0 ? false : true);
+                    boolean isPaid = (faker.number().numberBetween(0, 1) == 0 ? false : true);
 
                     List<Ticket> tickets = new ArrayList();
                     for (int i = 0; i < numbTicketsCustomer; i++) {
-                        Seat seat = seats.remove(faker.number().numberBetween(0, seats.size() -1 ));
+                        Seat seat = seats.remove(faker.number().numberBetween(0, seats.size() - 1));
 
                         // TODO: (David) Pricecalculation
                         long price = (int) ((seat.getSector() - 96) * event.getPrice());
 
 
-                        Ticket ticket= Ticket.builder()
+                        Ticket ticket = Ticket.builder()
                             .customer(customer)
                             .event(event)
                             .seat(seat)
                             .price(price)
                             .isPaid(isPaid)
                             .reservationNumber(reservationNR)
+                            .reservationDate(LocalDateTime.now())
                             .build();
 
                         LOGGER.debug("saving ticket {}", reservationNR);
@@ -98,26 +97,26 @@ public class TicketDataGenerator {
                         numbTickets--;
                         tickets.add(ticket);
                     }
-                    
+
                     // TODO (David)
-                    
-                                    LOGGER.debug("saving tickets {}", tickets);
 
-                Ticket ticket = tickets.get(0);
+                    LOGGER.debug("saving tickets {}", tickets);
 
-                Invoice invoice = new Invoice.InvoiceBuilder()
-                    .invoiceDate(ticket.getReservationDate())
-                    .invoiceNumber(ticket.getReservationNumber())
-                    .customer(ticket.getCustomer())
-                    .isStorno(false)
-                    .vendor(userRepository.findOne(1l))
-                    .tickets(tickets)
-                    .build();
+                    Ticket ticket = tickets.get(0);
 
-                LOGGER.debug("saving invoice {}", tickets);
-                invoiceRepository.save(invoice);
+                    Invoice invoice = new Invoice.InvoiceBuilder()
+                        .invoiceDate(ticket.getReservationDate())
+                        .invoiceNumber(ticket.getReservationNumber())
+                        .customer(ticket.getCustomer())
+                        .isStorno(false)
+                        .vendor(userRepository.findOne(1l))
+                        .tickets(tickets)
+                        .build();
 
-                    
+                    LOGGER.debug("saving invoice {}", tickets);
+                    invoiceRepository.save(invoice);
+
+
                 }
 
             }
