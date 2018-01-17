@@ -88,7 +88,7 @@ public abstract class BaseIntegrationTest {
 
     protected static final Long TICKET_RESERVATIONNR = 10001L;
     protected static final Long TICKET_ID = 1L;
-    protected static final int TICKET_PRICE = 100;
+    protected static final long TICKET_PRICE = 100;
 
     @Value("${server.context-path}")
     private String contextPath;

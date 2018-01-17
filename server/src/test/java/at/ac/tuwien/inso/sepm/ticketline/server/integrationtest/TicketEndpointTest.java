@@ -131,7 +131,7 @@ public class TicketEndpointTest extends BaseIntegrationTest {
 
         List<TicketDTO> ticketDTOList = TestDTOs.setUpTicketDTO();
 
-        ticketDTOList.get(0).setPrice(123);
+        ticketDTOList.get(0).setPrice(123L);
 
         Response response = RestAssured
             .given()

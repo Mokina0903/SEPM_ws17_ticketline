@@ -67,7 +67,7 @@ public class TicketMapperTest {
     private static final SimpleEventDTO EVENTDTO = new SimpleEventDTO();
     private static final Boolean PAID = false;
     private static final Boolean DELETED = true;
-    private static final Integer PRICE = 13456;
+    private static final Long PRICE = 13456L;
     private static final Long NUMBER = 43L;
     private static final Boolean PAID1 = true;
     private static final Boolean DELETED1 = true;
@@ -229,7 +229,7 @@ public class TicketMapperTest {
             .customer(CUSTOMER)
             .event(EVENT)
             .isPaid(PAID1)
-            .price(PRICE1)
+            .price(PRICE)
             .reservationNumber(NUMBER1)
             .seat(SEAT)
             .id(ID1)
@@ -297,7 +297,7 @@ public class TicketMapperTest {
             .customer(customerDTO)
             .event(event)
             .isPaid(PAID1)
-            .price(PRICE1)
+            .price(PRICE)
             .reservationNumber(NUMBER1)
             .seat(seat)
             .id(ID1)

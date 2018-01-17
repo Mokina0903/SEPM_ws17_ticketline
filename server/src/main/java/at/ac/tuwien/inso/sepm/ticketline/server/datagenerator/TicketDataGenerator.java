@@ -57,7 +57,7 @@ public class TicketDataGenerator {
                 List<Seat> seats = seatRepository.findAllByHallId(event.getHall().getId());
                 List<Customer> customers = customerRepository.findAll();
                 int numbTickets = faker.number ().numberBetween(30,seats.size()-1);
-                
+
                 // TODO (David) Reservation Date
 
                 int ticketCNT = 1;
@@ -75,7 +75,7 @@ public class TicketDataGenerator {
                         Seat seat = seats.remove(faker.number().numberBetween(0, seats.size() -1 ));
 
                         // TODO: (David) Pricecalculation
-                        int price = (int) ((seat.getSector() - 96) * event.getPrice());
+                        long price = (int) ((seat.getSector() - 96) * event.getPrice());
 
 
                         Ticket ticket= Ticket.builder()

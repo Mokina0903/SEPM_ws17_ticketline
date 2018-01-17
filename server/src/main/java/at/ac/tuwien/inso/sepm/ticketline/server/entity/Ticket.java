@@ -118,7 +118,7 @@ public class Ticket {
 
         long calcPrice = (event.getPrice() * priceSector) / 100;
 
-        setPrice((int) calcPrice);
+        setPrice(calcPrice);
 
         return calcPrice;
     }
