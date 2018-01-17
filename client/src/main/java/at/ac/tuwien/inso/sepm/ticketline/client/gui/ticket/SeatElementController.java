@@ -9,10 +9,13 @@ import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 
 import java.util.Map;
-
-
+@Component
+@Scope("prototype")
 public class SeatElementController {
     private static final Logger LOGGER = LoggerFactory.getLogger(at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket.TicketController.class);
 
