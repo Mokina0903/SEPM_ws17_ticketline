@@ -124,6 +124,7 @@ public class CustomerDialogController implements LocalizationObserver {
 
     @FXML
     void initialize() {
+        dpBirthdate.setValue(LocalDate.of(LocalDate.now().getYear()-14,LocalDate.now().getMonth(),LocalDate.now().getDayOfMonth()));
         tabHeaderController.setIcon(FontAwesome.Glyph.USERS);
         tabHeaderController.setTitle(BundleManager.getBundle().getString("customer.customer"));
 
