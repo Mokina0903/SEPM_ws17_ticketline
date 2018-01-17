@@ -100,7 +100,7 @@ public class SimpleTicketService implements TicketService {
     @Override
     public void reservationPdf( List<TicketDTO> tickets, Window window) {
 
-        URL formTemplate = getClass().getResource("/invoice_template/Invoice_Template_new.pdf") ;
+        URL formTemplate = getClass().getResource("/invoice_template/Reservation_Template.pdf") ;
         try (PDDocument pdfDocument = PDDocument.load(new File(formTemplate.getPath()))) {
 
             PDAcroForm acroForm = pdfDocument.getDocumentCatalog().getAcroForm();
@@ -219,7 +219,7 @@ public class SimpleTicketService implements TicketService {
 
 
             FileChooser fileChooser = new FileChooser();
-            fileChooser.setInitialFileName("Invoice"+tickets.get(0).getReservationNumber()+".pdf");
+            fileChooser.setInitialFileName("Reservation"+tickets.get(0).getReservationNumber()+".pdf");
             File file= fileChooser.showSaveDialog(window);
             pdfDocument.save(file);
 
