@@ -88,7 +88,7 @@ public interface TicketService {
      *
      * @param reservation_Id of the tickets that should be paid
      */
-    void payTicketByReservation_Id(Long reservation_Id);
+    void payTicketByReservation_Id(Long reservation_Id) throws OldVersionException;
 
     void setTicketsFreeIf30MinsBeforEvent();
 

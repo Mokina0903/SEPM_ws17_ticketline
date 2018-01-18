@@ -85,6 +85,14 @@ public interface TicketRepository extends JpaRepository<Ticket,Long>{
     void is_paidFlagTicketByReservation_Id(@Param("reservation_Id") Long reservation_Id);
 
     /**
+     * @param reservation_number of the ticket
+     * @param
+     * @return optional containing ticket, if ticket is found that is part of a reservation and is not paid yet
+     */
+    @Query(value = "select * from ticket where reservation_number = :reservation_number and is_paid = false",nativeQuery = true)
+    List<Ticket> findByReservation_NumberAndIsPaidFalse(@Param("reservation_number") Long reservation_number);
+
+    /**
      * @param event_Id of the event the ticket is for
      * @param seat_id of the seat the ticket is for
      * @return optional containing ticket, if ticket is found the seat is sold, if no ticket found the seat is free
