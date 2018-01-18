@@ -6,10 +6,33 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.statistics.Top10Controller"
             prefHeight="400.0" prefWidth="600.0">
+    <BorderPane.margin>
+        <Insets left="10" top="10" bottom="10" right="10"/>
+    </BorderPane.margin>
+    <center>
+        <BarChart fx:id="barChartTop10">
+            <xAxis>
+                <CategoryAxis fx:id="xAxis" side="BOTTOM"/>
+            </xAxis>
+            <yAxis>
+                <NumberAxis side="LEFT" fx:id="yAxis"/>
+            </yAxis>
+        </BarChart>
+
+    </center>
+    <bottom>
+
+            <Label text="Kategory: " GridPane.rowIndex="0" GridPane.columnIndex="0"/>
 
 
+    </bottom>
 </BorderPane>
+
