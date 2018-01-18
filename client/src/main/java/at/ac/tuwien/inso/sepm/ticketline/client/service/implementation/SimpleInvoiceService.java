@@ -181,15 +181,16 @@ public class SimpleInvoiceService implements InvoiceService{
                try {
                    Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + doc);
                } catch (IOException e) {
-                   //todo: new exception
                    e.printStackTrace();
                }*/
 
                FileChooser fileChooser = new FileChooser();
                fileChooser.setInitialFileName("Invoice"+invoiceDTO.getInvoiceNumber()+".pdf");
                File file= fileChooser.showSaveDialog(window);
-               pdfDocument.save(file); //todo:exception if nothing selected
 
+               if(file!=null) {
+                   pdfDocument.save(file);
+               }
                return file;
 
            } catch (InvalidPasswordException e) {
