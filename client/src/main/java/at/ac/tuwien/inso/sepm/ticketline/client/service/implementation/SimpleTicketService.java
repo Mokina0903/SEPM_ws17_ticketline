@@ -135,8 +135,8 @@ public class SimpleTicketService implements TicketService {
                 field = (PDTextField) acroForm.getFields().get(11);
                 field.setValue("");
 
-                //todo: insert id to 6
-
+                field = (PDTextField) acroForm.getFields().get(6);
+                field.setValue(ticketDTO.getReservationNumber()+"");
                 field = (PDTextField) acroForm.getFields().get(8);
                 field.setValue(ticketDTO.getReservationDate().format(formatter));
                 field = (PDTextField) acroForm.getFields().get(10);
