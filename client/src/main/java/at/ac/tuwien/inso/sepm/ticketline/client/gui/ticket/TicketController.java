@@ -486,7 +486,7 @@ public class TicketController extends TabElement implements LocalizationObserver
             InvoiceDTO stornoInvoice = InvoiceDTO.builder()
                 .isStorno(true)
                 .customer(tickets.get(0).getCustomer())
-                .tickets(tickets)
+                .tickets(stornoTickets)
                 .vendor(mainController.getUser())
                 .build();
             stornoInvoice = invoiceService.create(stornoInvoice);
