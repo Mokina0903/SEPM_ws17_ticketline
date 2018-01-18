@@ -22,9 +22,17 @@ public interface InvoiceService {
      * Find a single invoice entry by id.
      *
      * @param id the is of the invoice entry
-     * @return Optional containing the invoice entry
+     * @return InvoiceDTO containing the invoice entry
      */
     InvoiceDTO findOneById( Long id) throws DataAccessException;
+
+    /**
+     * Find a single invoice entry by reservationnumber.
+     *
+     * @param reservationNumber the is of the invoice entry
+     * @return InvoiceDTO containing the invoice entry
+     */
+    InvoiceDTO findOneByReservationNumber(Long reservationNumber) throws DataAccessException;
 
     /**
      * save invoice

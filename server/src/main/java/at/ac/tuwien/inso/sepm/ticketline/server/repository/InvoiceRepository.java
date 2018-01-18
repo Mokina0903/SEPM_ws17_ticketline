@@ -29,5 +29,11 @@ public interface InvoiceRepository extends JpaRepository<Invoice,Long>{
      */
     Optional<Invoice> findOneById( Long id);
 
-
+    /**
+     * Find a single invoice entry by reservantionNumber.
+     *
+     * @param reservationNumber the is of the invoice entry
+     * @return Optional containing the invoice entry
+     */
+    Optional<Invoice> findOneByInvoiceNumber( Long reservationNumber);
 }

@@ -26,6 +26,14 @@ public interface InvoiceService {
     Invoice findOneById( Long id);
 
     /**
+     * Find a single invoice entry by reservationnumber.
+     *
+     * @param reservationNumber  of the invoice entry
+     * @return InvoiceDTO of the invoice entry
+     */
+    Invoice findOneByReservationNumber(Long reservationNumber);
+
+    /**
      * save invoice
      *
      * @param invoice to be saved

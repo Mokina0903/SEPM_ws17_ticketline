@@ -43,6 +43,11 @@ public class SimpleInvoiceService implements InvoiceService{
     }
 
     @Override
+    public InvoiceDTO findOneByReservationNumber( Long reservationNumber ) throws DataAccessException {
+        return invoiceRestClient.findOneByReservationNumber(reservationNumber);
+    }
+
+    @Override
     public InvoiceDTO create( InvoiceDTO invoice ) throws DataAccessException {
         return invoiceRestClient.create(invoice);
     }

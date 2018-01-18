@@ -37,6 +37,11 @@ public class SimpleInvoiceService implements InvoiceService {
     }
 
     @Override
+    public Invoice findOneByReservationNumber( Long reservationNumber ) {
+        return invoiceRepository.findOneByInvoiceNumber(reservationNumber).orElseThrow(NotFoundException::new);
+    }
+
+    @Override
     public Invoice save( Invoice invoice ) {
         if(invoice.getTickets()==null || invoice.getTickets().isEmpty()){throw new EmptyFieldException();}
 

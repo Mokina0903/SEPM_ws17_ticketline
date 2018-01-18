@@ -74,6 +74,26 @@ public class SimpleInvoiceRestClient implements InvoiceRestClient{
     }
 
     @Override
+    public InvoiceDTO findOneByReservationNumber( Long reservationNumber ) throws DataAccessException {
+        try {
+            LOGGER.debug("Retrieving invoice by reservationNumber from {}", restClient.getServiceURI(INVOICE_URL));
+            ResponseEntity<InvoiceDTO> invoice =
+                restClient.exchange(
+                    restClient.getServiceURI(INVOICE_URL+"/rNr/"+reservationNumber),
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<InvoiceDTO>() {}
+                );
+            LOGGER.debug("Result status was {} with content {}", invoice.getStatusCode(), invoice.getBody());
+            return invoice.getBody();
+        } catch (HttpStatusCodeException e) {
+            throw new DataAccessException("Failed retrieve invoice with status code " + e.getStatusCode().toString());
+        } catch (RestClientException e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+    }
+
+    @Override
     public InvoiceDTO create( InvoiceDTO invoice ) throws DataAccessException {
         try {
             LOGGER.debug("save invoice");

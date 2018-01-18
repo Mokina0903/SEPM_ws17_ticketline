@@ -27,6 +27,14 @@ public interface InvoiceRestClient {
     InvoiceDTO findOneById( Long id) throws DataAccessException;
 
     /**
+     * Find a single invoice entry by reservationnumber.
+     *
+     * @param reservationNumber  of the invoice entry
+     * @return InvoiceDTO of the invoice entry
+     */
+    InvoiceDTO findOneByReservationNumber(Long reservationNumber) throws DataAccessException;
+
+    /**
      * save invoice
      *
      * @param invoice to be saved
