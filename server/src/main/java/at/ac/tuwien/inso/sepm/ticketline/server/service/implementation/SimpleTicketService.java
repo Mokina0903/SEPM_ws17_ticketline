@@ -106,6 +106,12 @@ public class SimpleTicketService implements TicketService {
     }
 
     @Override
+    public void payTicketByReservation_Id(Long reservation_Id){
+
+        ticketRepository.is_paidFlagTicketByReservation_Id(reservation_Id);
+    }
+
+    @Override
     public Page<Ticket> findAllByCustomerName(String name, Pageable request) {
 
         return ticketRepository.findAllByCustomerName("%"+name+"%", request);
