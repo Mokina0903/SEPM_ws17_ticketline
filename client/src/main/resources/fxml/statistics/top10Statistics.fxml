@@ -30,9 +30,13 @@
     </center>
     <bottom>
 
-            <Label text="Kategory: " GridPane.rowIndex="0" GridPane.columnIndex="0"/>
-
-
+        <HBox spacing="5">
+            <BorderPane.margin>
+                <Insets left="20" bottom="10" top="5"/>
+            </BorderPane.margin>
+            <Label text="Kategory: "/>
+            <ComboBox fx:id="comBoxKategory" />
+        </HBox>
     </bottom>
 </BorderPane>
 
