@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestClientException;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
@@ -113,6 +114,26 @@ public class SimpleEventRestClient implements EventRestClient{
             throw ErrorDTO.ErrorDTOBuilder(e.getResponseBodyAsString());
             //throw new DataAccessException("Failed retrieve Event with status code " + e.getStatusCode().toString());
         } catch (Exception e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<SimpleEventDTO> getTop10EventsOfMonth(LocalDateTime beginOfMonth, LocalDateTime endOfMonth) throws DataAccessException {
+        try {
+            LOGGER.debug("Retrieving all events from {}", restClient.getServiceURI(EVENT_URL));
+            ResponseEntity<List<SimpleEventDTO>> events =
+                restClient.exchange(
+                    restClient.getServiceURI(EVENT_URL+"/"+ beginOfMonth +"/"+endOfMonth),
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<List<SimpleEventDTO>>() {
+                    });
+            LOGGER.debug("Result status was {} with content {}", events.getStatusCode(), events.getBody());
+            return events.getBody();
+        } catch (HttpStatusCodeException e) {
+            throw new DataAccessException("Failed retrieve events with status code " + e.getStatusCode().toString());
+        } catch (RestClientException e) {
             throw new DataAccessException(e.getMessage(), e);
         }
     }

@@ -13,6 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -45,5 +47,10 @@ public class SimpleEventService implements EventService {
     @Override
     public DetailedEventDTO publishEvent(DetailedEventDTO detailedEventDTO) throws DataAccessException, ErrorDTO {
         return eventRestClient.publishEvent(detailedEventDTO);
+    }
+
+    @Override
+    public List<SimpleEventDTO> getTop10EventsOfMonth(LocalDateTime beginOfMonth, LocalDateTime endOfMonth) throws DataAccessException {
+        return eventRestClient.getTop10EventsOfMonth(beginOfMonth,endOfMonth);
     }
 }

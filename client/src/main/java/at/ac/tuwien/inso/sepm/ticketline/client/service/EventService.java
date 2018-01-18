@@ -8,6 +8,9 @@ import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.List;
 
 public interface EventService {
@@ -47,4 +50,12 @@ public interface EventService {
      * @throws ErrorDTO in case something went wrong (http Status)
      */
     DetailedEventDTO publishEvent(DetailedEventDTO detailedEventDTO) throws DataAccessException, ErrorDTO;
+
+    /**
+     *
+     * @param beginOfMonth the start of the month where to get the top events
+     * @param endOfMonth the end of the month where to get the top events
+     * @return a list of events
+     */
+    List<SimpleEventDTO> getTop10EventsOfMonth(LocalDateTime beginOfMonth, LocalDateTime endOfMonth) throws DataAccessException;
 }
