@@ -221,7 +221,9 @@ public class SimpleTicketService implements TicketService {
             FileChooser fileChooser = new FileChooser();
             fileChooser.setInitialFileName("Reservation"+tickets.get(0).getReservationNumber()+".pdf");
             File file= fileChooser.showSaveDialog(window);
-            pdfDocument.save(file);
+            if(file!=null) {
+                pdfDocument.save(file);
+            }
 
         } catch (InvalidPasswordException e) {
             e.printStackTrace();
