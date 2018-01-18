@@ -22,30 +22,36 @@
         <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
 
             <HBox>
-            <TextField fx:id="tfSearch" prefHeight="26.0" prefWidth="343.0" promptText="%ticket.searchField"
-                       GridPane.columnIndex="1"/>
-            <Button text="search" defaultButton="true" mnemonicParsing="false" GridPane.columnIndex="0" onAction="#search" />
+                <TextField fx:id="tfSearch" prefHeight="26.0" prefWidth="343.0" promptText="%ticket.searchField"
+                           GridPane.columnIndex="1"/>
+                <Button text="search" defaultButton="true" mnemonicParsing="false" GridPane.columnIndex="0" onAction="#search" />
             </HBox>
             <Label fx:id="lblNoMatch" text="%customer.noMatches" />
             <Pagination fx:id="pagination" maxHeight="1.7976931348623157E308"
-                                maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="600.0"
-                                HBox.hgrow="ALWAYS">
-            <HBox.margin>
-                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
-            </HBox.margin>
-            <padding>
-                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
-            </padding>
-        </Pagination>
+                        maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="600.0"
+                        HBox.hgrow="ALWAYS">
+                <HBox.margin>
+                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                </HBox.margin>
+                <padding>
+                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                </padding>
+            </Pagination>
         </VBox>
     </center>
     <right>
         <HBox spacing="5">
-        <BorderPane.margin>
-              <Insets top="81" right="20" />
-          </BorderPane.margin>
+            <BorderPane.margin>
+                <Insets top="81" right="20" />
+            </BorderPane.margin>
             <Button fx:id="btnStorno" text="%ticket.storno" prefHeight="25.0" prefWidth="80.0" onAction="#storno"/>
             <Label fx:id= "lblStorno" textFill="#cc1d1d" prefHeight="40.0" prefWidth="100.0"/>
+
+            <BorderPane.margin>
+                <Insets top="91" right="20" />
+            </BorderPane.margin>
+            <Button fx:id="btnPay" text="%ticket.pay" prefHeight="25.0" prefWidth="80.0" onAction="#pay"/>
+            <Label fx:id= "lblPay" textFill="#cc1d1d" prefHeight="40.0" prefWidth="100.0"/>
         </HBox>
 
     </right>
