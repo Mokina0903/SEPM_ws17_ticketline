@@ -9,6 +9,7 @@ import at.ac.tuwien.inso.sepm.ticketline.client.gui.TabHeaderController;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.InvoiceService;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.TicketService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
+import at.ac.tuwien.inso.sepm.ticketline.rest.invoice.InvoiceDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketRepresentationClass;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
@@ -20,6 +21,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Window;
 import javafx.util.Callback;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.slf4j.Logger;
@@ -335,6 +337,18 @@ public class TicketController extends TabElement implements LocalizationObserver
                 TicketRepresentationClass ticket = currentTableview.getSelectionModel().getSelectedItem();
                 ticketService.deleteTicketByTicket_Id(ticket.getTicket_id());
 
+                if(ticket.isPaid()) {
+                    InvoiceDTO invoice = invoiceService.findOneByReservationNumber(ticket.getReservationNumber());
+                    List<TicketDTO> tickets = new ArrayList<>();
+                    for (TicketDTO ticketDTO : invoice.getTickets()) {
+                        if (!ticketDTO.getId().equals(ticket.getTicket_id()) && ticketDTO.getId() != (ticket.getTicket_id())) {
+                            tickets.add(ticketDTO);
+                        }
+                    }
+                    invoice.setTickets(tickets);
+                    invoiceService.create(invoice);
+                }
+
                 return null;
             }
 
@@ -451,5 +465,40 @@ public class TicketController extends TabElement implements LocalizationObserver
     }
 
     public void createStornoInvoice( ActionEvent actionEvent ) {
+
+
+        try {
+            TicketRepresentationClass ticket = currentTableview.getSelectionModel().getSelectedItem();
+            if(!ticket.isPaid()){return;}//todo feedback to client
+            Page page = ticketService.findByReservationNumber(ticket.getReservationNumber(),new PageRequest(0,Integer.MAX_VALUE));
+            List<TicketDTO> tickets = page.getContent();
+
+
+            if(tickets==null || tickets.isEmpty()){return;}//todo:feedback to client
+            List<TicketDTO> stornoTickets = new ArrayList<>();
+            for(TicketDTO ticketDTO: tickets){
+                if(ticketDTO.isDeleted()){
+                    stornoTickets.add(ticketDTO);
+                }
+            }
+            if(stornoTickets.isEmpty()){return;}//todo:feedback to client
+
+            InvoiceDTO stornoInvoice = InvoiceDTO.builder()
+                .isStorno(true)
+                .customer(tickets.get(0).getCustomer())
+                .tickets(tickets)
+                .vendor(mainController.getUser())
+                .build();
+            stornoInvoice = invoiceService.create(stornoInvoice);
+
+            Window window = btnStorno.getParent().getScene().getWindow();
+            invoiceService.invoiceToPdf(stornoInvoice,window);
+
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+        } catch (SearchNoMatchException e) {
+            e.printStackTrace();
+        }
+
     }
 }
