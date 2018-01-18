@@ -54,7 +54,7 @@ public class PaginationHelper {
         this.controller = controller;
     }
 
-    public void setUpPagination(EventSearchFor searchFor) {
+    public void setUpPagination() {
 
         Pageable request = new PageRequest(0, ENTRIES_PER_PAGE);
         /*try {
@@ -84,7 +84,7 @@ public class PaginationHelper {
 
         } /*catch (DataAccessException e) {
             LOGGER.warn("Could not access data for pagination!");
-       } }*/
+        }*/
 
 
     private Node createPage(Integer pageIndex) {
@@ -92,10 +92,9 @@ public class PaginationHelper {
         Pageable request = new PageRequest(pageIndex, ENTRIES_PER_PAGE);
         ListView<VBox> lvElements = new ListView<>();
 
-        if (searchFor.equals(EventSearchFor.EVENT)) {
+        if (searchFor.equals(EventSearchFor.EVENT) || searchFor.equals(EventSearchFor.ALL)) {
             Page<SimpleEventDTO> events = loadEventPage(pageIndex);
             pagination.setPageCount(events.getTotalPages());
-            // controller.setPagination(pagination);
 
             System.out.println("ELEMENTS per PAge event create  !!!!!!!! + " + events.getContent().size());
             lvElements.setStyle("-fx-background-color: transparent;");

@@ -19,10 +19,10 @@ import java.util.Optional;
 public interface LocationRepository extends JpaRepository<Location,Long>,
     QueryDslPredicateExecutor<Location>, QuerydslBinderCustomizer<QLocation> {
     @Override
-    default public void customize(
-        QuerydslBindings bindings, QLocation root) {
+    default public void customize(QuerydslBindings bindings, QLocation root) {
         bindings.bind(String.class)
             .first((SingleValueBinding<StringPath, String>) StringExpression::containsIgnoreCase);
+       bindings.excluding(root.zip);
     }
 
 

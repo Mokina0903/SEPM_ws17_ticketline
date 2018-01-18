@@ -128,6 +128,7 @@ public class EventAdvancedSearchController implements LocalizationObserver {
     @FXML
     public void handleOk(ActionEvent actionEvent) {
 
+        System.out.println("AdvSearch OK........ " );
         MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
 
         if (!tfEventTitle.getText().isEmpty()) {
@@ -146,10 +147,10 @@ public class EventAdvancedSearchController implements LocalizationObserver {
         //todo task
 
         Page<SimpleEventDTO> events = null;
-
-          //  paginationHelper.setUpPagination(events);
-            eventController.getEventTab().setContent(oldContent);
-
+        paginationHelper.setSearchFor(EventSearchFor.ALL);
+        paginationHelper.setParameters(parameters);
+        paginationHelper.setUpPagination();
+        eventController.getEventTab().setContent(oldContent);
         }
 
 

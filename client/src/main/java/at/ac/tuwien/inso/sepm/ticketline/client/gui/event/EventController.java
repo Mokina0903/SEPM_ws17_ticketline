@@ -133,7 +133,7 @@ public class EventController extends TabElement implements LocalizationObserver 
                     tfSearchFor.setPromptText(BundleManager.getBundle().getString("events.searchForArtist"));
                 }
             }
-                paginationHelper.setSearchFor(searchFor);
+            paginationHelper.setSearchFor(searchFor);
             System.out.println(searchFor);
             }
         );
@@ -158,13 +158,14 @@ public class EventController extends TabElement implements LocalizationObserver 
             LOGGER.info("preparing Pagination for the event search");
             parameters = setParametersForEventSearch();
             paginationHelper.setParameters(parameters);
-            paginationHelper.setUpPagination(EventSearchFor.EVENT);
+            paginationHelper.setUpPagination();
 
         } else if (searchFor.equals(EventSearchFor.LOCATION)) {
             LOGGER.info("preparing Pagination for the locations search");
+            //todo searches events instead loc with param or no zip trotz param, evt plz als string in search
             parameters = setParametersForLocationSearch();
             paginationHelper.setParameters(parameters);
-            paginationHelper.setUpPagination(EventSearchFor.LOCATION);
+            paginationHelper.setUpPagination();
         }
     }
 
@@ -242,12 +243,12 @@ public class EventController extends TabElement implements LocalizationObserver 
     @FXML
     public void openAdvancedSearch(ActionEvent actionEvent) {
         LOGGER.info("opening the advanced event search dialog.");
-        searchFor = EventSearchFor.ALL;
 
         SpringFxmlLoader.Wrapper<EventAdvancedSearchController> wrapper =
             springFxmlLoader.loadAndWrap("/fxml/event/eventAdvancedSearchComponent.fxml");
         wrapper.getController().initializeData(eventRootContainer);
         eventTab.setContent(wrapper.getLoadedObject());
+        System.out.println("Searchfor in eventcontroller: " + searchFor);
     }
 
     @Override
