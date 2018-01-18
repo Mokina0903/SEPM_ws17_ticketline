@@ -85,8 +85,8 @@ public class SimpleInvoiceService implements InvoiceService{
                    field = (PDTextField) acroForm.getFields().get(11);
                    field.setValue("");
 
-                   //todo: insert id to 6
-
+                   field = (PDTextField) acroForm.getFields().get(6);
+                   field.setValue(invoiceDTO.getId()+"");
                    field = (PDTextField) acroForm.getFields().get(8);
                    field.setValue(invoiceDTO.getInvoiceDate().format(formatter));
                    field = (PDTextField) acroForm.getFields().get(10);
@@ -188,7 +188,7 @@ public class SimpleInvoiceService implements InvoiceService{
                FileChooser fileChooser = new FileChooser();
                fileChooser.setInitialFileName("Invoice"+invoiceDTO.getInvoiceNumber()+".pdf");
                File file= fileChooser.showSaveDialog(window);
-               pdfDocument.save(file);
+               pdfDocument.save(file); //todo:exception if nothing selected
 
                return file;
 
