@@ -17,14 +17,18 @@ public class OptionalBooleanBuilder {
 
     public <T> OptionalBooleanBuilder notNullAnd(Function<T, BooleanExpression> expressionFunction, T value) {
         if (value != null) {
+            if (isNumeric(value.toString()) && value.equals("0")) {
                 return new OptionalBooleanBuilder(predicate.and(expressionFunction.apply(value)));
+            }
         }
         return this;
     }
 
     public <T> OptionalBooleanBuilder notNullOr(Function<T, BooleanExpression> expressionFunction, T value) {
         if (value != null) {
-            return new OptionalBooleanBuilder(predicate.or(expressionFunction.apply(value)));
+            if (isNumeric(value.toString()) && value.equals("0")) {
+                return new OptionalBooleanBuilder(predicate.or(expressionFunction.apply(value)));
+            }
         }
         return this;
     }

@@ -5,5 +5,7 @@ import com.querydsl.core.types.Predicate;
 
 public interface EventFilterBuilder {
 
-    Predicate build(EventFilter filter);
+
+    Predicate buildAnd(EventFilter filter);
+    Predicate buildOr(EventFilter filter);
 }

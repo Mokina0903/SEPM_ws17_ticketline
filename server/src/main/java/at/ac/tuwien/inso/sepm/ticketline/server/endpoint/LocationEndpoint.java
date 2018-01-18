@@ -11,14 +11,14 @@ import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.eventLocation.hall
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.eventLocation.location.LocationMapper;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.eventLocation.seat.SeatMapper;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.LocationService;
+import com.querydsl.core.types.Predicate;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.data.domain.*;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.querydsl.binding.QuerydslPredicate;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -76,13 +76,16 @@ public class LocationEndpoint {
         return halls;
     }
 
-    @RequestMapping(value = "/location/advSearch/{pageIndex}/{locationsPerPage}/{search}", method = RequestMethod.GET)
-    @ApiOperation(value = "Get list of simple location entries")
-    public Page<SimpleLocationDTO> findAdvanced(@PathVariable("pageIndex")int pageIndex, @PathVariable("locationsPerPage")int locationsPerPage, @PathVariable("search") String search) {
-        System.out.println("******************* Found the loc endpoint ******************");
-        Pageable request = new PageRequest(pageIndex, locationsPerPage, Sort.Direction.ASC, "city");
-        Page<Location> locationPage = locationService.findByAdvancedSearch(search, request);
+    @RequestMapping(value = "/location/advLocationSearch/{pageIndex}/{locationsPerPage}", method = RequestMethod.GET)
+    @ApiOperation(value = "Get list of simple location entries filtered by parameters")
+    public Page<SimpleLocationDTO> findAdvanced(@PathVariable("pageIndex")int pageIndex, @PathVariable("locationsPerPage")int locationsPerPage,
+                                             @QuerydslPredicate(root = Event.class)Predicate predicate,
+                                             @RequestParam HashMap<String,String> parameters) {
+        Pageable request = new PageRequest(pageIndex, locationsPerPage, Sort.Direction.ASC, "description");
+        System.out.println("PARAMS loc: " + parameters.toString());
+        Page<Location> locationPage = locationService.findByAdvancedSearch(parameters, request);
         List<SimpleLocationDTO> dtos = locationMapper.locationToSimpleLocationDTO(locationPage.getContent());
+        System.out.println("LIST loc::: " +dtos.size());
         return new PageImpl<>(dtos, request, locationPage.getTotalElements());
     }
 

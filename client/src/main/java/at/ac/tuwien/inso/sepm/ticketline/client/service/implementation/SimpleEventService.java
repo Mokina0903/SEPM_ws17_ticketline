@@ -49,6 +49,9 @@ public class SimpleEventService implements EventService {
 
     @Override
     public Page<SimpleEventDTO> findAdvanced(Pageable request, MultiValueMap<String, String> parameters) throws DataAccessException{
-        return eventRestClient.findAdvanced(request, parameters);
+
+        Page<SimpleEventDTO> e = eventRestClient.findAdvanced(request, parameters);
+        System.out.println("ELEM per page SERVICE: " + e.getContent().size());
+        return e;
     }
 }

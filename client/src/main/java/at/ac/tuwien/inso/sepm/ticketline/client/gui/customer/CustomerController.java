@@ -7,6 +7,7 @@ import at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket.HallplanController;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.CustomerService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.JavaFXUtils;
+import at.ac.tuwien.inso.sepm.ticketline.rest.PageableDAO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
 import com.sun.javafx.tools.packager.bundlers.Bundler;
@@ -77,7 +78,7 @@ public class CustomerController extends TabElement implements LocalizationObserv
     private TableColumn<CustomerDTO, String> tcMail;
     private TableColumn<CustomerDTO, String> tcNumber;
 
-    private Tab customerTab;
+    private Tab customerTab = new Tab();
     private Tab currentTab;
     private final int CUSTOMER_PER_PAGE = 12;
     private boolean isTicketView;
@@ -112,19 +113,6 @@ public class CustomerController extends TabElement implements LocalizationObserv
         this.customerService = customerService;
     }
 
-    public void toggleTicketprozessView(boolean fromEvent){
-        btTickets.setVisible(!btTickets.isVisible());
-        btTickets.setDisable(!btTickets.isDisable());
-        btNext.setDisable(!btNext.isDisable());
-        btNext.setVisible(!btNext.isVisible());
-        tabHeaderController.setTitle(BundleManager.getBundle().getString("customer.chooseCustomer"));
-        if(fromEvent){
-            currentTab = mainController.getEventTab();
-        } else {
-           currentTab = customerTab;
-        }
-    }
-
     public void setNormalTabView(){
         btTickets.setVisible(true);
         btTickets.setDisable(false);
@@ -145,18 +133,22 @@ public class CustomerController extends TabElement implements LocalizationObserv
         isTicketView = true;
     }
 
+    public void initialzeData(Tab customerTab){
+       this.customerTab = customerTab;
+       currentTab = customerTab;
+    }
+
     @FXML
     private void initialize() {
         tabHeaderController.setIcon(FontAwesome.Glyph.USERS);
         tabHeaderController.setTitle(BundleManager.getBundle().getString("customer.customer"));
         localizationSubject.attach(this);
-
-        btSearch.setGraphic(fontAwesome.create("SEARCH").size(FONT_SIZE));
         btNew.setGraphic(fontAwesome.create("USER_PLUS").size(FONT_SIZE));
         btEdit.setGraphic(fontAwesome.create("PENCIL_SQUARE_ALT").size(FONT_SIZE));
         btTickets.setGraphic(fontAwesome.create("TICKET").size(FONT_SIZE));
 
         lbNoCustomerError.setWrapText(true);
+        currentTab = customerTab;
 
         btNext.setDisable(true);
         btNext.setVisible(false);
@@ -324,8 +316,7 @@ public class CustomerController extends TabElement implements LocalizationObserv
                 springFxmlLoader.loadAndWrap("/fxml/customer/customerEdit.fxml");
             wrapper.getController().initializeData(customer, customerOverviewRoot);
             wrapper.getController().setUpdate(true);
-            currentTab
-                .setContent(wrapper.getLoadedObject());
+            currentTab.setContent(wrapper.getLoadedObject());
         }
     }
 
@@ -348,6 +339,7 @@ public class CustomerController extends TabElement implements LocalizationObserv
         }
 
         btSearch.setText(BundleManager.getBundle().getString("menu.search"));
+        lbSearch.setText(BundleManager.getBundle().getString("menu.search"));
         tfSearch.setPromptText(BundleManager.getBundle().getString("customer.searchField"));
         lbNoMatch.setText(BundleManager.getBundle().getString("customer.noMatches"));
 

@@ -144,14 +144,12 @@ public class EventAdvancedSearchController implements LocalizationObserver {
         }
 
         //todo task
-        Pageable request = new PageRequest(0, 7);
+
         Page<SimpleEventDTO> events = null;
-        try {
-            events = eventService.findAdvanced(request, parameters);
-            paginationHelper.setUpPagination(events);
+
+          //  paginationHelper.setUpPagination(events);
             eventController.getEventTab().setContent(oldContent);
-        } catch (DataAccessException e) {
-            e.printStackTrace();
+
         }
 
 
@@ -194,7 +192,7 @@ public class EventAdvancedSearchController implements LocalizationObserver {
         );
 
         new Thread(workerTask).start();*/
-    }
+
 
     @FXML
     public void handleCancel(ActionEvent actionEvent) {

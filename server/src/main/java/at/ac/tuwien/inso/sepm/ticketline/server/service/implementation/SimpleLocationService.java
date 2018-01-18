@@ -5,12 +5,20 @@ import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Location;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.Location.HallRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.Location.LocationRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.Location.SeatRepository;
+import at.ac.tuwien.inso.sepm.ticketline.server.searchAndFilter.LocationFilter;
+import at.ac.tuwien.inso.sepm.ticketline.server.searchAndFilter.SimpleLocationFilterBuilder;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.LocationService;
+import com.google.common.collect.Lists;
+import com.querydsl.core.types.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -24,6 +32,9 @@ public class SimpleLocationService implements LocationService{
     private final HallRepository hallRepository;
     private final SeatRepository seatRepository;
 
+    @Autowired
+    SimpleLocationFilterBuilder filterBuilder;
+
     public SimpleLocationService( LocationRepository locationRepository, HallRepository hallRepository, SeatRepository seatRepository ) {
         this.locationRepository = locationRepository;
         this.hallRepository = hallRepository;
@@ -31,26 +42,15 @@ public class SimpleLocationService implements LocationService{
     }
 
     @Override
-    public Page<Location> findByAdvancedSearch(String search, Pageable request) {
-       /* MyPredicatesBuilder builder = new MyPredicatesBuilder("location");
-        if (search != null) {
-            try {
-                search = URLDecoder.decode(search, "UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                LOGGER.warn("Error while encoding search path");
-            }
-
-            Pattern pattern = Pattern.compile("(\\w+?)(:|<|>)([a-zA-Z0-9_.\\s]+?),");
-            Matcher matcher = pattern.matcher(search + ",");
-            while (matcher.find()) {
-                builder.with(matcher.group(1), matcher.group(2), matcher.group(3));
-            }
-        }
-        Iterable<Location> locations = locationRepository.findAll(builder.build());
-
-        List<Location> locationList = Lists.newArrayList(locations);
-        return new PageImpl<>(locationList, request, locationList.size());*/
-       return null;
+    public Page<Location> findByAdvancedSearch(HashMap<String, String> parameters, Pageable request) {
+        Predicate predicate = filterBuilder.buildAnd(new LocationFilter(parameters));
+        System.out.println("LOC Service Predicate: ....." + predicate);
+        Iterable<Location> events = locationRepository.findAll(predicate);
+        List<Location> eventList = Lists.newArrayList(events);
+        System.out.println("LOCATION service: list:.... " + eventList.size());
+        int start = request.getOffset();
+        int end = (start + request.getPageSize()) > eventList.size() ? eventList.size() : (start + request.getPageSize());
+        return new PageImpl<>(eventList.subList(start, end), request, eventList.size());
     }
 
     @Override

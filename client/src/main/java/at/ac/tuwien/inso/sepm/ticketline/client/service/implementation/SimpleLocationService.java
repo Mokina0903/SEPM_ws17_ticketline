@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.MultiValueMap;
 
 import java.util.List;
 
@@ -47,8 +48,7 @@ public class SimpleLocationService implements LocationService{
     }
 
     @Override
-    public Page<SimpleLocationDTO> findAdvanced(Pageable request, String search) throws DataAccessException{
-        System.out.println(search);
-        return locationRestClient.findAdvanced(request, search);
+    public Page<SimpleLocationDTO> findAdvanced(Pageable request, MultiValueMap<String, String> parameters) throws DataAccessException{
+        return locationRestClient.findAdvanced(request, parameters);
     }
 }

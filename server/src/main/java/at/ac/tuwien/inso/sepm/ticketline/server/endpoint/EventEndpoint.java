@@ -78,7 +78,7 @@ public class EventEndpoint {
     }*/
 
     @RequestMapping(value = "advSearch/{pageIndex}/{eventsPerPage}", method = RequestMethod.GET)
-    @ApiOperation(value = "Get list of simple upcoming event entries")
+    @ApiOperation(value = "Get list of simple event entries filtered by parameters")
     public Page<SimpleEventDTO> findAdvanced(@PathVariable("pageIndex")int pageIndex, @PathVariable("eventsPerPage")int eventsPerPage,
                                              @QuerydslPredicate(root = Event.class)Predicate predicate,
                                              @RequestParam HashMap<String,String> parameters) {

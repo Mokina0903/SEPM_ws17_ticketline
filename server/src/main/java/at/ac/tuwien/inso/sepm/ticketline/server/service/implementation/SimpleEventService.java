@@ -95,12 +95,14 @@ public class SimpleEventService implements EventService {
 
     @Override
     public Page<Event> findByAdvancedSearch(HashMap<String, String> parameters, Pageable request) {
-        Predicate predicate = filterBuilder.build(new EventFilter(parameters));
-        System.out.println("Service: Predicate *******" + predicate.toString() );
+        Predicate predicate = filterBuilder.buildAnd(new EventFilter(parameters));
         Iterable<Event> events = eventRepository.findAll(predicate);
         List<Event> eventList = Lists.newArrayList(events);
-        System.out.println("ListSIze: :::::::::::::" + eventList.size());
-        return new PageImpl<>(eventList, request, eventList.size());
+        int start = request.getOffset();
+        int end = (start + request.getPageSize()) > eventList.size() ? eventList.size() : (start + request.getPageSize());
+
+        Page<Event> e = new PageImpl<>(eventList, request, eventList.size());
+        return new PageImpl<>(eventList.subList(start, end), request, eventList.size());
     }
 
    /* @Override
@@ -119,7 +121,7 @@ public class SimpleEventService implements EventService {
                 builder.with(matcher.group(1), matcher.group(2), matcher.group(3));
             }
         }
-        Iterable<Event> events = eventRepository.findAll(builder.build());
+        Iterable<Event> events = eventRepository.findAll(builder.buildAnd());
 
         List<Event> eventList = Lists.newArrayList(events);
         return new PageImpl<>(eventList, request, eventList.size());

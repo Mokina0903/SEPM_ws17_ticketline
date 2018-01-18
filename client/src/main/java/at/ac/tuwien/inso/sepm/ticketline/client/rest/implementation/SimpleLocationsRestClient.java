@@ -12,11 +12,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Component;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestClientException;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -116,28 +118,31 @@ public class SimpleLocationsRestClient implements LocationRestClient{
     }
 
     @Override
-    public Page<SimpleLocationDTO> findAdvanced(Pageable request, String search) throws DataAccessException {
+    public Page<SimpleLocationDTO> findAdvanced(Pageable request, MultiValueMap<String, String> parameters) throws DataAccessException {
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 
-        try {
-            search = URLEncoder.encode(search, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            LOGGER.warn("Error while encoding search path");
-        }
-        try {
-            LOGGER.debug("Retrieving all upcoming events from {}", restClient.getServiceURI(LOCATIONS_URL));
+            String url = LOCATIONS_URL + "/advLocationSearch/" + request.getPageNumber() + "/" + request.getPageSize();
+
+            UriComponents builder = UriComponentsBuilder.fromPath(url)
+                .queryParams(parameters).build();
+            System.out.println(" uil: -------- " + builder.toUriString());
+            HttpEntity<?> entity = new HttpEntity<>(headers);
+
             ResponseEntity<RestResponsePage<SimpleLocationDTO>> locations =
                 restClient.exchange(
-                    restClient.getServiceURI(LOCATIONS_URL + "/advSearch/" + request.getPageNumber() + "/" + request.getPageSize() + "/" + search),
+                    restClient.getServiceURI(builder.toUriString()),
                     HttpMethod.GET,
-                    null,
+                    entity,
                     new ParameterizedTypeReference<RestResponsePage<SimpleLocationDTO>>() {
                     });
-            LOGGER.debug("Result status was {} with content {}", locations.getStatusCode(), locations.getBody());
             return locations.getBody();
         } catch (HttpStatusCodeException e) {
-            throw new DataAccessException("Failed retrieve locations with status code " + e.getStatusCode().toString());
+            throw new DataAccessException("Failed retrieve events with status code " + e.getStatusCode().toString());
         } catch (RestClientException e) {
             throw new DataAccessException(e.getMessage(), e);
         }
+
     }
 }

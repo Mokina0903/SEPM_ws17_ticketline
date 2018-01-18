@@ -17,24 +17,18 @@ public class EventFilter {
     private long duration;
 
     public EventFilter(HashMap<String, String> parameters) {
-        System.out.println("HAs Parameter key? " + parameters.containsKey("title"));
         if (parameters.containsKey("title")){
-            System.out.println("Has title **************************");
             this.title = parameters.get("title");
         }
         if (parameters.containsKey("description")){
-            System.out.println("Has descr **************************");
             this.description = parameters.get("description");
         }
         if (parameters.containsKey("priceFrom")){
-            System.out.println("Has priceFrom **************************");
             this.priceFrom = Long.parseLong(parameters.get("priceFrom"));
         }
         if (parameters.containsKey("priceTo")){
-            System.out.println("Has priceTo **************************");
             this.priceTo = Long.parseLong(parameters.get("priceTo"));
         }
-        System.out.println("_____ in EventFilter price max:" + priceTo);
         //todo
 
     }

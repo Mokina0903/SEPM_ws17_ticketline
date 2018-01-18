@@ -60,7 +60,7 @@ public class NewsEndpointTest extends BaseIntegrationTest {
                     .title(TEST_NEWS_TITLE)
                     .text(TEST_NEWS_TEXT)
                     .publishedAt(TEST_NEWS_PUBLISHED_AT)
-                    .build()));
+                    .buildAnd()));
         */
 
         Response response = RestAssured
@@ -103,7 +103,7 @@ public class NewsEndpointTest extends BaseIntegrationTest {
                 .title(TEST_NEWS_TITLE)
                 .text(TEST_NEWS_TEXT)
                 .publishedAt(TEST_NEWS_PUBLISHED_AT)
-                .build()));
+                .buildAnd()));
         */
         Response response = RestAssured
             .given()
@@ -184,7 +184,7 @@ public class NewsEndpointTest extends BaseIntegrationTest {
                 .title(TEST_NEWS_TITLE)
                 .text(TEST_NEWS_TEXT)
                 .publishedAt(TEST_NEWS_PUBLISHED_AT)
-                .build());
+                .buildAnd());
         */
 
         Response response = RestAssured
@@ -236,7 +236,7 @@ public class NewsEndpointTest extends BaseIntegrationTest {
                 .title(TEST_NEWS_TITLE)
                 .summary(TEST_NEWS_TEXT)
                 .publishedAt(TEST_NEWS_PUBLISHED_AT)
-                .build())));
+                .buildAnd())));
     }
     */
 

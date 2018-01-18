@@ -266,7 +266,7 @@ public class EventMapperTest {
             .price(EVENT_PRICE)
             .startOfEvent(EVENT_START)
             .endOfEvent(EVENT_END)
-            .build();
+            .buildAnd();
         Event event = eventMapper.simpleEventDTOToEven
         t(simpleEventDTO);
         assertThat(event).isNotNull();

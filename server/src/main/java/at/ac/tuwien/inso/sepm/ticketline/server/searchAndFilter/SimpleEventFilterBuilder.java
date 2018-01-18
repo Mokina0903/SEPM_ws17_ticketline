@@ -13,7 +13,7 @@ public class SimpleEventFilterBuilder implements EventFilterBuilder {
     //todo buildOr, buildAnd for general search vs filter search
 
     @Override
-    public Predicate build(EventFilter filter) {
+    public Predicate buildAnd(EventFilter filter) {
 
         return new OptionalBooleanBuilder(EVENT.isNotNull())
             .notEmptyAnd(EVENT.title::containsIgnoreCase, filter.getTitle())
@@ -23,6 +23,14 @@ public class SimpleEventFilterBuilder implements EventFilterBuilder {
             //todo filter time
             /*.notNullAnd(EVENT.startOfEvent::between, filter.getTimeStart(), filter.getTimeStart())
             .notNullAnd(EVENT.duration::before, filter.getDuration())*/
+            .build();
+    }
+
+    @Override
+    public Predicate buildOr(EventFilter filter) {
+        return new OptionalBooleanBuilder(EVENT.isNotNull())
+            .notEmptyOr(EVENT.title::containsIgnoreCase, filter.getTitle())
+            .notEmptyOr(EVENT.description::containsIgnoreCase, filter.getDescription())
             .build();
     }
 }

@@ -11,6 +11,9 @@ import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.hall.DetailedHallDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.location.SimpleLocationDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
+import io.swagger.models.auth.In;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -37,6 +40,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class EventController extends TabElement implements LocalizationObserver {
@@ -64,7 +69,7 @@ public class EventController extends TabElement implements LocalizationObserver 
     @FXML
     private TabHeaderController tabHeaderController;
 
-    private EventSearchFor searchFor;
+    private EventSearchFor searchFor = EventSearchFor.EVENT;
 
 
     private Tab eventTab;
@@ -72,7 +77,6 @@ public class EventController extends TabElement implements LocalizationObserver 
     private String searchForArtist = BundleManager.getBundle().getString("artist.artist");
     private String searchForEvent = BundleManager.getBundle().getString("events.events");
     private String searchForLocation = BundleManager.getBundle().getString("location.location");
-    private ObservableList<String> searchForList = FXCollections.observableArrayList();
     private final MainController mainController;
     private final SpringFxmlLoader springFxmlLoader;
     private final EventService eventService;
@@ -109,69 +113,93 @@ public class EventController extends TabElement implements LocalizationObserver 
     private void initialize() {
         tabHeaderController.setIcon(FontAwesome.Glyph.FILM);
         localizationSubject.attach(this);
-        searchForList.add(searchForEvent);
-        searchForList.add(searchForLocation);
-        searchForList.add(searchForArtist);
+        ObservableList<String> searchForList = FXCollections.observableArrayList();
+        searchForList.addAll(searchForEvent, searchForLocation, searchForArtist);
         update();
         //todo choicebox doesnt update language of items
 
+
         cbSearch.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
+            if (newValue != null) {
                 if (newValue.equals(searchForEvent)) {
                     searchFor = EventSearchFor.EVENT;
+                    tfSearchFor.setPromptText(BundleManager.getBundle().getString("events.searchForEvent"));
                 } else if (newValue.equals(searchForLocation)) {
                     searchFor = EventSearchFor.LOCATION;
+                    tfSearchFor.setPromptText(BundleManager.getBundle().getString("events.searchForLocation"));
+
                 } else {
                     searchFor = EventSearchFor.ARTIST;
+                    tfSearchFor.setPromptText(BundleManager.getBundle().getString("events.searchForArtist"));
                 }
+            }
+                paginationHelper.setSearchFor(searchFor);
+            System.out.println(searchFor);
             }
         );
 
         cbSearch.getSelectionModel().selectFirst();
 
         btSearch.setGraphic(fontAwesome.create("SEARCH").size(FONT_SIZE));
-        paginationHelper.initData(pagination, springFxmlLoader, eventService, locationService);
+        paginationHelper.initData(pagination, springFxmlLoader, eventService, locationService, this);
     }
 
 
     public void preparePagination() {
         //all customer at start or searchfield is empty
-        LOGGER.info("prepareing Pagination for the event overview");
-        try {
-            Pageable request = new PageRequest(0, EVENTS_PER_PAGE);
-            Page<SimpleEventDTO> events = eventService.findAllUpcoming(request);
-            paginationHelper.setUpPagination(events);
-        } catch (DataAccessException e) {
-            LOGGER.warn("Could not access total number of events");
-        } catch (SearchNoMatchException e) {
-            noMatchFound();
+        LOGGER.info("preparing Pagination for the event overview");
+            search();
+    }
+
+    @FXML
+    private void search() {
+        MultiValueMap<String, String> parameters;
+        if (searchFor.equals(EventSearchFor.EVENT)) {
+            LOGGER.info("preparing Pagination for the event search");
+            parameters = setParametersForEventSearch();
+            paginationHelper.setParameters(parameters);
+            paginationHelper.setUpPagination(EventSearchFor.EVENT);
+
+        } else if (searchFor.equals(EventSearchFor.LOCATION)) {
+            LOGGER.info("preparing Pagination for the locations search");
+            parameters = setParametersForLocationSearch();
+            paginationHelper.setParameters(parameters);
+            paginationHelper.setUpPagination(EventSearchFor.LOCATION);
         }
     }
 
 
-    @FXML
-    private void search(ActionEvent actionEvent) {
-        String searchText = tfSearchFor.getText();
-        String searchParam;
-        Pageable request = new PageRequest(0, EVENTS_PER_PAGE);
-        MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
-        if (searchFor.equals(EventSearchFor.EVENT)) {
-            try {
-                parameters.add("title", tfSearchFor.getText());
-                Page<SimpleEventDTO> events = eventService.findAdvanced(request, parameters);
-                paginationHelper.setUpPagination(events);
-            } catch (DataAccessException e) {
-                LOGGER.warn("Could not access search of events");
+    private MultiValueMap<String,String> setParametersForEventSearch() {
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        if (!tfSearchFor.getText().isEmpty() && !tfSearchFor.getText().equals("")) {
+            params.add("title", tfSearchFor.getText());
+            params.add("description", tfSearchFor.getText());
+        }
+        return params;
+    }
+
+    private MultiValueMap<String,String> setParametersForLocationSearch() {
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        if (!tfSearchFor.getText().isEmpty() && !tfSearchFor.getText().equals("")) {
+            if (isNumeric(tfSearchFor.getText())) {
+                params.add("plz", tfSearchFor.getText());
             }
-        } else if (searchFor.equals(EventSearchFor.LOCATION)) {
-            LOGGER.info("prepareing Pagination for the locations overview");
-            searchParam = "description:" + searchText;
-            try {
-                Page<SimpleLocationDTO> locations = locationService.findAdvanced(request, searchParam);
-                paginationHelper.setUpPagination(locations);
-            } catch (DataAccessException e) {
-                LOGGER.warn("Could not access total number of locations");
+            else {
+                params.add("description", tfSearchFor.getText());
+                params.add("city", tfSearchFor.getText());
+                params.add("street", tfSearchFor.getText());
             }
         }
+        return params;
+    }
+
+    private MultiValueMap<String,String> setParametersForArtistSearch() {
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        if (!tfSearchFor.getText().isEmpty() && !tfSearchFor.getText().equals("")) {
+            params.add("artistFirstName", tfSearchFor.getText());
+            params.add("artistLastName", tfSearchFor.getText());
+        }
+        return params;
     }
 
     @FXML
@@ -195,18 +223,26 @@ public class EventController extends TabElement implements LocalizationObserver 
     public void update() {
         tabHeaderController.setTitle(BundleManager.getBundle().getString("events.events"));
         btAdvSearch.setText(BundleManager.getBundle().getString("events.advSearch"));
-        tfSearchFor.setPromptText(BundleManager.getBundle().getString("events.searchFor"));
         searchForArtist = BundleManager.getBundle().getString("artist.artist");
         searchForEvent = BundleManager.getBundle().getString("events.events");
         searchForLocation = BundleManager.getBundle().getString("location.location");
+        ObservableList<String> searchForList = FXCollections.observableArrayList();
+        searchForList.addAll(searchForEvent, searchForLocation, searchForArtist);
         cbSearch.setItems(searchForList);
+        if (searchFor.equals(EventSearchFor.EVENT)) {
+            tfSearchFor.setPromptText(BundleManager.getBundle().getString("events.searchForEvent"));
+        } else if (searchFor.equals(EventSearchFor.LOCATION)) {
+            tfSearchFor.setPromptText(BundleManager.getBundle().getString("events.searchForLocation"));
+        } else {
+            tfSearchFor.setPromptText(BundleManager.getBundle().getString("events.searchForArtist"));
+        }
     }
 
 
     @FXML
     public void openAdvancedSearch(ActionEvent actionEvent) {
         LOGGER.info("opening the advanced event search dialog.");
-        searchFor = EventSearchFor.EVENT;
+        searchFor = EventSearchFor.ALL;
 
         SpringFxmlLoader.Wrapper<EventAdvancedSearchController> wrapper =
             springFxmlLoader.loadAndWrap("/fxml/event/eventAdvancedSearchComponent.fxml");
@@ -221,9 +257,7 @@ public class EventController extends TabElement implements LocalizationObserver 
 
     public void loadEvents() {
 
-        searchFor = EventSearchFor.ALL;
-        preparePagination();
-
+        paginationHelper.setSearchFor(EventSearchFor.EVENT);
         Task<Page<SimpleEventDTO>> taskLoadEvents = new Task<>() {
             @Override
             protected Page<SimpleEventDTO> call() throws DataAccessException {
@@ -231,7 +265,7 @@ public class EventController extends TabElement implements LocalizationObserver 
                     Pageable request = new PageRequest(0, EVENTS_PER_PAGE);
                     return eventService.findAllUpcoming(request);
                 } catch (SearchNoMatchException e) {
-                    e.printStackTrace();
+                   // e.printStackTrace();
                 }
                 return null;
             }
@@ -355,4 +389,15 @@ public class EventController extends TabElement implements LocalizationObserver 
         new Thread(workerTask).start();
     }
 
+    public boolean isNumeric(String s) {
+        return s != null && s.matches("[-+]?\\d*\\.?\\d+");
+    }
+
+    public Pagination getPagination() {
+        return pagination;
+    }
+
+    public void setPagination(Pagination pagination) {
+        this.pagination = pagination;
+    }
 }

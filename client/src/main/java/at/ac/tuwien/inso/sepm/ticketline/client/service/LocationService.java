@@ -7,6 +7,7 @@ import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.location.DetailedLoc
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.location.SimpleLocationDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.util.MultiValueMap;
 
 import java.util.List;
 
@@ -51,8 +52,9 @@ public interface LocationService {
      * Find all Locations by search parameters ordered by City ascending
      *
      * @param request page to load
+     * @param parameters search parameters
      * @return Page of upcoming locations
      * @throws DataAccessException in case something went wrong
      */
-    Page<SimpleLocationDTO> findAdvanced(Pageable request, String search) throws DataAccessException;
+    Page<SimpleLocationDTO> findAdvanced(Pageable request, MultiValueMap<String, String> parameters) throws DataAccessException;
 }

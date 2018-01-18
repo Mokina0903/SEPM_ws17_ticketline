@@ -5,7 +5,9 @@ import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Hall;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Location;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.util.MultiValueMap;
 
+import java.util.HashMap;
 import java.util.List;
 
 public interface LocationService {
@@ -14,11 +16,11 @@ public interface LocationService {
     /**
      * Find location entries by search parameters.
      *
-     * @param search list of search parameters
+     * @param parameters map of search parameters
      * @param request Pagable request
      * @return Page containing the location entries
      */
-    Page<Location> findByAdvancedSearch(String search, Pageable request);
+    Page<Location> findByAdvancedSearch(HashMap<String, String> parameters, Pageable request);
 
         /**
          * Find a single location entry by id.
@@ -26,7 +28,7 @@ public interface LocationService {
          * @param locationId the is of the location entry
          * @return Optional containing the location entry
          */
-    Location findLocationById( Long locationId);
+    Location findLocationById(Long locationId);
 
     /**
      * Find all Locations
