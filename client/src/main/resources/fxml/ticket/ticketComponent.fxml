@@ -46,12 +46,15 @@
             </BorderPane.margin>
             <Button fx:id="btnStorno" text="%ticket.storno" prefHeight="25.0" prefWidth="80.0" onAction="#storno"/>
             <Label fx:id= "lblStorno" textFill="#cc1d1d" prefHeight="40.0" prefWidth="100.0"/>
-
             <BorderPane.margin>
-                <Insets top="91" right="20" />
+                <Insets top="81" right="30" />
             </BorderPane.margin>
             <Button fx:id="btnPay" text="%ticket.pay" prefHeight="25.0" prefWidth="80.0" onAction="#pay"/>
             <Label fx:id= "lblPay" textFill="#cc1d1d" prefHeight="40.0" prefWidth="100.0"/>
+            <BorderPane.margin>
+                <Insets top="81" right="30" />
+            </BorderPane.margin>
+            <Button fx:id="btnStornoInvoice" text="%ticket.stornoInvoice" wrapText="true" prefHeight="25.0" prefWidth="150.0" onAction="#createStornoInvoice"/>
         </HBox>
 
     </right>

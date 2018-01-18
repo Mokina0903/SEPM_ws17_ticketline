@@ -1,44 +1,35 @@
 package at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket;
 
-import at.ac.tuwien.inso.sepm.ticketline.client.exception.BlockedUserException;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.SearchNoMatchException;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationObserver;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.MainController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.TabElement;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.TabHeaderController;
-import at.ac.tuwien.inso.sepm.ticketline.client.gui.customer.CustomerSearchFor;
-import at.ac.tuwien.inso.sepm.ticketline.client.rest.TicketRestClient;
+import at.ac.tuwien.inso.sepm.ticketline.client.service.InvoiceService;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.TicketService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
-import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
-import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketRepresentationClass;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Callback;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 
-import java.rmi.activation.ActivateFailedException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,6 +59,8 @@ public class TicketController extends TabElement implements LocalizationObserver
 
     @FXML
     public Label lblPay;
+    @FXML
+    public Button btnStornoInvoice;
 
 
     private TableColumn<TicketRepresentationClass, String> tcName;
@@ -86,6 +79,7 @@ public class TicketController extends TabElement implements LocalizationObserver
     private final MainController mainController;
     private final SpringFxmlLoader springFxmlLoader;
     private final TicketService ticketService;
+    private final InvoiceService invoiceService;
     private  Page<TicketDTO> ticketPage;
     private TableView<TicketRepresentationClass>currentTableview;
     private TicketSearchFor searchFor = TicketSearchFor.ALL;
@@ -104,10 +98,11 @@ public class TicketController extends TabElement implements LocalizationObserver
     }
 
 
-    public TicketController(MainController mainController, SpringFxmlLoader springFxmlLoader, TicketService ticketService) {
+    public TicketController( MainController mainController, SpringFxmlLoader springFxmlLoader, TicketService ticketService, InvoiceService invoiceService ) {
         this.mainController = mainController;
         this.springFxmlLoader = springFxmlLoader;
         this.ticketService = ticketService;
+        this.invoiceService = invoiceService;
     }
 
     @FXML
@@ -407,6 +402,7 @@ public class TicketController extends TabElement implements LocalizationObserver
             @Override
             protected void succeeded() {
                 super.succeeded();
+
             }
             //ToDo update
             @Override
@@ -442,6 +438,7 @@ public class TicketController extends TabElement implements LocalizationObserver
     @Override
     public void update() {
         btnStorno.setText(BundleManager.getBundle().getString("ticket.storno"));
+        btnStornoInvoice.setText(BundleManager.getBundle().getString("ticket.stornoInvoice"));
         tcName.setText(BundleManager.getBundle().getString("customer.fname"));
         tcSurname.setText(BundleManager.getBundle().getString("customer.lname"));
         tcIsPaid.setText(BundleManager.getBundle().getString("ticket.tcIsPaid"));
@@ -451,5 +448,8 @@ public class TicketController extends TabElement implements LocalizationObserver
 
 
 
+    }
+
+    public void createStornoInvoice( ActionEvent actionEvent ) {
     }
 }
