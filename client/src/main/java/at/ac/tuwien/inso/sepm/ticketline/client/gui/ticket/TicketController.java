@@ -63,6 +63,11 @@ public class TicketController extends TabElement implements LocalizationObserver
     @FXML
     public Label lblStorno;
 
+    @FXML
+    public Button btnPay;
+
+    @FXML
+    public Label lblPay;
 
 
     private TableColumn<TicketRepresentationClass, String> tcName;
@@ -351,7 +356,68 @@ public class TicketController extends TabElement implements LocalizationObserver
                     lblStorno.setWrapText(true);
                 } else if (getException().getMessage().trim().equals("500")) {
 
-                    mainController.showGeneralError("Sorry your ticked could not be found!");
+                    mainController.showGeneralError("Sorry your ticket could not be found!");
+                } else {
+                    mainController.showGeneralError(getException().toString());
+                }
+            }
+
+        };
+
+        workerTask.runningProperty().addListener((observable, oldValue, running) ->
+            mainController.setProgressbarProgress(
+                running ? ProgressBar.INDETERMINATE_PROGRESS : 0)
+        );
+
+        new Thread(workerTask).start();
+
+    }
+
+    @FXML
+    private void pay(ActionEvent actionEvent){
+        lblPay.setVisible(false);
+        if(currentTableview.getSelectionModel() != null) {
+            TicketRepresentationClass ticket = currentTableview.getSelectionModel().getSelectedItem();
+            if ((ticket == null)) {
+                lblPay.setText(BundleManager.getBundle().getString("ticket.chooseOne"));
+                lblPay.setVisible(true);
+                lblPay.setWrapText(true);
+                return;
+            }
+        }
+        else{
+            lblPay.setText(BundleManager.getBundle().getString("ticket.chooseOne"));
+            lblPay.setVisible(true);
+            lblPay.setWrapText(true);
+            return;
+        }
+
+        Task<Void> workerTask = new Task<Void>() {
+
+            @Override
+            protected Void call() throws Exception {
+                //ToDo fragen wie ich hier die exception abfangen kann
+                TicketRepresentationClass ticket = currentTableview.getSelectionModel().getSelectedItem();
+                System.out.println(ticket.getReservationNumber());
+                ticketService.payTicketByReservation_Id(ticket.getReservationNumber());
+
+                return null;
+            }
+
+            @Override
+            protected void succeeded() {
+                super.succeeded();
+            }
+            //ToDo update
+            @Override
+            protected void failed() {
+                if (getException().getMessage().trim().equals("424")) {
+                    lblPay.setText(BundleManager.getBundle().getString("ticket.allreadyPaid"));
+                    lblPay.setVisible(true);
+                    lblPay.setWrapText(true);
+                } else if (getException().getMessage().trim().equals("500")) {
+
+                    mainController.showGeneralError("Sorry your tickets could not be found!");
                 } else {
                     mainController.showGeneralError(getException().toString());
                 }

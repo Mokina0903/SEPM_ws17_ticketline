@@ -98,6 +98,13 @@ public class SimpleTicketService implements TicketService {
     }
 
     @Override
+    public void payTicketByReservation_Id(Long reservation_Id) throws DataAccessException {
+        ticketRestClient.payTicketByReservation_Id(reservation_Id);
+    }
+
+
+
+    @Override
     public void reservationPdf( List<TicketDTO> tickets, Window window) {
 
         URL formTemplate = getClass().getResource("/invoice_template/Reservation_Template.pdf") ;

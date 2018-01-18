@@ -235,7 +235,7 @@ public class SimpleTicketRestClient implements TicketRestClient {
     @Override
     public void deleteTicketByTicket_Id(Long ticket_Id) throws DataAccessException {
         //try {
-            LOGGER.debug("removing news from users notSeen from {}", restClient.getServiceURI(TICKET_URL));
+            LOGGER.debug("delete Ticket with Id " + ticket_Id + " {}", restClient.getServiceURI(TICKET_URL));
             ResponseEntity ticket =
                 restClient.exchange(
                     restClient.getServiceURI(TICKET_URL + "/" + "deleteTicket" + "/" + ticket_Id),
@@ -245,6 +245,26 @@ public class SimpleTicketRestClient implements TicketRestClient {
                     }
                 );
             LOGGER.debug("Result status was {} with content {}", ticket.getStatusCode(), ticket.getBody());
+        /*} catch (HttpStatusCodeException e) {
+            throw new DataAccessException("Failed to update user with status code " + e.getStatusCode().toString());
+        } catch (RestClientException e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }*/
+    }
+
+    @Override
+    public void payTicketByReservation_Id(Long reservation_Id) throws DataAccessException {
+        //try {
+        LOGGER.debug("pay Tickets with reservationnumber: " + reservation_Id + " {}", restClient.getServiceURI(TICKET_URL));
+        ResponseEntity ticket =
+            restClient.exchange(
+                restClient.getServiceURI(TICKET_URL + "/" + "payTickets" + "/" + reservation_Id),
+                HttpMethod.POST,
+                null,
+                new ParameterizedTypeReference<Long>() {
+                }
+            );
+        LOGGER.debug("Result status was {} with content {}", ticket.getStatusCode(), ticket.getBody());
         /*} catch (HttpStatusCodeException e) {
             throw new DataAccessException("Failed to update user with status code " + e.getStatusCode().toString());
         } catch (RestClientException e) {
