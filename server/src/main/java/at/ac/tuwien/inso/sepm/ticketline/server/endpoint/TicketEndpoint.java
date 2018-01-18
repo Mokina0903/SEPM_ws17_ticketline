@@ -4,6 +4,7 @@ import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.seat.SeatDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketDTO;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Customer;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Ticket;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.eventLocation.seat.SeatMapper;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.ticket.TicketMapper;
@@ -19,6 +20,13 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.data.domain.*;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Duration;
+import java.time.LocalDate;
+
+import java.time.LocalDateTime;
+import java.time.Period;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,7 +58,11 @@ public class TicketEndpoint {
     @RequestMapping(value = "/event/{eventId}", method = RequestMethod.GET)
     @ApiOperation(value = "Get information about ticket entries by event")
     public List<TicketDTO> findByEventId( @PathVariable Long eventId) {
-        ticketService.setTicketsFreeIf30MinsBeforEvent();
+
+        Event event = eventService.findOne(eventId);
+        if(Duration.between(LocalDate.now(), event.getStartOfEvent()).toMinutes() <=30){
+            ticketService.setTicketsFreeIf30MinsBeforEvent();
+        }
         return ticketMapper.ticketToTicketDTO(ticketService.findByEventId(eventId));
     }
 
@@ -58,7 +70,7 @@ public class TicketEndpoint {
     @ApiOperation(value = "Get number of ticket entries by event and sector")
     public int ticketCountForEventForSector( @PathVariable Long eventId, @PathVariable char sector)
     {
-        ticketService.setTicketsFreeIf30MinsBeforEvent();
+
         return ticketService.ticketCountForEventForSector(eventId,sector);
     }
 
@@ -97,7 +109,12 @@ public class TicketEndpoint {
     @RequestMapping(value = "/isFree/{eventId}/{sector}", method = RequestMethod.GET)
     @ApiOperation(value = "Search for free seats for event in sector")
     public List<SeatDTO> freeSeatsForEventInSector( @PathVariable Long eventId, @PathVariable char sector) {
-        ticketService.setTicketsFreeIf30MinsBeforEvent();
+
+        Event event = eventService.findOne(eventId);
+
+        if(Duration.between(LocalDateTime.now(), event.getStartOfEvent()).toMinutes()<30){
+            ticketService.setTicketsFreeIf30MinsBeforEvent();
+        }
         return seatMapper.seatToSeatDTO(locationService.findFreeSeatsForEventInSector(eventId,sector));
     }
     //todo: getFreeSeatsInSector(Event,Char), getTotalCountOfSeatsInSector(Hall,Char)
@@ -105,7 +122,7 @@ public class TicketEndpoint {
     @RequestMapping(value= "/{pageIndex}/{ticketsPerPage}", method = RequestMethod.GET)
     @ApiOperation(value = "Get list of ticket entries")
     public Page<TicketDTO> findAll(@PathVariable("pageIndex")int pageIndex, @PathVariable("ticketsPerPage")int ticketsPerPage){
-        ticketService.setTicketsFreeIf30MinsBeforEvent();
+
         Pageable request = new PageRequest(pageIndex, ticketsPerPage, Sort.Direction.ASC, "id");
         Page<Ticket> customerPage = ticketService.findAll(request);
         List<TicketDTO> dtos = ticketMapper.ticketToTicketDTO(customerPage.getContent());
@@ -115,7 +132,7 @@ public class TicketEndpoint {
     @RequestMapping(value= "/{customerName}/{pageIndex}/{ticketsPerPage}", method = RequestMethod.GET)
     @ApiOperation(value = "Get list of ticket entries")
     public Page<TicketDTO> findAllByCustomerName(@PathVariable("customerName") String customerName, @PathVariable("pageIndex")int pageIndex, @PathVariable("ticketsPerPage")int ticketsPerPage){
-        ticketService.setTicketsFreeIf30MinsBeforEvent();
+      ticketService.setTicketsFreeIf30MinsBeforEvent();
         Pageable request = new PageRequest(pageIndex, ticketsPerPage);
         Page<Ticket> tickets = ticketService.findAllByCustomerName(customerName, request);
         List<TicketDTO> dtos = ticketMapper.ticketToTicketDTO(tickets.getContent());
@@ -125,7 +142,7 @@ public class TicketEndpoint {
     @RequestMapping(value= "/searchResNr/{reservationNumber}/{pageIndex}/{ticketsPerPage}", method = RequestMethod.GET)
     @ApiOperation(value = "Get list of ticket entries")
     public Page<TicketDTO> findAllByReservationNumber(@PathVariable("reservationNumber") Long reservationNumber, @PathVariable("pageIndex")int pageIndex, @PathVariable("ticketsPerPage")int ticketsPerPage){
-        ticketService.setTicketsFreeIf30MinsBeforEvent();
+    ticketService.setTicketsFreeIf30MinsBeforEvent();
         Pageable request = new PageRequest(pageIndex, ticketsPerPage);
         Page<Ticket> tickets = ticketService.findAllByReservationNumber(reservationNumber, request);
         List<TicketDTO> dtos = ticketMapper.ticketToTicketDTO(tickets.getContent());

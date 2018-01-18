@@ -33,6 +33,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 
 @Component
 public class NewsAddFormularController implements LocalizationObserver {
@@ -75,7 +76,7 @@ public class NewsAddFormularController implements LocalizationObserver {
 
     private Node oldContent;
 
-    private String picPath;
+    private File picPath;
     private NewsController c;
 
     @Autowired
@@ -144,7 +145,13 @@ public class NewsAddFormularController implements LocalizationObserver {
 
         builder.title(TitleTF.getText());
         if(picPath!= null){
-            builder.picture(picPath);
+
+            try {
+                builder.picture(Files.readAllBytes(picPath.toPath()));
+            } catch (IOException e) {
+                LOGGER.warn("Could not save news. Data AccessException");
+                mainController.showGeneralError("Not able to save the News because of technical issues.");
+            }
         }
 
         builder.text(textArea.getText());
@@ -184,24 +191,8 @@ public class NewsAddFormularController implements LocalizationObserver {
 
         Image img = new Image(file.toURI().toString(),540 , 380, false, false);
         newsImage.setImage(img);
-        new File(home +"/NewsPictures").mkdir();
-        File destination = new File(home+"/NewsPictures/"+ file.getName());
-        picPath = destination.toURI().toString();
-        try {
 
-            Files.copy(file.toPath(),destination.toPath());
-
-        } catch (FileAlreadyExistsException e) {
-            LOGGER.warn("File already exists");
-
-           // e.printStackTrace();
-        } catch (IOException e) {
-            LOGGER.warn("Loading image failed.");
-           // e.printStackTrace();
-            mainController.showGeneralError("Loading image failed because of technical issues.");
-        }
-
-
+        picPath = file;
     }
 
     @FXML

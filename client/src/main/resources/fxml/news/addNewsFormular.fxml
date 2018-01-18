@@ -55,7 +55,7 @@
                         <Button fx:id="addImgBtn" minWidth="30" onAction="#addImage" text="+" />
                     </HBox>
 
-                    <ImageView fx:id="newsImage" />
+                    <ImageView fx:id="newsImage" fitWidth="200" fitHeight="200" />
                 </VBox>
 
                 <columnConstraints>

@@ -210,6 +210,7 @@ public class TicketController extends TabElement implements LocalizationObserver
         }));
 
         tvTickets.getColumns().addAll(tcNumber, tcName, tcSurname, tcSelected, tcIsPaid, tcIsDeleted);
+
         tvTickets.getItems().addAll(getRepresentationList(tickets.getContent()));
         tvTickets.refresh();
 

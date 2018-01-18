@@ -25,6 +25,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.io.ByteArrayInputStream;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.Iterator;
@@ -80,13 +81,15 @@ public class NewsElementController {
         this.userService=userService;
         backButton.setVisible(false);
         newsImageView.setVisible(false);
+        newsImageView.setManaged(false);
     }
 
     public void backToSimpleNewsView(ActionEvent actionEvent) {
         LOGGER.info("Closing the detailed view of the news element.");
         mainController.setGeneralErrorUnvisable();
         lblText.setText(simpleNewsDTO.getSummary());
-        newsImageView.setImage(null);
+        newsImageView.setManaged(false);
+        newsImageView.setVisible(false);
         backButton.setVisible(false);
         backButton.setDisable(true);
 
@@ -115,10 +118,11 @@ public class NewsElementController {
                 super.succeeded();
                 DetailedNewsDTO detailedNewsDTO= getValue();
                 lblText.setText(detailedNewsDTO.getText());
-                if(detailedNewsDTO.getPicPath() != null && !detailedNewsDTO.getPicPath().isEmpty()){
-                    Image img = new Image(detailedNewsDTO.getPicPath(),540 , 380, false, false);
+                if(detailedNewsDTO.getPicData() != null){
+                    Image img = new Image(new ByteArrayInputStream(detailedNewsDTO.getPicData()));
                     newsImageView.setImage(img);
                     newsImageView.setVisible(true);
+                    newsImageView.setManaged(true);
                 }
 
                 backButton.setVisible(true);

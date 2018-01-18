@@ -101,7 +101,7 @@ public class SimpleTicketService implements TicketService {
         }
 
         for (Ticket ticket : stillReservedTickets) {
-            ticketRepository.delete(ticket);
+            ticketRepository.updateReservationStatusToFalse(ticket.getId());
         }
     }
 
