@@ -1,24 +1,16 @@
 package at.ac.tuwien.inso.sepm.ticketline.client.gui.event;
 
-import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
-import at.ac.tuwien.inso.sepm.ticketline.client.exception.SearchNoMatchException;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.*;
-import at.ac.tuwien.inso.sepm.ticketline.client.gui.customer.CustomerController;
-import at.ac.tuwien.inso.sepm.ticketline.client.gui.customer.CustomerDialogController;
-import at.ac.tuwien.inso.sepm.ticketline.client.service.CustomerService;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.EventService;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.LocationService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
 import org.controlsfx.glyphfont.FontAwesome;
@@ -45,13 +37,37 @@ public class EventAdvancedSearchController implements LocalizationObserver {
     @FXML
     Label lbEventDescription;
     @FXML
-    Label lbEventPriceFrom;
+    Label lbEventPrice;
     @FXML
-    Label lbEventPriceTo;
+    Label lbEventDate;
+    @FXML
+    Label lbEventTime;
+    @FXML
+    Label lbEventDuration;
+    @FXML
+    Label lbEventType;
+    @FXML
+    Label lbEventSeats;
+
     @FXML
     Label lbLocation;
     @FXML
+    Label lbLocationTitle;
+    @FXML
+    Label lbLocationZip;
+    @FXML
+    Label lbLocationStreet;
+    @FXML
+    Label lbLocationCity;
+    @FXML
+    Label lbLocationCountry;
+
+    @FXML
     Label lbArtist;
+    @FXML
+    Label lbArtistFName;
+    @FXML
+    Label lbArtistLName;
 
     @FXML
     TextField tfEventTitle;
@@ -62,7 +78,6 @@ public class EventAdvancedSearchController implements LocalizationObserver {
     @FXML
     TextField tfEventPriceTo;
 
-    //todo
 
     @FXML
     TextField tfLocationTitle;
@@ -142,56 +157,8 @@ public class EventAdvancedSearchController implements LocalizationObserver {
         if (!tfEventPriceTo.getText().isEmpty()) {
             parameters.set("priceTo", tfEventPriceTo.getText());
         }
-
-        //todo task
-
-        Page<SimpleEventDTO> events = null;
-
-          //  paginationHelper.setUpPagination(events);
             eventController.getEventTab().setContent(oldContent);
-
         }
-
-
-
-        /*Pageable request = new PageRequest(0, 7);//todo
-        Page<SimpleEventDTO> events = null;
-        try {
-            events = eventService.find(request, parameters);
-        } catch (DataAccessException e) {
-            e.printStackTrace();
-        }
-        paginationHelper.setUpPagination(events);*/
-
-       /* Task<Void> workerTask = new Task<Void>() {
-            @Override
-            protected Void call() throws Exception {
-
-                Pageable request = new PageRequest(0, 7);//todo
-                Page<SimpleEventDTO> events = eventService.find(request, parameters);
-                paginationHelper.setUpPagination(events);
-                return null;
-            }
-
-            @Override
-            protected void succeeded() {
-                super.succeeded();
-                eventController.getEventTab().setContent(oldContent);
-            }
-
-            @Override
-            protected void failed() {
-
-                mainController.showGeneralError(getException().toString());
-            }
-        };
-
-        workerTask.runningProperty().addListener((observable, oldValue, running) ->
-            mainController.setProgressbarProgress(
-                running ? ProgressBar.INDETERMINATE_PROGRESS : 0)
-        );
-
-        new Thread(workerTask).start();*/
 
 
     @FXML
@@ -202,5 +169,22 @@ public class EventAdvancedSearchController implements LocalizationObserver {
     @Override
     public void update() {
         tabHeaderController.setTitle(BundleManager.getBundle().getString("event.advancedSearch"));
+        lbEventTitle.setText(BundleManager.getBundle().getString("events.title"));
+        lbEventDescription.setText(BundleManager.getBundle().getString("events.content"));
+        lbEventPrice.setText(BundleManager.getBundle().getString("events.price"));
+        lbEventDate.setText(BundleManager.getBundle().getString("events.date"));
+        lbEventTime.setText(BundleManager.getBundle().getString("events.time"));
+        lbEventDuration.setText(BundleManager.getBundle().getString("events.duration"));
+        lbEventType.setText(BundleManager.getBundle().getString("events.type"));
+        lbEventSeats.setText(BundleManager.getBundle().getString("events.seats"));
+        lbLocation.setText(BundleManager.getBundle().getString("location.location"));
+        lbLocationTitle.setText(BundleManager.getBundle().getString("events.title"));
+        lbLocationZip.setText(BundleManager.getBundle().getString("location.zip"));
+        lbLocationStreet.setText(BundleManager.getBundle().getString("location.street"));
+        lbLocationCity.setText(BundleManager.getBundle().getString("location.city"));
+        lbLocationCountry.setText(BundleManager.getBundle().getString("location.country"));
+        lbArtist.setText(BundleManager.getBundle().getString("artist.artist"));
+        lbArtistFName.setText(BundleManager.getBundle().getString("artist.fname"));
+        lbArtistLName.setText(BundleManager.getBundle().getString("artist.lname"));
     }
 }

@@ -127,6 +127,7 @@ public class PaginationHelper {
         }
     }
 
+    //todo TASK
 
         private Page<SimpleEventDTO> loadAdvancedSearchEventPage (Integer pageIndex){
             Pageable request = new PageRequest(pageIndex, ENTRIES_PER_PAGE);

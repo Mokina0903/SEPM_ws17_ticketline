@@ -68,6 +68,8 @@ public class EventController extends TabElement implements LocalizationObserver 
     @FXML
     public BorderPane eventRootContainer;
     @FXML
+    public Label lbNoMatch;
+    @FXML
     private TabHeaderController tabHeaderController;
 
     private EventSearchFor searchFor = EventSearchFor.EVENT;
@@ -119,6 +121,7 @@ public class EventController extends TabElement implements LocalizationObserver 
         ObservableList<String> searchForList = FXCollections.observableArrayList();
         searchForList.addAll(searchForEvent, searchForLocation, searchForArtist);
         update();
+        lbNoMatch.setVisible(false);
         //todo matchNotFound label
         //todo show free seats for events
 
@@ -218,15 +221,14 @@ public class EventController extends TabElement implements LocalizationObserver 
 
     private void noMatchFound() {
         LOGGER.info("no search match");
-        //lbNoMatch.setVisible(true);
-
-        //set empty tv
+        lbNoMatch.setVisible(true);
     }
 
     @Override
     public void update() {
         tabHeaderController.setTitle(BundleManager.getBundle().getString("events.events"));
         btAdvSearch.setText(BundleManager.getBundle().getString("events.advSearch"));
+        lbNoMatch.setText(BundleManager.getBundle().getString("customer.noMatches"));
         searchForArtist = BundleManager.getBundle().getString("artist.artist");
         searchForEvent = BundleManager.getBundle().getString("events.events");
         searchForLocation = BundleManager.getBundle().getString("location.location");
