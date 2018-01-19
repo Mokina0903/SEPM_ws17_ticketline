@@ -18,6 +18,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -121,6 +122,11 @@ public class SimpleEventService implements EventService {
         Event rEvent = eventRepository.save(event);
 
         return rEvent;
+    }
+
+    @Override
+    public List<Event> getTop10EventsOfMonth(LocalDateTime beginOfMonth, LocalDateTime endOfMonth) {
+        return eventRepository.findAllByOrderByStartOfEventDesc();
     }
 
 }

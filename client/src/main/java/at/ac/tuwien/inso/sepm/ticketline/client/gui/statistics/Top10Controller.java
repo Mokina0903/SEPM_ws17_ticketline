@@ -18,8 +18,6 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.Month;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -46,6 +44,8 @@ public class Top10Controller extends TabElement {
 
         this.loader = loader;
         this.mainController = mainController;
+        this.eventService =eventService;
+        this.ticketService =ticketService;
     }
 
     public void initializeData() {

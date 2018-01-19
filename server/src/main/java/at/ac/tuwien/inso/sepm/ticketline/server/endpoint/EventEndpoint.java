@@ -2,6 +2,7 @@ package at.ac.tuwien.inso.sepm.ticketline.server.endpoint;
 
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.DetailedEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
+import at.ac.tuwien.inso.sepm.ticketline.rest.event.StatistikRequest;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.event.EventMapper;
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.EmptyFieldException;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -70,6 +72,14 @@ public class EventEndpoint {
 
         event = eventService.publishEvent(event);
         return  eventMapper.eventToDetailedEventDTO(event);
+    }
+
+    @RequestMapping(value ="/getTopTen" ,method = RequestMethod.POST)
+    @ApiOperation(value = "Get the top ten events from the given month")
+    public List<SimpleEventDTO> getTop10EventsOfMonth(@RequestBody StatistikRequest request){
+
+
+        return eventMapper.eventToSimpleEventDTO(eventService.getTop10EventsOfMonth(request.getBeginOfMonth(), request.getEndOfMonth()));
     }
 
 }

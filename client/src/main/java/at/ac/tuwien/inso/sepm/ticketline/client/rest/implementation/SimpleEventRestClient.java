@@ -5,6 +5,7 @@ import at.ac.tuwien.inso.sepm.ticketline.client.rest.EventRestClient;
 import at.ac.tuwien.inso.sepm.ticketline.rest.ErrorDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.DetailedEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
+import at.ac.tuwien.inso.sepm.ticketline.rest.event.StatistikRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
@@ -121,12 +122,14 @@ public class SimpleEventRestClient implements EventRestClient{
     @Override
     public List<SimpleEventDTO> getTop10EventsOfMonth(LocalDateTime beginOfMonth, LocalDateTime endOfMonth) throws DataAccessException {
         try {
-            LOGGER.debug("Retrieving all events from {}", restClient.getServiceURI(EVENT_URL));
+            LOGGER.debug("Retrieving the events of a certain month from {}", restClient.getServiceURI(EVENT_URL));
+            StatistikRequest statistics = new StatistikRequest(beginOfMonth, endOfMonth);
+            HttpEntity<StatistikRequest> httpEntity = new HttpEntity<>(statistics);
             ResponseEntity<List<SimpleEventDTO>> events =
                 restClient.exchange(
-                    restClient.getServiceURI(EVENT_URL+"/"+ beginOfMonth +"/"+endOfMonth),
-                    HttpMethod.GET,
-                    null,
+                    restClient.getServiceURI(EVENT_URL+"/getTopTen"),
+                    HttpMethod.POST,
+                    httpEntity,
                     new ParameterizedTypeReference<List<SimpleEventDTO>>() {
                     });
             LOGGER.debug("Result status was {} with content {}", events.getStatusCode(), events.getBody());

@@ -250,6 +250,7 @@ public class MainController implements LocalizationObserver {
             } else if (newValue.equals(topTenTab)) {
                 if (top10Controller == null) {
                     top10Controller = (Top10Controller) setTabContent(top10Controller, "statistics/top10Statistics.fxml", topTenTab);
+                    top10Controller.initializeData();
 
                 }
             } else if (newValue.equals(ticketTab)) {
