@@ -12,6 +12,7 @@ import javafx.fxml.FXML;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Tab;
 import org.springframework.stereotype.Component;
@@ -25,7 +26,7 @@ import java.util.List;
 public class Top10Controller extends TabElement {
 
     @FXML
-    public BarChart barChartTop10;
+    public BarChart<String, Number> barChartTop10;
     @FXML
     public CategoryAxis xAxis;
     @FXML
@@ -64,6 +65,18 @@ public class Top10Controller extends TabElement {
             mainController.showGeneralError("Not able to load top10 Events right now. Server faild to access the data.");
             e.printStackTrace();
         }
+
+        XYChart.Series<String, Number> series = new XYChart.Series<String, Number>();
+        series.setName("Top 10");
+        for (SimpleEventDTO event : topTenEventsNow) {
+            try {
+                series.getData().add(new XYChart.Data<String, Number>(event.getTitle(), ticketService.findByEventId(event.getId()).size()));
+            } catch (DataAccessException e) {
+                e.printStackTrace();
+            }
+        }
+        barChartTop10.getData().clear();
+        barChartTop10.getData().addAll(series);
 
     }
 

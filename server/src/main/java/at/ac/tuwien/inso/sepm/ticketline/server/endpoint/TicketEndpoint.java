@@ -60,7 +60,7 @@ public class TicketEndpoint {
     public List<TicketDTO> findByEventId( @PathVariable Long eventId) {
 
         Event event = eventService.findOne(eventId);
-        if(Duration.between(LocalDate.now(), event.getStartOfEvent()).toMinutes() <=30){
+        if(Duration.between(LocalDateTime.now(), event.getStartOfEvent()).toMinutes() <=30 && Duration.between(LocalDateTime.now(), event.getStartOfEvent()).toMinutes() > 0 ){
             ticketService.setTicketsFreeIf30MinsBeforEvent();
         }
         return ticketMapper.ticketToTicketDTO(ticketService.findByEventId(eventId));
@@ -112,7 +112,7 @@ public class TicketEndpoint {
 
         Event event = eventService.findOne(eventId);
 
-        if(Duration.between(LocalDateTime.now(), event.getStartOfEvent()).toMinutes()<30){
+        if(Duration.between(LocalDateTime.now(), event.getStartOfEvent()).toMinutes()<30 && Duration.between(LocalDateTime.now(), event.getStartOfEvent()).toMinutes() > 0){
             ticketService.setTicketsFreeIf30MinsBeforEvent();
         }
         return seatMapper.seatToSeatDTO(locationService.findFreeSeatsForEventInSector(eventId,sector));
