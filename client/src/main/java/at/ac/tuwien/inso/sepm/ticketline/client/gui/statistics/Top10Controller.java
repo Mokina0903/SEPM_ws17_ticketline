@@ -135,7 +135,7 @@ public class Top10Controller extends TabElement implements LocalizationObserver 
                 LOGGER.debug("Loading top ten events failed.");
                 if (getValue() == null || getValue().isEmpty()) {
                     super.failed();
-                    mainController.showGeneralError("Failed to apply filter.");
+                    mainController.showGeneralError("Failed to load the top ten events");
                 }
             }
         };

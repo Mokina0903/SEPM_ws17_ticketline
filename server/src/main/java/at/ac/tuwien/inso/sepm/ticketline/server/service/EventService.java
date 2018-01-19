@@ -60,4 +60,14 @@ public interface EventService {
      */
      List<Event> getTop10EventsOfMonth(LocalDateTime beginOfMonth,LocalDateTime endOfMonth);
 
+
+    /**
+     *
+     * @param beginOfMonth begin of the month of which to get the top ten events
+     * @param endOfMonth end of the month of which to get the top ten events
+     * @param category to be filtered
+     * @return a list of events filtered by the given category
+     */
+    List<Event> getTop10EventsOfMonthFilteredByCategory(LocalDateTime beginOfMonth,LocalDateTime endOfMonth, String category);
+
 }

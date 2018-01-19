@@ -56,7 +56,7 @@ public class SimpleEventService implements EventService {
 
     @Override
     public List<SimpleEventDTO> getTop10EventsOfMonthFilteredbyCategory(LocalDate beginOfMonth, LocalDate endOfMonth, String category) throws DataAccessException {
-        return null;
+        return eventRestClient.getTop10EventsOfMonthFilteredbyCategory(beginOfMonth, endOfMonth, category);
     }
 
     @Override

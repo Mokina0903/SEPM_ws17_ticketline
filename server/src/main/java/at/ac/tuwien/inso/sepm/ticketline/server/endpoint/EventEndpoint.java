@@ -88,4 +88,14 @@ public class EventEndpoint {
         return eventMapper.eventToSimpleEventDTO(eventService.getTop10EventsOfMonth(startOfMonth, endOfMonth));
     }
 
+    @RequestMapping(value ="/getTopTen/{start}/{end}/{category]" ,method = RequestMethod.GET)
+    @ApiOperation(value = "Get the top ten events from the given month filtered by the given category")
+    public List<SimpleEventDTO> getTop10EventsOfMonthFilteredByCategory(@PathVariable("start") Long start, @PathVariable("end")Long end, @PathVariable("category") String category ){
+
+        LocalDateTime startOfMonth = LocalDateTime.ofInstant(Instant.ofEpochSecond(start), ZoneId.of("Europe/Paris"));
+        LocalDateTime endOfMonth = LocalDateTime.ofInstant(Instant.ofEpochSecond(end), ZoneId.of("Europe/Paris"));
+
+        return eventMapper.eventToSimpleEventDTO(eventService.getTop10EventsOfMonthFilteredByCategory(startOfMonth, endOfMonth, category));
+    }
+
 }

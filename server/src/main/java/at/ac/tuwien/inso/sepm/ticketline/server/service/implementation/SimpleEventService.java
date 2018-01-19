@@ -130,4 +130,9 @@ public class SimpleEventService implements EventService {
         return eventRepository.findTopTenEventsOfMonth( Timestamp.valueOf(beginOfMonth), Timestamp.valueOf(endOfMonth));
     }
 
+    @Override
+    public List<Event> getTop10EventsOfMonthFilteredByCategory(LocalDateTime beginOfMonth, LocalDateTime endOfMonth, String category) {
+        return eventRepository.findTopTenEventsOfMonthFilteredByCategory(Timestamp.valueOf(beginOfMonth), Timestamp.valueOf(endOfMonth), category);
+    }
+
 }

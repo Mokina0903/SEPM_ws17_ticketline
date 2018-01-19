@@ -138,7 +138,7 @@ public class SimpleEventRestClient implements EventRestClient{
                     new ParameterizedTypeReference<List<SimpleEventDTO>>() {
                     });
             System.out.println(events.getBody().size());
-            LOGGER.debug("Result status was {}", events.getStatusCode());
+            LOGGER.debug("Result status was {} with content {}", events.getStatusCode(), events.getBody());
             return events.getBody();
         } catch (HttpStatusCodeException e) {
             throw new DataAccessException("Failed retrieve events with status code " + e.getStatusCode().toString());
