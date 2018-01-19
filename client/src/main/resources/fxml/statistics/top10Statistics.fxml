@@ -21,6 +21,9 @@
     <BorderPane.margin>
         <Insets left="10" top="10" bottom="10" right="10"/>
     </BorderPane.margin>
+    <top>
+        <fx:include source="/fxml/tabHeader.fxml" fx:id="tabHeader"/>
+    </top>
     <center>
         <BarChart fx:id="barChartTop10">
             <xAxis>

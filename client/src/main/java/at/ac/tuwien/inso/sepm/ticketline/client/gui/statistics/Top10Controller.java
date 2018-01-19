@@ -3,8 +3,10 @@ package at.ac.tuwien.inso.sepm.ticketline.client.gui.statistics;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.MainController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.TabElement;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.TabHeaderController;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.EventService;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.TicketService;
+import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
 import javafx.event.ActionEvent;
@@ -15,6 +17,7 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Tab;
+import org.controlsfx.glyphfont.FontAwesome;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -33,6 +36,8 @@ public class Top10Controller extends TabElement {
     public NumberAxis yAxis;
     @FXML
     public ComboBox comBoxKategory;
+    @FXML
+    private TabHeaderController tabHeaderController;
 
     private MainController mainController;
     private SpringFxmlLoader loader;
@@ -54,6 +59,9 @@ public class Top10Controller extends TabElement {
         xAxis.setLabel("Events");
         yAxis.setLabel("Sales");
         barChartTop10.setTitle("Top 10 Events");
+
+        tabHeaderController.setIcon(FontAwesome.Glyph.BAR_CHART);
+        tabHeaderController.setTitle(BundleManager.getBundle().getString("statistics.top10Statistics"));
 
         LocalDate now = LocalDate.now();
         LocalDateTime beginOfThisMonth= LocalDateTime.of(now.getYear(), now.getMonth(), 1, 0, 0);
