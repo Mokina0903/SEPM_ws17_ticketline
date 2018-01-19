@@ -56,5 +56,5 @@ public interface LocationRestClient {
      * @return page of locations
      * @throws DataAccessException in case something went wrong
      */
-    Page<SimpleLocationDTO> findAdvanced(Pageable request, MultiValueMap<String, String> parameters) throws DataAccessException;
+    Page<SimpleLocationDTO> find(Pageable request, MultiValueMap<String, String> parameters) throws DataAccessException;
 }

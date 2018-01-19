@@ -25,10 +25,10 @@ public class SimpleLocationFilterBuilder implements LocationFilterBuilder{
     @Override
     public Predicate buildOr(LocationFilter filter) {
         return new OptionalBooleanBuilder(LOCATION.isNotNull())
-            .notEmptyOr(LOCATION.description::containsIgnoreCase, filter.getDescription())
+            .notEmptyAnd(LOCATION.description::containsIgnoreCase, filter.getDescription())
             .notEmptyOr(LOCATION.city::containsIgnoreCase, filter.getCountry())
             .notEmptyOr(LOCATION.street::containsIgnoreCase, filter.getStreet())
-            .notNullOr(LOCATION.zip::eq, filter.getZip())
+            .notNullAnd(LOCATION.zip::eq, filter.getZip())
             .build();
     }
 }

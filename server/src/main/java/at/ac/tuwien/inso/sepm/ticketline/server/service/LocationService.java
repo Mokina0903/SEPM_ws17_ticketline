@@ -20,7 +20,7 @@ public interface LocationService {
      * @param request Pagable request
      * @return Page containing the location entries
      */
-    Page<Location> findByAdvancedSearch(HashMap<String, String> parameters, Pageable request);
+    Page<Location> find(HashMap<String, String> parameters, Pageable request);
 
         /**
          * Find a single location entry by id.

@@ -116,8 +116,8 @@ public class EventController extends TabElement implements LocalizationObserver 
         ObservableList<String> searchForList = FXCollections.observableArrayList();
         searchForList.addAll(searchForEvent, searchForLocation, searchForArtist);
         update();
-        //todo choicebox doesnt update language of items
-
+        //todo matchNotFound label
+        //todo show free seats for events
 
         cbSearch.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
             if (newValue != null) {
@@ -158,14 +158,15 @@ public class EventController extends TabElement implements LocalizationObserver 
             LOGGER.info("preparing Pagination for the event search");
             parameters = setParametersForEventSearch();
             paginationHelper.setParameters(parameters);
-            paginationHelper.setUpPagination(EventSearchFor.EVENT);
+            paginationHelper.setUpPagination();
 
         } else if (searchFor.equals(EventSearchFor.LOCATION)) {
             LOGGER.info("preparing Pagination for the locations search");
             parameters = setParametersForLocationSearch();
             paginationHelper.setParameters(parameters);
-            paginationHelper.setUpPagination(EventSearchFor.LOCATION);
+            paginationHelper.setUpPagination();
         }
+        //todo artists
     }
 
 
@@ -182,7 +183,7 @@ public class EventController extends TabElement implements LocalizationObserver 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         if (!tfSearchFor.getText().isEmpty() && !tfSearchFor.getText().equals("")) {
             if (isNumeric(tfSearchFor.getText())) {
-                params.add("plz", tfSearchFor.getText());
+                params.add("zip", tfSearchFor.getText());
             }
             else {
                 params.add("description", tfSearchFor.getText());

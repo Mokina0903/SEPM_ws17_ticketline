@@ -18,7 +18,7 @@ public interface EventService {
      * @param request Pagable request
      * @return Page containing the event entries
      */
-    //Page<Event> findByAdvancedSearch(String search, Pageable request);
+    //Page<Event> find(String search, Pageable request);
 
     /**
      * Find all event entries

@@ -1,6 +1,5 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.endpoint;
 
-import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.hall.DetailedHallDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.hall.SimpleHallDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.location.DetailedLocationDTO;
@@ -76,14 +75,14 @@ public class LocationEndpoint {
         return halls;
     }
 
-    @RequestMapping(value = "/location/advLocationSearch/{pageIndex}/{locationsPerPage}", method = RequestMethod.GET)
+    @RequestMapping(value = "/location/locationSearch/{pageIndex}/{locationsPerPage}", method = RequestMethod.GET)
     @ApiOperation(value = "Get list of simple location entries filtered by parameters")
     public Page<SimpleLocationDTO> findAdvanced(@PathVariable("pageIndex")int pageIndex, @PathVariable("locationsPerPage")int locationsPerPage,
                                              @QuerydslPredicate(root = Event.class)Predicate predicate,
                                              @RequestParam HashMap<String,String> parameters) {
         Pageable request = new PageRequest(pageIndex, locationsPerPage, Sort.Direction.ASC, "description");
         System.out.println("PARAMS loc: " + parameters.toString());
-        Page<Location> locationPage = locationService.findByAdvancedSearch(parameters, request);
+        Page<Location> locationPage = locationService.find(parameters, request);
         List<SimpleLocationDTO> dtos = locationMapper.locationToSimpleLocationDTO(locationPage.getContent());
         System.out.println("LIST loc::: " +dtos.size());
         return new PageImpl<>(dtos, request, locationPage.getTotalElements());

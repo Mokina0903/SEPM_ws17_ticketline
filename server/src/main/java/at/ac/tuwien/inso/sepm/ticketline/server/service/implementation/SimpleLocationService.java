@@ -42,8 +42,8 @@ public class SimpleLocationService implements LocationService{
     }
 
     @Override
-    public Page<Location> findByAdvancedSearch(HashMap<String, String> parameters, Pageable request) {
-        Predicate predicate = filterBuilder.buildAnd(new LocationFilter(parameters));
+    public Page<Location> find(HashMap<String, String> parameters, Pageable request) {
+        Predicate predicate = filterBuilder.buildOr(new LocationFilter(parameters));
         System.out.println("LOC Service Predicate: ....." + predicate);
         Iterable<Location> events = locationRepository.findAll(predicate);
         List<Location> eventList = Lists.newArrayList(events);

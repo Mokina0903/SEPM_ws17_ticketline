@@ -7,7 +7,6 @@ import at.ac.tuwien.inso.sepm.ticketline.client.gui.event.EventSearchFor;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.location.LocationElementController;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.EventService;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.LocationService;
-import at.ac.tuwien.inso.sepm.ticketline.rest.artist.SimpleArtistDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.location.SimpleLocationDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
@@ -55,37 +54,15 @@ public class PaginationHelper {
         this.controller = controller;
     }
 
-    public void setUpPagination(EventSearchFor searchFor) {
-
-        Pageable request = new PageRequest(0, ENTRIES_PER_PAGE);
-        /*try {
-            if (searchFor.equals(EventSearchFor.ALL)) {
-                Page<SimpleEventDTO> events = eventService.findAdvanced(request, parameters);
-                pagination.setPageCount(events.getTotalPages());
-            } else if (searchFor.equals(EventSearchFor.EVENT)) {
-                //todo overallSearch
-                Page<SimpleEventDTO> events = eventService.findAdvanced(request, parameters);
-                pagination.setPageCount(events.getTotalPages());
-            } else if (searchFor.equals(EventSearchFor.LOCATION)) {
-                Page<SimpleLocationDTO> locations = locationService.findAdvanced(request, parameters);
-                pagination.setPageCount(locations.getTotalPages());
-            } else {
-               *//* Page<AritstDTO> artists = eventService.findArtists(request, parameters);
-                pagination.setPageCount(artists.getTotalPages());*//*
-            }*/
-
+    public void setUpPagination() {
             pagination.setCurrentPageIndex(0);
             pagination.setPageFactory(new Callback<Integer, Node>() {
-
                 @Override
                 public Node call(Integer pageIndex) {
                     return createPage(pageIndex);
                 }
             });
-
-        } /*catch (DataAccessException e) {
-            LOGGER.warn("Could not access data for pagination!");
-       } }*/
+        }
 
 
     private Node createPage(Integer pageIndex) {
@@ -169,7 +146,7 @@ public class PaginationHelper {
     private Page<SimpleLocationDTO> loadLocationPage(Integer pageIndex) {
         Pageable request = new PageRequest(pageIndex, ENTRIES_PER_PAGE);
         try {
-            Page<SimpleLocationDTO> locations = locationService.findAdvanced(request, parameters);
+            Page<SimpleLocationDTO> locations = locationService.find(request, parameters);
             return locations;
         } catch (DataAccessException e) {
             LOGGER.warn("Could not access data for event pagination");
@@ -180,7 +157,7 @@ public class PaginationHelper {
     /*private Page<SimpleArtistDTO> loadArtistPage(Integer pageIndex) {
         Pageable request = new PageRequest(pageIndex, ENTRIES_PER_PAGE);
         try {
-            Page<SimpleArtistDTO> artists = artistService.findAdvanced(request, parameters);
+            Page<SimpleArtistDTO> artists = artistService.find(request, parameters);
             return artists;
         } catch (DataAccessException e) {
             LOGGER.warn("Could not access data for event pagination");

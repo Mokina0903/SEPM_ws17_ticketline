@@ -74,7 +74,7 @@ public class EventEndpoint {
     @ResponseBody
     public Page<Event> search(@RequestParam(value = "search") String search,@PathVariable("pageIndex")int pageIndex, @PathVariable("eventsPerPage")int eventsPerPage) {
         Pageable request = new PageRequest(pageIndex, eventsPerPage, Sort.Direction.ASC, "start_of_event");
-        return eventService.findByAdvancedSearch(search, request);
+        return eventService.find(search, request);
     }*/
 
     @RequestMapping(value = "/advSearch/{pageIndex}/{eventsPerPage}", method = RequestMethod.GET)

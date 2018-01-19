@@ -157,7 +157,7 @@ public class EventAdvancedSearchController implements LocalizationObserver {
         /*Pageable request = new PageRequest(0, 7);//todo
         Page<SimpleEventDTO> events = null;
         try {
-            events = eventService.findAdvanced(request, parameters);
+            events = eventService.find(request, parameters);
         } catch (DataAccessException e) {
             e.printStackTrace();
         }
@@ -168,7 +168,7 @@ public class EventAdvancedSearchController implements LocalizationObserver {
             protected Void call() throws Exception {
 
                 Pageable request = new PageRequest(0, 7);//todo
-                Page<SimpleEventDTO> events = eventService.findAdvanced(request, parameters);
+                Page<SimpleEventDTO> events = eventService.find(request, parameters);
                 paginationHelper.setUpPagination(events);
                 return null;
             }

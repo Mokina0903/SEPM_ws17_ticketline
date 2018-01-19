@@ -116,7 +116,7 @@ public class SimpleEventService implements EventService {
     }
 
    /* @Override
-    public Page<Event> findByAdvancedSearch(String search, Pageable request) {
+    public Page<Event> find(String search, Pageable request) {
         MyPredicatesBuilder builder = new MyPredicatesBuilder("event");
         if (search != null) {
             try {

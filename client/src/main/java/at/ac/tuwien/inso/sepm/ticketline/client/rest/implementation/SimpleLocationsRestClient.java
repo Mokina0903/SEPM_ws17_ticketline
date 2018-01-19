@@ -118,16 +118,15 @@ public class SimpleLocationsRestClient implements LocationRestClient{
     }
 
     @Override
-    public Page<SimpleLocationDTO> findAdvanced(Pageable request, MultiValueMap<String, String> parameters) throws DataAccessException {
+    public Page<SimpleLocationDTO> find(Pageable request, MultiValueMap<String, String> parameters) throws DataAccessException {
         try {
             HttpHeaders headers = new HttpHeaders();
             headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 
-            String url = LOCATIONS_URL + "/advLocationSearch/" + request.getPageNumber() + "/" + request.getPageSize();
+            String url = LOCATIONS_URL + "/locationSearch/" + request.getPageNumber() + "/" + request.getPageSize();
 
             UriComponents builder = UriComponentsBuilder.fromPath(url)
                 .queryParams(parameters).build();
-            System.out.println(" uil: -------- " + builder.toUriString());
             HttpEntity<?> entity = new HttpEntity<>(headers);
 
             ResponseEntity<RestResponsePage<SimpleLocationDTO>> locations =

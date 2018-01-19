@@ -7,7 +7,7 @@ public class LocationFilter {
     private String description;
     private String country;
     private String street;
-    private int zip;
+    private int zip = -1;
 
     public LocationFilter(HashMap<String, String> parameters) {
         if (parameters.containsKey("description")) {
@@ -20,6 +20,7 @@ public class LocationFilter {
             this.street = parameters.get("street");
         }
         if (parameters.containsKey("zip")) {
+            System.out.println("____________ location has Zip: " + parameters.get("zip"));
             this.zip = Integer.parseInt(parameters.get("zip"));
         }
     }
