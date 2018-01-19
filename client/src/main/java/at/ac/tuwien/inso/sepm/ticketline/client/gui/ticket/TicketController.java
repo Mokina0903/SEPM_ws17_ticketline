@@ -423,12 +423,12 @@ public class TicketController extends TabElement implements LocalizationObserver
                     .isStorno(false)
                     .tickets(tickets)
                     .vendor(mainController.getUser())
-                    .customer(mainController.getCutsomer())
+                    .customer(tickets.get(0).getCustomer())
                     .build();
 
                 invoice = invoiceService.create(invoice);
 
-                javafx.stage.Window window = btnPay.getParent().getScene().getWindow();
+                javafx.stage.Window window = lblStorno.getParent().getScene().getWindow();
                 invoiceService.invoiceToPdf(invoice,window);
 
 
@@ -491,21 +491,30 @@ public class TicketController extends TabElement implements LocalizationObserver
 
         try {
             TicketRepresentationClass ticket = currentTableview.getSelectionModel().getSelectedItem();
+            if(ticket==null){
+                lblStornoInvoice.setText(BundleManager.getBundle().getString("ticket.chooseOne"));
+                return;
+            }
             if(!ticket.isPaid()){
                 lblStornoInvoice.setText(BundleManager.getBundle().getString("ticket.stornoInvoiceNotPaid"));
-                return;}//todo feedback to client
+                return;}
+
             Page page = ticketService.findByReservationNumber(ticket.getReservationNumber(),new PageRequest(0,Integer.MAX_VALUE));
             List<TicketDTO> tickets = page.getContent();
 
 
-            if(tickets==null || tickets.isEmpty()){return;}//todo:feedback to client
+            if(tickets==null || tickets.isEmpty()){
+                lblStornoInvoice.setText(BundleManager.getBundle().getString("ticket.stornoInvoiceNoTickets"));
+                return;}
             List<TicketDTO> stornoTickets = new ArrayList<>();
             for(TicketDTO ticketDTO: tickets){
                 if(ticketDTO.isDeleted()){
                     stornoTickets.add(ticketDTO);
                 }
             }
-            if(stornoTickets.isEmpty()){return;}//todo:feedback to client
+            if(stornoTickets.isEmpty()){
+                lblStornoInvoice.setText(BundleManager.getBundle().getString("ticket.stornoInvoiceNoTickets"));
+                return;}
 
             List<InvoiceDTO> invoices = invoiceService.findByReservationNumber(ticket.getReservationNumber());
             for(InvoiceDTO invoice : invoices){
@@ -530,9 +539,9 @@ public class TicketController extends TabElement implements LocalizationObserver
             invoiceService.invoiceToPdf(stornoInvoice,window);
 
         } catch (DataAccessException e) {
-            e.printStackTrace();
+            lblStornoInvoice.setText(BundleManager.getBundle().getString("exception.unexpected"));
         } catch (SearchNoMatchException e) {
-            e.printStackTrace();
+            lblStornoInvoice.setText(BundleManager.getBundle().getString("ticket.stornoInvoiceNoTickets"));
         }
 
     }
