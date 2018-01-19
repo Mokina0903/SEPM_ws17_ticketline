@@ -1,0 +1,30 @@
+
+
+
+
+
+.default-color0.chart-bar { -fx-bar-fill: #f9d900; }
+
+.chart-title{
+ -fx-font-family: "Aeial";
+  -fx-font-size: 16px;
+  -fx-font-weight: bold;
+
+}
+
+.axis {
+  -fx-text-fill: #4682b4;
+   -fx-font-size: 12px;
+}
+
+
+.chart
+{
+
+ -fx-padding: 15px;
+
+  -fx-legend-visible: false;
+
+}
+
+
