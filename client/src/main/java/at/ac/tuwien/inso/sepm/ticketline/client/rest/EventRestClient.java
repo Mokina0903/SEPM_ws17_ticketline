@@ -52,7 +52,16 @@ public interface EventRestClient {
      *
      * @param beginOfMonth the start of the month where to get the top events
      * @param endOfMonth the end of the month where to get the top events
-     * @return a list of events
+     * @return a list of events, without category search
      */
-    List<SimpleEventDTO> getTop10EventsOfMonth(LocalDateTime beginOfMonth, LocalDateTime endOfMonth) throws DataAccessException;
+    List<SimpleEventDTO> getTop10EventsOfMonth(LocalDate beginOfMonth, LocalDate endOfMonth) throws DataAccessException;
+
+    /**
+     *
+     * @param beginOfMonth the start of the month where to get the top events
+     * @param endOfMonth the end of the month where to get the top events
+     * @return a list of events, with category search
+     */
+    List<SimpleEventDTO> getTop10EventsOfMonthFilteredbyCategory(LocalDate beginOfMonth, LocalDate endOfMonth, String category) throws DataAccessException;
+
 }

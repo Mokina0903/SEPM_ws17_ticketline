@@ -50,7 +50,24 @@ public class SimpleEventService implements EventService {
     }
 
     @Override
-    public List<SimpleEventDTO> getTop10EventsOfMonth(LocalDateTime beginOfMonth, LocalDateTime endOfMonth) throws DataAccessException {
+    public List<SimpleEventDTO> getTop10EventsOfMonth(LocalDate beginOfMonth, LocalDate endOfMonth) throws DataAccessException {
         return eventRestClient.getTop10EventsOfMonth(beginOfMonth,endOfMonth);
+    }
+
+    @Override
+    public List<SimpleEventDTO> getTop10EventsOfMonthFilteredbyCategory(LocalDate beginOfMonth, LocalDate endOfMonth, String category) throws DataAccessException {
+        return null;
+    }
+
+    @Override
+    public boolean checkDates(LocalDate beginDate, LocalDate endDate) {
+        if(beginDate == null || endDate == null){
+            return false;
+        }
+        if(beginDate.isAfter(endDate)){
+            return false;
+        }
+
+        return true;
     }
 }

@@ -7,6 +7,8 @@ import at.ac.tuwien.inso.sepm.ticketline.rest.event.DetailedEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -52,7 +54,23 @@ public interface EventService {
      *
      * @param beginOfMonth the start of the month where to get the top events
      * @param endOfMonth the end of the month where to get the top events
-     * @return a list of events
+     * @return a list of events, without category search
      */
-    List<SimpleEventDTO> getTop10EventsOfMonth(LocalDateTime beginOfMonth, LocalDateTime endOfMonth) throws DataAccessException;
+    List<SimpleEventDTO> getTop10EventsOfMonth(LocalDate beginOfMonth, LocalDate endOfMonth) throws DataAccessException;
+
+    /**
+     *
+     * @param beginOfMonth the start of the month where to get the top events
+     * @param endOfMonth the end of the month where to get the top events
+     * @return a list of events, with category search
+     */
+    List<SimpleEventDTO> getTop10EventsOfMonthFilteredbyCategory(LocalDate beginOfMonth, LocalDate endOfMonth, String category) throws DataAccessException;
+
+    /**
+     *
+     * @param beginDate
+     * @param endDate
+     * @return false, when beginDate is after endDate, or one of them is null
+     */
+    boolean checkDates(LocalDate beginDate, LocalDate endDate);
 }

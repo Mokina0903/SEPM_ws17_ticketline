@@ -60,10 +60,10 @@
             </items>
             </ComboBox>
             <Label text="%statistics.fromDate"/>
-            <DatePicker/>
+            <DatePicker fx:id="fromDate"/>
             <Label text="%statistics.toDate"/>
-            <DatePicker/>
-            <Button fx:id="applyFilter" onAction="#applyStatsToChart" text="%statistics.apply"/>
+            <DatePicker fx:id="toDate"/>
+            <Button fx:id="applyFilter" onAction="#getTopTenEvents" text="%statistics.apply"/>
         </HBox>
     </bottom>
 </BorderPane>
