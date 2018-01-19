@@ -99,17 +99,19 @@ public class TicketDataGenerator {
                         tickets.add(ticket);
                     }
 
-                    Invoice invoice = new Invoice.InvoiceBuilder()
-                        .invoiceDate(reservationDate)
-                        .invoiceNumber(reservationNR)
-                        .customer(customer)
-                        .isStorno(false)
-                        .vendor(userRepository.findOne(1l))
-                        .tickets(tickets)
-                        .build();
+                    if(isPaid) {
+                        Invoice invoice = new Invoice.InvoiceBuilder()
+                            .invoiceDate(reservationDate)
+                            .invoiceNumber(reservationNR)
+                            .customer(customer)
+                            .isStorno(false)
+                            .vendor(userRepository.findOne(1l))
+                            .tickets(tickets)
+                            .build();
 
-                    LOGGER.debug("saving invoice {}", reservationNR);
-                    invoiceRepository.save(invoice);
+                        LOGGER.debug("saving invoice {}", reservationNR);
+                        invoiceRepository.save(invoice);
+                    }
                 }
             }
         }
