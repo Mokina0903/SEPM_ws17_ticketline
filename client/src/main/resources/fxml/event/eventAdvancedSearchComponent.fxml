@@ -21,9 +21,7 @@
 <BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="500.0" prefWidth="650.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.event.EventAdvancedSearchController">
 
     <top>
-
         <fx:include fx:id="tabHeader" source="/fxml/tabHeader.fxml" />
-
     </top>
 
     <center>

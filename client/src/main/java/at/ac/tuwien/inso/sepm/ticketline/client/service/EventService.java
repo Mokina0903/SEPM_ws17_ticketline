@@ -42,7 +42,7 @@ public interface EventService {
     DetailedEventDTO publishEvent(DetailedEventDTO detailedEventDTO) throws DataAccessException;
 
     /**
-     * Find all events by search parameters ordered by Date ascending
+     * Find all events by combined search parameters ordered by Date ascending
      *
      * @param request page to load
      * @param parameters for filter and search
@@ -51,4 +51,13 @@ public interface EventService {
      */
     Page<SimpleEventDTO> findAdvanced(Pageable request, MultiValueMap<String, String> parameters) throws DataAccessException;
 
-    }
+    /**
+     * Find all events by search parameters ordered by Date ascending
+     *
+     * @param request page to load
+     * @param parameters for filter and search
+     * @return Page of upcoming events
+     * @throws DataAccessException in case something went wrong
+     */
+    Page<SimpleEventDTO> find(Pageable request, MultiValueMap<String, String> parameters) throws DataAccessException;
+}

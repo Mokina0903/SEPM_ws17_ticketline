@@ -143,51 +143,56 @@ public class SimpleEventRestClient implements EventRestClient {
 
     @Override
     public Page<SimpleEventDTO> findAdvanced(Pageable request, MultiValueMap<String, String> parameters) throws DataAccessException {
-    try {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-
-        String url = EVENT_URL + "/advSearch/" + request.getPageNumber() + "/" + request.getPageSize();
-
-        UriComponents builder = UriComponentsBuilder.fromPath(url)
-            .queryParams(parameters).build();
-        HttpEntity<?> entity = new HttpEntity<>(headers);
-
-        ResponseEntity<RestResponsePage<SimpleEventDTO>> events =
-            restClient.exchange(
-            restClient.getServiceURI(builder.toUriString()),
-            HttpMethod.GET,
-            entity,
-            new ParameterizedTypeReference<RestResponsePage<SimpleEventDTO>>() {
-            });
-        return events.getBody();
-    } catch (HttpStatusCodeException e) {
-        throw new DataAccessException("Failed retrieve events with status code " + e.getStatusCode().toString());
-    } catch (RestClientException e) {
-        throw new DataAccessException(e.getMessage(), e);
-    }
-
-        /*try {
-            search = URLEncoder.encode(search, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            LOGGER.warn("Error while encoding search path");
-        }
         try {
-            LOGGER.debug("Retrieving all upcoming events from {}", restClient.getServiceURI(EVENT_URL));
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+
+            String url = EVENT_URL + "/advSearch/" + request.getPageNumber() + "/" + request.getPageSize();
+
+            UriComponents builder = UriComponentsBuilder.fromPath(url)
+                .queryParams(parameters).build();
+            HttpEntity<?> entity = new HttpEntity<>(headers);
+
             ResponseEntity<RestResponsePage<SimpleEventDTO>> events =
                 restClient.exchange(
-                    restClient.getServiceURI(EVENT_URL + "/advSearch/" + request.getPageNumber() + "/" + request.getPageSize() + "/" + search),
+                    restClient.getServiceURI(builder.toUriString()),
                     HttpMethod.GET,
-                    null,
+                    entity,
                     new ParameterizedTypeReference<RestResponsePage<SimpleEventDTO>>() {
                     });
-            LOGGER.debug("Result status was {} with content {}", events.getStatusCode(), events.getBody());
             return events.getBody();
         } catch (HttpStatusCodeException e) {
             throw new DataAccessException("Failed retrieve events with status code " + e.getStatusCode().toString());
         } catch (RestClientException e) {
             throw new DataAccessException(e.getMessage(), e);
-        }*/
+        }
+    }
+
+    @Override
+    public Page<SimpleEventDTO> find(Pageable request, MultiValueMap<String, String> parameters) throws DataAccessException {
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+
+            String url = EVENT_URL + "/search/" + request.getPageNumber() + "/" + request.getPageSize();
+
+            UriComponents builder = UriComponentsBuilder.fromPath(url)
+                .queryParams(parameters).build();
+            HttpEntity<?> entity = new HttpEntity<>(headers);
+
+            ResponseEntity<RestResponsePage<SimpleEventDTO>> events =
+                restClient.exchange(
+                    restClient.getServiceURI(builder.toUriString()),
+                    HttpMethod.GET,
+                    entity,
+                    new ParameterizedTypeReference<RestResponsePage<SimpleEventDTO>>() {
+                    });
+            return events.getBody();
+        } catch (HttpStatusCodeException e) {
+            throw new DataAccessException("Failed retrieve events with status code " + e.getStatusCode().toString());
+        } catch (RestClientException e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
     }
 
 }

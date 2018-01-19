@@ -7,6 +7,7 @@ import at.ac.tuwien.inso.sepm.ticketline.client.gui.event.EventSearchFor;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.location.LocationElementController;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.EventService;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.LocationService;
+import at.ac.tuwien.inso.sepm.ticketline.rest.artist.SimpleArtistDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.location.SimpleLocationDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
@@ -89,13 +90,17 @@ public class PaginationHelper {
 
     private Node createPage(Integer pageIndex) {
         pagination.setCurrentPageIndex(pageIndex);
-        Pageable request = new PageRequest(pageIndex, ENTRIES_PER_PAGE);
         ListView<VBox> lvElements = new ListView<>();
 
-        if (searchFor.equals(EventSearchFor.EVENT)) {
-            Page<SimpleEventDTO> events = loadEventPage(pageIndex);
-            pagination.setPageCount(events.getTotalPages());
-            // controller.setPagination(pagination);
+        Page<SimpleEventDTO> events;
+        if (searchFor.equals(EventSearchFor.EVENT) || searchFor.equals(EventSearchFor.ALL)) {
+            if (searchFor.equals(EventSearchFor.EVENT)) {
+                events = loadEventPage(pageIndex);
+                pagination.setPageCount(events.getTotalPages());
+            } else {
+                events = loadAdvancedSearchEventPage(pageIndex);
+                pagination.setPageCount(events.getTotalPages());
+            }
 
             System.out.println("ELEMENTS per PAge event create  !!!!!!!! + " + events.getContent().size());
             lvElements.setStyle("-fx-background-color: transparent;");
@@ -110,12 +115,12 @@ public class PaginationHelper {
             return lvElements;
 
         } else if (searchFor.equals(EventSearchFor.LOCATION)) {
-            Page<SimpleLocationDTO> events = loadLocationPage(pageIndex);
-            pagination.setPageCount(events.getTotalPages());
-            System.out.println("ELEMENTS per PAge loc create  !!!!!!!! + " + events.getContent().size());
+            Page<SimpleLocationDTO> locations = loadLocationPage(pageIndex);
+            pagination.setPageCount(locations.getTotalPages());
+            System.out.println("ELEMENTS per PAge loc create  !!!!!!!! + " + locations.getContent().size());
             lvElements.setStyle("-fx-background-color: transparent;");
-            if (!events.getContent().isEmpty()) {
-                for (SimpleLocationDTO element : events.getContent()) {
+            if (!locations.getContent().isEmpty()) {
+                for (SimpleLocationDTO element : locations.getContent()) {
                     SpringFxmlLoader.Wrapper<LocationElementController> wrapper =
                         springFxmlLoader.loadAndWrap("/fxml/location/locationElement.fxml");
                     wrapper.getController().initializeData(locationService, element, bPContainer);
@@ -123,16 +128,37 @@ public class PaginationHelper {
                 }
             }
             return lvElements;
-
         } else {
-        } //artists
+           /* Page<SimpleArtistDTO> artists = loadArtistPage(pageIndex);
+            pagination.setPageCount(artists.getTotalPages());
+            System.out.println("ELEMENTS per PAge loc create  !!!!!!!! + " + artists.getContent().size());
+            lvElements.setStyle("-fx-background-color: transparent;");
+            if (!artists.getContent().isEmpty()) {
+                for (SimpleArtistDTO element : artists.getContent()) {
+                    SpringFxmlLoader.Wrapper<ArtistElementController> wrapper =
+                        springFxmlLoader.loadAndWrap("/fxml/artist/artistElement.fxml");
+                    wrapper.getController().initializeData(artistService, element, bPContainer);
+                    lvElements.getItems().add(wrapper.getController().vbElement);*/
+        }
         return lvElements;
+    }
+
+
+    private Page<SimpleEventDTO> loadAdvancedSearchEventPage(Integer pageIndex) {
+        Pageable request = new PageRequest(pageIndex, ENTRIES_PER_PAGE);
+        try {
+            Page<SimpleEventDTO> events = eventService.findAdvanced(request, parameters);
+            return events;
+        } catch (DataAccessException e) {
+            LOGGER.warn("Could not access data for event pagination");
+        }
+        return null;
     }
 
     private Page<SimpleEventDTO> loadEventPage(Integer pageIndex) {
         Pageable request = new PageRequest(pageIndex, ENTRIES_PER_PAGE);
         try {
-            Page<SimpleEventDTO> events = eventService.findAdvanced(request, parameters);
+            Page<SimpleEventDTO> events = eventService.find(request, parameters);
             return events;
         } catch (DataAccessException e) {
             LOGGER.warn("Could not access data for event pagination");
@@ -150,6 +176,17 @@ public class PaginationHelper {
         }
         return null;
     }
+
+    /*private Page<SimpleArtistDTO> loadArtistPage(Integer pageIndex) {
+        Pageable request = new PageRequest(pageIndex, ENTRIES_PER_PAGE);
+        try {
+            Page<SimpleArtistDTO> artists = artistService.findAdvanced(request, parameters);
+            return artists;
+        } catch (DataAccessException e) {
+            LOGGER.warn("Could not access data for event pagination");
+        }
+        return null;
+    }*/
 
     public EventSearchFor getSearchFor() {
         return searchFor;

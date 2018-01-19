@@ -54,7 +54,23 @@ public interface EventService {
      */
     Page<Event> findAllUpcomingByTitle(Pageable request, String title);
 
+    /**
+     * find page of events by combined parameters
+     *
+     * @param parameters for filtering
+     * @param request for the page containing a page number and sort type
+     * @return page of events
+     */
     Page<Event> findByAdvancedSearch(HashMap<String, String> parameters, Pageable request);
+
+    /**
+     * find page of events by parameters
+     *
+     * @param parameters for filtering
+     * @param request for the page containing a page number and sort type
+     * @return page of events
+     */
+    Page<Event> find(HashMap<String, String> parameters, Pageable request);
 
     /**
      * Publish new Event
@@ -63,5 +79,4 @@ public interface EventService {
      * @return published Event entry
      */
     Event publishEvent(Event event);
-
 }

@@ -77,7 +77,7 @@ public class EventEndpoint {
         return eventService.findByAdvancedSearch(search, request);
     }*/
 
-    @RequestMapping(value = "advSearch/{pageIndex}/{eventsPerPage}", method = RequestMethod.GET)
+    @RequestMapping(value = "/advSearch/{pageIndex}/{eventsPerPage}", method = RequestMethod.GET)
     @ApiOperation(value = "Get list of simple event entries filtered by parameters")
     public Page<SimpleEventDTO> findAdvanced(@PathVariable("pageIndex")int pageIndex, @PathVariable("eventsPerPage")int eventsPerPage,
                                              @QuerydslPredicate(root = Event.class)Predicate predicate,
@@ -85,6 +85,19 @@ public class EventEndpoint {
         Pageable request = new PageRequest(pageIndex, eventsPerPage, Sort.Direction.ASC, "start_of_event");
         System.out.println("PARAMS: " + parameters.toString());
         Page<Event> eventPage = eventService.findByAdvancedSearch(parameters, request);
+        List<SimpleEventDTO> dtos = eventMapper.eventToSimpleEventDTO(eventPage.getContent());
+        System.out.println("LIST::: " +dtos.size());
+        return new PageImpl<>(dtos, request, eventPage.getTotalElements());
+    }
+
+    @RequestMapping(value = "/search/{pageIndex}/{eventsPerPage}", method = RequestMethod.GET)
+    @ApiOperation(value = "Get list of simple event entries filtered by parameters")
+    public Page<SimpleEventDTO> find(@PathVariable("pageIndex")int pageIndex, @PathVariable("eventsPerPage")int eventsPerPage,
+                                             @QuerydslPredicate(root = Event.class)Predicate predicate,
+                                             @RequestParam HashMap<String,String> parameters) {
+        Pageable request = new PageRequest(pageIndex, eventsPerPage, Sort.Direction.ASC, "start_of_event");
+        System.out.println("PARAMS: " + parameters.toString());
+        Page<Event> eventPage = eventService.find(parameters, request);
         List<SimpleEventDTO> dtos = eventMapper.eventToSimpleEventDTO(eventPage.getContent());
         System.out.println("LIST::: " +dtos.size());
         return new PageImpl<>(dtos, request, eventPage.getTotalElements());

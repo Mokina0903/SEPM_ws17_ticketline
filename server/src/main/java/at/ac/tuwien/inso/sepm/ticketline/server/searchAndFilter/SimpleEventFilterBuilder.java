@@ -29,7 +29,7 @@ public class SimpleEventFilterBuilder implements EventFilterBuilder {
     @Override
     public Predicate buildOr(EventFilter filter) {
         return new OptionalBooleanBuilder(EVENT.isNotNull())
-            .notEmptyOr(EVENT.title::containsIgnoreCase, filter.getTitle())
+            .notEmptyAnd(EVENT.title::containsIgnoreCase, filter.getTitle())
             .notEmptyOr(EVENT.description::containsIgnoreCase, filter.getDescription())
             .build();
     }
