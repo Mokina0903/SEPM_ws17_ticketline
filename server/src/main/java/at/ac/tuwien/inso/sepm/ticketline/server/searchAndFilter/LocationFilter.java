@@ -1,23 +1,15 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.searchAndFilter;
 
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 public class LocationFilter {
 
     private String description;
     private String country;
     private String street;
-    private int zip = -1;
+    private int zip;
 
     public LocationFilter(HashMap<String, String> parameters) {
-        Iterator it = parameters.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry)it.next();
-            System.out.println("print Map in locFilter: "+pair.getKey() + " = " + pair.getValue());
-        }
-
         if (parameters.containsKey("description")) {
             this.description = parameters.get("description");
         }
@@ -27,9 +19,8 @@ public class LocationFilter {
         if (parameters.containsKey("street")) {
             this.street = parameters.get("street");
         }
-        if (parameters.containsKey("plz")) {
-                this.zip = Integer.parseInt(parameters.get("plz"));
-                System.out.println("ZIP of loc = " + zip);
+        if (parameters.containsKey("zip")) {
+            this.zip = Integer.parseInt(parameters.get("zip"));
         }
     }
 

@@ -28,7 +28,7 @@ public class SimpleLocationFilterBuilder implements LocationFilterBuilder{
             .notEmptyOr(LOCATION.description::containsIgnoreCase, filter.getDescription())
             .notEmptyOr(LOCATION.city::containsIgnoreCase, filter.getCountry())
             .notEmptyOr(LOCATION.street::containsIgnoreCase, filter.getStreet())
-           // .notNullOr(LOCATION.zip::eq, filter.getZip())
+            .notNullOr(LOCATION.zip::eq, filter.getZip())
             .build();
     }
 }

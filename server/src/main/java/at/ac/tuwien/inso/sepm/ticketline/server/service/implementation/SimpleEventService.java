@@ -96,7 +96,6 @@ public class SimpleEventService implements EventService {
     @Override
     public Page<Event> findByAdvancedSearch(HashMap<String, String> parameters, Pageable request) {
         Predicate predicate = filterBuilder.buildAnd(new EventFilter(parameters));
-        System.out.println("Event Predicate: ::::::::::::  " + predicate);
         Iterable<Event> events = eventRepository.findAll(predicate);
         List<Event> eventList = Lists.newArrayList(events);
         int start = request.getOffset();

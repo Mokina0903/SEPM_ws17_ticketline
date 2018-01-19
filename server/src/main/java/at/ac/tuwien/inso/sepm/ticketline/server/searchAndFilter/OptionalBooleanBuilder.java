@@ -17,9 +17,7 @@ public class OptionalBooleanBuilder {
 
     public <T> OptionalBooleanBuilder notNullAnd(Function<T, BooleanExpression> expressionFunction, T value) {
         if (value != null) {
-            System.out.println("notNUllAnd Loc is not null: " + value);
-            if (isNumeric(value.toString()) && Long.parseLong(value.toString()) != -1) {
-                System.out.println("Adds zip to search : " + value.toString());
+            if (isNumeric(value.toString()) && value.equals("0")) {
                 return new OptionalBooleanBuilder(predicate.and(expressionFunction.apply(value)));
             }
         }
@@ -28,7 +26,7 @@ public class OptionalBooleanBuilder {
 
     public <T> OptionalBooleanBuilder notNullOr(Function<T, BooleanExpression> expressionFunction, T value) {
         if (value != null) {
-            if (isNumeric(value.toString())) {
+            if (isNumeric(value.toString()) && value.equals("0")) {
                 return new OptionalBooleanBuilder(predicate.or(expressionFunction.apply(value)));
             }
         }
@@ -55,16 +53,6 @@ public class OptionalBooleanBuilder {
         }
         return this;
     }
-
-
-    public OptionalBooleanBuilder notEmptyIntegerAnd(Function<String, BooleanExpression> expressionFunction, Integer value) {
-        if (!StringUtils.isEmpty(value) || value != -1) {
-            System.out.println("IntegerMethod: " + value);
-            return new OptionalBooleanBuilder(predicate.and(expressionFunction.apply(value.toString())));
-        }
-        return this;
-    }
-
 
     public BooleanExpression build() {
         return predicate;
