@@ -38,6 +38,9 @@ public class DetailedEventDTO{
     @ApiModelProperty(required = true, name = "The hall where the event takes place")
     private DetailedHallDTO hall;
 
+    @ApiModelProperty(required = true, name = "The Event category")
+    private String eventCategory;
+
     public Long getId() {
         return id;
     }
@@ -110,6 +113,14 @@ public class DetailedEventDTO{
         this.hall = hall;
     }
 
+    public String getEventCategory() {
+        return eventCategory;
+    }
+
+    public void setEventCategory(String eventCategory) {
+        this.eventCategory = eventCategory;
+    }
+
     @Override
     public String toString() {
         return "DetailedEventDTO{" +
@@ -122,6 +133,7 @@ public class DetailedEventDTO{
             ", endOfEvent=" + endOfEvent +
             ", seatSelection=" + seatSelection +
             ", hall=" + hall +
+            ", eventCategory=" + eventCategory +
             '}';
     }
 
@@ -140,6 +152,7 @@ public class DetailedEventDTO{
         if (!getStartOfEvent().equals(eventDTO.getStartOfEvent())) return false;
         if (!getEndOfEvent().equals(eventDTO.getEndOfEvent())) return false;
         if (!getSeatSelection().equals(eventDTO.getSeatSelection())) return false;
+        if (!getEventCategory().equals(eventDTO.getEventCategory())) return false;
         return getHall().equals(eventDTO.getHall());
     }
 
@@ -154,6 +167,7 @@ public class DetailedEventDTO{
         result = 31 * result + getEndOfEvent().hashCode();
         result = 31 * result + getSeatSelection().hashCode();
         result = 31 * result + getHall().hashCode();
+        result = 31 * result + getEventCategory().hashCode();
         return result;
     }
 
@@ -172,6 +186,7 @@ public class DetailedEventDTO{
         private LocalDateTime endOfEvent;
         private DetailedHallDTO hall;
         private Boolean seatSelection;
+        private String eventCategory;
 
 
         public DetailedEventDTOBuilder id(Long id){
@@ -219,6 +234,11 @@ public class DetailedEventDTO{
             return this;
         }
 
+        public DetailedEventDTOBuilder category(String eventCategory){
+            this.eventCategory = eventCategory;
+            return this;
+        }
+
         public DetailedEventDTO build(){
             DetailedEventDTO event = new DetailedEventDTO();
             event.setId(id);
@@ -230,6 +250,7 @@ public class DetailedEventDTO{
             event.setEndOfEvent(endOfEvent);
             event.setHall(hall);
             event.setSeatSelection(seatSelection);
+            event.setEventCategory(eventCategory);
 
             return event;
         }

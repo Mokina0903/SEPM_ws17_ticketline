@@ -114,6 +114,8 @@ public class EventLocationDataGenerator {
         } else {
             LOGGER.info("generating {} event entries", NUMBER_OF_EVENTS_TO_GENERATE);
 
+            Event.EventCategory[] eventCategories = Event.EventCategory.values();
+
             for (int i = 0; i < NUMBER_OF_EVENTS_TO_GENERATE; i++) {
 
                 LocalDateTime start=LocalDateTime.ofInstant(
@@ -135,6 +137,11 @@ public class EventLocationDataGenerator {
                     artists.add(artist);
                 }
 
+
+                List<Hall> allHalls = hallRepository.findAll();
+
+                Event.EventCategory category = eventCategories[faker.number().numberBetween(0, eventCategories.length-1)];
+
                 Event event = Event.builder()
                     .startOfEvent(start)
                     .endOfEvent(start.plusHours(2))
@@ -145,6 +152,7 @@ public class EventLocationDataGenerator {
                     .title(faker.music().instrument() + " concert")
                     .hall(hallRepository.findAll().get(faker.number().numberBetween(0,(int)hallRepository.count())))
                     .artists(artists)
+                    .category(category)
                     .seatSelection(faker.bool().bool())
                     .build();
                 LOGGER.debug("saving event {}", event);
