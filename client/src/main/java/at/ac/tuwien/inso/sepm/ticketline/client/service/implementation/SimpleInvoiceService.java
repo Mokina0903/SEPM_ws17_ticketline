@@ -1,6 +1,7 @@
 package at.ac.tuwien.inso.sepm.ticketline.client.service.implementation;
 
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
+import at.ac.tuwien.inso.sepm.ticketline.client.exception.EmptyValueException;
 import at.ac.tuwien.inso.sepm.ticketline.client.rest.InvoiceRestClient;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.InvoiceService;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
@@ -48,7 +49,7 @@ public class SimpleInvoiceService implements InvoiceService{
     }
 
     @Override
-    public InvoiceDTO create( InvoiceDTO invoice ) throws DataAccessException {
+    public InvoiceDTO create( InvoiceDTO invoice ) throws DataAccessException, EmptyValueException {
         return invoiceRestClient.create(invoice);
     }
 

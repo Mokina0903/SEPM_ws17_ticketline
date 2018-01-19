@@ -1,6 +1,7 @@
 package at.ac.tuwien.inso.sepm.ticketline.client.service;
 
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
+import at.ac.tuwien.inso.sepm.ticketline.client.exception.EmptyValueException;
 import at.ac.tuwien.inso.sepm.ticketline.rest.invoice.InvoiceDTO;
 import javafx.stage.Window;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -41,7 +42,7 @@ public interface InvoiceService {
      * @param invoice to be saved
      * @return saved invoice with created values
      */
-    InvoiceDTO create(InvoiceDTO invoice) throws DataAccessException;
+    InvoiceDTO create(InvoiceDTO invoice) throws DataAccessException, EmptyValueException;
 
     File invoiceToPdf( InvoiceDTO invoiceDTO, Window window) throws DataAccessException;
 }
