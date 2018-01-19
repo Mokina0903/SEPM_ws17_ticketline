@@ -491,7 +491,9 @@ public class TicketController extends TabElement implements LocalizationObserver
 
         try {
             TicketRepresentationClass ticket = currentTableview.getSelectionModel().getSelectedItem();
-            if(!ticket.isPaid()){return;}//todo feedback to client
+            if(!ticket.isPaid()){
+                lblStornoInvoice.setText(BundleManager.getBundle().getString("ticket.stornoInvoiceNotPaid"));
+                return;}//todo feedback to client
             Page page = ticketService.findByReservationNumber(ticket.getReservationNumber(),new PageRequest(0,Integer.MAX_VALUE));
             List<TicketDTO> tickets = page.getContent();
 
