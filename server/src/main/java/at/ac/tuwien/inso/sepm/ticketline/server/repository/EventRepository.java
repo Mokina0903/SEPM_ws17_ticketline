@@ -67,11 +67,11 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
 
 
-    @Query(value = "SELECT TOP 10 e.id, e.title, e.description, e.price, e.start_Of_Event, e.end_Of_Event, e.seat_Selection " +
-        "FROM event e join tickets t ON e.id = t.event_id " +
-        "WHERE e.start_Of_Event >= :begin AND e.start_Of_Event <= :end AND e.end_Of_Event <= :end" +
+    @Query(value = "SELECT TOP 10 e.id, e.title, e.description, e.price, e.start_Of_Event, e.end_Of_Event, e.seat_Selection" +
+        " FROM event e join ticket t ON e.id = t.event_id " +
+        "WHERE e.start_Of_Event >= :begin AND e.start_Of_Event <= :end AND e.end_Of_Event <= :end " +
         "GROUP BY  e.id, e.title, e.description, e.price, e.start_Of_Event, e.end_Of_Event, e.seat_Selection"+
-        "ORDER BY count(*)", nativeQuery = true)
+        " ORDER BY count(*)", nativeQuery = true)
     List<Event> findTopTenEventsOfMonth(@Param("begin")LocalDateTime beginOfMonth,@Param("end") LocalDateTime endOfMonth);
 
     //todo find by type, implement type in event (enum)

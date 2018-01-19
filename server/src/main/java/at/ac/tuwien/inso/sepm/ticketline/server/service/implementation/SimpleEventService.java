@@ -126,7 +126,7 @@ public class SimpleEventService implements EventService {
 
     @Override
     public List<Event> getTop10EventsOfMonth(LocalDateTime beginOfMonth, LocalDateTime endOfMonth) {
-        return eventRepository.findAllByOrderByStartOfEventDesc();
+        return eventRepository.findTopTenEventsOfMonth(beginOfMonth, endOfMonth);
     }
 
 }

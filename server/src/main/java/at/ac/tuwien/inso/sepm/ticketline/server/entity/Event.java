@@ -154,7 +154,7 @@ public class Event {
             ", endOfEvent=" + endOfEvent +
             ", seatSelection=" + seatSelection +
             ", hall=" + hall +
-            ", artists=" + artists +
+           // ", artists=" + artists +
             ", eventCategory=" + eventCategory +
             '}';
     }

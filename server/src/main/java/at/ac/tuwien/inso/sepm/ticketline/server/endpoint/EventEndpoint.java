@@ -12,6 +12,8 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.query.Param;
+import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.*;
@@ -20,7 +22,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 @RestController
@@ -74,12 +78,14 @@ public class EventEndpoint {
         return  eventMapper.eventToDetailedEventDTO(event);
     }
 
-    @RequestMapping(value ="/getTopTen" ,method = RequestMethod.POST)
+    @RequestMapping(value ="/getTopTen/{start}/{end}" ,method = RequestMethod.GET)
     @ApiOperation(value = "Get the top ten events from the given month")
-    public List<SimpleEventDTO> getTop10EventsOfMonth(@RequestBody StatistikRequest request){
+    public List<SimpleEventDTO> getTop10EventsOfMonth(@PathVariable("start") Long start, @PathVariable("end")Long end){
 
+        LocalDateTime startOfMonth = LocalDateTime.ofInstant(Instant.ofEpochSecond(start), ZoneId.of("Europe/Paris"));
+        LocalDateTime endOfMonth = LocalDateTime.ofInstant(Instant.ofEpochSecond(end), ZoneId.of("Europe/Paris"));
 
-        return eventMapper.eventToSimpleEventDTO(eventService.getTop10EventsOfMonth(request.getBeginOfMonth(), request.getEndOfMonth()));
+        return eventMapper.eventToSimpleEventDTO(eventService.getTop10EventsOfMonth(startOfMonth, endOfMonth));
     }
 
 }
