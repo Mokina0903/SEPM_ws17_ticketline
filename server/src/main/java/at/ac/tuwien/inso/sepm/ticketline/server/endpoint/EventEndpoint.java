@@ -95,7 +95,7 @@ public class EventEndpoint {
         LocalDateTime startOfMonth = LocalDateTime.ofInstant(Instant.ofEpochSecond(start), ZoneId.of("Europe/Paris"));
         LocalDateTime endOfMonth = LocalDateTime.ofInstant(Instant.ofEpochSecond(end), ZoneId.of("Europe/Paris"));
 
-        return eventMapper.eventToSimpleEventDTO(eventService.getTop10EventsOfMonthFilteredByCategory(startOfMonth, endOfMonth, category));
+        return eventMapper.eventToSimpleEventDTO(eventService.getTop10EventsOfMonthFilteredByCategory(startOfMonth, endOfMonth, Event.EventCategory.valueOf(category)));
     }
 
 }

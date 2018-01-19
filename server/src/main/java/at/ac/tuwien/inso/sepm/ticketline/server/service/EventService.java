@@ -68,6 +68,6 @@ public interface EventService {
      * @param category to be filtered
      * @return a list of events filtered by the given category
      */
-    List<Event> getTop10EventsOfMonthFilteredByCategory(LocalDateTime beginOfMonth,LocalDateTime endOfMonth, String category);
+    List<Event> getTop10EventsOfMonthFilteredByCategory(LocalDateTime beginOfMonth,LocalDateTime endOfMonth, Event.EventCategory category);
 
 }

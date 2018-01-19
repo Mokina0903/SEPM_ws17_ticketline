@@ -78,11 +78,11 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
 
     @Query(value = "SELECT TOP 10 e.id, e.title, e.description, e.price, e.start_Of_Event, e.end_Of_Event, e.seat_Selection, e.event_Category, e.hall_id" +
-        " FROM event e join ticket t ON e.id = t.event_id " +
-        "WHERE e.start_Of_Event >= :begin AND e.start_Of_Event <= :end AND e.end_Of_Event <= :end AND e.event_Category = :category" +
-        "GROUP BY  e.id, e.title, e.description, e.price, e.start_Of_Event, e.end_Of_Event, e.seat_Selection, e.event_Category, e.hall_id"+
+        " FROM event e join ticket t ON e.id = t.event_id" +
+        " WHERE e.start_Of_Event >= :begin AND e.start_Of_Event <= :end AND e.end_Of_Event <= :end AND e.event_Category like '%Jazz%' AND :category=:category" +
+        " GROUP BY  e.id, e.title, e.description, e.price, e.start_Of_Event, e.end_Of_Event, e.seat_Selection, e.event_Category, e.hall_id"+
         " ORDER BY count(*)", nativeQuery = true)
-    List<Event> findTopTenEventsOfMonthFilteredByCategory(@Param("begin")Timestamp beginOfMonth, @Param("end") Timestamp endOfMonth, @Param("category") String category);
+    List<Event> findTopTenEventsOfMonthFilteredByCategory(@Param("begin")Timestamp beginOfMonth, @Param("end") Timestamp endOfMonth, @Param("category") Event.EventCategory category);
 
     //todo find by type, implement type in event (enum)
     //todo find by duration (+-30 min)
