@@ -33,6 +33,9 @@ public class SimpleEventDTO {
     @ApiModelProperty(required =true, name = "Info about seat selection or sectors")
     private Boolean seatSelection;
 
+    @ApiModelProperty(required = true, name = "The Event category")
+    private String eventCategory;
+
     public Long getId() {
         return id;
     }
@@ -99,6 +102,14 @@ public class SimpleEventDTO {
         this.seatSelection = seatSelection;
     }
 
+    public String getEventCategory() {
+        return eventCategory;
+    }
+
+    public void setEventCategory(String eventCategory) {
+        this.eventCategory = eventCategory;
+    }
+
     @Override
     public String toString() {
         return "SimpleEventDTO{" +
@@ -110,6 +121,7 @@ public class SimpleEventDTO {
             ", startOfEvent=" + startOfEvent +
             ", endOfEvent=" + endOfEvent +
             ", seatSelection=" + seatSelection +
+            ", eventCategory=" + eventCategory +
             '}';
     }
 
@@ -126,6 +138,7 @@ public class SimpleEventDTO {
         if (!getPrice().equals(that.getPrice())) return false;
         if (!getStartOfEvent().equals(that.getStartOfEvent())) return false;
         if (!getEndOfEvent().equals(that.getEndOfEvent())) return false;
+        if (!getEventCategory().equals(that.getEventCategory())) return false;
         return getSeatSelection().equals(that.getSeatSelection());
     }
 
@@ -139,6 +152,7 @@ public class SimpleEventDTO {
         result = 31 * result + getStartOfEvent().hashCode();
         result = 31 * result + getEndOfEvent().hashCode();
         result = 31 * result + getSeatSelection().hashCode();
+        result = 31 * result + getEventCategory().hashCode();
         return result;
     }
 
@@ -155,6 +169,7 @@ public class SimpleEventDTO {
         private LocalDateTime startOfEvent;
         private LocalDateTime endOfEvent;
         private Boolean seatSelection;
+        private String eventCategory;
 
         public SimpleEventDTOBuilder id(Long id){
             this.id = id;
@@ -196,6 +211,11 @@ public class SimpleEventDTO {
             return this;
         }
 
+        public SimpleEventDTOBuilder category(String eventCategory){
+            this.eventCategory = eventCategory;
+            return this;
+        }
+
         public SimpleEventDTO build(){
             SimpleEventDTO event = new SimpleEventDTO();
             event.setId(id);
@@ -205,6 +225,7 @@ public class SimpleEventDTO {
             event.setPrice(price);
             event.setStartOfEvent(startOfEvent);
             event.setEndOfEvent(endOfEvent);
+            event.setEventCategory(eventCategory);
             return event;
         }
     }
