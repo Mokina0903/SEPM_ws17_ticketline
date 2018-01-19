@@ -63,6 +63,8 @@ public class TicketController extends TabElement implements LocalizationObserver
     public Label lblPay;
     @FXML
     public Button btnStornoInvoice;
+    @FXML
+    public Label lblStornoInvoice;
 
 
     private TableColumn<TicketRepresentationClass, String> tcName;
@@ -412,6 +414,23 @@ public class TicketController extends TabElement implements LocalizationObserver
                 TicketRepresentationClass ticket = currentTableview.getSelectionModel().getSelectedItem();
                 System.out.println(ticket.getReservationNumber());
                 ticketService.payTicketByReservation_Id(ticket.getReservationNumber());
+
+                List<TicketDTO> tickets = ticketService
+                    .findByReservationNumber(ticket.getReservationNumber(),new PageRequest(0,Integer.MAX_VALUE))
+                    .getContent();
+
+                InvoiceDTO invoice = new InvoiceDTO.InvoiceDTOBuilder()
+                    .isStorno(false)
+                    .tickets(tickets)
+                    .vendor(mainController.getUser())
+                    .customer(mainController.getCutsomer())
+                    .build();
+
+                invoice = invoiceService.create(invoice);
+
+                javafx.stage.Window window = btnPay.getParent().getScene().getWindow();
+                invoiceService.invoiceToPdf(invoice,window);
+
 
                 return null;
             }
