@@ -41,12 +41,12 @@
         </BarChart>
     </center>
     <bottom>
-        <HBox spacing="5">
+        <HBox spacing="15">
             <BorderPane.margin>
                 <Insets left="60" bottom="45" top="5"/>
             </BorderPane.margin>
-            <Label text="Kategory: "/>
-            <ComboBox fx:id="comBoxKategory">
+            <Label text="%statistics.category"/>
+            <ComboBox fx:id="comBoxCategory">
             <items>
                 <FXCollections fx:factory="observableArrayList">
                     <String fx:value="All"/>
@@ -59,6 +59,11 @@
                 </FXCollections>
             </items>
             </ComboBox>
+            <Label text="%statistics.fromDate"/>
+            <DatePicker/>
+            <Label text="%statistics.toDate"/>
+            <DatePicker/>
+            <Button fx:id="applyFilter" onAction="#applyStatsToChart" text="%statistics.apply"/>
         </HBox>
     </bottom>
 </BorderPane>

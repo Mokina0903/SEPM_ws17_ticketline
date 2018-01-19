@@ -15,6 +15,7 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Tab;
 import org.controlsfx.glyphfont.FontAwesome;
@@ -35,7 +36,9 @@ public class Top10Controller extends TabElement {
     @FXML
     public NumberAxis yAxis;
     @FXML
-    public ComboBox comBoxKategory;
+    public ComboBox comBoxCategory;
+    @FXML
+    public Button applyFilter;
     @FXML
     private TabHeaderController tabHeaderController;
 
@@ -59,6 +62,7 @@ public class Top10Controller extends TabElement {
         xAxis.setLabel("Events");
         yAxis.setLabel("Sales");
         barChartTop10.setTitle("Top 10 Events");
+        comBoxCategory.getSelectionModel().select(0);
 
         tabHeaderController.setIcon(FontAwesome.Glyph.BAR_CHART);
         tabHeaderController.setTitle(BundleManager.getBundle().getString("statistics.top10Statistics"));
