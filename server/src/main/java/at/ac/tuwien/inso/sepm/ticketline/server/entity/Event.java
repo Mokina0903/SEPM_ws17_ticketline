@@ -12,6 +12,17 @@ import java.util.List;
 @Table(name = "event")
 public class Event {
 
+    // TODO: David is correct?
+    public enum EventCategory
+    {
+        Musical,
+        Rock,
+        Pop,
+        Kabarett,
+        Jazz,
+        Kino
+    };
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq_event_id")
     @SequenceGenerator(name = "seq_event_id", sequenceName = "seq_event_id")
@@ -36,6 +47,9 @@ public class Event {
 
     @Column(nullable = false)
     private Boolean seatSelection;
+
+    @Column(nullable =  false)
+    private EventCategory eventCategory;
 
     public Boolean getSeatSelection() {
         return seatSelection;
@@ -119,6 +133,14 @@ public class Event {
         this.artists = artists;
     }
 
+    public EventCategory getEventCategory() {
+        return eventCategory;
+    }
+
+    public void setEventCategory(EventCategory eventCategory) {
+        this.eventCategory = eventCategory;
+    }
+
     public static EventBuilder builder(){return new EventBuilder();}
 
     @Override
@@ -133,6 +155,7 @@ public class Event {
             ", seatSelection=" + seatSelection +
             ", hall=" + hall +
             ", artists=" + artists +
+            ", eventCategory=" + eventCategory +
             '}';
     }
 
@@ -151,6 +174,7 @@ public class Event {
         if (!getEndOfEvent().equals(event.getEndOfEvent())) return false;
         if (!getSeatSelection().equals(event.getSeatSelection())) return false;
         if (!getHall().equals(event.getHall())) return false;
+        if (!getEventCategory().equals(event.getEventCategory())) return false;
         return getArtists().equals(event.getArtists());
     }
 
@@ -165,6 +189,7 @@ public class Event {
         result = 31 * result + getSeatSelection().hashCode();
         result = 31 * result + getHall().hashCode();
         result = 31 * result + getArtists().hashCode();
+        result = 31 * result + getEventCategory().hashCode();
         return result;
     }
 
@@ -178,6 +203,7 @@ public class Event {
         private LocalDateTime endOfEvent;
         private Hall hall;
         private List<Artist> artists;
+        private EventCategory eventCategory;
 
         public EventBuilder id(Long id){
             this.id = id;
@@ -224,6 +250,11 @@ public class Event {
             return this;
         }
 
+        public EventBuilder category(EventCategory eventCategory){
+            this.eventCategory = eventCategory;
+            return this;
+        }
+
         public Event build(){
             Event event = new Event();
             event.setId(id);
@@ -235,7 +266,7 @@ public class Event {
             event.setHall(hall);
             event.setArtists(artists);
             event.setSeatSelection(seatSelection);
-
+            event.setEventCategory(eventCategory);
             return event;
         }
     }

@@ -198,6 +198,40 @@ public class EventMapperTest {
     }
 
     @Test
+    public void CategoryTest() {
+        // TODO: David is correct?
+        Event event = Event.builder()
+            .id(EVENT_ID)
+            .title(EVENT_TITLE)
+            .artists(EVENT_ARTISTS)
+            .description(EVENT_DESCRIPTION_SUMMARY)
+            .price(EVENT_PRICE)
+            .startOfEvent(EVENT_START)
+            .endOfEvent(EVENT_END)
+            .category(Event.EventCategory.Musical)
+            .build();
+        SimpleEventDTO simpleEventDTO = eventMapper.eventToSimpleEventDTO(event);
+
+        //System.out.println(simpleEventDTO.getEventCategory());
+
+        DetailedEventDTO detailedEventDTO = DetailedEventDTO.builder()
+            .id(EVENT_ID)
+            .artists(EVENT_ARTISTS_DTO)
+            .title(EVENT_TITLE)
+            .description(EVENT_DESCRIPTION)
+            .price(EVENT_PRICE)
+            .startOfEvent(EVENT_START)
+            .endOfEvent(EVENT_END)
+            .hall(HALL_DTO)
+            .category("Musical")
+            .build();
+        Event event2 = eventMapper.detailedEventDTOToEvent(detailedEventDTO);
+
+        //System.out.println(event2.getEventCategory());
+
+    }
+
+    @Test
     public void shouldMapEventsToSimpleEventsDTONotShorteningDescriptionToSummary() {
         Event event = Event.builder()
             .id(EVENT_ID)
