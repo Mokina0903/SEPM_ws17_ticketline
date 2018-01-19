@@ -3,6 +3,7 @@ package at.ac.tuwien.inso.sepm.ticketline.client.gui.event;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.SearchNoMatchException;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.*;
+import at.ac.tuwien.inso.sepm.ticketline.client.service.ArtistService;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.EventService;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.LocationService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
@@ -81,6 +82,7 @@ public class EventController extends TabElement implements LocalizationObserver 
     private final SpringFxmlLoader springFxmlLoader;
     private final EventService eventService;
     private final LocationService locationService;
+    private final ArtistService artistService;
 
     private GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
     private final int FONT_SIZE = 16;
@@ -102,11 +104,12 @@ public class EventController extends TabElement implements LocalizationObserver 
 
 
     public EventController(MainController mainController, SpringFxmlLoader springFxmlLoader, EventService eventService,
-                           LocationService locationService) {
+                           LocationService locationService, ArtistService artistService) {
         this.mainController = mainController;
         this.springFxmlLoader = springFxmlLoader;
         this.eventService = eventService;
         this.locationService = locationService;
+        this.artistService = artistService;
     }
 
     @FXML
@@ -141,7 +144,7 @@ public class EventController extends TabElement implements LocalizationObserver 
         cbSearch.getSelectionModel().selectFirst();
 
         btSearch.setGraphic(fontAwesome.create("SEARCH").size(FONT_SIZE));
-        paginationHelper.initData(pagination, springFxmlLoader, eventService, locationService, this);
+        paginationHelper.initData(pagination, springFxmlLoader, eventService, locationService, artistService, this);
     }
 
 
@@ -157,16 +160,16 @@ public class EventController extends TabElement implements LocalizationObserver 
         if (searchFor.equals(EventSearchFor.EVENT)) {
             LOGGER.info("preparing Pagination for the event search");
             parameters = setParametersForEventSearch();
-            paginationHelper.setParameters(parameters);
-            paginationHelper.setUpPagination();
 
         } else if (searchFor.equals(EventSearchFor.LOCATION)) {
             LOGGER.info("preparing Pagination for the locations search");
             parameters = setParametersForLocationSearch();
-            paginationHelper.setParameters(parameters);
-            paginationHelper.setUpPagination();
+        } else {
+            LOGGER.info("preparing Pagination for the artist search");
+            parameters = setParametersForArtistSearch();
         }
-        //todo artists
+        paginationHelper.setParameters(parameters);
+        paginationHelper.setUpPagination();
     }
 
 

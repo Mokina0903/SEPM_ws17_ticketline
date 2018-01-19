@@ -4,13 +4,13 @@ import at.ac.tuwien.inso.sepm.ticketline.server.entity.QEvent;
 import com.querydsl.core.types.Predicate;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Component
 public class SimpleEventFilterBuilder implements EventFilterBuilder {
 
     private final QEvent EVENT = QEvent.event;
-
-
-    //todo buildOr, buildAnd for general search vs filter search
 
     @Override
     public Predicate buildAnd(EventFilter filter) {
@@ -21,8 +21,8 @@ public class SimpleEventFilterBuilder implements EventFilterBuilder {
             .notNullAnd(EVENT.price::loe, filter.getPriceTo())
             .notNullAnd(EVENT.price::goe, filter.getPriceFrom())
             //todo filter time
-            /*.notNullAnd(EVENT.startOfEvent::between, filter.getTimeStart(), filter.getTimeStart())
-            .notNullAnd(EVENT.duration::before, filter.getDuration())*/
+            .notNullAnd(EVENT.startOfEvent::ne, LocalDateTime.now())
+           // .notNullAnd(EVENT.duration::before, filter.getDuration())*/
             .build();
     }
 

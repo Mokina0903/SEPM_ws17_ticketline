@@ -20,7 +20,6 @@ public class LocationFilter {
             this.street = parameters.get("street");
         }
         if (parameters.containsKey("zip")) {
-            System.out.println("____________ location has Zip: " + parameters.get("zip"));
             this.zip = Integer.parseInt(parameters.get("zip"));
         }
     }
