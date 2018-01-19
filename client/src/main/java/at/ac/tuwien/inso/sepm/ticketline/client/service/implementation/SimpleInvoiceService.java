@@ -43,8 +43,8 @@ public class SimpleInvoiceService implements InvoiceService{
     }
 
     @Override
-    public InvoiceDTO findOneByReservationNumber( Long reservationNumber ) throws DataAccessException {
-        return invoiceRestClient.findOneByReservationNumber(reservationNumber);
+    public List<InvoiceDTO> findByReservationNumber( Long reservationNumber ) throws DataAccessException {
+        return invoiceRestClient.findByReservationNumber(reservationNumber);
     }
 
     @Override

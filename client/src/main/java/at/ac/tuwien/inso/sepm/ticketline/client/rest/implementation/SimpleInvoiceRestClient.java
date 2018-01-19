@@ -20,6 +20,7 @@ import org.springframework.web.client.RestClientException;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 @Component
 public class SimpleInvoiceRestClient implements InvoiceRestClient{
@@ -74,15 +75,15 @@ public class SimpleInvoiceRestClient implements InvoiceRestClient{
     }
 
     @Override
-    public InvoiceDTO findOneByReservationNumber( Long reservationNumber ) throws DataAccessException {
+    public List<InvoiceDTO> findByReservationNumber( Long reservationNumber ) throws DataAccessException {
         try {
             LOGGER.debug("Retrieving invoice by reservationNumber from {}", restClient.getServiceURI(INVOICE_URL));
-            ResponseEntity<InvoiceDTO> invoice =
+            ResponseEntity<List<InvoiceDTO>> invoice =
                 restClient.exchange(
                     restClient.getServiceURI(INVOICE_URL+"/rNr/"+reservationNumber),
                     HttpMethod.GET,
                     null,
-                    new ParameterizedTypeReference<InvoiceDTO>() {}
+                    new ParameterizedTypeReference<List<InvoiceDTO>>() {}
                 );
             LOGGER.debug("Result status was {} with content {}", invoice.getStatusCode(), invoice.getBody());
             return invoice.getBody();

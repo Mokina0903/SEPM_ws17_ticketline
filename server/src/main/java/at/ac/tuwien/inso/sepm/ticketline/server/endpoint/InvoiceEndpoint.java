@@ -49,8 +49,8 @@ public class InvoiceEndpoint {
     }
     @RequestMapping(value = "/rNr/{reservationNumber}", method = RequestMethod.GET)
     @ApiOperation(value = "Get information about a specific invoice entry by reservationNumber")
-    public InvoiceDTO findOneByReservationNumber( @PathVariable Long reservationNumber) {
-        return invoiceMapper.invoiceToInvoiceDTO(invoiceService.findOneByReservationNumber(reservationNumber));
+    public List<InvoiceDTO> findByReservationNumber( @PathVariable Long reservationNumber) {
+        return invoiceMapper.invoiceToInvoiceDTO(invoiceService.findByReservationNumber(reservationNumber));
     }
 
     @RequestMapping(value="/create", method = RequestMethod.POST)

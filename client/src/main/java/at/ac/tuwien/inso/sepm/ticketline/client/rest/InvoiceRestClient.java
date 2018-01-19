@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 public interface InvoiceRestClient {
     /**
@@ -27,12 +28,12 @@ public interface InvoiceRestClient {
     InvoiceDTO findOneById( Long id) throws DataAccessException;
 
     /**
-     * Find a single invoice entry by reservationnumber.
+     * Find invoice/reversal entries by reservationnumber.
      *
      * @param reservationNumber  of the invoice entry
-     * @return InvoiceDTO of the invoice entry
+     * @return List of InvoiceDTO of the invoice entry
      */
-    InvoiceDTO findOneByReservationNumber(Long reservationNumber) throws DataAccessException;
+    List<InvoiceDTO> findByReservationNumber( Long reservationNumber) throws DataAccessException;
 
     /**
      * save invoice

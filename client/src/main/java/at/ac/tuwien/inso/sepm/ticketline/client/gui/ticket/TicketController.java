@@ -338,7 +338,9 @@ public class TicketController extends TabElement implements LocalizationObserver
                 ticketService.deleteTicketByTicket_Id(ticket.getTicket_id());
 
                 if(ticket.isPaid()) {
-                    InvoiceDTO invoice = invoiceService.findOneByReservationNumber(ticket.getReservationNumber());
+                    List<InvoiceDTO> invoices = invoiceService.findByReservationNumber(ticket.getReservationNumber());
+                    InvoiceDTO invoice = invoices.get(0);
+
                     List<TicketDTO> tickets = new ArrayList<>();
                     for (TicketDTO ticketDTO : invoice.getTickets()) {
                         if (!ticketDTO.getId().equals(ticket.getTicket_id()) && ticketDTO.getId() != (ticket.getTicket_id())) {
@@ -347,6 +349,7 @@ public class TicketController extends TabElement implements LocalizationObserver
                     }
                     invoice.setTickets(tickets);
                     invoiceService.create(invoice);
+
                 }
 
                 return null;
@@ -482,6 +485,17 @@ public class TicketController extends TabElement implements LocalizationObserver
                 }
             }
             if(stornoTickets.isEmpty()){return;}//todo:feedback to client
+
+            List<InvoiceDTO> invoices = invoiceService.findByReservationNumber(ticket.getReservationNumber());
+            for(InvoiceDTO invoice : invoices){
+                if(invoice.isStorno()){
+                    for (TicketDTO ticketDTO:invoice.getTickets()){
+                        if(stornoTickets.contains(ticketDTO)){
+                            stornoTickets.remove(ticketDTO);
+                        }
+                    }
+                }
+            }
 
             InvoiceDTO stornoInvoice = InvoiceDTO.builder()
                 .isStorno(true)

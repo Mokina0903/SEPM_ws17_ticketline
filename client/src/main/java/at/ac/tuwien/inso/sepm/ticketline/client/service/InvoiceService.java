@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.io.File;
+import java.util.List;
 
 public interface InvoiceService {
     /**
@@ -32,7 +33,7 @@ public interface InvoiceService {
      * @param reservationNumber the is of the invoice entry
      * @return InvoiceDTO containing the invoice entry
      */
-    InvoiceDTO findOneByReservationNumber(Long reservationNumber) throws DataAccessException;
+    List<InvoiceDTO> findByReservationNumber( Long reservationNumber) throws DataAccessException;
 
     /**
      * save invoice

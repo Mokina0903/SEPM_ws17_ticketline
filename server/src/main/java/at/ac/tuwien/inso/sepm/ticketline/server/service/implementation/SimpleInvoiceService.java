@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class SimpleInvoiceService implements InvoiceService {
@@ -37,8 +38,10 @@ public class SimpleInvoiceService implements InvoiceService {
     }
 
     @Override
-    public Invoice findOneByReservationNumber( Long reservationNumber ) {
-        return invoiceRepository.findOneByInvoiceNumber(reservationNumber).orElseThrow(NotFoundException::new);
+    public List<Invoice> findByReservationNumber( Long reservationNumber ) {
+        List<Invoice> invoices = invoiceRepository.findByInvoiceNumber(reservationNumber);
+        if(invoices==null || invoices.isEmpty()){throw new NotFoundException();}
+        return invoices;
     }
 
     @Override
