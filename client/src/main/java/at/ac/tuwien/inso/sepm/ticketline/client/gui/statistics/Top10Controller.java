@@ -1,9 +1,7 @@
 package at.ac.tuwien.inso.sepm.ticketline.client.gui.statistics;
 
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
-import at.ac.tuwien.inso.sepm.ticketline.client.gui.MainController;
-import at.ac.tuwien.inso.sepm.ticketline.client.gui.TabElement;
-import at.ac.tuwien.inso.sepm.ticketline.client.gui.TabHeaderController;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.*;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.EventService;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.TicketService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
@@ -19,6 +17,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Tab;
 import org.controlsfx.glyphfont.FontAwesome;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -27,7 +26,7 @@ import java.util.List;
 
 
 @Component
-public class Top10Controller extends TabElement {
+public class Top10Controller extends TabElement implements LocalizationObserver {
 
     @FXML
     public BarChart<String, Number> barChartTop10;
@@ -49,6 +48,9 @@ public class Top10Controller extends TabElement {
     private Tab statisticsTab;
     private List<SimpleEventDTO> topTenEventsNow;
 
+    @Autowired
+    private LocalizationSubject localizationSubject;
+
     public Top10Controller(MainController mainController, SpringFxmlLoader loader, EventService eventService, TicketService ticketService) {
 
         this.loader = loader;
@@ -63,6 +65,8 @@ public class Top10Controller extends TabElement {
         yAxis.setLabel("Sales");
         barChartTop10.setTitle("Top 10 Events");
         comBoxCategory.getSelectionModel().select(0);
+
+        localizationSubject.attach(this);
 
         tabHeaderController.setIcon(FontAwesome.Glyph.BAR_CHART);
         tabHeaderController.setTitle(BundleManager.getBundle().getString("statistics.top10Statistics"));
@@ -103,5 +107,11 @@ public class Top10Controller extends TabElement {
     @Override
     protected void setTab(Tab tab) {
         statisticsTab = tab;
+    }
+
+    @Override
+    public void update() {
+        tabHeaderController.setTitle(BundleManager.getBundle().getString("statistics.top10Statistics"));
+
     }
 }
