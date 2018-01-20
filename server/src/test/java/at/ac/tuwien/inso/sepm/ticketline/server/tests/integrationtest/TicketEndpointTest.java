@@ -22,6 +22,7 @@ import static org.hamcrest.core.Is.is;
 
 public class TicketEndpointTest extends BaseIntegrationTest {
 
+    // TODO: (David) Change to IntegrationTest
     // TODO: Remove reservation 30 min before
     // TODO: Reversal of Reservation
     // TODO: Sell book ticket
