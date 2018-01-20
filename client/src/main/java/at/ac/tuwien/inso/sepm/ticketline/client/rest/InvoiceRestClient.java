@@ -44,5 +44,13 @@ public interface InvoiceRestClient {
      */
     InvoiceDTO create(InvoiceDTO invoice) throws DataAccessException, EmptyValueException;
 
+    /**
+     * update invoice
+     *
+     * @param invoice to be updated
+     * @return updated invoice
+     */
+    InvoiceDTO update(InvoiceDTO invoice) throws DataAccessException;
+
     void saveInvoicePdf( File document) throws DataAccessException, IOException;
 }

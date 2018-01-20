@@ -347,18 +347,20 @@ public class TicketController extends TabElement implements LocalizationObserver
                 TicketRepresentationClass ticket = currentTableview.getSelectionModel().getSelectedItem();
                 ticketService.deleteTicketByTicket_Id(ticket.getTicket_id());
 
-                if(ticket.isPaid()) {
+                if(ticketService.findOneById(ticket.getTicket_id()).isPaid()) {
                     List<InvoiceDTO> invoices = invoiceService.findByReservationNumber(ticket.getReservationNumber());
                     InvoiceDTO invoice = invoices.get(0);
 
                     List<TicketDTO> tickets = new ArrayList<>();
-                    for (TicketDTO ticketDTO : invoice.getTickets()) {
-                        if (!ticketDTO.getId().equals(ticket.getTicket_id()) && ticketDTO.getId() != (ticket.getTicket_id())) {
-                            tickets.add(ticketDTO);
+                    if(invoice.getTickets()!=null && !invoice.getTickets().isEmpty()) {
+                        for (TicketDTO ticketDTO : invoice.getTickets()) {
+                            if (!ticketDTO.getId().equals(ticket.getTicket_id()) && ticketDTO.getId() != (ticket.getTicket_id())) {
+                                tickets.add(ticketDTO);
+                            }
                         }
                     }
                     invoice.setTickets(tickets);
-                    invoiceService.create(invoice);
+                    invoiceService.update(invoice);
 
                 }
 
@@ -368,6 +370,9 @@ public class TicketController extends TabElement implements LocalizationObserver
             @Override
             protected void succeeded() {
                 super.succeeded();
+                lblStorno.setVisible(false);
+                lblPay.setVisible(false);
+                lblStornoInvoice.setVisible(false);
             }
             //ToDo update
             @Override
@@ -406,11 +411,19 @@ public class TicketController extends TabElement implements LocalizationObserver
                 lblPay.setWrapText(true);
                 return;
             }
-            if(ticket.isPaid()){
-                lblPay.setText(BundleManager.getBundle().getString("ticket.allreadyPaid"));
+
+            try {
+                TicketDTO ticketToCheck= ticketService.findOneById(ticket.getTicket_id());
+                if(ticketToCheck.isPaid()){
+                    lblPay.setText(BundleManager.getBundle().getString("ticket.allreadyPaid"));
+                    lblPay.setVisible(true);
+                    return;
+                }
+            } catch (DataAccessException e) {
+                lblPay.setText(BundleManager.getBundle().getString("ticket.payNotFound"));
                 lblPay.setVisible(true);
-                return;
             }
+
         }
         else{
             lblPay.setText(BundleManager.getBundle().getString("ticket.chooseOne"));
@@ -448,7 +461,9 @@ public class TicketController extends TabElement implements LocalizationObserver
             @Override
             protected void succeeded() {
                 super.succeeded();
-
+                lblStorno.setVisible(false);
+                lblPay.setVisible(false);
+                lblStornoInvoice.setVisible(false);
             }
             //ToDo update
             @Override
@@ -497,12 +512,14 @@ public class TicketController extends TabElement implements LocalizationObserver
         lblStornoInvoice.setVisible(false);
         try {
             TicketRepresentationClass ticket = currentTableview.getSelectionModel().getSelectedItem();
+
             if(ticket==null){
                 lblStornoInvoice.setText(BundleManager.getBundle().getString("ticket.chooseOne"));
                 lblStornoInvoice.setVisible(true);
                 return;
             }
-            if(!ticket.isPaid()){
+            TicketDTO ticketToCheck= ticketService.findOneById(ticket.getTicket_id());
+            if(!ticketToCheck.isPaid()){
                 lblStornoInvoice.setText(BundleManager.getBundle().getString("ticket.stornoInvoiceNotPaid"));
                 lblStornoInvoice.setVisible(true);
                 return;}
@@ -547,6 +564,10 @@ public class TicketController extends TabElement implements LocalizationObserver
 
             Window window = btnStorno.getParent().getScene().getWindow();
             invoiceService.invoiceToPdf(stornoInvoice,window);
+
+            lblStorno.setVisible(false);
+            lblPay.setVisible(false);
+            lblStornoInvoice.setVisible(false);
 
         } catch (DataAccessException e) {
             lblStornoInvoice.setText(BundleManager.getBundle().getString("exception.unexpected"));

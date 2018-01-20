@@ -54,6 +54,11 @@ public class SimpleInvoiceService implements InvoiceService{
     }
 
     @Override
+    public InvoiceDTO update( InvoiceDTO invoice ) throws DataAccessException {
+        return invoiceRestClient.update(invoice);
+    }
+
+    @Override
     public File invoiceToPdf(InvoiceDTO invoiceDTO, Window window) {
 
         URL formTemplate = getClass().getResource("/invoice_template/Invoice_Template_new.pdf") ;

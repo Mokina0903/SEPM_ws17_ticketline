@@ -55,6 +55,11 @@ public class SimpleInvoiceService implements InvoiceService {
     }
 
     @Override
+    public Invoice update( Invoice invoice ) {
+        return invoiceRepository.save(invoice);
+    }
+
+    @Override
     public void saveInvoicePDF( PDDocument document ) throws IOException {
 
         File template =  new File(getClass().getResource("/invoice/invoice.pdf").getPath()) ;

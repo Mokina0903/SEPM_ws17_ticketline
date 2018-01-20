@@ -42,5 +42,13 @@ public interface InvoiceService {
      */
     Invoice save(Invoice invoice);
 
+    /**
+     * updateinvoice
+     *
+     * @param invoice to be updated
+     * @return updated invoice
+     */
+    Invoice update(Invoice invoice);
+
     void saveInvoicePDF( PDDocument document) throws IOException;
 }

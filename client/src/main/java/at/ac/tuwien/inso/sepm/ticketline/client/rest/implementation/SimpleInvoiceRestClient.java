@@ -119,6 +119,26 @@ public class SimpleInvoiceRestClient implements InvoiceRestClient{
     }
 
     @Override
+    public InvoiceDTO update( InvoiceDTO invoice ) throws DataAccessException {
+        try {
+            LOGGER.debug("update invoice");
+            HttpEntity<InvoiceDTO> entity = new HttpEntity<>(invoice);
+            ResponseEntity<InvoiceDTO> invoiceResponse =
+                restClient.exchange(
+                    restClient.getServiceURI(INVOICE_URL+"/update"),
+                    HttpMethod.POST,
+                    entity,
+                    new ParameterizedTypeReference<InvoiceDTO>() {});
+            return invoiceResponse.getBody();
+        } catch (HttpStatusCodeException e) {
+
+            throw new DataAccessException("Failed update invoice with status code " + e.getStatusCode().toString());
+        } catch (RestClientException e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+    }
+
+    @Override
     public void saveInvoicePdf( File document ) throws DataAccessException, IOException {
         try {
             LOGGER.debug("save invoice pdf");

@@ -45,6 +45,14 @@ public interface InvoiceService {
     InvoiceDTO create(InvoiceDTO invoice) throws DataAccessException, EmptyValueException;
 
     /**
+     * update invoice
+     *
+     * @param invoice to be updated
+     * @return updated invoice
+     */
+    InvoiceDTO update(InvoiceDTO invoice) throws DataAccessException;
+
+    /**
      * create pdf for invoice/reversal and save with filechooser
      *
      * @param invoiceDTO to create pdf for

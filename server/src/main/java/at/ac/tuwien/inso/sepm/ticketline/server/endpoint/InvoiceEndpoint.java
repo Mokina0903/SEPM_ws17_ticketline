@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -62,9 +63,24 @@ public class InvoiceEndpoint {
         invoice.setTickets(tickets);
         return invoiceMapper.invoiceToInvoiceDTO(invoiceService.save(invoice));
     }
+
+    @RequestMapping(value = "/update",method = RequestMethod.POST)
+    @ApiOperation(value = "Update given invoice")
+    public InvoiceDTO updateInvoice(@RequestBody InvoiceDTO invoiceDTO){
+        List<Ticket> tickets = new ArrayList<>();
+        Invoice invoice = invoiceMapper.invoiceDTOToInvoice(invoiceDTO);
+        if(invoiceDTO.getTickets()!=null && !invoiceDTO.getTickets().isEmpty()){
+            tickets = ticketMapper.ticketDTOToTicket(invoiceDTO.getTickets());
+            invoice.setTickets(tickets);
+        }
+        return invoiceMapper.invoiceToInvoiceDTO(invoiceService.update(invoice));
+
+    }
+
+
     @RequestMapping(value="/newPdf", method = RequestMethod.POST)
     @ApiOperation(value = "save the given invoice pdf")
-    public void createInvoice( @RequestBody File document ) {
+    public void createInvoicePdf( @RequestBody File document ) {
 
         try {
             invoiceService.saveInvoicePDF(PDDocument.load(document));
