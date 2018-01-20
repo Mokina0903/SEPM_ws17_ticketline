@@ -154,7 +154,7 @@ public class Top10Controller extends TabElement implements LocalizationObserver 
 
         for (SimpleEventDTO event : topTenEvents) {
             try {
-                series.getData().add(new XYChart.Data<String, Number>(event.getTitle(), ticketService.findByEventId(event.getId()).size()));
+                series.getData().add(new XYChart.Data<String, Number>(event.getTitle(), ticketService.countByEvent_Id(event.getId())));
             } catch (DataAccessException e) {
                 e.printStackTrace();
             }

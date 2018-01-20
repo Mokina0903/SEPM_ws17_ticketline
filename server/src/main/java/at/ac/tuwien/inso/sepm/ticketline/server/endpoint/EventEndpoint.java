@@ -92,10 +92,14 @@ public class EventEndpoint {
     @ApiOperation(value = "Get the top ten events from the given month filtered by the given category")
     public List<SimpleEventDTO> getTop10EventsOfMonthFilteredByCategory(@PathVariable("start") Long start, @PathVariable("end")Long end, @PathVariable("category") String category ){
 
+        System.out.println("**************************get Top 10 by category entered *****************");
         LocalDateTime startOfMonth = LocalDateTime.ofInstant(Instant.ofEpochSecond(start), ZoneId.of("Europe/Paris"));
         LocalDateTime endOfMonth = LocalDateTime.ofInstant(Instant.ofEpochSecond(end), ZoneId.of("Europe/Paris"));
 
-        return eventMapper.eventToSimpleEventDTO(eventService.getTop10EventsOfMonthFilteredByCategory(startOfMonth, endOfMonth, Event.EventCategory.valueOf(category)));
+        List<SimpleEventDTO> checklist= eventMapper.eventToSimpleEventDTO(eventService.getTop10EventsOfMonthFilteredByCategory(startOfMonth, endOfMonth, Event.EventCategory.valueOf(category)));
+
+        System.out.println(checklist.size());
+        return checklist;
     }
 
 }

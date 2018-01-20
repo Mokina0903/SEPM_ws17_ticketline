@@ -66,6 +66,17 @@ public class TicketEndpoint {
         return ticketMapper.ticketToTicketDTO(ticketService.findByEventId(eventId));
     }
 
+    @RequestMapping(value = "/event/getTicketCount/{eventId}", method = RequestMethod.GET)
+    @ApiOperation(value = "Get information about ticket entries by event")
+    public Long countByEvent_Id( @PathVariable Long eventId) {
+
+        Event event = eventService.findOne(eventId);
+        if(Duration.between(LocalDateTime.now(), event.getStartOfEvent()).toMinutes() <=30 && Duration.between(LocalDateTime.now(), event.getStartOfEvent()).toMinutes() > 0 ){
+            ticketService.setTicketsFreeIf30MinsBeforEvent();
+        }
+        return ticketService.countByEvent_IdAndIsDeletedFalse(eventId);
+    }
+
     @RequestMapping(value = "/event/{eventId}/{sector}", method = RequestMethod.GET)
     @ApiOperation(value = "Get number of ticket entries by event and sector")
     public int ticketCountForEventForSector( @PathVariable Long eventId, @PathVariable char sector)
@@ -155,6 +166,8 @@ public class TicketEndpoint {
     public void deleteTicket(@PathVariable Long ticketID) throws OldVersionException, NotFoundException {
         ticketService.deleteTicketByTicket_Id(ticketID);
     }
+
+
 
 
 

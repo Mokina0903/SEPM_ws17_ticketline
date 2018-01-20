@@ -47,6 +47,13 @@ public interface TicketRepository extends JpaRepository<Ticket,Long>{
     List<Ticket> findByEvent_IdAndIsDeletedFalse(Long event_Id);
 
     /**
+     *
+     * @param event_Id
+     * @return the number of Tickets within this event
+     */
+    Long countByEvent_IdAndIsDeletedFalse(Long event_Id);
+
+    /**
      * find all tickets of specific customer
      *
      * @param customer_Id of the customer to find tickets for

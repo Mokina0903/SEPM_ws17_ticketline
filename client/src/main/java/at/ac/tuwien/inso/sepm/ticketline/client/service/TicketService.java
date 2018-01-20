@@ -106,5 +106,13 @@ public interface TicketService {
      */
     void deleteTicketByTicket_Id(Long ticket_Id) throws DataAccessException;
 
+    /**
+     *
+     * @param event_Id from the event
+     * @return the number of tickets from this event
+     * @throws DataAccessException when server fails to load the count of the tickets
+     */
+    Long countByEvent_Id(Long event_Id) throws DataAccessException;
+
 
 }
