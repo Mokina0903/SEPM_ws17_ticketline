@@ -125,7 +125,7 @@ public class SimpleCustomerRestClient implements CustomerRestClient{
                 Void.class);
         } catch (HttpStatusCodeException e) {
             if (e.getStatusCode().value() == 424) {
-                throw new OldVersionException();
+                throw new OldVersionException(e.getStatusCode().toString());
             }
             else {
                 throw new DataAccessException("Failed retrieve customer with status code " + e.getStatusCode().toString());
