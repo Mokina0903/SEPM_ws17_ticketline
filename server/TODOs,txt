@@ -1,10 +1,9 @@
 --------------------------------------- Alle --------------------------------------
-TODO: CodeCleaning (Leerzeilen, unnötige imports)
+TODO: CodeCleaning (Leerzeilen, unnötige imports, kommentare und auskommentierten code)
 TODO: JavaDoc
 TODO: Diverse TODOS im Code lösen
 TODO: Alle Protokolle nochmals durchsehen
 TODO: Vollständigkeit der Dokumente prüfen
-
 
 -------------------------------------- David --------------------------------------
 
@@ -42,9 +41,26 @@ TODO: Fragen:
  + Diverse TODOS im Code
 
 
+
 TODO: Datagenerator:
   + User anlegen für Alle
 
 TODO: Infrastruktur für Präsendation installieren
 
+
 TODO: Jar-File erstellen
+
+------------------------Verena---------------------------------
+TODO:
+- Sectoren ausgegraut, und kleiner
+- Legende bearbeiten
+- manuelle tests schreiben (tickets, statistik saalplan)
+- pflichtfelder bei news noch anzeigen, und wenn falsch rot umrahmen
+- fenster größe setzten
+- ticketcontroller - tasks einbauen
+- generelles layout nach dem big merge
+
+FRAGEN:
+- kann man reservierte tickets kaufen?
+
+-events anzahl von tickets anzeigen -?
