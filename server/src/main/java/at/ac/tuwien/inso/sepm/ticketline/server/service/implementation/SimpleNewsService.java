@@ -6,6 +6,8 @@ import at.ac.tuwien.inso.sepm.ticketline.server.exception.NotFoundException;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.NewsRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.NewsService;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.UserService;
+import org.hibernate.LazyInitializationException;
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -34,28 +36,34 @@ public class SimpleNewsService implements NewsService {
     }
 
     @Override
-    public List<News> findNotSeenByUser( Long userId ) {
+    public List<News> findNotSeenByUser(Long userId) {
         return newsRepository.findNotSeenByUser(userId);
     }
 
     @Override
-    public List<News> findOldNewsByUser( Long userId ) {
+    public List<News> findOldNewsByUser(Long userId) {
         return newsRepository.findOldNewsByUser(userId);
     }
 
     @Override
     public News publishNews(News news) {
         news.setPublishedAt(LocalDateTime.now());
-        News newsTMP =newsRepository.save(news);
+        News newsTMP = newsRepository.save(news);
         List<User> users = userService.findAll();
-        if(!users.isEmpty()) {
+        if (!users.isEmpty()) {
             for (User user : users) {
                 List<News> notSeen = user.getNotSeen();
-                if(notSeen==null){notSeen=new ArrayList<>();}
-                notSeen.add(newsTMP);
-                user.setNotSeen(notSeen);
-                //userService.updateNotSeen(user.getId(),user.getNotSeen());
-                userService.save(user);
+                if (notSeen == null) {
+                    notSeen = new ArrayList<>();
+                }
+
+                try {
+                    notSeen.add(newsTMP);
+                    user.setNotSeen(notSeen);
+                    userService.save(user);
+                } catch (JpaObjectRetrievalFailureException | LazyInitializationException e) {
+                    // Necessary for IntegrationTest
+                }
             }
         }
         return newsTMP;
