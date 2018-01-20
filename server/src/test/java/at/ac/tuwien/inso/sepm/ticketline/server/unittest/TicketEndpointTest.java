@@ -1,4 +1,4 @@
-package at.ac.tuwien.inso.sepm.ticketline.server.integrationtest;
+package at.ac.tuwien.inso.sepm.ticketline.server.unittest;
 
 import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketDTO;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
@@ -6,6 +6,7 @@ import at.ac.tuwien.inso.sepm.ticketline.server.entity.Ticket;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Seat;
 import at.ac.tuwien.inso.sepm.ticketline.server.integrationtest.base.BaseIntegrationTest;
 import at.ac.tuwien.inso.sepm.ticketline.server.TestDTOs;
+import at.ac.tuwien.inso.sepm.ticketline.server.unittest.base.BaseUnitTest;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
@@ -20,7 +21,7 @@ import java.util.List;
 
 import static org.hamcrest.core.Is.is;
 
-public class TicketEndpointTest extends BaseIntegrationTest {
+public class TicketEndpointTest extends BaseUnitTest {
 
     private static final String TICKET_ENDPOINT = "/tickets";
     private static final String TICKET_EVENT_PATH = "/event";
