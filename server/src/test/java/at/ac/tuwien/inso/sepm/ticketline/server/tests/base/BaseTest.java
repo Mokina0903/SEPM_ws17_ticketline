@@ -1,4 +1,4 @@
-package at.ac.tuwien.inso.sepm.ticketline.server.integrationtest.base;
+package at.ac.tuwien.inso.sepm.ticketline.server.tests.base;
 
 import at.ac.tuwien.inso.sepm.ticketline.server.configuration.JacksonConfiguration;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.*;
@@ -23,7 +23,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.embedded.LocalServerPort;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -35,8 +34,7 @@ import java.util.List;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("integration-test")
-@Rollback(true)
-public abstract class BaseIntegrationTest {
+public abstract class BaseTest {
 
     protected static final String SERVER_HOST = "http://localhost";
     protected static final String USER_USERNAME = "user";

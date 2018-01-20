@@ -1,4 +1,4 @@
-package at.ac.tuwien.inso.sepm.ticketline.server;
+package at.ac.tuwien.inso.sepm.ticketline.server.tests.base;
 
 import at.ac.tuwien.inso.sepm.ticketline.rest.artist.SimpleArtistDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
@@ -8,12 +8,11 @@ import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.hall.DetailedHallDTO
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.location.DetailedLocationDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.seat.SeatDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketDTO;
-import at.ac.tuwien.inso.sepm.ticketline.server.integrationtest.base.BaseIntegrationTest;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class TestDTOs extends BaseIntegrationTest {
+public abstract class TestDTOs extends BaseTest {
 
     public static SimpleEventDTO setUpSimpleEventDTO() {
         List<SimpleArtistDTO> artists = new ArrayList<>();
