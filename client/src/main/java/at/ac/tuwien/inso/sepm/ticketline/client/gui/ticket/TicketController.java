@@ -405,6 +405,11 @@ public class TicketController extends TabElement implements LocalizationObserver
                 lblPay.setWrapText(true);
                 return;
             }
+            if(ticket.isPaid()){
+                lblPay.setText(BundleManager.getBundle().getString("ticket.allreadyPaid"));
+                lblPay.setVisible(true);
+                return;
+            }
         }
         else{
             lblPay.setText(BundleManager.getBundle().getString("ticket.chooseOne"));
@@ -486,21 +491,6 @@ public class TicketController extends TabElement implements LocalizationObserver
         ticketTab = tab;
     }
 
-    @Override
-    public void update() {
-        btnStorno.setText(BundleManager.getBundle().getString("ticket.storno"));
-        btnStornoInvoice.setText(BundleManager.getBundle().getString("ticket.stornoInvoice"));
-        tcName.setText(BundleManager.getBundle().getString("customer.fname"));
-        tcSurname.setText(BundleManager.getBundle().getString("customer.lname"));
-        tcIsPaid.setText(BundleManager.getBundle().getString("ticket.tcIsPaid"));
-        tcNumber.setText(BundleManager.getBundle().getString("ticket.ticketNumber"));
-        lblNoMatch.setText(BundleManager.getBundle().getString("customer.noMatches"));
-        tcSelected.setText(BundleManager.getBundle().getString("ticket.sector"));
-
-
-
-    }
-
     public void createStornoInvoice( ActionEvent actionEvent ) {
 
         lblStornoInvoice.setVisible(false);
@@ -566,4 +556,23 @@ public class TicketController extends TabElement implements LocalizationObserver
         }
 
     }
+
+    @Override
+    public void update() {
+        btnStorno.setText(BundleManager.getBundle().getString("ticket.storno"));
+        lblStorno.setVisible(false);
+        btnStornoInvoice.setText(BundleManager.getBundle().getString("ticket.stornoInvoice"));
+        lblStornoInvoice.setVisible(false);
+        tcName.setText(BundleManager.getBundle().getString("customer.fname"));
+        tcSurname.setText(BundleManager.getBundle().getString("customer.lname"));
+        tcIsPaid.setText(BundleManager.getBundle().getString("ticket.tcIsPaid"));
+        tcNumber.setText(BundleManager.getBundle().getString("ticket.ticketNumber"));
+        lblNoMatch.setText(BundleManager.getBundle().getString("customer.noMatches"));
+        tcSelected.setText(BundleManager.getBundle().getString("ticket.sector"));
+        lblPay.setVisible(false);
+        btnPay.setText(BundleManager.getBundle().getString("ticket.pay"));
+
+    }
+
+
 }
