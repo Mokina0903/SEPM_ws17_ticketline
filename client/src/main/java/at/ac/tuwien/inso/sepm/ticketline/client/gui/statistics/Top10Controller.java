@@ -13,12 +13,15 @@ import at.ac.tuwien.inso.sepm.ticketline.rest.news.SimpleNewsDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,6 +63,8 @@ public class Top10Controller extends TabElement implements LocalizationObserver 
     private EventService eventService;
     private Tab statisticsTab;
     private List<SimpleEventDTO> topTenEventsNow;
+
+    private long selectedID;
 
     @Autowired
     private LocalizationSubject localizationSubject;
@@ -162,10 +167,48 @@ public class Top10Controller extends TabElement implements LocalizationObserver 
                 e.printStackTrace();
             }
         }
+
+
         barChartTop10.getData().clear();
         barChartTop10.getData().addAll(series);
+        setUpEventHandler(series);
+    }
+
+    private void setUpEventHandler(XYChart.Series<Number, String> series){
+        for (final XYChart.Data<Number,String> col : series.getData()){
+            final Node n = col.getNode();
+            n.setEffect(null);
 
 
+        n.setOnMouseEntered(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent e) {
+                n.getStyleClass().add("hover");
+            }
+        });
+        n.setOnMouseExited(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent e) {
+                n.getStyleClass().remove("hover");
+            }
+        });
+        n.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent e) {
+                if(n.getStyleClass().contains("selected")){
+                    n.getStyleClass().remove("selected");
+                    return;
+                }
+
+                n.getStyleClass().add("selected");
+                String event = col.getYValue();
+                String[] subStrings = event.split(" ");
+                selectedID = Long.valueOf( subStrings[subStrings.length-1]);
+                System.out.println(selectedID);
+            }
+        });
+
+        }
     }
 
     @Override

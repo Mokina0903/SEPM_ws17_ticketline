@@ -24,6 +24,14 @@
    -fx-font-size: 12px;
 }
 
+.hover{
+-fx-background-color: teal;
+}
+.selected{
+  -fx-background-color: teal;
+  -fx-effect: dropshadow(three-pass-box, teal , 7, 0, 0, 0);
+}
+
 
 .chart
 {
