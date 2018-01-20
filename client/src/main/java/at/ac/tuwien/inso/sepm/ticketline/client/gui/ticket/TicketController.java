@@ -61,6 +61,9 @@ public class TicketController extends TabElement implements LocalizationObserver
     @FXML
     public Label lblStorno;
 
+    @FXML
+    public Button btnSuche;
+
     @Autowired
     private LocalizationSubject localizationSubject;
 
@@ -386,8 +389,9 @@ public class TicketController extends TabElement implements LocalizationObserver
         tcNumber.setText(BundleManager.getBundle().getString("ticket.ticketNumber"));
         lblNoMatch.setText(BundleManager.getBundle().getString("customer.noMatches"));
         tcSelected.setText(BundleManager.getBundle().getString("ticket.sector"));
-
-
-
+        tcIsDeleted.setText(BundleManager.getBundle().getString("ticket.isDeleted"));
+        lblStorno.setText(BundleManager.getBundle().getString("ticket.allready"));
+        tfSearch.setPromptText(BundleManager.getBundle().getString("ticket.searchField"));
+        btnSuche.setText(BundleManager.getBundle().getString("ticket.search"));
     }
 }

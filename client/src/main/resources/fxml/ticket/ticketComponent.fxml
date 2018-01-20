@@ -24,7 +24,7 @@
             <HBox>
             <TextField fx:id="tfSearch" prefHeight="26.0" prefWidth="343.0" promptText="%ticket.searchField"
                        GridPane.columnIndex="1"/>
-            <Button text="search" defaultButton="true" mnemonicParsing="false" GridPane.columnIndex="0" onAction="#search" />
+            <Button fx:id="btnSuche" text="%ticket.search" defaultButton="true" mnemonicParsing="false" GridPane.columnIndex="0" onAction="#search" />
             </HBox>
             <Label fx:id="lblNoMatch" text="%customer.noMatches" />
             <Pagination fx:id="pagination" maxHeight="1.7976931348623157E308"
