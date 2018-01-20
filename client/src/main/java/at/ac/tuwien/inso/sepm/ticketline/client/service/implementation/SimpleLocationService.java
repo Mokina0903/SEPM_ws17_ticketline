@@ -49,6 +49,8 @@ public class SimpleLocationService implements LocationService{
 
     @Override
     public Page<SimpleLocationDTO> find(Pageable request, MultiValueMap<String, String> parameters) throws DataAccessException{
+        System.out.println("Locations loading...");
+
         return locationRestClient.find(request, parameters);
     }
 }

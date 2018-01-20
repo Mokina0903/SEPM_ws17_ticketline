@@ -4,15 +4,18 @@ import at.ac.tuwien.inso.sepm.ticketline.client.gui.*;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.EventService;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.LocationService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
-import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
+import javafx.util.StringConverter;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.Glyph;
 import org.controlsfx.glyphfont.GlyphFont;
@@ -20,12 +23,10 @@ import org.controlsfx.glyphfont.GlyphFontRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+
 
 @Component
 public class EventAdvancedSearchController implements LocalizationObserver {
@@ -33,60 +34,68 @@ public class EventAdvancedSearchController implements LocalizationObserver {
     private static final Logger LOGGER = LoggerFactory.getLogger(EventAdvancedSearchController.class);
 
     @FXML
-    Label lbEventTitle;
+    private Label lbEventTitle;
     @FXML
-    Label lbEventDescription;
+    private Label lbEventDescription;
     @FXML
-    Label lbEventPrice;
+    private Label lbEventPrice;
     @FXML
-    Label lbEventDate;
+    private Label lbEventDate;
     @FXML
-    Label lbEventTime;
+    private Label lbEventTime;
     @FXML
-    Label lbEventDuration;
+    private Label lbTimeInfo;
     @FXML
-    Label lbEventType;
+    private Label lbEventDuration;
     @FXML
-    Label lbEventSeats;
+    private Label lbDurationInfo;
+    @FXML
+    private Label lbEventType;
+    @FXML
+    private Label lbEventSeats;
 
     @FXML
-    Label lbLocation;
+    private Label lbLocation;
     @FXML
-    Label lbLocationTitle;
+    private Label lbLocationTitle;
     @FXML
-    Label lbLocationZip;
+    private Label lbLocationZip;
     @FXML
-    Label lbLocationStreet;
+    private Label lbLocationStreet;
     @FXML
-    Label lbLocationCity;
+    private Label lbLocationCity;
     @FXML
-    Label lbLocationCountry;
+    private Label lbLocationCountry;
 
     @FXML
-    Label lbArtist;
+    private Label lbArtist;
     @FXML
-    Label lbArtistFName;
+    private Label lbArtistFName;
     @FXML
-    Label lbArtistLName;
+    private Label lbArtistLName;
 
     @FXML
-    TextField tfEventTitle;
+    private TextField tfEventTitle;
     @FXML
-    TextField tfEventDescription;
+    private TextField tfEventDescription;
     @FXML
-    TextField tfEventPriceFrom;
+    private TextField tfEventPriceFrom;
     @FXML
-    TextField tfEventPriceTo;
+    private TextField tfEventPriceTo;
 
 
     @FXML
-    TextField tfLocationTitle;
+    private TextField tfLocationTitle;
 
     @FXML
-    Button btOk;
+    private Slider slTime = new Slider(0, 24 * 60, 120);
     @FXML
-    Button btCancel;
+    private Slider slDuration;
 
+    @FXML
+    private Button btOk;
+    @FXML
+    private Button btCancel;
 
 
     @FXML
@@ -104,7 +113,6 @@ public class EventAdvancedSearchController implements LocalizationObserver {
     private final EventService eventService;
     private final LocationService locationService;
     private Node oldContent;
-
 
 
     private GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
@@ -125,8 +133,47 @@ public class EventAdvancedSearchController implements LocalizationObserver {
 
         localizationSubject.attach(this);
 
+        setUpSlider(slTime, lbTimeInfo);
+        setUpSlider(slDuration, lbDurationInfo);
+
+
         setButtonGraphic(btOk, "CHECK", Color.OLIVE);
         setButtonGraphic(btCancel, "TIMES", Color.CRIMSON);
+    }
+
+    private void setUpSlider(Slider slider, Label infoLabel) {
+        slider.setMin(0);
+        slider.setMax(24 * 60);
+        slider.setMajorTickUnit(120);
+        slider.setMinorTickCount(0);
+        slider.setShowTickLabels(true);
+        slider.setShowTickMarks(true);
+        StringConverter<Double> stringConverter = new StringConverter<>() {
+
+            @Override
+            public String toString(Double object) {
+                Integer hours = (object).intValue() / 60;
+                return String.format("%02d", hours) + ":00";
+            }
+
+            @Override
+            public Double fromString(String string) {
+                return null;
+            }
+        };
+        slider.setLabelFormatter(stringConverter);
+        slider.valueProperty().addListener(new ChangeListener<Number>() {
+
+            @Override
+            public void changed(ObservableValue<? extends Number> observable,
+                                Number oldValue, Number newValue) {
+
+                int runtime = newValue.intValue(); // number of total runtime minutes
+                int hours = runtime / 60;
+                int minutes = runtime % 60;
+                infoLabel.setText(String.format("%02d:%02d", hours, minutes));
+            }
+        });
     }
 
     private void setButtonGraphic(Button button, String glyphSymbol, Color color) {
@@ -157,11 +204,29 @@ public class EventAdvancedSearchController implements LocalizationObserver {
         if (!tfEventPriceTo.getText().isEmpty()) {
             parameters.set("priceTo", tfEventPriceTo.getText());
         }
-            eventController.getEventTab().setContent(oldContent);
+        if (slTime.getValue() != 0) {
+            Double timeInMinutes = slTime.getValue();
+            Long timeInMinutesInt = timeInMinutes.longValue();
+            parameters.set("timeOfStart", timeInMinutesInt.toString());
+            System.out.println("looking for time: " + timeInMinutes.intValue());
         }
+        if (slDuration.getValue() != 0) {
+            Double timeInMinutes = slDuration.getValue();
+            parameters.set("duration", timeInMinutes.toString());
+        }
+
+        //type
+        //seats
+        //old
+        paginationHelper.setSearchFor(EventSearchFor.ALL);
+        paginationHelper.setParameters(parameters);
+        paginationHelper.setUpPagination();
+        eventController.getEventTab().setContent(oldContent);
+    }
 
 
     @FXML
+
     public void handleCancel(ActionEvent actionEvent) {
         eventController.getEventTab().setContent(oldContent);
     }

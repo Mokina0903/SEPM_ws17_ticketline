@@ -143,7 +143,7 @@ public class EventController extends TabElement implements LocalizationObserver 
         cbSearch.getSelectionModel().selectFirst();
 
         btSearch.setGraphic(fontAwesome.create("SEARCH").size(FONT_SIZE));
-        paginationHelper.initData(pagination, springFxmlLoader, eventService, locationService, artistService, this);
+        paginationHelper.initData(pagination, springFxmlLoader, eventService, locationService, artistService, this, mainController);
     }
 
 
@@ -188,7 +188,7 @@ public class EventController extends TabElement implements LocalizationObserver 
                 params.add("zip", tfSearchFor.getText());
             }
             else {
-                params.add("description", tfSearchFor.getText());
+                params.add("descriptionEvent", tfSearchFor.getText());
                 params.add("city", tfSearchFor.getText());
                 params.add("street", tfSearchFor.getText());
             }

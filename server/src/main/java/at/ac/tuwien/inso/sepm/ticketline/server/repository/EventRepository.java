@@ -13,6 +13,7 @@ import org.springframework.data.querydsl.binding.SingleValueBinding;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,13 +21,12 @@ import java.util.Optional;
 public interface EventRepository extends JpaRepository<Event, Long>,
     QueryDslPredicateExecutor<Event>, QuerydslBinderCustomizer<QEvent> {
 
-    //siehe: http://www.baeldung.com/rest-api-search-language-spring-data-querydsl
-
     @Override
     default public void customize(
         QuerydslBindings bindings, QEvent root) {
         bindings.bind(String.class)
             .first((SingleValueBinding<StringPath, String>) StringExpression::containsIgnoreCase);
+
     }
 
 

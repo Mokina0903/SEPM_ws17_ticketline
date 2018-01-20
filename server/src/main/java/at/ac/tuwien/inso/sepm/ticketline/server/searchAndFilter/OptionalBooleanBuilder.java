@@ -17,8 +17,9 @@ public class OptionalBooleanBuilder {
 
     public <T> OptionalBooleanBuilder notNullAnd(Function<T, BooleanExpression> expressionFunction, T value) {
         if (value != null) {
-            System.out.println("value not null");
+            System.out.println("value not null:");
             if (isNumeric(value.toString()) && Long.parseLong(value.toString()) != -1) {
+                System.out.println(value.toString());
                 return new OptionalBooleanBuilder(predicate.and(expressionFunction.apply(value)));
             }
         }

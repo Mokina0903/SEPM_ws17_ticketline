@@ -7,6 +7,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,8 +48,8 @@ public class Event implements Predicatable{
     @Column(nullable = false)
     private LocalDateTime endOfEvent;
 
-    @Transient
-    @Formula("minute(endOfEvent)-minute(startOfEvent)")
+    private LocalTime startOfEventTime;
+
     private long duration;
 
     @Column(nullable = false)
@@ -119,17 +120,31 @@ public class Event implements Predicatable{
         return endOfEvent;
     }
 
-    public void setEndOfEvent( LocalDateTime endOfEvent ) {
+    public LocalTime getStartOfEventTime() {
+        return startOfEvent.toLocalTime();
+    }
+
+    public void setStartOfEventTime() {
+        this.startOfEventTime = startOfEvent.toLocalTime();
+    }
+
+    public void setEndOfEvent(LocalDateTime endOfEvent ) {
         this.endOfEvent = endOfEvent;
     }
 
+
     public long getDuration() {
+        Long duration = Duration.between(endOfEvent, startOfEvent).getSeconds();
+        duration /= 60;
+        System.out.println("Duration is " + duration);
         return duration;
     }
 
-    public void setDuration(long duration) {
-        this.duration = Duration.between(endOfEvent, startOfEvent).getSeconds();
-
+    public void setDuration() {
+        Long duration = Duration.between(endOfEvent, startOfEvent).getSeconds();
+        duration /= 60;
+        System.out.println("Duration is " + duration);
+        this.duration = duration;
     }
 
     public Hall getHall() {
@@ -244,6 +259,7 @@ public class Event implements Predicatable{
             this.startOfEvent = startOfEvent;
             return this;
         }
+
 
         public EventBuilder endOfEvent(LocalDateTime endOfEvent){
             this.endOfEvent = endOfEvent;

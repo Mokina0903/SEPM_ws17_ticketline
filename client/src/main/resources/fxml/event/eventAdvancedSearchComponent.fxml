@@ -18,7 +18,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="500.0" prefWidth="650.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.event.EventAdvancedSearchController">
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="500.0" prefWidth="650.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.event.EventAdvancedSearchController">
 
     <top>
         <fx:include fx:id="tabHeader" source="/fxml/tabHeader.fxml" />
@@ -68,9 +68,19 @@
                   <Label fx:id="lbEventDate" text="%events.date" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <DatePicker maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                   <Label fx:id="lbEventTime" text="%events.time" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <Slider GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                  <HBox GridPane.columnIndex="1" GridPane.rowIndex="4">
+                     <children>
+                        <Slider fx:id="slTime" maxWidth="1.7976931348623157E308" />
+                        <Label fx:id="lbTimeInfo" maxWidth="-Infinity" prefWidth="50.0" />
+                     </children>
+                  </HBox>
                   <Label fx:id="lbEventDuration" text="%events.duration" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                  <Slider GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                  <HBox GridPane.columnIndex="1" GridPane.rowIndex="6">
+                     <children>
+                        <Slider fx:id="slDuration" />
+                        <Label fx:id="lbDurationInfo" />
+                     </children>
+                  </HBox>
                   <Label fx:id="lbEventType" text="%events.type" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                   <ChoiceBox maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                   <Label fx:id="lbEventSeats" text="%events.seats" GridPane.columnIndex="2" GridPane.rowIndex="3" />

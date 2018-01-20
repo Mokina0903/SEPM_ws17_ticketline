@@ -9,13 +9,16 @@ import at.ac.tuwien.inso.sepm.ticketline.client.gui.location.LocationElementCont
 import at.ac.tuwien.inso.sepm.ticketline.client.service.ArtistService;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.EventService;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.LocationService;
+import at.ac.tuwien.inso.sepm.ticketline.client.service.implementation.SimpleArtistService;
 import at.ac.tuwien.inso.sepm.ticketline.rest.artist.SimpleArtistDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.location.SimpleLocationDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
+import javafx.concurrent.Task;
 import javafx.scene.Node;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Pagination;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
@@ -37,6 +40,7 @@ public class PaginationHelper {
     private Pagination pagination;
     private BorderPane bPContainer;
     private SpringFxmlLoader springFxmlLoader;
+    private MainController mainController;
     private EventController controller;
     private EventService eventService;
     private LocationService locationService;
@@ -50,16 +54,18 @@ public class PaginationHelper {
 
     public void initData(Pagination pagination, SpringFxmlLoader springFxmlLoader,
                          EventService eventService, LocationService locationService,
-                         ArtistService artistService, EventController controller) {
+                         ArtistService artistService, EventController controller, MainController mainController) {
         this.pagination = pagination;
         this.springFxmlLoader = springFxmlLoader;
         this.eventService = eventService;
         this.locationService = locationService;
         this.artistService = artistService;
         this.controller = controller;
+        this.mainController = mainController;
     }
 
     public void setUpPagination() {
+
         pagination.setCurrentPageIndex(0);
         pagination.setPageFactory(new Callback<Integer, Node>() {
             @Override
@@ -69,101 +75,212 @@ public class PaginationHelper {
         });
     }
 
-
     private Node createPage(Integer pageIndex) {
         pagination.setCurrentPageIndex(pageIndex);
-        ListView<VBox> lvElements = new ListView<>();
+        ListView<VBox> lvElements;
 
-        Page<SimpleEventDTO> events;
         if (searchFor.equals(EventSearchFor.EVENT) || searchFor.equals(EventSearchFor.ALL)) {
-            if (searchFor.equals(EventSearchFor.EVENT)) {
-                events = loadEventPage(pageIndex);
-                pagination.setPageCount(events.getTotalPages());
-            } else {
-                events = loadAdvancedSearchEventPage(pageIndex);
-                pagination.setPageCount(events.getTotalPages());
-            }
-
-            System.out.println("ELEMENTS per PAge event create  !!!!!!!! + " + events.getContent().size());
-            lvElements.setStyle("-fx-background-color: transparent;");
-            if (!events.getContent().isEmpty()) {
-                for (SimpleEventDTO element : events.getContent()) {
-                    SpringFxmlLoader.Wrapper<EventElementController> wrapper =
-                        springFxmlLoader.loadAndWrap("/fxml/event/eventElement.fxml");
-                    wrapper.getController().initializeData(eventService, element, bPContainer);
-                    lvElements.getItems().add(wrapper.getController().vbElement);
-                }
-            }
-            controller.setMatchInfoLabel(events.getTotalElements());
-            return lvElements;
-
-        } else if (searchFor.equals(EventSearchFor.LOCATION)) {
-            Page<SimpleLocationDTO> locations = loadLocationPage(pageIndex);
-            pagination.setPageCount(locations.getTotalPages());
-            System.out.println("ELEMENTS per PAge loc create  !!!!!!!! + " + locations.getContent().size());
-            lvElements.setStyle("-fx-background-color: transparent;");
-            if (!locations.getContent().isEmpty()) {
-                for (SimpleLocationDTO element : locations.getContent()) {
-                    SpringFxmlLoader.Wrapper<LocationElementController> wrapper =
-                        springFxmlLoader.loadAndWrap("/fxml/location/locationElement.fxml");
-                    wrapper.getController().initializeData(locationService, element, bPContainer);
-                    lvElements.getItems().add(wrapper.getController().vbElement);
-                }
-            }
-            controller.setMatchInfoLabel(locations.getTotalElements());
-            return lvElements;
-        } else {
-            Page<SimpleArtistDTO> artists = loadArtistPage(pageIndex);
-            pagination.setPageCount(artists.getTotalPages());
-            System.out.println("ELEMENTS per PAge art create  !!!!!!!! + " + artists.getTotalElements());
-            lvElements.setStyle("-fx-background-color: transparent;");
-            if (!artists.getContent().isEmpty()) {
-                for (SimpleArtistDTO element : artists.getContent()) {
-                    SpringFxmlLoader.Wrapper<ArtistElementController> wrapper =
-                        springFxmlLoader.loadAndWrap("/fxml/artist/artistElement.fxml");
-                    wrapper.getController().initializeData(artistService, element, bPContainer);
-                    lvElements.getItems().add(wrapper.getController().vbElement);
-                }
-            }
-            controller.setMatchInfoLabel(artists.getTotalElements());
-            return lvElements;
+            lvElements = loadEvents(pageIndex);
         }
+        else if (searchFor.equals(EventSearchFor.LOCATION)) {
+            lvElements = loadLocations(pageIndex);
+
+        } else {
+            lvElements = loadArtists(pageIndex);
+        }
+        return lvElements;
     }
 
     //todo TASK
+    private ListView<VBox> loadEvents(Integer pageIndex) {
+        mainController.setGeneralErrorUnvisable();
+        ListView<VBox> lvElements = new ListView<>();
 
-        private Page<SimpleEventDTO> loadAdvancedSearchEventPage (Integer pageIndex){
-            Pageable request = new PageRequest(pageIndex, ENTRIES_PER_PAGE);
-            try {
-                Page<SimpleEventDTO> events = eventService.findAdvanced(request, parameters);
+        Task<Page<SimpleEventDTO>> taskloadEvents = new Task<>() {
+            Page<SimpleEventDTO> events;
+            @Override
+            protected Page<SimpleEventDTO> call() throws DataAccessException {
+                Pageable request = new PageRequest(pageIndex, ENTRIES_PER_PAGE);
+               if(searchFor.equals(EventSearchFor.EVENT)) {
+                   events = eventService.find(request, parameters);
+               } else {
+                   events = eventService.findAdvanced(request,parameters);
+               }
                 return events;
-            } catch (DataAccessException e) {
-                LOGGER.warn("Could not access data for event pagination");
             }
-            return null;
-        }
 
-        private Page<SimpleEventDTO> loadEventPage (Integer pageIndex){
-            Pageable request = new PageRequest(pageIndex, ENTRIES_PER_PAGE);
-            try {
-                Page<SimpleEventDTO> events = eventService.find(request, parameters);
-                return events;
-            } catch (DataAccessException e) {
-                LOGGER.warn("Could not access data for event pagination");
+            @Override
+            protected void succeeded() {
+                super.succeeded();
+                loadEventElements(events, lvElements);
             }
-            return null;
-        }
 
-        private Page<SimpleLocationDTO> loadLocationPage (Integer pageIndex){
-            Pageable request = new PageRequest(pageIndex, ENTRIES_PER_PAGE);
-            try {
-                Page<SimpleLocationDTO> locations = locationService.find(request, parameters);
+            @Override
+            protected void failed() {
+                super.failed();
+                mainController.showGeneralError("Failure at load Events: " + getException().getMessage());
+            }
+        };
+
+        taskloadEvents.runningProperty().addListener((observable, oldValue, running) ->
+            mainController.setProgressbarProgress(
+                running ? ProgressBar.INDETERMINATE_PROGRESS : 0)
+        );
+
+        new Thread(taskloadEvents).start();
+        return lvElements;
+    }
+
+    private ListView<VBox> loadLocations(Integer pageIndex) {
+        mainController.setGeneralErrorUnvisable();
+        ListView<VBox> lvElements = new ListView<>();
+
+        Task<Page<SimpleLocationDTO>> taskloadEvents = new Task<>() {
+            Page<SimpleLocationDTO> locations;
+            @Override
+            protected Page<SimpleLocationDTO> call() throws DataAccessException {
+                Pageable request = new PageRequest(pageIndex, ENTRIES_PER_PAGE);
+                locations = locationService.find(request, parameters);
                 return locations;
-            } catch (DataAccessException e) {
-                LOGGER.warn("Could not access data for event pagination");
             }
-            return null;
+
+            @Override
+            protected void succeeded() {
+                super.succeeded();
+                loadLocationElements(locations, lvElements);
+            }
+
+            @Override
+            protected void failed() {
+                super.failed();
+                mainController.showGeneralError("Failure at load Events: " + getException().getMessage());
+            }
+        };
+
+        taskloadEvents.runningProperty().addListener((observable, oldValue, running) ->
+            mainController.setProgressbarProgress(
+                running ? ProgressBar.INDETERMINATE_PROGRESS : 0)
+        );
+
+        new Thread(taskloadEvents).start();
+        return lvElements;
+    }
+
+    private ListView<VBox> loadArtists(Integer pageIndex) {
+        mainController.setGeneralErrorUnvisable();
+        ListView<VBox> lvElements = new ListView<>();
+
+        Task<Page<SimpleArtistDTO>> taskloadEvents = new Task<>() {
+            Page<SimpleArtistDTO> artists;
+
+            @Override
+            protected Page<SimpleArtistDTO> call() throws DataAccessException {
+                Pageable request = new PageRequest(pageIndex, ENTRIES_PER_PAGE);
+                artists = artistService.find(request, parameters);
+                return artists;
+            }
+
+            @Override
+            protected void succeeded() {
+                super.succeeded();
+                loadArtistElements(artists, lvElements);
+            }
+
+            @Override
+            protected void failed() {
+                super.failed();
+                mainController.showGeneralError("Failure at load Events: " + getException().getMessage());
+            }
+        };
+
+        taskloadEvents.runningProperty().addListener((observable, oldValue, running) ->
+            mainController.setProgressbarProgress(
+                running ? ProgressBar.INDETERMINATE_PROGRESS : 0)
+        );
+
+        new Thread(taskloadEvents).start();
+        return lvElements;
+    }
+
+    private Node loadEventElements(Page<SimpleEventDTO> events, ListView<VBox> lvElements) {
+        pagination.setPageCount(events.getTotalPages());
+
+        lvElements.setStyle("-fx-background-color: transparent;");
+        if (!events.getContent().isEmpty()) {
+            System.out.println("size: " + events.getContent().size());
+            for (SimpleEventDTO element : events.getContent()) {
+                SpringFxmlLoader.Wrapper<EventElementController> wrapper =
+                    springFxmlLoader.loadAndWrap("/fxml/event/eventElement.fxml");
+                wrapper.getController().initializeData(eventService, element, bPContainer);
+                lvElements.getItems().add(wrapper.getController().vbElement);
+            }
         }
+        controller.setMatchInfoLabel(events.getTotalElements());
+        return lvElements;
+    }
+
+    private Node loadLocationElements(Page<SimpleLocationDTO> locations, ListView<VBox> lvElements) {
+        pagination.setPageCount(locations.getTotalPages());
+        lvElements.setStyle("-fx-background-color: transparent;");
+        if (!locations.getContent().isEmpty()) {
+            for (SimpleLocationDTO element : locations.getContent()) {
+                SpringFxmlLoader.Wrapper<LocationElementController> wrapper =
+                    springFxmlLoader.loadAndWrap("/fxml/location/locationElement.fxml");
+                wrapper.getController().initializeData(locationService, element, bPContainer);
+                lvElements.getItems().add(wrapper.getController().vbElement);
+            }
+        }
+        controller.setMatchInfoLabel(locations.getTotalElements());
+        return lvElements;
+    }
+
+    private Node loadArtistElements(Page<SimpleArtistDTO> artists, ListView<VBox> lvElements) {
+        pagination.setPageCount(artists.getTotalPages());
+        lvElements.setStyle("-fx-background-color: transparent;");
+        if (!artists.getContent().isEmpty()) {
+            for (SimpleArtistDTO element : artists.getContent()) {
+                SpringFxmlLoader.Wrapper<ArtistElementController> wrapper =
+                    springFxmlLoader.loadAndWrap("/fxml/artist/artistElement.fxml");
+                wrapper.getController().initializeData(artistService, element, bPContainer);
+                lvElements.getItems().add(wrapper.getController().vbElement);
+            }
+        }
+        controller.setMatchInfoLabel(artists.getTotalElements());
+        return lvElements;
+    }
+
+    private Page<SimpleEventDTO> loadAdvancedSearchEventPage(Integer pageIndex) {
+        Pageable request = new PageRequest(pageIndex, ENTRIES_PER_PAGE);
+        try {
+            Page<SimpleEventDTO> events = eventService.findAdvanced(request, parameters);
+            return events;
+        } catch (DataAccessException e) {
+            LOGGER.warn("Could not access data for event pagination");
+        }
+        return null;
+    }
+
+    private Page<SimpleEventDTO> loadEventPage(Integer pageIndex) {
+        Pageable request = new PageRequest(pageIndex, ENTRIES_PER_PAGE);
+        try {
+            Page<SimpleEventDTO> events = eventService.find(request, parameters);
+            return events;
+        } catch (DataAccessException e) {
+            LOGGER.warn("Could not access data for event pagination");
+        }
+        return null;
+    }
+
+    private Page<SimpleLocationDTO> loadLocationPage(Integer pageIndex) {
+        Pageable request = new PageRequest(pageIndex, ENTRIES_PER_PAGE);
+        try {
+            Page<SimpleLocationDTO> locations = locationService.find(request, parameters);
+            return locations;
+        } catch (DataAccessException e) {
+            LOGGER.warn("Could not access data for event pagination");
+        }
+        return null;
+    }
 
     private Page<SimpleArtistDTO> loadArtistPage(Integer pageIndex) {
         Pageable request = new PageRequest(pageIndex, ENTRIES_PER_PAGE);
@@ -176,28 +293,28 @@ public class PaginationHelper {
         return null;
     }
 
-        public EventSearchFor getSearchFor () {
-            return searchFor;
-        }
-
-        public void setSearchFor (EventSearchFor searchFor){
-            this.searchFor = searchFor;
-        }
-
-
-        public MultiValueMap<String, String> getParameters () {
-            return parameters;
-        }
-
-        public void setParameters (MultiValueMap < String, String > parameters){
-            this.parameters = parameters;
-        }
-
-        public EventController getController () {
-            return controller;
-        }
-
-        public void setController (EventController controller){
-            this.controller = controller;
-        }
+    public EventSearchFor getSearchFor() {
+        return searchFor;
     }
+
+    public void setSearchFor(EventSearchFor searchFor) {
+        this.searchFor = searchFor;
+    }
+
+
+    public MultiValueMap<String, String> getParameters() {
+        return parameters;
+    }
+
+    public void setParameters(MultiValueMap<String, String> parameters) {
+        this.parameters = parameters;
+    }
+
+    public EventController getController() {
+        return controller;
+    }
+
+    public void setController(EventController controller) {
+        this.controller = controller;
+    }
+}

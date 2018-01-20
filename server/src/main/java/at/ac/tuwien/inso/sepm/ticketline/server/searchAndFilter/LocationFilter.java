@@ -10,8 +10,8 @@ public class LocationFilter {
     private int zip = -1;
 
     public LocationFilter(HashMap<String, String> parameters) {
-        if (parameters.containsKey("description")) {
-            this.description = parameters.get("description");
+        if (parameters.containsKey("descriptionEvent")) {
+            this.description = parameters.get("descriptionEvent");
         }
         if (parameters.containsKey("country")) {
             this.country = parameters.get("country");
