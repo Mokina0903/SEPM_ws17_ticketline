@@ -98,4 +98,9 @@ public abstract class TestConstants {
     protected static final int SEAT_NR = 1;
     protected static final char SEAT_SECTOR = 'a';
     protected static final int SEAT_ROW = 1;
+
+    // --------------------- TICKET ---------------------
+    protected static final Long TICKET_RESERVATIONNR = 10001L;
+    protected static final Long TICKET_ID = 1L;
+    protected static final long TICKET_PRICE = 100;
 }

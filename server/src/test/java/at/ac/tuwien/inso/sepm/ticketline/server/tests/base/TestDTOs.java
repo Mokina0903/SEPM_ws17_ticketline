@@ -13,6 +13,8 @@ import at.ac.tuwien.inso.sepm.ticketline.server.entity.Customer;
 import java.util.ArrayList;
 import java.util.List;
 
+import static at.ac.tuwien.inso.sepm.ticketline.server.tests.base.TestConstants.*;
+
 public abstract class TestDTOs extends BaseTestUnit {
 
     public static SimpleEventDTO setUpSimpleEventDTO() {

@@ -37,46 +37,6 @@ import static at.ac.tuwien.inso.sepm.ticketline.server.tests.base.TestConstants.
 @ActiveProfiles("integration-test")
 public abstract class BaseTestUnit {
 
-    /*
-    protected static final String SERVER_HOST = "http://localhost";
-    protected static final String USER_USERNAME = "user";
-    protected static final String USER_PASSWORD = "password";
-    protected static final String ADMIN_PASSWORD = "password";
-    protected static final String ADMIN_USERNAME = "admin";
-
-    protected static final String NEWS_TEXT = "TestNewsText";
-    protected static final String NEWS_TITLE = "title";
-    protected static final LocalDateTime NEWS_PUBLISHED_AT =
-        LocalDateTime.of(2017, 11, 13, 12, 15, 0, 0);
-    protected static final long NEWS_ID = 1L;
-
-    protected static final Long ARTIST_ID = 1L;
-    protected static final String ARTIST_FIRSTNAME = "Firstname";
-    protected static final String ARTIST_LASTNAME = "Lastname";
-
-    protected static final long EVENT_ID = 1L;
-    protected static final String EVENT_DESCRIPTION = "Event Description";
-    protected static final String EVENT_TITLE = "Event Title";
-    protected static final long EVENT_PRICE = 100;
-
-    protected static LocalDateTime EVENT_START =
-        LocalDateTime.of(2017, 11, 29, 12, 15, 0, 0);
-
-    protected static final long CUSTOMER_ID = 1L;
-    protected static final long CUSTOMER_NUMBER = 9999L;
-    protected static final String  CUSTOMER_NAME = "Max";
-    protected static final String  CUSTOMER_SURNAME = "Mustermann";
-    protected static final String  CUSTOMER_MAIL = "Maxmustermann@gmail.com";
-    protected static final LocalDate CUSTOMER_BIRTHDATE = LocalDate.of(1950, 1, 1);
-    protected static final String  CUSTOMER_NAME_SUBSTRING = "muste";
-
-
-
-    protected static final Long TICKET_RESERVATIONNR = 10001L;
-    protected static final Long TICKET_ID = 1L;
-    protected static final long TICKET_PRICE = 100;
-    */
-
     @Value("${server.context-path}")
     private String contextPath;
 

@@ -19,6 +19,7 @@ import static org.hamcrest.core.Is.is;
 
 public class UserEndpointTest extends BaseIntegrationTest {
 
+    // TODO: (David) Change to IntegrationTest
     @Before
     public void setUp() {
 
