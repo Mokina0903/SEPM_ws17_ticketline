@@ -57,7 +57,6 @@ public class TicketDataGenerator {
             for (Event event : events) {
                 List<Seat> seats = seatRepository.findAllByHallId(event.getHall().getId());
                 List<Customer> customers = customerRepository.findAll();
-                event.setEventCategory(Event.EventCategory.Jazz); //verena: added vor testing, can be removed any time
                 int numbTickets = faker.number().numberBetween(30, seats.size() - 1);
 
                 // TODO (David) Reservation Date

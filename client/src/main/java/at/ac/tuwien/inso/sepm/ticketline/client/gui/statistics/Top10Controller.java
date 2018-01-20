@@ -108,6 +108,7 @@ public class Top10Controller extends TabElement implements LocalizationObserver 
         if (!eventService.checkDates(beginDate, endDate)) {
             fromDate.getStyleClass().add("error");
             toDate.getStyleClass().add("error");
+            return;
         } else {
             fromDate.getStyleClass().remove("error");
             toDate.getStyleClass().remove("error");
@@ -151,10 +152,11 @@ public class Top10Controller extends TabElement implements LocalizationObserver 
     public void applyStatsToChart(List<SimpleEventDTO> topTenEvents) {
 
         XYChart.Series<String, Number> series = new XYChart.Series<String, Number>();
-
+        LOGGER.debug("This is the size of the top 10 event list: " + topTenEvents.size());
         for (SimpleEventDTO event : topTenEvents) {
             try {
-                series.getData().add(new XYChart.Data<String, Number>(event.getTitle(), ticketService.countByEvent_Id(event.getId())));
+                System.out.println("*************************event name"+event.getTitle()+"!!*******************************");
+                series.getData().add(new XYChart.Data<String, Number>(event.getTitle()+" "+event.getId().toString(), ticketService.countByEvent_Id(event.getId())));
             } catch (DataAccessException e) {
                 e.printStackTrace();
             }

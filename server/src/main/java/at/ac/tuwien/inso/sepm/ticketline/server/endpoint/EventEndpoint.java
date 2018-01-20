@@ -88,7 +88,7 @@ public class EventEndpoint {
         return eventMapper.eventToSimpleEventDTO(eventService.getTop10EventsOfMonth(startOfMonth, endOfMonth));
     }
 
-    @RequestMapping(value ="/getTopTen/{start}/{end}/{category]" ,method = RequestMethod.GET)
+    @RequestMapping(value ="/getTopTenFiltered/{start}/{end}/{category}" ,method = RequestMethod.GET)
     @ApiOperation(value = "Get the top ten events from the given month filtered by the given category")
     public List<SimpleEventDTO> getTop10EventsOfMonthFilteredByCategory(@PathVariable("start") Long start, @PathVariable("end")Long end, @PathVariable("category") String category ){
 
@@ -96,7 +96,7 @@ public class EventEndpoint {
         LocalDateTime startOfMonth = LocalDateTime.ofInstant(Instant.ofEpochSecond(start), ZoneId.of("Europe/Paris"));
         LocalDateTime endOfMonth = LocalDateTime.ofInstant(Instant.ofEpochSecond(end), ZoneId.of("Europe/Paris"));
 
-        List<SimpleEventDTO> checklist= eventMapper.eventToSimpleEventDTO(eventService.getTop10EventsOfMonthFilteredByCategory(startOfMonth, endOfMonth, Event.EventCategory.valueOf(category)));
+        List<SimpleEventDTO> checklist= eventMapper.eventToSimpleEventDTO(eventService.getTop10EventsOfMonthFilteredByCategory(startOfMonth, endOfMonth, category));
 
         System.out.println(checklist.size());
         return checklist;

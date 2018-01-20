@@ -132,13 +132,13 @@ public class SimpleEventRestClient implements EventRestClient{
 
             ResponseEntity<List<SimpleEventDTO>> events =
                 restClient.exchange(
-                    restClient.getServiceURI(EVENT_URL+"/getTopTen/"+start+"/"+end+"/"+category),
+                    restClient.getServiceURI(EVENT_URL+"/getTopTenFiltered/"+start+"/"+end+"/"+category),
                     HttpMethod.GET,
                     null,
                     new ParameterizedTypeReference<List<SimpleEventDTO>>() {
                     });
             System.out.println(events.getBody().size());
-            LOGGER.debug("Result status was {} with content {}", events.getStatusCode(), events.getBody());
+            LOGGER.debug("Result status was {} with content {}", events.getStatusCode());
             return events.getBody();
         } catch (HttpStatusCodeException e) {
             throw new DataAccessException("Failed retrieve events with status code " + e.getStatusCode().toString());

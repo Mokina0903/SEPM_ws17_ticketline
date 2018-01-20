@@ -49,6 +49,7 @@ public class Event {
     private Boolean seatSelection;
 
     @Column(nullable =  false)
+    @Enumerated(EnumType.STRING)
     private EventCategory eventCategory;
 
     public Boolean getSeatSelection() {
