@@ -14,13 +14,10 @@ import org.springframework.http.HttpStatus;
 import java.util.Arrays;
 import java.util.Collections;
 
+import static at.ac.tuwien.inso.sepm.ticketline.server.tests.base.TestConstants.*;
 import static org.hamcrest.core.Is.is;
 
 public class NewsTest extends BaseTestUnit {
-
-    private static final String USER_ENDPOINT = "/user";
-    private static final String NEWS_ENDPOINT = "/news";
-    private static final String SPECIFIC_NEWS_PATH = "/{newsId}";
 
     @Test
     public void findAllNewsUnauthorizedAsAnonymous() {

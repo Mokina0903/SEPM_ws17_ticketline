@@ -12,6 +12,8 @@ import org.junit.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
+import static at.ac.tuwien.inso.sepm.ticketline.server.tests.base.TestConstants.ARTIST_FIRSTNAME;
+import static at.ac.tuwien.inso.sepm.ticketline.server.tests.base.TestConstants.EVENT_START;
 import static org.hamcrest.core.Is.is;
 
 public class EventTest extends BaseTestUnit {

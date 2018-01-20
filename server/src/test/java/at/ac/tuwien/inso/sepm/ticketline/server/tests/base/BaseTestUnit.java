@@ -26,16 +26,18 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import static at.ac.tuwien.inso.sepm.ticketline.server.tests.base.TestConstants.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("integration-test")
 public abstract class BaseTestUnit {
 
+    /*
     protected static final String SERVER_HOST = "http://localhost";
     protected static final String USER_USERNAME = "user";
     protected static final String USER_PASSWORD = "password";
@@ -51,17 +53,6 @@ public abstract class BaseTestUnit {
     protected static final Long ARTIST_ID = 1L;
     protected static final String ARTIST_FIRSTNAME = "Firstname";
     protected static final String ARTIST_LASTNAME = "Lastname";
-
-    protected static final long LOCATION_ID = 1L;
-    protected static final String LOCATION_DESCRIPTION = "description";
-    protected static final String LOCATION_CITY= "TestCity";
-    protected static final String LOCATION_COUNTRY = "TestCountry";
-    protected static final int LOCATION_HOUSENR = 123;
-    protected static final String LOCATION_STREET = "TestStreet";
-    protected static final int LOCATION_ZIP = 1234;
-
-    protected static final long HALL_ID = 1L;
-    protected static final String HALL_DESCRIPTION = "Test Hall 1";
 
     protected static final long EVENT_ID = 1L;
     protected static final String EVENT_DESCRIPTION = "Event Description";
@@ -79,14 +70,12 @@ public abstract class BaseTestUnit {
     protected static final LocalDate CUSTOMER_BIRTHDATE = LocalDate.of(1950, 1, 1);
     protected static final String  CUSTOMER_NAME_SUBSTRING = "muste";
 
-    protected static final Long SEAT_ID = 1L;
-    protected static final int SEAT_NR = 1;
-    protected static final char SEAT_SECTOR = 'a';
-    protected static final int SEAT_ROW = 1;
+
 
     protected static final Long TICKET_RESERVATIONNR = 10001L;
     protected static final Long TICKET_ID = 1L;
     protected static final long TICKET_PRICE = 100;
+    */
 
     @Value("${server.context-path}")
     private String contextPath;

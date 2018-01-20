@@ -80,5 +80,22 @@ public abstract class TestConstants {
     // --------------------- ARTIST ---------------------
     public static final String TICKET_ENDPOINT = "/tickets";
 
+    // -------------------- LOCATION --------------------
+    protected static final long LOCATION_ID = 1L;
+    protected static final String LOCATION_DESCRIPTION = "description";
+    protected static final String LOCATION_CITY= "TestCity";
+    protected static final String LOCATION_COUNTRY = "TestCountry";
+    protected static final int LOCATION_HOUSENR = 123;
+    protected static final String LOCATION_STREET = "TestStreet";
+    protected static final int LOCATION_ZIP = 1234;
 
+    // ---------------------- HALL ----------------------
+    protected static final long HALL_ID = 1L;
+    protected static final String HALL_DESCRIPTION = "Test Hall 1";
+
+    // ---------------------- SEAT ----------------------
+    protected static final Long SEAT_ID = 1L;
+    protected static final int SEAT_NR = 1;
+    protected static final char SEAT_SECTOR = 'a';
+    protected static final int SEAT_ROW = 1;
 }

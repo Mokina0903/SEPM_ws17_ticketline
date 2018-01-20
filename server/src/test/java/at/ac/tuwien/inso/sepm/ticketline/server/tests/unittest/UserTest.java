@@ -15,27 +15,12 @@ import org.junit.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
+import static at.ac.tuwien.inso.sepm.ticketline.server.tests.base.TestConstants.*;
 import static org.hamcrest.core.Is.is;
 
 public class UserTest extends BaseTestUnit {
-
-    private static final String USER_ENDPOINT = "/user";
-    private static final String USER_ENDPOINT_BLOCK = "/user/block";
-    private static final String USER_ENDPOINT_UNBLOCK = "/user/unblock";
-    private static final String USER_ENDPOINT_FIND = "/user/find/{userName}";
-    private static final String USER_ENDPOINT_RESET = "/user/resetPassword";
-    private static final String USER_ENDPOINT_IS_BLOCKED = "/user/isBlocked/{username}";
-    private static final String USER_ENDPOINT_NEW_USER = "/user";
-    private static final String SPECIFIC_USER_PATH = "/{userId}";
-
-    private static final String TEST_USER_TEXT = "TestUserText";
-    private static final String TEST_USER_TITLE = "title";
-    private static final LocalDateTime TEST_USER_PUBLISHED_AT =
-        LocalDateTime.of(2016, 11, 13, 12, 15, 0, 0);
-    private static final long TEST_USER_ID = 1L;
 
     @Before
     public void setUp() {
@@ -379,7 +364,7 @@ public class UserTest extends BaseTestUnit {
                 .blocked(false)
                 .role(2)
                 .build())
-            .when().post(USER_ENDPOINT_NEW_USER)
+            .when().post(USER_ENDPOINT)
             .then().extract().response();
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
 
@@ -406,7 +391,7 @@ public class UserTest extends BaseTestUnit {
                 .blocked(false)
                 .role(1)
                 .build())
-            .when().post(USER_ENDPOINT_NEW_USER)
+            .when().post(USER_ENDPOINT)
             .then().extract().response();
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
 
@@ -432,7 +417,7 @@ public class UserTest extends BaseTestUnit {
                 .blocked(false)
                 .role(2)
                 .build())
-            .when().post(USER_ENDPOINT_NEW_USER)
+            .when().post(USER_ENDPOINT)
             .then().extract().response();
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN.value()));
     }
@@ -449,7 +434,7 @@ public class UserTest extends BaseTestUnit {
                 .blocked(false)
                 .role(2)
                 .build())
-            .when().post(USER_ENDPOINT_NEW_USER)
+            .when().post(USER_ENDPOINT)
             .then().extract().response();
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.CONFLICT.value()));
     }
@@ -469,7 +454,7 @@ public class UserTest extends BaseTestUnit {
                 .blocked(false)
                 .role(2)
                 .build())
-            .when().post(USER_ENDPOINT_NEW_USER)
+            .when().post(USER_ENDPOINT)
             .then().extract().response();
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
 
@@ -486,7 +471,7 @@ public class UserTest extends BaseTestUnit {
             .given()
             .contentType(ContentType.JSON)
             .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
-            .when().get(USER_ENDPOINT_NEW_USER)
+            .when().get(USER_ENDPOINT)
             .then().extract().response();
         Assert.assertTrue((response.asString().contains("user") && response.asString().contains("admin")));
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
@@ -498,7 +483,7 @@ public class UserTest extends BaseTestUnit {
             .given()
             .contentType(ContentType.JSON)
             .header(HttpHeaders.AUTHORIZATION, validUserTokenWithPrefix)
-            .when().get(USER_ENDPOINT_NEW_USER)
+            .when().get(USER_ENDPOINT)
             .then().extract().response();
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN.value()));
     }

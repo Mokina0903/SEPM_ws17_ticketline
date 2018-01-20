@@ -18,13 +18,10 @@ import org.springframework.http.HttpStatus;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static at.ac.tuwien.inso.sepm.ticketline.server.tests.base.TestConstants.TICKET_ENDPOINT;
 import static org.hamcrest.core.Is.is;
 
 public class TicketTest extends BaseTestUnit {
-
-    private static final String TICKET_ENDPOINT = "/tickets";
-    private static final String TICKET_EVENT_PATH = "/event";
-    private static final String TICKET_CUSTOMER_PATH = "/customer";
 
     // TODO: Remove reservation 30 min before
     // TODO: Reversal of Reservation
