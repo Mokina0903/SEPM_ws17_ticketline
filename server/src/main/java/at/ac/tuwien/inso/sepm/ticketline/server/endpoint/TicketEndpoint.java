@@ -71,9 +71,7 @@ public class TicketEndpoint {
     public Long countByEvent_Id( @PathVariable Long eventId) {
 
         Event event = eventService.findOne(eventId);
-        if(Duration.between(LocalDateTime.now(), event.getStartOfEvent()).toMinutes() <=30 && Duration.between(LocalDateTime.now(), event.getStartOfEvent()).toMinutes() > 0 ){
-            ticketService.setTicketsFreeIf30MinsBeforEvent();
-        }
+
         return ticketService.countByEvent_IdAndIsDeletedFalse(eventId);
     }
 

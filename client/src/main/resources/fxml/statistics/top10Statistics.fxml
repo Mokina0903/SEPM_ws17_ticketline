@@ -33,10 +33,10 @@
     <center>
         <BarChart fx:id="barChartTop10">
             <xAxis>
-                <CategoryAxis fx:id="xAxis" side="BOTTOM"/>
+                <NumberAxis fx:id="xAxis" side="BOTTOM"/>
             </xAxis>
             <yAxis>
-                <NumberAxis side="LEFT" fx:id="yAxis"/>
+                <CategoryAxis fx:id="yAxis" side="LEFT"/>
             </yAxis>
         </BarChart>
     </center>

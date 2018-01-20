@@ -38,11 +38,11 @@ public class Top10Controller extends TabElement implements LocalizationObserver 
     private static final Logger LOGGER = LoggerFactory.getLogger(NewsController.class);
 
     @FXML
-    public BarChart<String, Number> barChartTop10;
+    public BarChart<Number, String> barChartTop10;
     @FXML
-    public CategoryAxis xAxis;
+    public CategoryAxis yAxis;
     @FXML
-    public NumberAxis yAxis;
+    public NumberAxis xAxis;
     @FXML
     public ComboBox<String> comBoxCategory;
     @FXML
@@ -75,7 +75,9 @@ public class Top10Controller extends TabElement implements LocalizationObserver 
     public void initializeData() {
 
         xAxis.setLabel("Events");
+        xAxis.setTickLabelRotation(90);
         yAxis.setLabel("Sales");
+        yAxis.setTickLabelRotation(90);
         barChartTop10.setTitle("Top 10 Events");
         comBoxCategory.getSelectionModel().select(0);
 
@@ -151,11 +153,11 @@ public class Top10Controller extends TabElement implements LocalizationObserver 
 
     public void applyStatsToChart(List<SimpleEventDTO> topTenEvents) {
 
-        XYChart.Series<String, Number> series = new XYChart.Series<String, Number>();
+        XYChart.Series<Number, String> series = new XYChart.Series<Number, String>();
         LOGGER.debug("This is the size of the top 10 event list: " + topTenEvents.size());
         for (SimpleEventDTO event : topTenEvents) {
             try {
-                series.getData().add(new XYChart.Data<String, Number>(event.getTitle()+" "+event.getId().toString(), ticketService.countByEvent_Id(event.getId())));
+                series.getData().add(new XYChart.Data<Number, String>( ticketService.countByEvent_Id(event.getId()),event.getTitle()+" "+event.getId().toString()));
             } catch (DataAccessException e) {
                 e.printStackTrace();
             }
