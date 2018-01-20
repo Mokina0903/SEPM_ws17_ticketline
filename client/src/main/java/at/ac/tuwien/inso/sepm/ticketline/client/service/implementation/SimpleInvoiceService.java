@@ -54,7 +54,7 @@ public class SimpleInvoiceService implements InvoiceService{
     }
 
     @Override
-    public File invoiceToPdf(InvoiceDTO invoiceDTO, Window window) throws DataAccessException {
+    public File invoiceToPdf(InvoiceDTO invoiceDTO, Window window) {
 
         URL formTemplate = getClass().getResource("/invoice_template/Invoice_Template_new.pdf") ;
            try (PDDocument pdfDocument = PDDocument.load(new File(formTemplate.getPath()))) {
@@ -142,35 +142,35 @@ public class SimpleInvoiceService implements InvoiceService{
                    int line=0;
                    for(List<TicketDTO> sec:allSectors) {
 
-                       if (!sec.isEmpty() && !invoiceDTO.isStorno()) {
+                       if (!sec.isEmpty()) {
                            field = (PDTextField) acroForm.getFields().get(14+(line*4));
-                           field.setValue(invoiceDTO.isStorno()?"-":""+event.getTitle() + " Ticket(s) in Sector \""+sec.get(0).getSeat().getSector()+"\"");
+                           field.setValue((invoiceDTO.isStorno()?"-":"")+event.getTitle() + " Ticket(s) in Sector \""+sec.get(0).getSeat().getSector()+"\"");
                            field = (PDTextField) acroForm.getFields().get(15+(line*4));
                            field.setValue(sec.size() + "");
                            field = (PDTextField) acroForm.getFields().get(16+(line*4));
-                           field.setValue(invoiceDTO.isStorno()?"-":""+sec.get(0).getPriceInEuro() + " \u20ac");
+                           field.setValue((invoiceDTO.isStorno()?"-":"")+sec.get(0).getPriceInEuro() + " \u20ac");
                            field = (PDTextField) acroForm.getFields().get(17+(line*4));
-                           field.setValue(invoiceDTO.isStorno()?"-":""+getTotalPriceForTickets(sec.get(0).getPrice(),sec.size()) + " \u20ac");
+                           field.setValue((invoiceDTO.isStorno()?"-":"")+getTotalPriceForTickets(sec.get(0).getPrice(),sec.size()) + " \u20ac");
                            if(line==3 || line==4){
                                field = (PDTextField) acroForm.getFields().get(17+(line*4));
-                               field.setValue(invoiceDTO.isStorno()?"-":""+event.getTitle() + " Ticket(s) in Sector \""+sec.get(0).getSeat().getSector()+"\"");
+                               field.setValue((invoiceDTO.isStorno()?"-":"")+event.getTitle() + " Ticket(s) in Sector \""+sec.get(0).getSeat().getSector()+"\"");
                                field = (PDTextField) acroForm.getFields().get(14+(line*4));
                                field.setValue(sec.size() + "");
                                field = (PDTextField) acroForm.getFields().get(15+(line*4));
-                               field.setValue(invoiceDTO.isStorno()?"-":""+sec.get(0).getPriceInEuro() + " \u20ac");
+                               field.setValue((invoiceDTO.isStorno()?"-":"")+sec.get(0).getPriceInEuro() + " \u20ac");
                                field = (PDTextField) acroForm.getFields().get(16+(line*4));
-                               field.setValue(invoiceDTO.isStorno()?"-":""+getTotalPriceForTickets(sec.get(0).getPrice(),sec.size()) + " \u20ac");
+                               field.setValue((invoiceDTO.isStorno()?"-":"")+getTotalPriceForTickets(sec.get(0).getPrice(),sec.size()) + " \u20ac");
                            }
                            line++;
                        }
                    }
 
                    field = (PDTextField) acroForm.getFields().get(38);
-                   field.setValue(invoiceDTO.isStorno()?"-":""+invoiceDTO.getTotalPriceWithoutTaxInEuro());
+                   field.setValue((invoiceDTO.isStorno()?"-":"")+invoiceDTO.getTotalPriceWithoutTaxInEuro());
                    field = (PDTextField) acroForm.getFields().get(39);
-                   field.setValue(invoiceDTO.isStorno()?"-":""+invoiceDTO.getTotalTaxInEuro());
+                   field.setValue((invoiceDTO.isStorno()?"-":"")+invoiceDTO.getTotalTaxInEuro());
                    field = (PDTextField) acroForm.getFields().get(40);
-                   field.setValue(invoiceDTO.isStorno()?"-":""+invoiceDTO.getTotalPriceInEuro()+"\u20ac");
+                   field.setValue((invoiceDTO.isStorno()?"-":"")+invoiceDTO.getTotalPriceInEuro()+"\u20ac");
 
                }
 
@@ -191,7 +191,8 @@ public class SimpleInvoiceService implements InvoiceService{
                }*/
 
                FileChooser fileChooser = new FileChooser();
-               fileChooser.setInitialFileName("Invoice"+invoiceDTO.getInvoiceNumber()+".pdf");
+               fileChooser.setInitialFileName((invoiceDTO.isStorno()?"Reversal":"Invoice")+invoiceDTO.getInvoiceNumber()+".pdf");
+               fileChooser.setTitle("Save "+(invoiceDTO.isStorno()?"Reversal":"Invoice")+"PDF");
                File file= fileChooser.showSaveDialog(window);
 
                if(file!=null) {
@@ -205,21 +206,6 @@ public class SimpleInvoiceService implements InvoiceService{
                e.printStackTrace();
            }
 
-/*
-        PDPage page = new PDPage();
-        doc.addPage(page);
-        PDFont font = PDType1Font.HELVETICA_BOLD;
-        try (PDPageContentStream contents = new PDPageContentStream(doc, page)) {
-            contents.beginText();
-            contents.setFont(font, 12);
-            contents.newLineAtOffset(100, 700);
-            contents.showText("Invoice NR:" +invoiceDTO.getInvoiceNumber());
-            contents.endText();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        */
         return null;
     }
 

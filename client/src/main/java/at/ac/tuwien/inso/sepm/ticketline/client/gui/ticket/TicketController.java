@@ -35,6 +35,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class TicketController extends TabElement implements LocalizationObserver {
@@ -89,9 +90,14 @@ public class TicketController extends TabElement implements LocalizationObserver
     private TableView<TicketRepresentationClass>currentTableview;
     private TicketSearchFor searchFor = TicketSearchFor.ALL;
 
+    private InvoiceDTO invoiceTMP;
+
 
     void setErrorLblUnvisable(){
         lblStorno.setVisible(false);
+        lblStornoInvoice.setVisible(false);
+        lblPay.setVisible(false);
+        lblNoMatch.setVisible(false);
     }
 
     public Tab getTicketTab() {
@@ -407,10 +413,10 @@ public class TicketController extends TabElement implements LocalizationObserver
             return;
         }
 
-        Task<Void> workerTask = new Task<Void>() {
+        Task<InvoiceDTO> workerTask = new Task<>() {
 
             @Override
-            protected Void call() throws Exception {
+            protected InvoiceDTO call() throws Exception {
                 //ToDo fragen wie ich hier die exception abfangen kann
                 TicketRepresentationClass ticket = currentTableview.getSelectionModel().getSelectedItem();
                 System.out.println(ticket.getReservationNumber());
@@ -427,13 +433,10 @@ public class TicketController extends TabElement implements LocalizationObserver
                     .customer(tickets.get(0).getCustomer())
                     .build();
 
-                invoice = invoiceService.create(invoice);
 
-                javafx.stage.Window window = lblStorno.getParent().getScene().getWindow();
-                invoiceService.invoiceToPdf(invoice,window);
-
-
-                return null;
+                invoice=invoiceService.create(invoice);
+                TicketController.this.invoiceTMP = invoice;
+                return invoice;
             }
 
             @Override
@@ -463,7 +466,18 @@ public class TicketController extends TabElement implements LocalizationObserver
                 running ? ProgressBar.INDETERMINATE_PROGRESS : 0)
         );
 
-        new Thread(workerTask).start();
+        Thread thread = new Thread(workerTask);
+        thread.start();
+
+       while (thread.isAlive()){
+            try {
+                TimeUnit.MILLISECONDS.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        javafx.stage.Window window = pagination.getScene().getWindow();
+        invoiceService.invoiceToPdf(invoiceTMP,window);
 
     }
 

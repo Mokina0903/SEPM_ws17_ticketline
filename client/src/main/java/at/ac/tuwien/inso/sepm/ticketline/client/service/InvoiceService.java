@@ -44,5 +44,12 @@ public interface InvoiceService {
      */
     InvoiceDTO create(InvoiceDTO invoice) throws DataAccessException, EmptyValueException;
 
-    File invoiceToPdf( InvoiceDTO invoiceDTO, Window window) throws DataAccessException;
+    /**
+     * create pdf for invoice/reversal and save with filechooser
+     *
+     * @param invoiceDTO to create pdf for
+     * @param window to show filechooser on
+     * @return created pdf as file
+     */
+    File invoiceToPdf( InvoiceDTO invoiceDTO, Window window);
 }
