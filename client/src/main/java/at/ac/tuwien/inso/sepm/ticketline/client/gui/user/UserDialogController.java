@@ -378,5 +378,7 @@ public class UserDialogController implements LocalizationObserver {
         lblInvalidPassword.setText(BundleManager.getBundle().getString("user.invalidpasswort"));
         lblInvalidRole.setText(BundleManager.getBundle().getString("user.invalidrole"));
 
+        tabHeaderController.setTitle(BundleManager.getBundle().getString("user.user"));
+
     }
 }
