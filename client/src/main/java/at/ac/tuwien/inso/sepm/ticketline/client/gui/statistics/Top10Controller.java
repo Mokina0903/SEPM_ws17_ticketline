@@ -26,6 +26,8 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import org.controlsfx.glyphfont.FontAwesome;
+import org.controlsfx.glyphfont.GlyphFont;
+import org.controlsfx.glyphfont.GlyphFontRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,6 +76,8 @@ public class Top10Controller extends TabElement implements LocalizationObserver 
     private EventService eventService;
     private Tab statisticsTab;
     private List<SimpleEventDTO> topTenEventsNow;
+    private GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
+    private final int FONT_SIZE = 16;
 
     private long selectedID = -1;
     Node beforeN = null;
@@ -97,6 +101,7 @@ public class Top10Controller extends TabElement implements LocalizationObserver 
         yAxis.setTickLabelRotation(90);
         barChartTop10.setTitle("Top 10 Events");
         comBoxCategory.getSelectionModel().select(0);
+        btnGoToBuying.setGraphic(fontAwesome.create("TICKET").size(FONT_SIZE));
 
         localizationSubject.attach(this);
 
@@ -214,14 +219,18 @@ public class Top10Controller extends TabElement implements LocalizationObserver 
                 public void handle(MouseEvent e) {
                     if (n.getStyleClass().contains("selected")) {
                         n.getStyleClass().remove("selected");
+                        btnGoToBuying.getStyleClass().remove("buyBtn");
                         return;
                     }
 
                     if (!(beforeN == null)) {
                         beforeN.getStyleClass().remove("selected");
+                        btnGoToBuying.getStyleClass().remove("buyBtn");
                     }
 
                     n.getStyleClass().add("selected");
+                    btnGoToBuying.getStyleClass().add("buyBtn");
+
                     String event = col.getYValue();
                     String[] subStrings = event.split(" ");
                     selectedID = Long.valueOf(subStrings[subStrings.length - 1]);

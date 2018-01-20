@@ -41,10 +41,12 @@
         </BarChart>
     </center>
     <bottom>
-        <HBox spacing="15">
+        <HBox spacing="100">
             <BorderPane.margin>
-                <Insets left="60" bottom="45" top="5"/>
+                <Insets left="100" bottom="45" top="5"/>
             </BorderPane.margin>
+        <HBox spacing="15">
+
             <Label text="%statistics.category"/>
             <ComboBox fx:id="comBoxCategory">
             <items>
@@ -65,11 +67,9 @@
             <DatePicker fx:id="toDate"/>
             <Button fx:id="applyFilter" onAction="#getTopTenEvents" text="%statistics.apply"/>
         </HBox>
+            <Button fx:id="btnGoToBuying" onAction="#goToTicketProzess" prefWidth="50"/>
+        </HBox>
     </bottom>
-    <right>
-        <VBox>
-            <Button fx:id="btnGoToBuying" onAction="#goToTicketProzess"/>
-        </VBox>
-    </right>
+
 </BorderPane>
 
