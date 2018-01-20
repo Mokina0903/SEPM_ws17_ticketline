@@ -345,7 +345,7 @@ public class CustomerDialogController implements LocalizationObserver {
             protected void failed() {
 
 
-                if (getException().getMessage().equals("OldVersionException: 424")) {
+                if (getException().getMessage().equals("424")) {
                     LOGGER.info("Customer has been changed since you started editing.");
                     lblVersionException.setVisible(true);
                     lblVersionException.setText(BundleManager.getBundle().getString("customer.version"));
