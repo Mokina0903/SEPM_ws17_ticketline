@@ -3,10 +3,7 @@ package at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.EmptyValueException;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.SearchNoMatchException;
-import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationObserver;
-import at.ac.tuwien.inso.sepm.ticketline.client.gui.MainController;
-import at.ac.tuwien.inso.sepm.ticketline.client.gui.TabElement;
-import at.ac.tuwien.inso.sepm.ticketline.client.gui.TabHeaderController;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.*;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.InvoiceService;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.TicketService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
@@ -27,6 +24,7 @@ import javafx.util.Callback;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -92,6 +90,8 @@ public class TicketController extends TabElement implements LocalizationObserver
 
     private InvoiceDTO invoiceTMP;
 
+    @Autowired
+    private LocalizationSubject localizationSubject;
 
     void setErrorLblUnvisable(){
         lblStorno.setVisible(false);
@@ -123,6 +123,7 @@ public class TicketController extends TabElement implements LocalizationObserver
         lblStorno.setWrapText(true);
         lblStorno.setMaxWidth(100.0);
 
+        localizationSubject.attach(this);
     }
 
     public void initializePagination(){
