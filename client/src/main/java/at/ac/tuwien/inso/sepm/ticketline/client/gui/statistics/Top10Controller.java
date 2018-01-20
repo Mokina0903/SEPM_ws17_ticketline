@@ -65,6 +65,7 @@ public class Top10Controller extends TabElement implements LocalizationObserver 
     private List<SimpleEventDTO> topTenEventsNow;
 
     private long selectedID;
+     Node beforeN = null;
 
     @Autowired
     private LocalizationSubject localizationSubject;
@@ -175,6 +176,7 @@ public class Top10Controller extends TabElement implements LocalizationObserver 
     }
 
     private void setUpEventHandler(XYChart.Series<Number, String> series){
+
         for (final XYChart.Data<Number,String> col : series.getData()){
             final Node n = col.getNode();
             n.setEffect(null);
@@ -200,11 +202,16 @@ public class Top10Controller extends TabElement implements LocalizationObserver 
                     return;
                 }
 
+                if(!(beforeN==null)){
+                    beforeN.getStyleClass().remove("selected");
+                }
+
                 n.getStyleClass().add("selected");
                 String event = col.getYValue();
                 String[] subStrings = event.split(" ");
                 selectedID = Long.valueOf( subStrings[subStrings.length-1]);
                 System.out.println(selectedID);
+                beforeN = n;
             }
         });
 
