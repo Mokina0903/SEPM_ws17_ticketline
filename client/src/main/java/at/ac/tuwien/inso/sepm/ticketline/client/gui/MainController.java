@@ -240,23 +240,6 @@ public class MainController implements LocalizationObserver {
         }
     }
 
-    public void setCurrentTab(MainControlTabs tab){
-        switch(tab){
-            case EVENT: tpContent.getSelectionModel().select(eventTab);
-            break;
-            case NEWS: tpContent.getSelectionModel().select(newsTab);
-            break;
-            case TICKET: tpContent.getSelectionModel().select(ticketTab);
-            break;
-            case STATISTICS: tpContent.getSelectionModel().select(topTenTab);
-            break;
-            case USER: tpContent.getSelectionModel().select(userTab);
-            break;
-            case CUSTOMER: tpContent.getSelectionModel().select(customerTab);
-        }
-    }
-
-
     private void setListenerForTabs() {
         tpContent.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.equals(ticketTab)) {

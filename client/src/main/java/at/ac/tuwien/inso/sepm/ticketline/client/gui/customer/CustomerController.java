@@ -461,7 +461,6 @@ public class CustomerController extends TabElement implements LocalizationObserv
             mainController.getEventTab().setContent(oldContent);
         } else {
             mainController.getTopTenTab().setContent(oldContent);
-            mainController.setCurrentTab(MainControlTabs.STATISTICS);
         }
 
         setNormalTabView();
