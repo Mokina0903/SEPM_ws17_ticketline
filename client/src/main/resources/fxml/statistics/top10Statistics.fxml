@@ -41,13 +41,12 @@
         </BarChart>
     </center>
     <bottom>
-        <HBox spacing="100">
-            <BorderPane.margin>
-                <Insets left="100" bottom="45" top="5"/>
-            </BorderPane.margin>
-        <HBox spacing="15">
 
-            <Label text="%statistics.category"/>
+        <HBox spacing="15">
+            <BorderPane.margin>
+                <Insets left="90" bottom="12" right="15"/>
+            </BorderPane.margin>
+            <Label prefWidth="70" text="%statistics.category"/>
             <ComboBox fx:id="comBoxCategory">
             <items>
                 <FXCollections fx:factory="observableArrayList">
@@ -61,14 +60,16 @@
                 </FXCollections>
             </items>
             </ComboBox>
-            <Label fx:id="lblFromDate" text="%statistics.fromDate"/>
+            <Label fx:id="lblFromDate" prefWidth="40" text="%statistics.fromDate"/>
             <DatePicker fx:id="fromDate"/>
-            <Label fx:id="lblToDate" text="%statistics.toDate"/>
+            <Label fx:id="lblToDate" prefWidth="25" text="%statistics.toDate"/>
             <DatePicker fx:id="toDate"/>
-            <Button fx:id="applyFilter" onAction="#getTopTenEvents" text="%statistics.apply"/>
+            <Button fx:id="applyFilter" prefWidth="100" onAction="#getTopTenEvents" text="%statistics.apply"/>
+            <Button fx:id="btnGoToBuying" onAction="#goToTicketProzess" prefWidth="70"/>
+            <Label fx:id="lblNoEventChoosen" text="%statistics.noEvetChoosen" textFill="crimson"/>
         </HBox>
-            <Button fx:id="btnGoToBuying" onAction="#goToTicketProzess" prefWidth="50"/>
-        </HBox>
+
+
     </bottom>
 
 </BorderPane>

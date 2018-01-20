@@ -68,6 +68,8 @@ public class Top10Controller extends TabElement implements LocalizationObserver 
     @FXML
     public BorderPane myContainer;
     @FXML
+    public Label lblNoEventChoosen;
+    @FXML
     private TabHeaderController tabHeaderController;
 
     private MainController mainController;
@@ -103,6 +105,9 @@ public class Top10Controller extends TabElement implements LocalizationObserver 
         comBoxCategory.getSelectionModel().select(0);
         btnGoToBuying.setGraphic(fontAwesome.create("TICKET").size(FONT_SIZE));
 
+        lblNoEventChoosen.setVisible(false);
+        lblNoEventChoosen.setWrapText(true);
+        lblNoEventChoosen.setMaxWidth(100);
         localizationSubject.attach(this);
 
         tabHeaderController.setIcon(FontAwesome.Glyph.BAR_CHART);
@@ -217,9 +222,11 @@ public class Top10Controller extends TabElement implements LocalizationObserver 
             n.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent e) {
+                    lblNoEventChoosen.setVisible(false);
                     if (n.getStyleClass().contains("selected")) {
                         n.getStyleClass().remove("selected");
                         btnGoToBuying.getStyleClass().remove("buyBtn");
+                        selectedID = -1;
                         return;
                     }
 
@@ -244,10 +251,12 @@ public class Top10Controller extends TabElement implements LocalizationObserver 
     @FXML
     public void goToTicketProzess(ActionEvent actionEvent) {
         mainController.setGeneralErrorUnvisable();
-        if(selectedID == -1){
-            //TODO: add a label
+        if (selectedID == -1) {
+            lblNoEventChoosen.setVisible(true);
             return;
         }
+        lblNoEventChoosen.setVisible(false);
+
 
         Task<DetailedEventDTO> eventDTOTask = new Task<DetailedEventDTO>() {
             @Override
@@ -292,8 +301,6 @@ public class Top10Controller extends TabElement implements LocalizationObserver 
     }
 
 
-
-
     @Override
     protected void setTab(Tab tab) {
         statisticsTab = tab;
@@ -305,6 +312,10 @@ public class Top10Controller extends TabElement implements LocalizationObserver 
         lblFromDate.setText(BundleManager.getBundle().getString("statistics.fromDate"));
         lblToDate.setText(BundleManager.getBundle().getString("statistics.toDate"));
         applyFilter.setText(BundleManager.getBundle().getString("statistics.apply"));
+
+        if (lblNoEventChoosen.isVisible()) {
+            lblNoEventChoosen.setText(BundleManager.getBundle().getString("statistics.noEvetChoosen"));
+        }
 
     }
 
