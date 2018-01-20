@@ -65,7 +65,7 @@ public class Top10Controller extends TabElement implements LocalizationObserver 
     private List<SimpleEventDTO> topTenEventsNow;
 
     private long selectedID;
-     Node beforeN = null;
+    Node beforeN = null;
 
     @Autowired
     private LocalizationSubject localizationSubject;
@@ -135,6 +135,7 @@ public class Top10Controller extends TabElement implements LocalizationObserver 
 
             @Override
             protected void succeeded() {
+                LOGGER.info("Task succeeded");
                 super.succeeded();
                 applyStatsToChart(getValue());
             }
@@ -157,63 +158,91 @@ public class Top10Controller extends TabElement implements LocalizationObserver 
 
     }
 
-    public void applyStatsToChart(List<SimpleEventDTO> topTenEvents) {
+    private void applyStatsToChart(List<SimpleEventDTO> topTenEvents) {
 
         XYChart.Series<Number, String> series = new XYChart.Series<Number, String>();
-        LOGGER.debug("This is the size of the top 10 event list: " + topTenEvents.size());
+        LOGGER.info("Applying stats to char, top 10 event list size: " + topTenEvents.size());
+
         for (SimpleEventDTO event : topTenEvents) {
-            try {
-                series.getData().add(new XYChart.Data<Number, String>( ticketService.countByEvent_Id(event.getId()),event.getTitle()+" "+event.getId().toString()));
-            } catch (DataAccessException e) {
-                e.printStackTrace();
-            }
+
+            Task<Long> getCountOfTicketsFromEvent = new Task<Long>() {
+                @Override
+                protected Long call() throws Exception {
+                    return ticketService.countByEvent_Id(event.getId());
+                }
+
+                @Override
+                protected void succeeded() {
+                    super.succeeded();
+                    LOGGER.info("Task succeeded");
+                    try {
+                        series.getData().add(new XYChart.Data<Number, String>(ticketService.countByEvent_Id(event.getId()), event.getTitle() + " " + event.getId().toString()));
+                    } catch (DataAccessException e) {
+                        e.printStackTrace();
+                    }
+                    barChartTop10.getData().clear();
+                    barChartTop10.getData().addAll(series);
+                    setUpEventHandler(series);
+                }
+
+                @Override
+                protected void failed() {
+                    LOGGER.debug("Loading top ten events failed.");
+                    if (getValue() == null) {
+                        super.failed();
+                        mainController.showGeneralError("Failed to load ticket count from event: " + event.getTitle());
+                    }
+                }
+            };
+            getCountOfTicketsFromEvent.runningProperty().addListener((observable, oldValue, running) ->
+                mainController.setProgressbarProgress(
+                    running ? ProgressBar.INDETERMINATE_PROGRESS : 0)
+            );
+
+            new Thread(getCountOfTicketsFromEvent).start();
         }
 
 
-        barChartTop10.getData().clear();
-        barChartTop10.getData().addAll(series);
-        setUpEventHandler(series);
     }
 
-    private void setUpEventHandler(XYChart.Series<Number, String> series){
+    private void setUpEventHandler(XYChart.Series<Number, String> series) {
 
-        for (final XYChart.Data<Number,String> col : series.getData()){
+        for (final XYChart.Data<Number, String> col : series.getData()) {
             final Node n = col.getNode();
             n.setEffect(null);
 
 
-        n.setOnMouseEntered(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent e) {
-                n.getStyleClass().add("hover");
-            }
-        });
-        n.setOnMouseExited(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent e) {
-                n.getStyleClass().remove("hover");
-            }
-        });
-        n.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent e) {
-                if(n.getStyleClass().contains("selected")){
-                    n.getStyleClass().remove("selected");
-                    return;
+            n.setOnMouseEntered(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent e) {
+                    n.getStyleClass().add("hover");
                 }
-
-                if(!(beforeN==null)){
-                    beforeN.getStyleClass().remove("selected");
+            });
+            n.setOnMouseExited(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent e) {
+                    n.getStyleClass().remove("hover");
                 }
+            });
+            n.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent e) {
+                    if (n.getStyleClass().contains("selected")) {
+                        n.getStyleClass().remove("selected");
+                        return;
+                    }
 
-                n.getStyleClass().add("selected");
-                String event = col.getYValue();
-                String[] subStrings = event.split(" ");
-                selectedID = Long.valueOf( subStrings[subStrings.length-1]);
-                System.out.println(selectedID);
-                beforeN = n;
-            }
-        });
+                    if (!(beforeN == null)) {
+                        beforeN.getStyleClass().remove("selected");
+                    }
+
+                    n.getStyleClass().add("selected");
+                    String event = col.getYValue();
+                    String[] subStrings = event.split(" ");
+                    selectedID = Long.valueOf(subStrings[subStrings.length - 1]);
+                    beforeN = n;
+                }
+            });
 
         }
     }
