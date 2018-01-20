@@ -9,13 +9,13 @@ import at.ac.tuwien.inso.sepm.ticketline.server.exception.OldVersionException;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.CustomerService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.*;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+// TODO: (Verena) Warum Exception handling
 
 @RestController
 @RequestMapping(value = "/customer")
@@ -44,12 +44,7 @@ public class CustomerEndpoint {
     @RequestMapping(value= "/{id}",method = RequestMethod.GET)
     @ApiOperation(value = "Get one spezific customer entry by id")
     public CustomerDTO findById(@PathVariable("id") Long id){
-        try {
-            return customerMapper.customerToCustomerDTO(customerService.findOneById(id));
-        } catch (InvalidIdException | CustomerNotValidException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return customerMapper.customerToCustomerDTO(customerService.findOneById(id));
     }
 
     @RequestMapping(value="/findWithKnr/{knr}", method = RequestMethod.GET)
@@ -69,36 +64,28 @@ public class CustomerEndpoint {
     @RequestMapping(value="/create", method = RequestMethod.POST)
     @ApiOperation(value = "Create and save the given customer")
     public void createCustomer(@RequestBody CustomerDTO customer){
-        try {
-            customerMapper.customerToCustomerDTO(customerService.createCustomer(customerMapper.customerDTOToCustomer(customer)));
-        } catch (CustomerNotValidException e) {
-          //  e.printStackTrace();
-        }
-
+        // TODO: (Verena) Mapper notwendig?
+        customerMapper.customerToCustomerDTO(customerService.createCustomer(customerMapper.customerDTOToCustomer(customer)));
     }
 
     @RequestMapping(value="/update", method = RequestMethod.POST)
     @ApiOperation(value = "Update and save the given customer")
     public void updateCustomer(@RequestBody CustomerDTO customerDTO){
-        try {
-            //customerDTO.
+        // TODO: (Verena) Was passiert bei unbekannten Benutzer?
+        Customer customer = customerService.findByKnr(customerDTO.getKnr());
+        if (customer == null)
+            throw new InvalidIdException("No valid knr!");
 
-            Customer customer = customerService.findByKnr(customerDTO.getKnr());
-            if(!customer.correctVersion(customerDTO.getVersion())) {
-                System.out.println(customer);
-                System.out.println("This is new");
-                System.out.println(customerMapper.customerDTOToCustomer(customerDTO));
-                if (!customer.equalsUpdate(customerMapper.customerDTOToCustomer(customerDTO))) {
-                    throw new OldVersionException();
-                }
+        if (!customer.correctVersion(customerDTO.getVersion())) {
+            System.out.println(customer);
+            System.out.println("This is new");
+            System.out.println(customerMapper.customerDTOToCustomer(customerDTO));
+            if (!customer.equalsUpdate(customerMapper.customerDTOToCustomer(customerDTO))) {
+                throw new OldVersionException();
             }
-            customerDTO.setVersion(customerDTO.getVersion() + 1);
-            customerService.updateCustomer(customerMapper.customerDTOToCustomer(customerDTO));
-
-        } catch (CustomerNotValidException | InvalidIdException e) {
-          // e.printStackTrace();
         }
-
+        customerDTO.setVersion(customerDTO.getVersion() + 1);
+        customerService.updateCustomer(customerMapper.customerDTOToCustomer(customerDTO));
     }
 
     @RequestMapping(value="/findName/{pageIndex}/{customerPerPage}/{name}", method = RequestMethod.GET)

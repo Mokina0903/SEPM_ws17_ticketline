@@ -8,11 +8,12 @@ import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.hall.DetailedHallDTO
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.location.DetailedLocationDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.seat.SeatDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketDTO;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.Customer;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class TestDTOs extends BaseTest {
+public abstract class TestDTOs extends BaseTestUnit {
 
     public static SimpleEventDTO setUpSimpleEventDTO() {
         List<SimpleArtistDTO> artists = new ArrayList<>();
@@ -125,6 +126,29 @@ public abstract class TestDTOs extends BaseTest {
             .build());
 
         return ticketDTOList;
+    }
+
+    public static Customer defaultCustomer() {
+        return Customer.builder()
+            .id(CUSTOMER_ID)
+            .knr(CUSTOMER_NUMBER)
+            .name(CUSTOMER_NAME)
+            .surname(CUSTOMER_SURNAME)
+            .mail(CUSTOMER_MAIL)
+            .birthDate(CUSTOMER_BIRTHDATE)
+            .build();
+    }
+
+    public static CustomerDTO defaultCustomerDTO() {
+        return CustomerDTO.builder()
+            .id(CUSTOMER_ID)
+            .knr(CUSTOMER_NUMBER)
+            .name(CUSTOMER_NAME)
+            .surname(CUSTOMER_SURNAME)
+            .mail(CUSTOMER_MAIL)
+            .birthDate(CUSTOMER_BIRTHDATE)
+            .version(1)
+            .build();
     }
 
 }

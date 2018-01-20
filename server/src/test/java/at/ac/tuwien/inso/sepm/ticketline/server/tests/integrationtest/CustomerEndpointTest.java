@@ -2,79 +2,77 @@ package at.ac.tuwien.inso.sepm.ticketline.server.tests.integrationtest;
 
 import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Customer;
-import at.ac.tuwien.inso.sepm.ticketline.server.exception.CustomerNotValidException;
-import at.ac.tuwien.inso.sepm.ticketline.server.exception.InvalidIdException;
-import at.ac.tuwien.inso.sepm.ticketline.server.tests.base.BaseTest;
-import at.ac.tuwien.inso.sepm.ticketline.server.service.CustomerService;
+import at.ac.tuwien.inso.sepm.ticketline.server.repository.CustomerRepository;
+import at.ac.tuwien.inso.sepm.ticketline.server.tests.base.BaseIntegrationTest;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.mockito.Mockito;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
-import java.time.LocalDate;
+import java.util.Collections;
 
-import static junit.framework.TestCase.fail;
+import static at.ac.tuwien.inso.sepm.ticketline.server.tests.base.TestConstants.*;
+import static at.ac.tuwien.inso.sepm.ticketline.server.tests.base.TestDTOs.defaultCustomer;
+import static at.ac.tuwien.inso.sepm.ticketline.server.tests.base.TestDTOs.defaultCustomerDTO;
 import static org.hamcrest.core.Is.is;
+import static org.mockito.Matchers.any;
 
-public class CustomerEndpointTest extends BaseTest {
+public class CustomerEndpointTest extends BaseIntegrationTest {
 
-    private static final String CUSTOMER_ENDPOINT = "/customer";
-    private static final String CUSTOMER_CREATE_PATH = "/create";
-    private static final String CUSTOMER_UPDATE_PATH = "/update";
-    private static final String CUSTOMER_BY_NUMBER_PATH = "/findWithKnr/{knr}";
-    private static final String CUSTOMER_BY_NAME_PATH = "/findName/{pageIndex}/{customerPerPage}/{name}";
+    @MockBean
+    private CustomerRepository customerRepository;
 
-    private static final String PAGE_INDEX = "/{pageIndex}";
-    private static final String CUSTOMER_PER_PAGE = "/{customerPerPage}";
+    //@Autowired
+    //private CustomerService customerService;
 
-    @Autowired
-    private CustomerService customerService;
-
-    @Before
+    //@Before
     public void setUp() {
-        setUpDefaultCustomers();
+        //setUpDefaultCustomers();
     }
 
-
+    // get /customer/{pageIndex}/{customerPerPage}        Get list of customer entries
     @Test
-    public void findAllCustomerUnauthorizedAsAnonymous() {
+    public void findAllCustomerAsAnonymous() {
         Response response = RestAssured
             .given()
             .contentType(ContentType.JSON)
-            .when().get(CUSTOMER_ENDPOINT)
+            .when().get(CUSTOMER_ENDPOINT + CUSTOMER_PAGE_INDEX + CUSTOMER_PER_PAGE, 0, Integer.MAX_VALUE)
             .then().extract().response();
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED.value()));
     }
 
     @Test
     public void findAllCustomerAsUser() {
+        Mockito.when(customerRepository.findAll()).thenReturn(Collections.singletonList(defaultCustomer()));
         Response response = RestAssured
             .given()
             .contentType(ContentType.JSON)
             .header(HttpHeaders.AUTHORIZATION, validUserTokenWithPrefix)
-            .when().get(CUSTOMER_ENDPOINT + PAGE_INDEX + CUSTOMER_PER_PAGE, 0, Integer.MAX_VALUE)
+            .when().get(CUSTOMER_ENDPOINT + CUSTOMER_PAGE_INDEX + CUSTOMER_PER_PAGE, 0, Integer.MAX_VALUE)
             .then().extract().response();
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
+    }
 
-        //todo customerEndpoint returns Page instead of list, but dont know how to change code to page
-      /*  Assert.assertThat(Arrays.asList(response.as(CustomerDTO[].class)), is(Collections.singletonList(
-            CustomerDTO.builder()
-                .id(CUSTOMER_ID)
-                .knr(CUSTOMER_NUMBER)
-                .name(CUSTOMER_NAME)
-                .surname(CUSTOMER_SURNAME)
-                .mail(CUSTOMER_MAIL)
-                .birthDate(CUSTOMER_BIRTHDATE)
-                .build())));*/
+    // get /customer/findWithKnr/{knr}        Get one spezific customer entry by knr
+    @Test
+    public void findByCustomerKnrAsAnonymous() {
+        Response response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .when().get(CUSTOMER_ENDPOINT + CUSTOMER_BY_NUMBER_PATH, CUSTOMER_NUMBER)
+            .then().extract().response();
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED.value()));
     }
 
     @Test
-    public void findByCustomerNumber() {
+    public void findByCustomerKnrAsUser() {
+        Mockito.when(customerRepository.findOneByKnr(CUSTOMER_NUMBER)).thenReturn(defaultCustomer());
+
         Response response = RestAssured
             .given()
             .contentType(ContentType.JSON)
@@ -82,21 +80,31 @@ public class CustomerEndpointTest extends BaseTest {
             .when().get(CUSTOMER_ENDPOINT + CUSTOMER_BY_NUMBER_PATH, CUSTOMER_NUMBER)
             .then().extract().response();
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
-
-        Assert.assertThat(response.as(CustomerDTO.class), is(CustomerDTO.builder()
-                .id(CUSTOMER_ID)
-                .knr(CUSTOMER_NUMBER)
-                .name(CUSTOMER_NAME)
-                .surname(CUSTOMER_SURNAME)
-                .mail(CUSTOMER_MAIL)
-                .birthDate(CUSTOMER_BIRTHDATE)
-                .version(1)
-                .build()));
-
     }
 
+
+    // get /customer/findName/{pageIndex}/{customerPerPage}/{name}        Gets all customers with the given name
     @Test
-    public void findByFirstname() {
+    public void findByNameAsAnonymous() {
+        Mockito.when(customerRepository
+            .findByNameStartingWithIgnoreCaseOrSurnameStartingWithIgnoreCase(CUSTOMER_NAME, CUSTOMER_NAME))
+            .thenReturn(Collections.singletonList(defaultCustomer()));
+
+        Response response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .when().get(CUSTOMER_ENDPOINT + CUSTOMER_BY_NAME_PATH, 0, Integer.MAX_VALUE, CUSTOMER_NAME)
+            .then().extract().response();
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED.value()));
+    }
+
+
+    @Test
+    public void findByNameAsUser() {
+        Mockito.when(customerRepository
+            .findByNameStartingWithIgnoreCaseOrSurnameStartingWithIgnoreCase(CUSTOMER_NAME, CUSTOMER_NAME))
+            .thenReturn(Collections.singletonList(defaultCustomer()));
+
         Response response = RestAssured
             .given()
             .contentType(ContentType.JSON)
@@ -104,171 +112,182 @@ public class CustomerEndpointTest extends BaseTest {
             .when().get(CUSTOMER_ENDPOINT + CUSTOMER_BY_NAME_PATH, 0, Integer.MAX_VALUE, CUSTOMER_NAME)
             .then().extract().response();
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
-
-      /*  Assert.assertThat(Arrays.asList(response.as(CustomerDTO[].class)), is(Collections.singletonList(
-            CustomerDTO.builder()
-                .id(CUSTOMER_ID)
-                .knr(CUSTOMER_NUMBER)
-                .name(CUSTOMER_NAME)
-                .surname(CUSTOMER_SURNAME)
-                .mail(CUSTOMER_MAIL)
-                .birthDate(CUSTOMER_BIRTHDATE)
-                .build())));*/
     }
 
-    @Test
-    public void findBySurname() {
-        Response response = RestAssured
-            .given()
-            .contentType(ContentType.JSON)
-            .header(HttpHeaders.AUTHORIZATION, validUserTokenWithPrefix)
-            .when().get(CUSTOMER_ENDPOINT + CUSTOMER_BY_NAME_PATH, 0, Integer.MAX_VALUE, CUSTOMER_SURNAME)
-            .then().extract().response();
-        Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
 
-/*        Assert.assertTrue(Arrays.asList(response.as(CustomerDTO[].class)).contains(CustomerDTO.builder()
-                .id(CUSTOMER_ID)
-                .knr(CUSTOMER_NUMBER)
-                .name(CUSTOMER_NAME)
-                .surname(CUSTOMER_SURNAME)
-                .mail(CUSTOMER_MAIL)
-                .birthDate(CUSTOMER_BIRTHDATE)
-                .build()));*/
-    }
-
-    @Test
-    public void findByNameStartsWithString() {
-        Response response = RestAssured
-            .given()
-            .contentType(ContentType.JSON)
-            .header(HttpHeaders.AUTHORIZATION, validUserTokenWithPrefix)
-            .when().get(CUSTOMER_ENDPOINT + CUSTOMER_BY_NAME_PATH, 0, Integer.MAX_VALUE, CUSTOMER_NAME_SUBSTRING)
-            .then().extract().response();
-        Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
-
-       /* Assert.assertTrue(Arrays.asList(response.as(CustomerDTO[].class)).contains(
-            CustomerDTO.builder()
-                .id(CUSTOMER_ID)
-                .knr(CUSTOMER_NUMBER)
-                .name(CUSTOMER_NAME)
-                .surname(CUSTOMER_SURNAME)
-                .mail(CUSTOMER_MAIL)
-                .birthDate(CUSTOMER_BIRTHDATE)
-                .build()));*/
-    }
 
     //todo Validation Tests fail
 
-    @Test(expected = CustomerNotValidException.class)
-    public void createCustomerWithInvalidName() throws CustomerNotValidException {
-        Customer customer = Customer.builder()
-            .id(CUSTOMER_ID)
-            .knr(CUSTOMER_NUMBER)
-            .name("")
-            .surname(CUSTOMER_SURNAME)
-            .mail(CUSTOMER_MAIL)
-            .birthDate(CUSTOMER_BIRTHDATE)
-            .build();
-            customerService.createCustomer(customer);
-            fail("CustomerNotValidException expected.");
+    //post /customer/create        Create and save the given customer
+    @Test
+    public void createCustomerAsAnonymous() {
+        Response response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .body(defaultCustomerDTO())
+            .when().post(CUSTOMER_ENDPOINT + CUSTOMER_CREATE_PATH)
+            .then().extract().response();
+
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED.value()));
     }
 
-    @Test(expected = CustomerNotValidException.class)
-    public void createCustomerWithInvalidSurname() throws CustomerNotValidException {
-        Customer customer = Customer.builder()
-            .id(CUSTOMER_ID)
-            .knr(CUSTOMER_NUMBER)
-            .name(CUSTOMER_NAME)
-            .surname("")
-            .mail(CUSTOMER_MAIL)
-            .birthDate(CUSTOMER_BIRTHDATE)
-            .build();
-        customerService.createCustomer(customer);
-        fail("CustomerNotValidException expected.");
+    @Test
+    public void createCustomerAsUser() {
+        Mockito.when(customerRepository.save(any(Customer.class)))
+            .thenReturn(defaultCustomer());
+
+        Response response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .header(HttpHeaders.AUTHORIZATION, validUserTokenWithPrefix)
+            .body(defaultCustomerDTO())
+            .when().post(CUSTOMER_ENDPOINT + CUSTOMER_CREATE_PATH)
+            .then().extract().response();
+
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
     }
 
-    @Test(expected = CustomerNotValidException.class)
-    public void createCustomerWithInvalidEmail() throws CustomerNotValidException {
-        Customer customer = Customer.builder()
-            .id(CUSTOMER_ID)
-            .knr(CUSTOMER_NUMBER)
-            .name(CUSTOMER_NAME)
-            .surname(CUSTOMER_SURNAME)
-            .mail("invalid.Email")
-            .birthDate(CUSTOMER_BIRTHDATE)
-            .build();
-        customerService.createCustomer(customer);
-        fail("CustomerNotValidException expected.");
+    @Test
+    public void createCustomerWithInvalidNameAsUser() {
+        CustomerDTO customerDTO = defaultCustomerDTO();
+        customerDTO.setName("");
+
+        Response response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .header(HttpHeaders.AUTHORIZATION, validUserTokenWithPrefix)
+            .body(customerDTO)
+            .when().post(CUSTOMER_ENDPOINT + CUSTOMER_CREATE_PATH)
+            .then().extract().response();
+
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.NOT_ACCEPTABLE.value()));
     }
 
-    @Test(expected = CustomerNotValidException.class)
-    public void createCustomerWithInvalidBirthdate() throws CustomerNotValidException {
-        Customer customer = Customer.builder()
-            .id(CUSTOMER_ID)
-            .knr(CUSTOMER_NUMBER)
-            .name(CUSTOMER_NAME)
-            .surname(CUSTOMER_SURNAME)
-            .mail(CUSTOMER_MAIL)
-            .birthDate(LocalDate.now())
-            .build();
-        customerService.createCustomer(customer);
-        fail("CustomerNotValidException expected.");
+    //post /customer/update        Update and save the given customer
+
+    @Test
+    public void updateCustomerAsAnonymous() {
+        Response response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .body(defaultCustomerDTO())
+            .when().post(CUSTOMER_ENDPOINT + CUSTOMER_UPDATE_PATH)
+            .then().extract().response();
+
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED.value()));
     }
 
-    @Test(expected = CustomerNotValidException.class)
-    public void updateCustomerWithInvalidName() throws InvalidIdException, CustomerNotValidException {
-        Customer customer = Customer.builder()
-            .id(CUSTOMER_ID)
-            .knr(CUSTOMER_NUMBER)
-            .name("")
-            .surname(CUSTOMER_SURNAME)
-            .mail(CUSTOMER_MAIL)
-            .birthDate(CUSTOMER_BIRTHDATE)
-            .build();
-        customerService.updateCustomer(customer);
-        fail("CustomerNotValidException expected.");
+    @Test
+    public void updateCustomerAsUser() {
+        Mockito.when(customerRepository.findOneByKnr(CUSTOMER_NUMBER)).thenReturn(defaultCustomer());
+
+        CustomerDTO customerDTO = defaultCustomerDTO();
+        customerDTO.setName("Neuer-Name");
+
+        Response response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .header(HttpHeaders.AUTHORIZATION, validUserTokenWithPrefix)
+            .body(customerDTO)
+            .when().post(CUSTOMER_ENDPOINT + CUSTOMER_UPDATE_PATH)
+            .then().extract().response();
+
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
     }
 
-    @Test(expected = CustomerNotValidException.class)
-    public void updateCustomerWithInvalidSurname() throws InvalidIdException, CustomerNotValidException {
-        Customer customer = Customer.builder()
-            .id(CUSTOMER_ID)
-            .knr(CUSTOMER_NUMBER)
-            .name(CUSTOMER_NAME)
-            .surname("")
-            .mail(CUSTOMER_MAIL)
-            .birthDate(CUSTOMER_BIRTHDATE)
-            .build();
-        customerService.updateCustomer(customer);
-        fail("CustomerNotValidException expected.");
+    @Test
+    public void updateCustomerWithInvalidNameAsUser() {
+        Mockito.when(customerRepository.findOneByKnr(CUSTOMER_NUMBER)).thenReturn(defaultCustomer());
+
+        CustomerDTO customerDTO = defaultCustomerDTO();
+        customerDTO.setName("");
+
+        Response response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .header(HttpHeaders.AUTHORIZATION, validUserTokenWithPrefix)
+            .body(customerDTO)
+            .when().post(CUSTOMER_ENDPOINT + CUSTOMER_UPDATE_PATH)
+            .then().extract().response();
+
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.NOT_ACCEPTABLE.value()));
     }
 
-    @Test(expected = CustomerNotValidException.class)
-    public void updateCustomerWithInvalidEmail() throws InvalidIdException, CustomerNotValidException {
-        Customer customer = Customer.builder()
-            .id(CUSTOMER_ID)
-            .knr(CUSTOMER_NUMBER)
-            .name(CUSTOMER_NAME)
-            .surname(CUSTOMER_SURNAME)
-            .mail("invalid.Email")
-            .birthDate(CUSTOMER_BIRTHDATE)
-            .build();
-        customerService.updateCustomer(customer);
-        fail("CustomerNotValidException expected.");
+    @Test
+    public void updateWrongVersionCustomerAsUser() {
+        Customer customer = defaultCustomer();
+        customer.setVersion(2);
+
+        Mockito.when(customerRepository.findOneByKnr(CUSTOMER_NUMBER)).thenReturn(customer);
+
+        CustomerDTO customerDTO = defaultCustomerDTO();
+        customerDTO.setName("Neuer-Name");
+
+        Response response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .header(HttpHeaders.AUTHORIZATION, validUserTokenWithPrefix)
+            .body(customerDTO)
+            .when().post(CUSTOMER_ENDPOINT + CUSTOMER_UPDATE_PATH)
+            .then().extract().response();
+
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.FAILED_DEPENDENCY.value()));
     }
 
-    @Test(expected = CustomerNotValidException.class)
-    public void updateCustomerWithInvalidBirthdate() throws InvalidIdException, CustomerNotValidException {
-        Customer customer = Customer.builder()
-            .id(CUSTOMER_ID)
-            .knr(CUSTOMER_NUMBER)
-            .name(CUSTOMER_NAME)
-            .surname(CUSTOMER_SURNAME)
-            .mail(CUSTOMER_MAIL)
-            .birthDate(LocalDate.now())
-            .build();
-        customerService.updateCustomer(customer);
-        fail("CustomerNotValidException expected.");
+    @Test
+    public void updateWrongKnrCustomerAsUser() {
+        Customer customer = defaultCustomer();
+
+        Mockito.when(customerRepository.findOneByKnr(CUSTOMER_NUMBER)).thenReturn(customer);
+
+        CustomerDTO customerDTO = defaultCustomerDTO();
+        customerDTO.setKnr(2L);
+
+        Response response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .header(HttpHeaders.AUTHORIZATION, validUserTokenWithPrefix)
+            .body(customerDTO)
+            .when().post(CUSTOMER_ENDPOINT + CUSTOMER_UPDATE_PATH)
+            .then().extract().response();
+
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.NOT_FOUND.value()));
     }
+
+    //get /customer/{id}        Get one spezific customer entry by id
+    @Test
+    public void idCustomerAsAnonymous() {
+        Response response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .when().get(CUSTOMER_ENDPOINT + CUSTOMER_ID_INDEX, CUSTOMER_ID)
+            .then().extract().response();
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED.value()));
+    }
+
+    @Test
+    public void idCustomerAsUser() {
+        Mockito.when(customerRepository.findOneById(CUSTOMER_ID)).thenReturn(java.util.Optional.ofNullable(defaultCustomer()));
+        Response response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .header(HttpHeaders.AUTHORIZATION, validUserTokenWithPrefix)
+            .when().get(CUSTOMER_ENDPOINT + CUSTOMER_ID_INDEX, CUSTOMER_ID)
+            .then().extract().response();
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
+    }
+
+    @Test
+    public void idWrongCustomerAsUser() {
+        Mockito.when(customerRepository.findOneById(CUSTOMER_ID)).thenReturn(null);
+        Response response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .header(HttpHeaders.AUTHORIZATION, validUserTokenWithPrefix)
+            .when().get(CUSTOMER_ENDPOINT + CUSTOMER_ID_INDEX, 2)
+            .then().extract().response();
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.NOT_FOUND.value()));
+    }
+
 
 }

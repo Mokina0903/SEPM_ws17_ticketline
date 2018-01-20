@@ -1,11 +1,16 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.exception;
 
-public class CustomerNotValidException extends Exception {
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+// TODO (Verena) Welchen HTTP Status?
+@ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
+public class CustomerNotValidException extends RuntimeException {
 
     public CustomerNotValidException() {
     }
 
     public CustomerNotValidException(String message) {
-        super(message);
+        super("CustomerNotValidException: " + message);
     }
 }
