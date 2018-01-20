@@ -1,0 +1,50 @@
+--------------------------------------- Alle --------------------------------------
+TODO: CodeCleaning (Leerzeilen, unnötige imports)
+TODO: JavaDoc
+TODO: Diverse TODOS im Code lösen
+TODO: Alle Protokolle nochmals durchsehen
+TODO: Vollständigkeit der Dokumente prüfen
+
+
+-------------------------------------- David --------------------------------------
+
+TODO: Mergen
+
+
+
+TODO: IntegrationTests:
+  + CustomerEndpoint
+  + EventEndpoint
+  + InvoiceEndpoint
+  + LocationEndpoint
+  + NewsEndpoint
+  + TicketEndpoint
+  + UserEndpoint
+
+TODO: UnitTests:
+  + CustomerEndpoint
+  + EventEndpoint
+  + InvoiceEndpoint
+  + LocationEndpoint
+  + NewsEndpoint
+  + TicketEndpoint
+  + UserEndpoint
+
+TODO: TestPlan:
+  + Manuelle Tests schreiben in Exceldatei
+  + Manuelle Tests durchführen
+  + Csv anpassen (Kategorie)
+  + Testbericht?
+
+
+TODO: Fragen:
+ + Kategorien OK
+ + Diverse TODOS im Code
+
+
+TODO: Datagenerator:
+  + User anlegen für Alle
+
+TODO: Infrastruktur für Präsendation installieren
+
+TODO: Jar-File erstellen
