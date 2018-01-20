@@ -116,6 +116,9 @@ public class MainController implements LocalizationObserver {
         return newsTab;
     }
 
+    public Tab getTopTenTab() {
+        return topTenTab;
+    }
 
     public MainController(
         SpringFxmlLoader springFxmlLoader,
@@ -237,23 +240,26 @@ public class MainController implements LocalizationObserver {
         }
     }
 
+    public void setCurrentTab(MainControlTabs tab){
+        switch(tab){
+            case EVENT: tpContent.getSelectionModel().select(eventTab);
+            break;
+            case NEWS: tpContent.getSelectionModel().select(newsTab);
+            break;
+            case TICKET: tpContent.getSelectionModel().select(ticketTab);
+            break;
+            case STATISTICS: tpContent.getSelectionModel().select(topTenTab);
+            break;
+            case USER: tpContent.getSelectionModel().select(userTab);
+            break;
+            case CUSTOMER: tpContent.getSelectionModel().select(customerTab);
+        }
+    }
+
 
     private void setListenerForTabs() {
         tpContent.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-
-            if (newValue.equals(eventTab)) {
-                if (eventController == null) {
-                    eventController = (EventController) setTabContent(eventController, "event/eventComponent.fxml", eventTab);
-                    eventController.loadEvents();
-                    // eventController.preparePagination();
-                }
-            } else if (newValue.equals(topTenTab)) {
-                if (top10Controller == null) {
-                    top10Controller = (Top10Controller) setTabContent(top10Controller, "statistics/top10Statistics.fxml", topTenTab);
-                    top10Controller.initializeData();
-
-                }
-            } else if (newValue.equals(ticketTab)) {
+            if (newValue.equals(ticketTab)) {
                 if (ticketController == null) {
                     ticketController = (TicketController) setTabContent(ticketController, "ticket/ticketComponent.fxml", ticketTab);
                     ticketController.initializePagination();
@@ -265,11 +271,27 @@ public class MainController implements LocalizationObserver {
                     customerController.initialzeData(customerTab);
                     // customerController.preparePagination();
                 }
-            } else {
+            } else if (newValue.equals(userTab)){
                 if (userController == null) {
                     userController = (UserController) setTabContent(userController, "user/userComponent.fxml", userTab);
                     userController.loadUsers();
                 }
+            } else if (newValue.equals(eventTab)) {
+               // if (eventController == null) {
+                    eventController = (EventController) setTabContent(eventController, "event/eventComponent.fxml", eventTab);
+                    eventController.loadEvents();
+                if(! (customerController == null)){
+                    customerController.setNormalTabView();
+                }
+
+                    // eventController.preparePagination();
+            } else if (newValue.equals(topTenTab)) {
+                top10Controller = (Top10Controller) setTabContent(top10Controller, "statistics/top10Statistics.fxml", topTenTab);
+                top10Controller.initializeData();
+                if(! (customerController == null)){
+                    customerController.setNormalTabView();
+                }
+
             }
         });
     }

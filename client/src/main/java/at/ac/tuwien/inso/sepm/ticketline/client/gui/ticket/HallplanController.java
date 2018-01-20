@@ -7,6 +7,7 @@ import at.ac.tuwien.inso.sepm.ticketline.client.exception.TicketAlreadyExistsExc
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.*;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.customer.CustomerController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.event.EventController;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.statistics.Top10Controller;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.InvoiceService;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.TicketService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
@@ -25,6 +26,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -39,8 +41,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
-import java.awt.*;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -126,6 +126,7 @@ public class HallplanController implements LocalizationObserver {
 
     private DetailedHallDTO hall;
     private Node oldContent;
+    Tab currentTab;
 
      Map<Character, Integer> ticketAmountForEachSector;
     private Map<Character, Double> priceOfEachSector;
@@ -246,9 +247,10 @@ public class HallplanController implements LocalizationObserver {
         priceOfEachSectorLabels.put('e', lblPriceOfTicketsInE);
     }
 
-    public void initializeData(DetailedEventDTO event, CustomerDTO customer, Node oldContent) {
+    public void initializeData(DetailedEventDTO event, CustomerDTO customer, Node oldContent, Tab currentTab) {
         this.event = event;
         this.hall = event.getHall();
+        this.currentTab = currentTab;
 
         this.oldContent = oldContent;
 
@@ -379,7 +381,8 @@ public class HallplanController implements LocalizationObserver {
 
     @FXML
     public void backToEventSelection(ActionEvent actionEvent) {
-        mainController.getEventTab().setContent(oldContent);
+        mainController.setCutsomer(null);
+        currentTab.setContent(oldContent);
     }
 
     @FXML
@@ -513,16 +516,23 @@ public class HallplanController implements LocalizationObserver {
 
     private void backToEventTabBeginning() {
 
-
+        Node root;
         customerController.setNormalTabView();
-        SpringFxmlLoader.Wrapper<EventController> wrapper =
+        if(currentTab ==mainController.getEventTab()){
+            SpringFxmlLoader.Wrapper<EventController> wrapper =
             springFxmlLoader.loadAndWrap("/fxml/event/eventComponent.fxml");
-        Node root = springFxmlLoader.load("/fxml/event/eventComponent.fxml");
+            root = springFxmlLoader.load("/fxml/event/eventComponent.fxml");
+            EventController c = wrapper.getController();
+            c.loadEvents();
+        }else{
+            SpringFxmlLoader.Wrapper<Top10Controller> wrapper =
+                springFxmlLoader.loadAndWrap("/fxml/statistics/top10Statistics.fxml");
+            root = springFxmlLoader.load("/fxml/statistics/top10Statistics.fxml");
+            Top10Controller c = wrapper.getController();
+            c.initializeData();
+        }
 
-        EventController c = wrapper.getController();
-
-        c.loadEvents();
-        mainController.getEventTab().setContent(root);
+        currentTab.setContent(root);
         mainController.setCutsomer(null);
         mainController.setEvent(null);
     }

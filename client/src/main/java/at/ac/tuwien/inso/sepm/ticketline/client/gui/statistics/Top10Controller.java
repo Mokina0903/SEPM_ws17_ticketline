@@ -2,12 +2,14 @@ package at.ac.tuwien.inso.sepm.ticketline.client.gui.statistics;
 
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.*;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.customer.CustomerController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.news.NewsController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.news.NewsElementController;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.EventService;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.TicketService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.JavaFXUtils;
+import at.ac.tuwien.inso.sepm.ticketline.rest.event.DetailedEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.news.SimpleNewsDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
@@ -22,6 +24,7 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,6 +58,14 @@ public class Top10Controller extends TabElement implements LocalizationObserver 
     @FXML
     public DatePicker toDate;
     @FXML
+    public Label lblFromDate;
+    @FXML
+    public Label lblToDate;
+    @FXML
+    public Button btnGoToBuying;
+    @FXML
+    public BorderPane myContainer;
+    @FXML
     private TabHeaderController tabHeaderController;
 
     private MainController mainController;
@@ -64,7 +75,7 @@ public class Top10Controller extends TabElement implements LocalizationObserver 
     private Tab statisticsTab;
     private List<SimpleEventDTO> topTenEventsNow;
 
-    private long selectedID;
+    private long selectedID = -1;
     Node beforeN = null;
 
     @Autowired
@@ -79,7 +90,7 @@ public class Top10Controller extends TabElement implements LocalizationObserver 
     }
 
     public void initializeData() {
-
+        mainController.setGeneralErrorUnvisable();
         xAxis.setLabel("Events");
         xAxis.setTickLabelRotation(90);
         yAxis.setLabel("Sales");
@@ -110,6 +121,7 @@ public class Top10Controller extends TabElement implements LocalizationObserver 
 
     public void getTopTenEvents(ActionEvent actionEvent) {
 
+        mainController.setGeneralErrorUnvisable();
         LocalDate beginDate = fromDate.getValue();
         LocalDate endDate = toDate.getValue();
         String category = comBoxCategory.getSelectionModel().getSelectedItem();
@@ -165,43 +177,16 @@ public class Top10Controller extends TabElement implements LocalizationObserver 
 
         for (SimpleEventDTO event : topTenEvents) {
 
-            Task<Long> getCountOfTicketsFromEvent = new Task<Long>() {
-                @Override
-                protected Long call() throws Exception {
-                    return ticketService.countByEvent_Id(event.getId());
-                }
-
-                @Override
-                protected void succeeded() {
-                    super.succeeded();
-                    LOGGER.info("Task succeeded");
-                    try {
-                        series.getData().add(new XYChart.Data<Number, String>(ticketService.countByEvent_Id(event.getId()), event.getTitle() + " " + event.getId().toString()));
-                    } catch (DataAccessException e) {
-                        e.printStackTrace();
-                    }
-                    barChartTop10.getData().clear();
-                    barChartTop10.getData().addAll(series);
-                    setUpEventHandler(series);
-                }
-
-                @Override
-                protected void failed() {
-                    LOGGER.debug("Loading top ten events failed.");
-                    if (getValue() == null) {
-                        super.failed();
-                        mainController.showGeneralError("Failed to load ticket count from event: " + event.getTitle());
-                    }
-                }
-            };
-            getCountOfTicketsFromEvent.runningProperty().addListener((observable, oldValue, running) ->
-                mainController.setProgressbarProgress(
-                    running ? ProgressBar.INDETERMINATE_PROGRESS : 0)
-            );
-
-            new Thread(getCountOfTicketsFromEvent).start();
+            try {
+                series.getData().add(new XYChart.Data<Number, String>(ticketService.countByEvent_Id(event.getId()), event.getTitle() + " " + event.getId().toString()));
+            } catch (DataAccessException e) {
+                e.printStackTrace();
+            }
         }
 
+        barChartTop10.getData().clear();
+        barChartTop10.getData().addAll(series);
+        setUpEventHandler(series);
 
     }
 
@@ -247,6 +232,59 @@ public class Top10Controller extends TabElement implements LocalizationObserver 
         }
     }
 
+    @FXML
+    public void goToTicketProzess(ActionEvent actionEvent) {
+        mainController.setGeneralErrorUnvisable();
+        if(selectedID == -1){
+            //TODO: add a label
+            return;
+        }
+
+        Task<DetailedEventDTO> eventDTOTask = new Task<DetailedEventDTO>() {
+            @Override
+            protected DetailedEventDTO call() throws Exception {
+                return eventService.findById(selectedID);
+            }
+
+            @Override
+            protected void succeeded() {
+                LOGGER.info("Task succeeded");
+                super.succeeded();
+                mainController.setEvent(getValue());
+            }
+
+            @Override
+            protected void failed() {
+                LOGGER.debug("Loading top ten events failed.");
+                if (getValue() == null) {
+                    super.failed();
+                    mainController.showGeneralError("Failed to load the top ten events");
+                }
+            }
+        };
+
+        eventDTOTask.runningProperty().addListener((observable, oldValue, running) ->
+            mainController.setProgressbarProgress(
+                running ? ProgressBar.INDETERMINATE_PROGRESS : 0));
+
+        new Thread(eventDTOTask).start();
+
+        SpringFxmlLoader.Wrapper<CustomerController> wrapper =
+            loader.loadAndWrap("/fxml/customer/customerComponent.fxml");
+        Node root = loader.load("/fxml/customer/customerComponent.fxml");
+        CustomerController c = wrapper.getController();
+        c.preparePagination();
+        c.setTicketProzessView(statisticsTab);
+        c.setOldContent(myContainer);
+
+
+        statisticsTab.setContent(root);
+
+    }
+
+
+
+
     @Override
     protected void setTab(Tab tab) {
         statisticsTab = tab;
@@ -255,6 +293,11 @@ public class Top10Controller extends TabElement implements LocalizationObserver 
     @Override
     public void update() {
         tabHeaderController.setTitle(BundleManager.getBundle().getString("statistics.top10Statistics"));
+        lblFromDate.setText(BundleManager.getBundle().getString("statistics.fromDate"));
+        lblToDate.setText(BundleManager.getBundle().getString("statistics.toDate"));
+        applyFilter.setText(BundleManager.getBundle().getString("statistics.apply"));
 
     }
+
+
 }

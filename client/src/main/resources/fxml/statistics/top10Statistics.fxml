@@ -15,7 +15,7 @@
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.statistics.Top10Controller"
-            prefHeight="400.0" prefWidth="600.0">
+            prefHeight="400.0" prefWidth="600.0" fx:id="myContainer">
     <stylesheets>
         <URL value="@/css/statistics.css"/>
     </stylesheets>
@@ -59,12 +59,17 @@
                 </FXCollections>
             </items>
             </ComboBox>
-            <Label text="%statistics.fromDate"/>
+            <Label fx:id="lblFromDate" text="%statistics.fromDate"/>
             <DatePicker fx:id="fromDate"/>
-            <Label text="%statistics.toDate"/>
+            <Label fx:id="lblToDate" text="%statistics.toDate"/>
             <DatePicker fx:id="toDate"/>
             <Button fx:id="applyFilter" onAction="#getTopTenEvents" text="%statistics.apply"/>
         </HBox>
     </bottom>
+    <right>
+        <VBox>
+            <Button fx:id="btnGoToBuying" onAction="#goToTicketProzess"/>
+        </VBox>
+    </right>
 </BorderPane>
 
