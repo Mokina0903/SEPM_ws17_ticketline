@@ -10,10 +10,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
 import org.controlsfx.glyphfont.FontAwesome;
@@ -93,6 +90,17 @@ public class EventAdvancedSearchController implements LocalizationObserver {
     private Slider slDuration;
 
     @FXML
+    private RadioButton rbSeatsNo;
+    @FXML
+    private RadioButton rbSeatsYes;
+    @FXML
+    private RadioButton rbUpcoming;
+    @FXML
+    private RadioButton rbPast;
+    @FXML
+    DatePicker dpDate;
+
+    @FXML
     private Button btOk;
     @FXML
     private Button btCancel;
@@ -136,6 +144,8 @@ public class EventAdvancedSearchController implements LocalizationObserver {
         setUpSlider(slTime, lbTimeInfo);
         setUpSlider(slDuration, lbDurationInfo);
 
+        rbUpcoming.setSelected(true);
+        rbSeatsNo.setSelected(true);
 
         setButtonGraphic(btOk, "CHECK", Color.OLIVE);
         setButtonGraphic(btCancel, "TIMES", Color.CRIMSON);
@@ -214,6 +224,23 @@ public class EventAdvancedSearchController implements LocalizationObserver {
             Double timeInMinutes = slDuration.getValue();
             parameters.set("duration", timeInMinutes.toString());
         }
+        if (rbSeatsNo.isSelected() == false) {
+            parameters.set("noSeats", "toFilter");
+        }
+        if (rbSeatsYes.isSelected() == false) {
+            parameters.set("seats", "toFilter");
+        }
+        if (rbUpcoming.isSelected() == false) {
+            parameters.set("upcoming", "toFilter");
+        }
+        if (rbPast.isSelected() == false) {
+            parameters.set("past", "toFilter");
+        }
+/*
+        if (!dpDate.getEditor().getText().isEmpty()) {
+            parameters.set("eventDate", dpDate.getValue().toString());
+        }
+*/
 
         //type
         //seats
@@ -251,5 +278,11 @@ public class EventAdvancedSearchController implements LocalizationObserver {
         lbArtist.setText(BundleManager.getBundle().getString("artist.artist"));
         lbArtistFName.setText(BundleManager.getBundle().getString("artist.fname"));
         lbArtistLName.setText(BundleManager.getBundle().getString("artist.lname"));
+        rbUpcoming.setId(BundleManager.getBundle().getString("events.upcoming"));
+        rbPast.setId(BundleManager.getBundle().getString("events.past"));
+        rbSeatsNo.setId(BundleManager.getBundle().getString("events.seatsNo"));
+        rbSeatsYes.setId(BundleManager.getBundle().getString("events.seatsYes"));
+
     }
 }
+

@@ -2,12 +2,8 @@ package at.ac.tuwien.inso.sepm.ticketline.server.searchAndFilter;
 
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.QEvent;
 import com.querydsl.core.types.Predicate;
-import org.hibernate.boot.jaxb.SourceType;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 @Component
 public class SimpleEventFilterBuilder implements EventFilterBuilder {
@@ -24,12 +20,14 @@ public class SimpleEventFilterBuilder implements EventFilterBuilder {
             .notEmptyAnd(EVENT.description::containsIgnoreCase, filter.getDescription())
             .notNullAnd(EVENT.price::loe, filter.getPriceTo())
             .notNullAnd(EVENT.price::goe, filter.getPriceFrom())
-            .notNullAnd(EVENT.startOfEventTime::before, filter.getStartTimeUpperBound())
-            .notNullAnd(EVENT.startOfEventTime::after, filter.getStartTimeLowerBound())
-
+            .notNullAnd(EVENT.startOfEventTime::loe, filter.getStartTimeUpperBound())
+            .notNullAnd(EVENT.startOfEventTime::goe, filter.getStartTimeLowerBound())
             //todo filter time
 /*          .notNullAnd(EVENT.startOfEvent::between, filter.getStartTimeUpperBound())
           .notNullAnd(EVENT.startOfEvent::after, filter.getStartTimeLowerBound())*/
+
+            .notNullAnd(EVENT.seatSelection::ne, filter.getNoSeats())
+            .notNullAnd(EVENT.seatSelection::eq, filter.getSeats())
 
             // .notNullAnd(EVENT.duration::before, filter.getDuration())*/
             .build();

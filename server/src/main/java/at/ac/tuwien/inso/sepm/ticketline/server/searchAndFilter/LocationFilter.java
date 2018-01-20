@@ -1,5 +1,7 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.searchAndFilter;
 
+import io.swagger.models.auth.In;
+
 import java.util.HashMap;
 
 public class LocationFilter {
@@ -7,7 +9,7 @@ public class LocationFilter {
     private String description;
     private String country;
     private String street;
-    private int zip = -1;
+    private Integer zip;
 
     public LocationFilter(HashMap<String, String> parameters) {
         if (parameters.containsKey("descriptionEvent")) {
@@ -48,11 +50,11 @@ public class LocationFilter {
         this.street = street;
     }
 
-    public int getZip() {
+    public Integer getZip() {
         return zip;
     }
 
-    public void setZip(int zip) {
+    public void setZip(Integer zip) {
         this.zip = zip;
     }
 }

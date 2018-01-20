@@ -83,10 +83,8 @@ public class EventEndpoint {
                                              @QuerydslPredicate(root = Event.class)Predicate predicate,
                                              @RequestParam HashMap<String,String> parameters) {
         Pageable request = new PageRequest(pageIndex, eventsPerPage, Sort.Direction.ASC, "start_of_event");
-        System.out.println("PARAMS: " + parameters.toString());
         Page<Event> eventPage = eventService.findByAdvancedSearch(parameters, request);
         List<SimpleEventDTO> dtos = eventMapper.eventToSimpleEventDTO(eventPage.getContent());
-        System.out.println("LIST::: " +dtos.size());
         return new PageImpl<>(dtos, request, eventPage.getTotalElements());
     }
 
@@ -96,10 +94,8 @@ public class EventEndpoint {
                                              @QuerydslPredicate(root = Event.class)Predicate predicate,
                                              @RequestParam HashMap<String,String> parameters) {
         Pageable request = new PageRequest(pageIndex, eventsPerPage, Sort.Direction.ASC, "start_of_event");
-        System.out.println("PARAMS: " + parameters.toString());
         Page<Event> eventPage = eventService.find(parameters, request);
         List<SimpleEventDTO> dtos = eventMapper.eventToSimpleEventDTO(eventPage.getContent());
-        System.out.println("LIST::: " +dtos.size());
         return new PageImpl<>(dtos, request, eventPage.getTotalElements());
     }
 

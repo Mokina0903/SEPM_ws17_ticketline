@@ -24,7 +24,7 @@ public class Event implements Predicatable{
         Kabarett,
         Jazz,
         Kino
-    };
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq_event_id")
@@ -48,9 +48,10 @@ public class Event implements Predicatable{
     @Column(nullable = false)
     private LocalDateTime endOfEvent;
 
-    private LocalTime startOfEventTime;
+    @Column(nullable = false)
+    private Long startOfEventTime;
 
-    private long duration;
+    private Long duration;
 
     @Column(nullable = false)
     private Boolean seatSelection;
@@ -120,31 +121,26 @@ public class Event implements Predicatable{
         return endOfEvent;
     }
 
-    public LocalTime getStartOfEventTime() {
-        return startOfEvent.toLocalTime();
+    public Long getStartOfEventTime() {
+        return startOfEventTime;
     }
 
     public void setStartOfEventTime() {
-        this.startOfEventTime = startOfEvent.toLocalTime();
+        LocalTime time = startOfEvent.toLocalTime();
+        this.startOfEventTime = Duration.between(LocalTime.MIN, startOfEvent).toMinutes();
     }
 
     public void setEndOfEvent(LocalDateTime endOfEvent ) {
         this.endOfEvent = endOfEvent;
     }
 
-
     public long getDuration() {
-        Long duration = Duration.between(endOfEvent, startOfEvent).getSeconds();
-        duration /= 60;
-        System.out.println("Duration is " + duration);
         return duration;
     }
 
     public void setDuration() {
-        Long duration = Duration.between(endOfEvent, startOfEvent).getSeconds();
-        duration /= 60;
-        System.out.println("Duration is " + duration);
-        this.duration = duration;
+        long minutes = Duration.between(startOfEvent, endOfEvent).toMinutes();
+        this.duration = minutes;
     }
 
     public Hall getHall() {
@@ -260,7 +256,6 @@ public class Event implements Predicatable{
             return this;
         }
 
-
         public EventBuilder endOfEvent(LocalDateTime endOfEvent){
             this.endOfEvent = endOfEvent;
             return this;
@@ -298,6 +293,8 @@ public class Event implements Predicatable{
             event.setArtists(artists);
             event.setSeatSelection(seatSelection);
             event.setEventCategory(eventCategory);
+            event.setStartOfEventTime();
+            event.setDuration();
             return event;
         }
     }

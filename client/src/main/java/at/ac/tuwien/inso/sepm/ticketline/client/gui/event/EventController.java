@@ -227,7 +227,8 @@ public class EventController extends TabElement implements LocalizationObserver 
 
     public void loadEvents() {
 
-        paginationHelper.setSearchFor(EventSearchFor.EVENT);
+        preparePagination();
+       /* paginationHelper.setSearchFor(EventSearchFor.EVENT);
         Task<Page<SimpleEventDTO>> taskLoadEvents = new Task<>() {
             @Override
             protected Page<SimpleEventDTO> call() throws DataAccessException {
@@ -260,7 +261,7 @@ public class EventController extends TabElement implements LocalizationObserver 
         );
 
 
-        new Thread(taskLoadEvents).start();
+        new Thread(taskLoadEvents).start();*/
 
     }
 

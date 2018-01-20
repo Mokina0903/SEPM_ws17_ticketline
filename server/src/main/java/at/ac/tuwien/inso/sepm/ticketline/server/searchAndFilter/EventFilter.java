@@ -2,7 +2,6 @@ package at.ac.tuwien.inso.sepm.ticketline.server.searchAndFilter;
 
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.HashMap;
 
@@ -10,13 +9,18 @@ public class EventFilter {
 
     private String title;
     private String description;
-    private long priceFrom = 0;
-    private long priceTo = Long.MAX_VALUE;
+    private Long priceFrom;
+    private Long priceTo;
     private LocalDate date;
-    private LocalTime startTimeLowerBound;
-    private LocalTime startTimeUpperBound;
+    private Long startTimeLowerBound;
+    private Long startTimeUpperBound;
     private LocalTime durationLowerBound;
     private LocalTime durationUpperBound;
+    private Boolean seats;
+    private Boolean noSeats;
+    private Boolean upcoming;
+    private Boolean past;
+
 
     public EventFilter(HashMap<String, String> parameters) {
         if (parameters.containsKey("title")) {
@@ -32,27 +36,28 @@ public class EventFilter {
             this.priceTo = Long.parseLong(parameters.get("priceTo"));
         }
         if (parameters.containsKey("timeOfStart")) {
-            long earlyStartInMinutes = Long.parseLong(parameters.get("timeOfStart"));
+            Long lowerBound = Long.parseLong(parameters.get("timeOfStart"));
             System.out.println("Event has time of start...");
-            earlyStartInMinutes -= 30;
-            if (earlyStartInMinutes < 0) {
-                earlyStartInMinutes += 24 * 60;
+            lowerBound -= 30;
+            if (lowerBound < 0) {
+                lowerBound += 24 * 60;
             }
-            LocalTime lowerBound = minutesToTime(earlyStartInMinutes);
             this.startTimeLowerBound = lowerBound;
-            System.out.println(lowerBound);
+          /*  LocalTime lowerBound = minutesToTime(startTimeLowerBound);
+            this.startTimeLowerBound = lowerBound;*/
+            System.out.println("Filter Time: " + lowerBound);
 
-            long lateStartInMinutes = Long.parseLong(parameters.get("timeOfStart"));
-            lateStartInMinutes += 30;
-            if (lateStartInMinutes >= 24 * 60) {
-                lateStartInMinutes -= 24 * 60;
+            Long upperBound = Long.parseLong(parameters.get("timeOfStart"));
+            upperBound += 30;
+            if (upperBound >= 24 * 60) {
+                upperBound -= 24 * 60;
             }
 
-            LocalTime upperBound = minutesToTime(lateStartInMinutes);
+            //LocalTime upperBound = minutesToTime(startTimeUpperBound);
             this.startTimeLowerBound = upperBound;
             System.out.println(upperBound);
         }
-        if (parameters.containsKey("duration")) {
+       /* if (parameters.containsKey("duration")) {
             long durationLowerBoundInMinutes = Long.parseLong(parameters.get("duration"));
             durationLowerBoundInMinutes -= 30;
             if (durationLowerBoundInMinutes < 0) {
@@ -67,19 +72,31 @@ public class EventFilter {
                 durationUpperBoundInMinutes -= 24 * 60;
             }
             LocalTime upperBound = minutesToTime(durationUpperBoundInMinutes);
-            this.durationLowerBound = upperBound;        }
+            this.durationLowerBound = upperBound;
+        }*/
+        if (parameters.containsKey("seats")) {
+            this.seats = true;
+        }
+        if (parameters.containsKey("noSeats")) {
+            this.noSeats = true;
+        }
+        if (parameters.containsKey("upcoming")) {
+            this.upcoming = true;
+        }
+        if (parameters.containsKey("past")) {
+            this.past = true;
+        }
 
         //todo
 
     }
 
-    private LocalTime minutesToTime(long minutes) {
-        long hours = minutes / 60;
-        long minutesLeft = minutes % 60;
-        System.out.println("Time in Filter: " +hours + " : " + minutesLeft);
+    private String minutesToTime(Long minutes) {
+        Long hours = minutes / 60;
+        Long minutesLeft = minutes % 60;
+        System.out.println("Time in Filter: " + hours + " : " + minutesLeft);
         String time = String.format("%02d:%02d", hours, minutesLeft);
-
-        return LocalTime.parse(time);
+        return time;
 
     }
 
@@ -100,19 +117,19 @@ public class EventFilter {
         this.description = description;
     }
 
-    public long getPriceFrom() {
+    public Long getPriceFrom() {
         return priceFrom;
     }
 
-    public void setPriceFrom(long priceFrom) {
+    public void setPriceFrom(Long priceFrom) {
         this.priceFrom = priceFrom;
     }
 
-    public long getPriceTo() {
+    public Long getPriceTo() {
         return priceTo;
     }
 
-    public void setPriceTo(long priceTo) {
+    public void setPriceTo(Long priceTo) {
         this.priceTo = priceTo;
     }
 
@@ -124,19 +141,19 @@ public class EventFilter {
         this.date = date;
     }
 
-    public LocalTime getStartTimeLowerBound() {
+    public Long getStartTimeLowerBound() {
         return startTimeLowerBound;
     }
 
-    public void setStartTimeLowerBound(LocalTime startTimeLowerBound) {
+    public void setStartTimeLowerBound(Long startTimeLowerBound) {
         this.startTimeLowerBound = startTimeLowerBound;
     }
 
-    public LocalTime getStartTimeUpperBound() {
+    public Long getStartTimeUpperBound() {
         return startTimeUpperBound;
     }
 
-    public void setStartTimeUpperBound(LocalTime startTimeUpperBound) {
+    public void setStartTimeUpperBound(Long startTimeUpperBound) {
         this.startTimeUpperBound = startTimeUpperBound;
     }
 
@@ -154,5 +171,37 @@ public class EventFilter {
 
     public void setDurationUpperBound(LocalTime durationUpperBound) {
         this.durationUpperBound = durationUpperBound;
+    }
+
+    public Boolean getSeats() {
+        return seats;
+    }
+
+    public void setSeats(Boolean seats) {
+        this.seats = seats;
+    }
+
+    public Boolean getNoSeats() {
+        return noSeats;
+    }
+
+    public void setNoSeats(Boolean noSeats) {
+        this.noSeats = noSeats;
+    }
+
+    public Boolean getUpcoming() {
+        return upcoming;
+    }
+
+    public void setUpcoming(Boolean upcoming) {
+        this.upcoming = upcoming;
+    }
+
+    public Boolean getPast() {
+        return past;
+    }
+
+    public void setPast(Boolean past) {
+        this.past = past;
     }
 }

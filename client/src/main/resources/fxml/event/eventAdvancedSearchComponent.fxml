@@ -68,18 +68,25 @@
                   <Label fx:id="lbEventDate" text="%events.date" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <DatePicker maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                   <Label fx:id="lbEventTime" text="%events.time" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                  <HBox GridPane.columnIndex="1" GridPane.rowIndex="4">
+                  <HBox maxWidth="1.7976931348623157E308" prefHeight="25.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                      <children>
-                        <Slider fx:id="slTime" maxWidth="1.7976931348623157E308" />
-                        <Label fx:id="lbTimeInfo" maxWidth="-Infinity" prefWidth="50.0" />
+                        <Slider fx:id="slTime" maxWidth="1.7976931348623157E308" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                        <Label fx:id="lbTimeInfo" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="50.0" />
                      </children>
+                     <GridPane.margin>
+                        <Insets right="10.0" />
+                     </GridPane.margin>
                   </HBox>
                   <Label fx:id="lbEventDuration" text="%events.duration" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                  <HBox GridPane.columnIndex="1" GridPane.rowIndex="6">
+                  <HBox maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="6">
                      <children>
-                        <Slider fx:id="slDuration" />
+                        <Slider fx:id="slDuration" maxWidth="1.7976931348623157E308" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                         <Label fx:id="lbDurationInfo" />
+                        <Label fx:id="lbDurationInfo" minWidth="-Infinity" prefWidth="50.0" />
                      </children>
+                     <GridPane.margin>
+                        <Insets right="10.0" />
+                     </GridPane.margin>
                   </HBox>
                   <Label fx:id="lbEventType" text="%events.type" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                   <ChoiceBox maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="2" />
@@ -87,14 +94,14 @@
                   <Label text="%events.past" GridPane.columnIndex="2" GridPane.rowIndex="5" />
                   <HBox maxWidth="1.7976931348623157E308" minWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="4">
                      <children>
-                        <RadioButton maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefWidth="75.0" text="%general.no" />
-                        <RadioButton maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefWidth="75.0" text="%general.yes" />
+                        <RadioButton fx:id="rbSeatsNo" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefWidth="120.0" text="%general.no" />
+                        <RadioButton fx:id="rbSeatsYes" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefWidth="120.0" text="%general.yes" />
                      </children>
                   </HBox>
                   <HBox maxWidth="1.7976931348623157E308" minWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="6">
                      <children>
-                        <RadioButton maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefWidth="75.0" text="%general.no" />
-                        <RadioButton maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefWidth="75.0" text="%general.yes" />
+                        <RadioButton fx:id="rbUpcoming" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefWidth="120.0" text="%events.future" />
+                        <RadioButton fx:id="rbPast" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefWidth="120.0" text="%events.old" />
                      </children>
                   </HBox>
                </children>
