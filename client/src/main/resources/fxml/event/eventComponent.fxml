@@ -12,8 +12,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="eventRootContainer" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.event.EventController">
+<BorderPane fx:id="eventRootContainer" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.event.EventController">
 
     <top>
         <fx:include fx:id="tabHeader" source="/fxml/tabHeader.fxml" />
@@ -29,9 +30,10 @@
                         <GridPane hgap="5.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" vgap="10.0" HBox.hgrow="ALWAYS">
                             <columnConstraints>
                                 <ColumnConstraints halignment="LEFT" maxWidth="-Infinity" minWidth="300.0" prefWidth="430.0" />
-                                <ColumnConstraints hgrow="ALWAYS" maxWidth="164.0" minWidth="40.0" prefWidth="67.0" />
+                                <ColumnConstraints hgrow="ALWAYS" maxWidth="-Infinity" minWidth="40.0" prefWidth="40.0" />
+                        <ColumnConstraints halignment="CENTER" minWidth="50.0" prefWidth="50.0" />
 
-                                <ColumnConstraints halignment="RIGHT" maxWidth="-Infinity" minWidth="110.0" prefWidth="110.0" />
+                                <ColumnConstraints halignment="LEFT" maxWidth="1.7976931348623157E308" minWidth="200.0" prefWidth="110.0" />
                             </columnConstraints>
                             <rowConstraints>
                                 <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
@@ -47,7 +49,10 @@
                                 </HBox>
                                 <Button fx:id="btAdvSearch" maxWidth="1.7976931348623157E308" minWidth="200.0" mnemonicParsing="false" onAction="#openAdvancedSearch" text="%events.advSearch" GridPane.halignment="LEFT" GridPane.rowIndex="1" />
                                 <Button fx:id="btSearch" defaultButton="true" minWidth="40.0" onAction="#search" prefWidth="40.0" GridPane.columnIndex="1" />
-                        <Label fx:id="lbNoMatch" text="%customer.noMatches" GridPane.columnIndex="2" />
+                        <Label fx:id="lbMatchInfo" prefHeight="16.0" prefWidth="163.0" GridPane.columnIndex="3">
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font></Label>
                             </children>
                             <HBox.margin>
                                 <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />

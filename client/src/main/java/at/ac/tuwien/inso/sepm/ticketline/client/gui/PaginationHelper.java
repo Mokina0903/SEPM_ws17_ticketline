@@ -94,6 +94,7 @@ public class PaginationHelper {
                     lvElements.getItems().add(wrapper.getController().vbElement);
                 }
             }
+            controller.setMatchInfoLabel(events.getTotalElements());
             return lvElements;
 
         } else if (searchFor.equals(EventSearchFor.LOCATION)) {
@@ -109,6 +110,7 @@ public class PaginationHelper {
                     lvElements.getItems().add(wrapper.getController().vbElement);
                 }
             }
+            controller.setMatchInfoLabel(locations.getTotalElements());
             return lvElements;
         } else {
             Page<SimpleArtistDTO> artists = loadArtistPage(pageIndex);
@@ -123,6 +125,7 @@ public class PaginationHelper {
                     lvElements.getItems().add(wrapper.getController().vbElement);
                 }
             }
+            controller.setMatchInfoLabel(artists.getTotalElements());
             return lvElements;
         }
     }

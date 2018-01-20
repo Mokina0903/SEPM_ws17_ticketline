@@ -10,11 +10,7 @@ import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.DetailedEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.hall.DetailedHallDTO;
-import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.location.SimpleLocationDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
-import io.swagger.models.auth.In;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -22,6 +18,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.paint.Color;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.GlyphFont;
 import org.controlsfx.glyphfont.GlyphFontRegistry;
@@ -41,8 +38,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 
 @Component
 public class EventController extends TabElement implements LocalizationObserver {
@@ -68,11 +63,12 @@ public class EventController extends TabElement implements LocalizationObserver 
     @FXML
     public BorderPane eventRootContainer;
     @FXML
-    public Label lbNoMatch;
+    public Label lbMatchInfo;
     @FXML
     private TabHeaderController tabHeaderController;
 
     private EventSearchFor searchFor = EventSearchFor.EVENT;
+    private long numberOfMatches;
 
 
     private Tab eventTab;
@@ -121,8 +117,8 @@ public class EventController extends TabElement implements LocalizationObserver 
         ObservableList<String> searchForList = FXCollections.observableArrayList();
         searchForList.addAll(searchForEvent, searchForLocation, searchForArtist);
         update();
-        lbNoMatch.setVisible(false);
-        //todo matchNotFound label
+        lbMatchInfo.setVisible(false);
+
         //todo show free seats for events
 
         cbSearch.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
@@ -178,7 +174,7 @@ public class EventController extends TabElement implements LocalizationObserver 
 
     private MultiValueMap<String,String> setParametersForEventSearch() {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        if (!tfSearchFor.getText().isEmpty() && !tfSearchFor.getText().equals("")) {
+        if (!tfSearchFor.getText().isEmpty() && !tfSearchFor.getText().equals(" ")) {
             params.add("title", tfSearchFor.getText());
             params.add("description", tfSearchFor.getText());
         }
@@ -187,7 +183,7 @@ public class EventController extends TabElement implements LocalizationObserver 
 
     private MultiValueMap<String,String> setParametersForLocationSearch() {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        if (!tfSearchFor.getText().isEmpty() && !tfSearchFor.getText().equals("")) {
+        if (!tfSearchFor.getText().isEmpty() && !tfSearchFor.getText().equals(" ")) {
             if (isNumeric(tfSearchFor.getText())) {
                 params.add("zip", tfSearchFor.getText());
             }
@@ -202,7 +198,7 @@ public class EventController extends TabElement implements LocalizationObserver 
 
     private MultiValueMap<String,String> setParametersForArtistSearch() {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        if (!tfSearchFor.getText().isEmpty() && !tfSearchFor.getText().equals("")) {
+        if (!tfSearchFor.getText().isEmpty() && !tfSearchFor.getText().equals(" ")) {
             params.add("artistFirstName", tfSearchFor.getText());
             params.add("artistLastName", tfSearchFor.getText());
         }
@@ -218,33 +214,6 @@ public class EventController extends TabElement implements LocalizationObserver 
         eventTab.setContent(root);
     }
 
-
-    private void noMatchFound() {
-        LOGGER.info("no search match");
-        lbNoMatch.setVisible(true);
-    }
-
-    @Override
-    public void update() {
-        tabHeaderController.setTitle(BundleManager.getBundle().getString("events.events"));
-        btAdvSearch.setText(BundleManager.getBundle().getString("events.advSearch"));
-        lbNoMatch.setText(BundleManager.getBundle().getString("customer.noMatches"));
-        searchForArtist = BundleManager.getBundle().getString("artist.artist");
-        searchForEvent = BundleManager.getBundle().getString("events.events");
-        searchForLocation = BundleManager.getBundle().getString("location.location");
-        ObservableList<String> searchForList = FXCollections.observableArrayList();
-        searchForList.addAll(searchForEvent, searchForLocation, searchForArtist);
-        cbSearch.setItems(searchForList);
-        if (searchFor.equals(EventSearchFor.EVENT)) {
-            tfSearchFor.setPromptText(BundleManager.getBundle().getString("events.searchForEvent"));
-        } else if (searchFor.equals(EventSearchFor.LOCATION)) {
-            tfSearchFor.setPromptText(BundleManager.getBundle().getString("events.searchForLocation"));
-        } else {
-            tfSearchFor.setPromptText(BundleManager.getBundle().getString("events.searchForArtist"));
-        }
-    }
-
-
     @FXML
     public void openAdvancedSearch(ActionEvent actionEvent) {
         LOGGER.info("opening the advanced event search dialog.");
@@ -254,11 +223,6 @@ public class EventController extends TabElement implements LocalizationObserver 
             springFxmlLoader.loadAndWrap("/fxml/event/eventAdvancedSearchComponent.fxml");
         wrapper.getController().initializeData(eventRootContainer);
         eventTab.setContent(wrapper.getLoadedObject());
-    }
-
-    @Override
-    protected void setTab(Tab tab) {
-        eventTab = tab;
     }
 
     public void loadEvents() {
@@ -405,5 +369,48 @@ public class EventController extends TabElement implements LocalizationObserver 
 
     public void setPagination(Pagination pagination) {
         this.pagination = pagination;
+    }
+
+    public void setMatchInfoLabel(long matches) {
+        if (matches == 0) {
+            lbMatchInfo.setText(BundleManager.getBundle().getString("general.noMatches"));
+            lbMatchInfo.setTextFill(Color.CRIMSON);
+        } else {
+            lbMatchInfo.setText(BundleManager.getBundle().getString("general.matches") + " " + matches);
+            lbMatchInfo.setTextFill(Color.BLACK);
+        }
+        numberOfMatches = matches;
+        lbMatchInfo.setVisible(true);
+    }
+
+    @Override
+    protected void setTab(Tab tab) {
+        eventTab = tab;
+    }
+
+
+    @Override
+    public void update() {
+        tabHeaderController.setTitle(BundleManager.getBundle().getString("events.events"));
+        btAdvSearch.setText(BundleManager.getBundle().getString("events.advSearch"));
+        if (numberOfMatches== 0) {
+            lbMatchInfo.setText(BundleManager.getBundle().getString("general.noMatches"));
+        }
+        else {
+            lbMatchInfo.setText(BundleManager.getBundle().getString("general.matches") + " " + numberOfMatches);
+        }
+        searchForArtist = BundleManager.getBundle().getString("artist.artist");
+        searchForEvent = BundleManager.getBundle().getString("events.events");
+        searchForLocation = BundleManager.getBundle().getString("location.location");
+        ObservableList<String> searchForList = FXCollections.observableArrayList();
+        searchForList.addAll(searchForEvent, searchForLocation, searchForArtist);
+        cbSearch.setItems(searchForList);
+        if (searchFor.equals(EventSearchFor.EVENT)) {
+            tfSearchFor.setPromptText(BundleManager.getBundle().getString("events.searchForEvent"));
+        } else if (searchFor.equals(EventSearchFor.LOCATION)) {
+            tfSearchFor.setPromptText(BundleManager.getBundle().getString("events.searchForLocation"));
+        } else {
+            tfSearchFor.setPromptText(BundleManager.getBundle().getString("events.searchForArtist"));
+        }
     }
 }
