@@ -35,7 +35,7 @@ public abstract class BaseIntegrationTest {
     private int port;
 
     @Autowired
-    private SimpleHeaderTokenAuthenticationService simpleHeaderTokenAuthenticationService;
+    protected SimpleHeaderTokenAuthenticationService simpleHeaderTokenAuthenticationService;
 
     @Autowired
     private JacksonConfiguration jacksonConfiguration;
@@ -45,7 +45,7 @@ public abstract class BaseIntegrationTest {
 
     /* @MockBean */
     @Autowired
-    private UserRepository userRepository;
+    protected UserRepository userRepository;
 
     protected String validUserTokenWithPrefix;
     protected String validAdminTokenWithPrefix;
