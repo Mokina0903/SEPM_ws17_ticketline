@@ -1,8 +1,8 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.tests.unittest;
 
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.DetailedEventDTO;
+import at.ac.tuwien.inso.sepm.ticketline.server.tests.base.BaseTestUnit;
 import at.ac.tuwien.inso.sepm.ticketline.server.tests.base.TestDTOs;
-import at.ac.tuwien.inso.sepm.ticketline.server.tests.base.BaseTest;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
@@ -14,7 +14,7 @@ import org.springframework.http.HttpStatus;
 
 import static org.hamcrest.core.Is.is;
 
-public class EventEndpointTest extends BaseTest {
+public class EventTest extends BaseTestUnit {
     private static final String EVENT_ENDPOINT = "/event";
 
     @Before

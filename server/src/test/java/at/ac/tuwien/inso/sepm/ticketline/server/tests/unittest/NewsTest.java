@@ -2,7 +2,7 @@ package at.ac.tuwien.inso.sepm.ticketline.server.tests.unittest;
 
 import at.ac.tuwien.inso.sepm.ticketline.rest.news.DetailedNewsDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.news.SimpleNewsDTO;
-import at.ac.tuwien.inso.sepm.ticketline.server.tests.base.BaseTest;
+import at.ac.tuwien.inso.sepm.ticketline.server.tests.base.BaseTestUnit;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
@@ -16,7 +16,7 @@ import java.util.Collections;
 
 import static org.hamcrest.core.Is.is;
 
-public class NewsEndpointTest extends BaseTest {
+public class NewsTest extends BaseTestUnit {
 
     private static final String USER_ENDPOINT = "/user";
     private static final String NEWS_ENDPOINT = "/news";

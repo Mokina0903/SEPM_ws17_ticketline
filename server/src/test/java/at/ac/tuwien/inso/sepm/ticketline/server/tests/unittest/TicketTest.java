@@ -4,8 +4,8 @@ import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketDTO;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Ticket;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Seat;
+import at.ac.tuwien.inso.sepm.ticketline.server.tests.base.BaseTestUnit;
 import at.ac.tuwien.inso.sepm.ticketline.server.tests.base.TestDTOs;
-import at.ac.tuwien.inso.sepm.ticketline.server.tests.base.BaseTest;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
@@ -20,7 +20,7 @@ import java.util.List;
 
 import static org.hamcrest.core.Is.is;
 
-public class TicketEndpointTest extends BaseTest {
+public class TicketTest extends BaseTestUnit {
 
     private static final String TICKET_ENDPOINT = "/tickets";
     private static final String TICKET_EVENT_PATH = "/event";

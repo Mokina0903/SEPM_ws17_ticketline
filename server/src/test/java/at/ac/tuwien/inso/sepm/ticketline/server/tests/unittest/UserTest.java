@@ -5,7 +5,7 @@ import at.ac.tuwien.inso.sepm.ticketline.rest.user.DetailedUserDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.user.SimpleUserDTO;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.News;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.User;
-import at.ac.tuwien.inso.sepm.ticketline.server.tests.base.BaseTest;
+import at.ac.tuwien.inso.sepm.ticketline.server.tests.base.BaseTestUnit;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
@@ -20,7 +20,7 @@ import java.util.List;
 
 import static org.hamcrest.core.Is.is;
 
-public class UserEndpointTest extends BaseTest {
+public class UserTest extends BaseTestUnit {
 
     private static final String USER_ENDPOINT = "/user";
     private static final String USER_ENDPOINT_BLOCK = "/user/block";

@@ -4,8 +4,8 @@ import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Customer;
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.CustomerNotValidException;
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.InvalidIdException;
-import at.ac.tuwien.inso.sepm.ticketline.server.tests.base.BaseTest;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.CustomerService;
+import at.ac.tuwien.inso.sepm.ticketline.server.tests.base.BaseTestUnit;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
@@ -21,7 +21,7 @@ import java.time.LocalDate;
 import static junit.framework.TestCase.fail;
 import static org.hamcrest.core.Is.is;
 
-public class CustomerEndpointTest extends BaseTest {
+public class CustomerTest extends BaseTestUnit {
 
     private static final String CUSTOMER_ENDPOINT = "/customer";
     private static final String CUSTOMER_CREATE_PATH = "/create";
