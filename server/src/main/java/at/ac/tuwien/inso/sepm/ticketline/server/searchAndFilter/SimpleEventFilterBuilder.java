@@ -33,8 +33,8 @@ public class SimpleEventFilterBuilder implements EventFilterBuilder {
 
             .notNullAnd(EVENT.startOfEvent::loe, filter.getUpcoming())
             .notNullAnd(EVENT.startOfEvent::goe, filter.getPast())
-            //todo category
-            //.notEmptyAnd(EVENT.category::eq, filter.getCategory())
+
+             .notEmptyAnd(EVENT.category::eq, filter.getCategory())
 
             //todo also show ausverkauft
             .build();

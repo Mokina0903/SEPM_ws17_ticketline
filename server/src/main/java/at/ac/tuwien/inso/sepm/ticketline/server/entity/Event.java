@@ -62,6 +62,8 @@ public class Event implements Predicatable{
     @Enumerated(EnumType.STRING)
     private EventCategory eventCategory;
 
+    private String category;
+
     public Boolean getSeatSelection() {
         return seatSelection;
     }
@@ -179,6 +181,14 @@ public class Event implements Predicatable{
 
     public void setEventCategory(EventCategory eventCategory) {
         this.eventCategory = eventCategory;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory() {
+        this.category = eventCategory.toString();
     }
 
     public static EventBuilder builder(){return new EventBuilder();}
@@ -309,6 +319,7 @@ public class Event implements Predicatable{
             event.setEventDate();
             event.setStartOfEventTime();
             event.setDuration();
+            event.setCategory();
             return event;
         }
     }
