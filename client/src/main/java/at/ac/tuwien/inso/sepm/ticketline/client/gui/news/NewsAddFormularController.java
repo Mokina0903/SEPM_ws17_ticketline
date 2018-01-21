@@ -36,7 +36,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 @Component
-public class NewsAddFormularController implements LocalizationObserver {
+public class
+NewsAddFormularController implements LocalizationObserver {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NewsController.class);
 
@@ -101,6 +102,7 @@ public class NewsAddFormularController implements LocalizationObserver {
         tabHeaderController.setIcon(FontAwesome.Glyph.NEWSPAPER_ALT);
         tabHeaderController.setTitle(BundleManager.getBundle().getString("news.addNews"));
 
+        setButtonGraphic(addImgBtn, "PLUS", Color.BLACK);
         setButtonGraphic(saveBtn, "CHECK", Color.OLIVE);
         setButtonGraphic(backWithoutSaveBtn, "TIMES", Color.CRIMSON);
     }
