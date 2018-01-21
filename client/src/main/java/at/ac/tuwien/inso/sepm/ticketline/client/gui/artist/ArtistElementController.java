@@ -1,20 +1,20 @@
 package at.ac.tuwien.inso.sepm.ticketline.client.gui.artist;
 
 
+import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationObserver;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationSubject;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.MainController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.PaginationHelper;
-import at.ac.tuwien.inso.sepm.ticketline.client.gui.event.EventController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.event.EventSearchFor;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.ArtistService;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.EventService;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.LocationService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
 import at.ac.tuwien.inso.sepm.ticketline.rest.artist.SimpleArtistDTO;
+import at.ac.tuwien.inso.sepm.ticketline.rest.event.DetailedEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.location.SimpleLocationDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -26,6 +26,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+
+import java.awt.event.ActionEvent;
 
 @Component
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
@@ -40,13 +42,14 @@ public class ArtistElementController implements LocalizationObserver {
     public Button btShowEvents;
     @FXML
     public VBox vbElement;
-    public Button ticketReservationButton;
 
     private ArtistService artistService;
     private SimpleArtistDTO simpleArtistDTO;
     private MainController mainController;
-    private EventController eventController;
     private SpringFxmlLoader loader;
+
+    @Autowired
+    private PaginationHelper paginationHelper;
 
     Node myContainer;
 
@@ -54,9 +57,8 @@ public class ArtistElementController implements LocalizationObserver {
     @Autowired
     private LocalizationSubject localizationSubject;
 
-    public ArtistElementController(MainController mainController, EventController eventController, SpringFxmlLoader loader) {
+    public ArtistElementController(MainController mainController, SpringFxmlLoader loader) {
         this.mainController = mainController;
-        this.eventController = eventController;
         this.loader = loader;
     }
 
@@ -76,25 +78,22 @@ public class ArtistElementController implements LocalizationObserver {
 
     }
 
+    @FXML
+    private void loadEvents() {
+        paginationHelper.setSearchFor(EventSearchFor.EVENTS_BY_ARTIST);
+        paginationHelper.setArtistDTO(simpleArtistDTO);
+        paginationHelper.setUpPagination();
+        /*
+        mainController.setEvent(event);
+        mainController.getEventTab().setContent(root);*/
+
+    }
+
     @Override
     public void update() {
         btShowEvents.setText(BundleManager.getBundle().getString("events.events"));
     }
 
 
-    public void eventButtonClicked( ActionEvent actionEvent ) {
-
-        PaginationHelper paginationHelper = eventController.getPaginationHelper();
-        paginationHelper.setSearchFor(EventSearchFor.EVENT);
-
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("artistFirstName", simpleArtistDTO.getArtistFirstName());
-        params.add("artistFirstName", simpleArtistDTO.getArtistFirstName());
-
-
-
-        //paginationHelper.setParameters();
-
-    }
 }
 

@@ -3,6 +3,8 @@ package at.ac.tuwien.inso.sepm.ticketline.client.gui.location;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationObserver;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationSubject;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.MainController;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.PaginationHelper;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.event.EventSearchFor;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.LocationService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.location.SimpleLocationDTO;
@@ -40,6 +42,9 @@ public class LocationElementController implements LocalizationObserver {
     @FXML
     public VBox vbElement;
 
+    @Autowired
+    private PaginationHelper paginationHelper;
+
     private LocationService locationService;
     private SimpleLocationDTO simpleLocationDTO;
     private MainController mainController;
@@ -75,6 +80,16 @@ public class LocationElementController implements LocalizationObserver {
         lbZip.setText(String.valueOf(simpleLocationDTO.getZip()));
         }
 
+    @FXML
+    private void loadEvents() {
+        paginationHelper.setSearchFor(EventSearchFor.EVENTS_BY_ARTIST);
+        paginationHelper.setLocationDTO(simpleLocationDTO);
+        paginationHelper.setUpPagination();
+        /*
+        mainController.setEvent(event);
+        mainController.getEventTab().setContent(root);*/
+
+    }
 
     @Override
     public void update() {

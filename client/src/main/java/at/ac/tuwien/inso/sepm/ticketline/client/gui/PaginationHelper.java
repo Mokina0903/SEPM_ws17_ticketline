@@ -45,6 +45,9 @@ public class PaginationHelper {
     private EventService eventService;
     private LocationService locationService;
     private ArtistService artistService;
+    private SimpleArtistDTO artistDTO;
+    private SimpleLocationDTO locationDTO;
+
     private EventSearchFor searchFor;
 
     private final int ENTRIES_PER_PAGE = 7;
@@ -101,11 +104,16 @@ public class PaginationHelper {
             @Override
             protected Page<SimpleEventDTO> call() throws DataAccessException {
                 Pageable request = new PageRequest(pageIndex, ENTRIES_PER_PAGE);
-               if(searchFor.equals(EventSearchFor.EVENT)) {
-                   events = eventService.find(request, parameters);
-               } else {
-                   events = eventService.findAdvanced(request,parameters);
-               }
+                if(searchFor.equals(EventSearchFor.EVENT)) {
+                    events = eventService.find(request, parameters);
+                } else if(searchFor.equals(EventSearchFor.ALL)){
+                    events = eventService.findAdvanced(request,parameters);
+                } else if (searchFor.equals(EventSearchFor.EVENTS_BY_ARTIST)) {
+                 //todo   events = eventService.findByArtist(request, artistDTO);
+                }
+                else {
+               //     events = eventService.findByLocation(request, locationDTO);
+                }
                 return events;
             }
 
@@ -314,5 +322,21 @@ public class PaginationHelper {
 
     public void setController(EventController controller) {
         this.controller = controller;
+    }
+
+    public SimpleArtistDTO getArtistDTO() {
+        return artistDTO;
+    }
+
+    public void setArtistDTO(SimpleArtistDTO artistDTO) {
+        this.artistDTO = artistDTO;
+    }
+
+    public SimpleLocationDTO getLocationDTO() {
+        return locationDTO;
+    }
+
+    public void setLocationDTO(SimpleLocationDTO locationDTO) {
+        this.locationDTO = locationDTO;
     }
 }

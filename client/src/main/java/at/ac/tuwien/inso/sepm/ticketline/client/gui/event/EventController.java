@@ -155,11 +155,6 @@ public class EventController extends TabElement implements LocalizationObserver 
     }
 
 
-    public void preparePagination() {
-        //all customer at start or searchfield is empty
-        LOGGER.info("preparing Pagination for the event overview");
-            search();
-    }
 
     @FXML
     private void search() {
@@ -234,43 +229,7 @@ public class EventController extends TabElement implements LocalizationObserver 
     }
 
     public void loadEvents() {
-
-        preparePagination();
-       /* paginationHelper.setSearchFor(EventSearchFor.EVENT);
-        Task<Page<SimpleEventDTO>> taskLoadEvents = new Task<>() {
-            @Override
-            protected Page<SimpleEventDTO> call() throws DataAccessException {
-                try {
-                    Pageable request = new PageRequest(0, EVENTS_PER_PAGE);
-                    return eventService.findAllUpcoming(request);
-                } catch (SearchNoMatchException e) {
-                   // e.printStackTrace();
-                }
-                return null;
-            }
-
-            @Override
-            protected void succeeded() {
-                super.succeeded();
-                preparePagination();
-            }
-
-            @Override
-            protected void failed() {
-                if (getValue() == null || getValue().getContent().isEmpty()) {
-                    super.failed();
-                    mainController.showGeneralError("Failure at load events: " + getException().getMessage());
-                }
-            }
-        };
-        taskLoadEvents.runningProperty().addListener((observable, oldValue, running) ->
-            mainController.setProgressbarProgress(
-                running ? ProgressBar.INDETERMINATE_PROGRESS : 0)
-        );
-
-
-        new Thread(taskLoadEvents).start();*/
-
+        search();
     }
 
 

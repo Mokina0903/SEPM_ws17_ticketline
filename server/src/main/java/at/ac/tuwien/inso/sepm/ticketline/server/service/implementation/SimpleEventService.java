@@ -1,5 +1,6 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.service.implementation;
 
+import at.ac.tuwien.inso.sepm.ticketline.rest.artist.SimpleArtistDTO;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Artist;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.QEvent;
@@ -78,6 +79,7 @@ public class SimpleEventService implements EventService {
         //todo
         return null;
     }
+
 
 
     // https://spring.io/blog/2011/04/26/advanced-spring-data-jpa-specifications-and-querydsl/
