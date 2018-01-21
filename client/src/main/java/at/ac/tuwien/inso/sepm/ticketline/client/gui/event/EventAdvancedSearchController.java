@@ -30,6 +30,7 @@ import org.springframework.util.MultiValueMap;
 public class EventAdvancedSearchController implements LocalizationObserver {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EventAdvancedSearchController.class);
+    public Button dpResetButton;
 
     @FXML
     private Label lbEventTitle;
@@ -155,6 +156,7 @@ public class EventAdvancedSearchController implements LocalizationObserver {
 
         setButtonGraphic(btOk, "CHECK", Color.OLIVE);
         setButtonGraphic(btCancel, "TIMES", Color.CRIMSON);
+        setButtonGraphic(dpResetButton,"ERASER",Color.CRIMSON);
     }
 
     private void setUpSlider(Slider slider, Label infoLabel) {
@@ -269,6 +271,10 @@ public class EventAdvancedSearchController implements LocalizationObserver {
         eventController.getEventTab().setContent(oldContent);
     }
 
+
+    public void onDPResetButtonClicked( ActionEvent actionEvent ) {
+        dpDate.setValue(null);
+    }
 
     @FXML
 
