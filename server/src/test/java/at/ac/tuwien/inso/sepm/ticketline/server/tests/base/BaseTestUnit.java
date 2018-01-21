@@ -1,4 +1,4 @@
-package at.ac.tuwien.inso.sepm.ticketline.server.integrationtest.base;
+package at.ac.tuwien.inso.sepm.ticketline.server.tests.base;
 
 import at.ac.tuwien.inso.sepm.ticketline.server.configuration.JacksonConfiguration;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.*;
@@ -23,72 +23,19 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.embedded.LocalServerPort;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static at.ac.tuwien.inso.sepm.ticketline.server.tests.base.TestConstants.*;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("integration-test")
-@Rollback(true)
-public abstract class BaseIntegrationTest {
-
-    protected static final String SERVER_HOST = "http://localhost";
-    protected static final String USER_USERNAME = "user";
-    protected static final String USER_PASSWORD = "password";
-    protected static final String ADMIN_PASSWORD = "password";
-    protected static final String ADMIN_USERNAME = "admin";
-
-    protected static final String NEWS_TEXT = "TestNewsText";
-    protected static final String NEWS_TITLE = "title";
-    protected static final LocalDateTime NEWS_PUBLISHED_AT =
-        LocalDateTime.of(2017, 11, 13, 12, 15, 0, 0);
-    protected static final long NEWS_ID = 1L;
-
-    protected static final Long ARTIST_ID = 1L;
-    protected static final String ARTIST_FIRSTNAME = "Firstname";
-    protected static final String ARTIST_LASTNAME = "Lastname";
-
-    protected static final long LOCATION_ID = 1L;
-    protected static final String LOCATION_DESCRIPTION = "description";
-    protected static final String LOCATION_CITY= "TestCity";
-    protected static final String LOCATION_COUNTRY = "TestCountry";
-    protected static final int LOCATION_HOUSENR = 123;
-    protected static final String LOCATION_STREET = "TestStreet";
-    protected static final int LOCATION_ZIP = 1234;
-
-    protected static final long HALL_ID = 1L;
-    protected static final String HALL_DESCRIPTION = "Test Hall 1";
-
-    protected static final long EVENT_ID = 1L;
-    protected static final String EVENT_DESCRIPTION = "Event Description";
-    protected static final String EVENT_TITLE = "Event Title";
-    protected static final long EVENT_PRICE = 100;
-
-    protected static LocalDateTime EVENT_START =
-        LocalDateTime.of(2017, 11, 29, 12, 15, 0, 0);
-
-    protected static final long CUSTOMER_ID = 1L;
-    protected static final long CUSTOMER_NUMBER = 9999L;
-    protected static final String  CUSTOMER_NAME = "Max";
-    protected static final String  CUSTOMER_SURNAME = "Mustermann";
-    protected static final String  CUSTOMER_MAIL = "Maxmustermann@gmail.com";
-    protected static final LocalDate CUSTOMER_BIRTHDATE = LocalDate.of(1950, 1, 1);
-    protected static final String  CUSTOMER_NAME_SUBSTRING = "muste";
-
-    protected static final Long SEAT_ID = 1L;
-    protected static final int SEAT_NR = 1;
-    protected static final char SEAT_SECTOR = 'a';
-    protected static final int SEAT_ROW = 1;
-
-    protected static final Long TICKET_RESERVATIONNR = 10001L;
-    protected static final Long TICKET_ID = 1L;
-    protected static final long TICKET_PRICE = 100;
+public abstract class BaseTestUnit {
 
     @Value("${server.context-path}")
     private String contextPath;

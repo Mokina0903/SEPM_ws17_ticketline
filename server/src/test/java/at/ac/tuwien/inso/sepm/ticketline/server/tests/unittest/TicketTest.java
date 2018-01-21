@@ -1,11 +1,11 @@
-package at.ac.tuwien.inso.sepm.ticketline.server.integrationtest;
+package at.ac.tuwien.inso.sepm.ticketline.server.tests.unittest;
 
 import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketDTO;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Ticket;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Seat;
-import at.ac.tuwien.inso.sepm.ticketline.server.integrationtest.base.BaseIntegrationTest;
-import at.ac.tuwien.inso.sepm.ticketline.server.integrationtest.base.TestDTOs;
+import at.ac.tuwien.inso.sepm.ticketline.server.tests.base.BaseTestUnit;
+import at.ac.tuwien.inso.sepm.ticketline.server.tests.base.TestDTOs;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
@@ -18,13 +18,10 @@ import org.springframework.http.HttpStatus;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static at.ac.tuwien.inso.sepm.ticketline.server.tests.base.TestConstants.TICKET_ENDPOINT;
 import static org.hamcrest.core.Is.is;
 
-public class TicketEndpointTest extends BaseIntegrationTest {
-
-    private static final String TICKET_ENDPOINT = "/tickets";
-    private static final String TICKET_EVENT_PATH = "/event";
-    private static final String TICKET_CUSTOMER_PATH = "/customer";
+public class TicketTest extends BaseTestUnit {
 
     // TODO: Remove reservation 30 min before
     // TODO: Reversal of Reservation

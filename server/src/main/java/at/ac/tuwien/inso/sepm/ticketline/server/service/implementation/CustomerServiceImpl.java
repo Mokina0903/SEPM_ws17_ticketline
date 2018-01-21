@@ -18,6 +18,7 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -43,11 +44,17 @@ public class CustomerServiceImpl implements CustomerService {
         if (!validateIdOrKnr(id)) {
             throw new InvalidIdException("Given id was not valid.");
         }
-        Customer customer = customerRepository.findOneById(id).orElseThrow(NotFoundException::new);
-        if (!validateCustomer(customer)) {
+
+        Optional<Customer> customer = customerRepository.findOneById(id);
+
+        if (customer == null) {
+            throw new NotFoundException("knr " + id);
+        }
+
+        if (!validateCustomer(customer.get())) {
             throw new CustomerNotValidException("Customer not valid");
         }
-        return customer;
+        return customer.get();
     }
 
     @Override

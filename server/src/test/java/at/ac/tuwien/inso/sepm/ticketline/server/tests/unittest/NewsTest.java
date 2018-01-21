@@ -1,8 +1,8 @@
-package at.ac.tuwien.inso.sepm.ticketline.server.integrationtest;
+package at.ac.tuwien.inso.sepm.ticketline.server.tests.unittest;
 
 import at.ac.tuwien.inso.sepm.ticketline.rest.news.DetailedNewsDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.news.SimpleNewsDTO;
-import at.ac.tuwien.inso.sepm.ticketline.server.integrationtest.base.BaseIntegrationTest;
+import at.ac.tuwien.inso.sepm.ticketline.server.tests.base.BaseTestUnit;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
@@ -14,13 +14,10 @@ import org.springframework.http.HttpStatus;
 import java.util.Arrays;
 import java.util.Collections;
 
+import static at.ac.tuwien.inso.sepm.ticketline.server.tests.base.TestConstants.*;
 import static org.hamcrest.core.Is.is;
 
-public class NewsEndpointTest extends BaseIntegrationTest {
-
-    private static final String USER_ENDPOINT = "/user";
-    private static final String NEWS_ENDPOINT = "/news";
-    private static final String SPECIFIC_NEWS_PATH = "/{newsId}";
+public class NewsTest extends BaseTestUnit {
 
     @Test
     public void findAllNewsUnauthorizedAsAnonymous() {

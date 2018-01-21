@@ -16,7 +16,9 @@ import at.ac.tuwien.inso.sepm.ticketline.server.service.LocationService;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.TicketService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.hibernate.LazyInitializationException;
 import org.springframework.data.domain.*;
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -78,11 +80,12 @@ public class TicketEndpoint {
 
         for (TicketDTO ticketDTO : ticketDTOS){
             Ticket ticket = ticketMapper.ticketDTOtoTicket(ticketDTO);
+
             ticket.setEvent(eventService.findOne(ticketDTO.getEvent().getId()));
             ticket.calculatePrice();
             tickets.add(ticket);
-        }
 
+        }
         tickets =ticketService.save(tickets);
         return ticketMapper.ticketToTicketDTO(tickets);
     }

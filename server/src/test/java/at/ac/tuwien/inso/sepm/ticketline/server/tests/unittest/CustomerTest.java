@@ -1,11 +1,11 @@
-package at.ac.tuwien.inso.sepm.ticketline.server.integrationtest;
+package at.ac.tuwien.inso.sepm.ticketline.server.tests.unittest;
 
 import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Customer;
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.CustomerNotValidException;
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.InvalidIdException;
-import at.ac.tuwien.inso.sepm.ticketline.server.integrationtest.base.BaseIntegrationTest;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.CustomerService;
+import at.ac.tuwien.inso.sepm.ticketline.server.tests.base.BaseTestUnit;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
@@ -18,19 +18,11 @@ import org.springframework.http.HttpStatus;
 
 import java.time.LocalDate;
 
+import static at.ac.tuwien.inso.sepm.ticketline.server.tests.base.TestConstants.*;
 import static junit.framework.TestCase.fail;
 import static org.hamcrest.core.Is.is;
 
-public class CustomerEndpointTest extends BaseIntegrationTest{
-
-    private static final String CUSTOMER_ENDPOINT = "/customer";
-    private static final String CUSTOMER_CREATE_PATH = "/create";
-    private static final String CUSTOMER_UPDATE_PATH = "/update";
-    private static final String CUSTOMER_BY_NUMBER_PATH = "/findWithKnr/{knr}";
-    private static final String CUSTOMER_BY_NAME_PATH = "/findName/{pageIndex}/{customerPerPage}/{name}";
-
-    private static final String PAGE_INDEX = "/{pageIndex}";
-    private static final String CUSTOMER_PER_PAGE = "/{customerPerPage}";
+public class CustomerTest extends BaseTestUnit {
 
     @Autowired
     private CustomerService customerService;
@@ -57,7 +49,7 @@ public class CustomerEndpointTest extends BaseIntegrationTest{
             .given()
             .contentType(ContentType.JSON)
             .header(HttpHeaders.AUTHORIZATION, validUserTokenWithPrefix)
-            .when().get(CUSTOMER_ENDPOINT + PAGE_INDEX + CUSTOMER_PER_PAGE, 0, Integer.MAX_VALUE)
+            .when().get(CUSTOMER_ENDPOINT + CUSTOMER_PAGE_INDEX + CUSTOMER_PER_PAGE, 0, Integer.MAX_VALUE)
             .then().extract().response();
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
 
