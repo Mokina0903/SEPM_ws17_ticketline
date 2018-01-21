@@ -33,11 +33,12 @@ TODO: TestPlan:
   + Manuelle Tests schreiben in Exceldatei
   + Manuelle Tests durchführen
   + Csv anpassen (Kategorie)
+    - Kategorie nicht vorhanden
   + Testbericht?
 
 
 TODO: Fragen:
- + Kategorien OK
+ + Kategorien OK (Done)
  + Diverse TODOS im Code
 
 
