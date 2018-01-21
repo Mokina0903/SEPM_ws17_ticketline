@@ -18,6 +18,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 import org.controlsfx.glyphfont.FontAwesome;
+import org.controlsfx.glyphfont.GlyphFont;
+import org.controlsfx.glyphfont.GlyphFontRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +56,11 @@ public class EventController extends TabElement implements LocalizationObserver 
     private final int EVENTS_PER_PAGE = 7;
     private EventSearchFor searchFor;
 
+
+    private GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
+    private final int FONT_SIZE = 16;
+
+
     @Autowired
     private LocalizationSubject localizationSubject;
 
@@ -77,6 +84,7 @@ public class EventController extends TabElement implements LocalizationObserver 
         tabHeaderController.setIcon(FontAwesome.Glyph.FILM);
         tabHeaderController.setTitle(BundleManager.getBundle().getString("events.events"));
         localizationSubject.attach(this);
+        btnAddEvent.setGraphic(fontAwesome.create("PLUS"));
         /*
         lvEventElements.getSelectionModel()
             .selectedIndexProperty()

@@ -28,6 +28,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -79,6 +80,16 @@ public class HallplanController implements LocalizationObserver {
     public Label lblPriceOfTicketsInE;
     @FXML
     public Label lblTotalSum;
+    @FXML
+    public HBox sectorALabels;
+    @FXML
+    public HBox sectorBLabels;
+    @FXML
+    public HBox sectorCLabels;
+    @FXML
+    public HBox sectorDLabels;
+    @FXML
+    public HBox sectorELabels;
 
     @FXML
     private HallplanCutlineController cutlineContainerController;
@@ -226,7 +237,22 @@ public class HallplanController implements LocalizationObserver {
         lblError.setMaxWidth(100);
         lblError.setMinHeight(50);
 
+        setAllLabelsNotManagedAndNotVisible();
         initializeLabelMaps();
+    }
+
+    private void setAllLabelsNotManagedAndNotVisible(){
+
+        sectorALabels.setVisible(false);
+        sectorALabels.setManaged(false);
+        sectorBLabels.setVisible(false);
+        sectorBLabels.setManaged(false);
+        sectorCLabels.setVisible(false);
+        sectorCLabels.setManaged(false);
+        sectorDLabels.setVisible(false);
+        sectorDLabels.setManaged(false);
+        sectorELabels.setVisible(false);
+        sectorELabels.setManaged(false);
     }
 
     private void initializeLabelMaps() {
@@ -362,19 +388,29 @@ public class HallplanController implements LocalizationObserver {
         switch (sector) {
             case 'a':
                 node.getStyleClass().add("sectorA");
+                sectorALabels.setVisible(true);
+                sectorALabels.setManaged(true);
                 break;
             case 'b':
                 node.getStyleClass().add("sectorB");
+                sectorBLabels.setVisible(true);
+                sectorBLabels.setManaged(true);
                 break;
             case 'c':
                 node.getStyleClass().add("sectorC");
+                sectorCLabels.setVisible(true);
+                sectorCLabels.setManaged(true);
                 break;
             case 'd':
                 node.getStyleClass().add("sectorD");
+                sectorDLabels.setVisible(true);
+                sectorDLabels.setManaged(true);
                 break;
             case 'e':
                 node.getStyleClass().add("sectorE");
-
+                sectorELabels.setVisible(true);
+                sectorELabels.setManaged(true);
+                break;
         }
     }
 
