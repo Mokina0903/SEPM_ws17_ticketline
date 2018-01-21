@@ -13,12 +13,12 @@ TODO: Mergen
 
 TODO: IntegrationTests:
   + CustomerEndpoint
-  + EventEndpoint
+  + EventEndpoint (Done)
   + InvoiceEndpoint
   + LocationEndpoint
-  + NewsEndpoint
-  + TicketEndpoint
-  + UserEndpoint
+  + NewsEndpoint (Done)
+  + TicketEndpoint (Done)
+  + UserEndpoint (Done)
 
 TODO: UnitTests:
   + CustomerEndpoint
@@ -27,12 +27,13 @@ TODO: UnitTests:
   + LocationEndpoint
   + NewsEndpoint
   + TicketEndpoint
-  + UserEndpoint
+  + UserEndpoint (Done)
 
 TODO: TestPlan:
   + Manuelle Tests schreiben in Exceldatei
   + Manuelle Tests durchführen
   + Csv anpassen (Kategorie)
+      - Kategorie nicht vorhanden
   + Testbericht?
 
 
