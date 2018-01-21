@@ -8,7 +8,9 @@ import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.hall.DetailedHallDTO
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.location.DetailedLocationDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.seat.SeatDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketDTO;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.Artist;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Customer;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Hall;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Location;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Seat;
@@ -171,12 +173,24 @@ public abstract class TestDTOs {
         return Hall.builder()
             .id(HALL_ID)
             .description(HALL_DESCRIPTION)
+            .location(
+                Location.builder()
+                    .id(LOCATION_ID)
+                    .description(LOCATION_DESCRIPTION)
+                    .country(LOCATION_COUNTRY)
+                    .city(LOCATION_CITY)
+                    .zip(LOCATION_ZIP)
+                    .street(LOCATION_STREET)
+                    .houseNr(LOCATION_HOUSENR)
+                    .eventHalls(Collections.emptyList())
+                    .build()
+            )
             .seats(defaultSeats())
             .build();
     }
 
     public static Location defaultLocation() {
-        return Location.builder()
+        Location location = Location.builder()
             .id(LOCATION_ID)
             .description(LOCATION_DESCRIPTION)
             .country(LOCATION_COUNTRY)
@@ -186,6 +200,8 @@ public abstract class TestDTOs {
             .houseNr(LOCATION_HOUSENR)
             .eventHalls(Collections.singletonList(defaultHall()))
             .build();
+
+        return location;
     }
 
     public static CustomerDTO defaultCustomerDTO() {
@@ -197,6 +213,28 @@ public abstract class TestDTOs {
             .mail(CUSTOMER_MAIL)
             .birthDate(CUSTOMER_BIRTHDATE)
             .version(1)
+            .build();
+    }
+
+    public static Artist defaultArtist() {
+        return Artist.builder()
+            .id(ARTIST_ID)
+            .artistFirstname(ARTIST_FIRSTNAME)
+            .artistLastName(ARTIST_LASTNAME)
+            .build();
+    }
+
+    public static Event defaultEvent() {
+        return Event.builder()
+            .id(EVENT_ID)
+            .startOfEvent(EVENT_START)
+            .endOfEvent(EVENT_START.plusHours(2))
+            .artists(Collections.singletonList(defaultArtist()))
+            .price(EVENT_PRICE)
+            .description(EVENT_DESCRIPTION)
+            .title(EVENT_TITLE)
+            .hall(defaultHall())
+            .seatSelection(true)
             .build();
     }
 

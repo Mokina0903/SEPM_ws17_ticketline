@@ -71,6 +71,7 @@ public abstract class TestConstants {
     public static final long EVENT_PRICE = 100;
     public static LocalDateTime EVENT_START =
         LocalDateTime.of(2017, 11, 29, 12, 15, 0, 0);
+    public static LocalDateTime EVENT_ENDE = EVENT_START.plusHours(2);
 
     // --------------------- ARTIST ---------------------
     public static final Long ARTIST_ID = 1L;
