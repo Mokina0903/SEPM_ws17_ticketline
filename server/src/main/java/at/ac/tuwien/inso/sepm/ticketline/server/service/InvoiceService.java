@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.io.IOException;
+import java.util.List;
 
 public interface InvoiceService {
 
@@ -26,12 +27,28 @@ public interface InvoiceService {
     Invoice findOneById( Long id);
 
     /**
+     * Find a single invoice entry by reservationnumber.
+     *
+     * @param reservationNumber  of the invoice entry
+     * @return InvoiceDTO of the invoice entry
+     */
+    List<Invoice> findByReservationNumber( Long reservationNumber);
+
+    /**
      * save invoice
      *
      * @param invoice to be saved
      * @return saved invoice with created values
      */
     Invoice save(Invoice invoice);
+
+    /**
+     * updateinvoice
+     *
+     * @param invoice to be updated
+     * @return updated invoice
+     */
+    Invoice update(Invoice invoice);
 
     void saveInvoicePDF( PDDocument document) throws IOException;
 }

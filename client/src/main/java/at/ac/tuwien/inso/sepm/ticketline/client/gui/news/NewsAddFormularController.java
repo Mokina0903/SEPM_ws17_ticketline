@@ -160,6 +160,7 @@ NewsAddFormularController implements LocalizationObserver {
         newNews = builder.build();
         try {
             newNews = newsService.publishNews(newNews);
+            mainController.showGeneralFeedback(BundleManager.getBundle().getString("news.feedbackPublish"));
             c.loadNews();
             c.getNewsTab().setContent(oldContent);
         } catch (DataAccessException e) {

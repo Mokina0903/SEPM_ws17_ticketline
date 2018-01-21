@@ -462,9 +462,16 @@ public class HallplanController implements LocalizationObserver {
 
                 javafx.stage.Window window = this.seatsContainerGV.getParent().getScene().getWindow();
                 invoiceService.invoiceToPdf(invoice,window);
+            }else{
+                javafx.stage.Window window = this.seatsContainerGV.getParent().getScene().getWindow();
+                ticketService.reservationPdf(ticketsSaved,window);
             }
 
-
+            if(tickets.get(0).isPaid()){
+                mainController.showGeneralFeedback(BundleManager.getBundle().getString("ticket.feedbackBuy"));
+            }else {
+                mainController.showGeneralFeedback(BundleManager.getBundle().getString("ticket.feedbackReserve"));
+            }
             backToEventTabBeginning();
 
 

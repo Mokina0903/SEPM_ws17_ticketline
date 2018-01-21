@@ -168,6 +168,11 @@ public class TicketEndpoint {
         ticketService.deleteTicketByTicket_Id(ticketID);
     }
 
+    @RequestMapping(value= "/payTickets/{reservationID}", method = RequestMethod.POST)
+    @ApiOperation(value = "pay all tickets with a certain reservation number")
+    public void payTickets(@PathVariable Long reservationID) throws OldVersionException, NotFoundException {
+        ticketService.payTicketByReservation_Id(reservationID);
+    }
 
 
 

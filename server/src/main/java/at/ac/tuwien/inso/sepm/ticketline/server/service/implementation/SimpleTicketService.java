@@ -104,14 +104,26 @@ public class SimpleTicketService implements TicketService {
 
     @Override
     public void setTicketsFreeIf30MinsBeforEvent() {
-        List<Ticket> stillReservedTickets = ticketRepository.setTicketsFreeIf30MinsBeforeEvent();
+       /* List<Ticket> stillReservedTickets = ticketRepository.setTicketsFreeIf30MinsBeforeEvent();
         if(stillReservedTickets.isEmpty()){
             return;
         }
 
         for (Ticket ticket : stillReservedTickets) {
             ticketRepository.updateReservationStatusToFalse(ticket.getId());
+        }*/
+    }
+
+    @Override
+    public void payTicketByReservation_Id(Long reservation_Id) throws OldVersionException{
+
+        //System.out.println("Da bin ich " +ticketRepository.findByReservation_NumberAndIsPaidFalse(reservation_Id));
+
+        if(ticketRepository.findByReservation_NumberAndIsPaidFalse(reservation_Id).isEmpty()){
+
+            throw new OldVersionException();
         }
+        ticketRepository.is_paidFlagTicketByReservation_Id(reservation_Id);
     }
 
     @Override

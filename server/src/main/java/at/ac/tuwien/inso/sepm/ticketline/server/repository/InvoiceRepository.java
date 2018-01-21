@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Transactional
@@ -29,5 +30,11 @@ public interface InvoiceRepository extends JpaRepository<Invoice,Long>{
      */
     Optional<Invoice> findOneById( Long id);
 
-
+    /**
+     * Find a single invoice entry by reservantionNumber.
+     *
+     * @param reservationNumber the is of the invoice entry
+     * @return Optional containing the invoice entry
+     */
+    List<Invoice> findByInvoiceNumber( Long reservationNumber);
 }

@@ -1,44 +1,41 @@
 package at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket;
 
-import at.ac.tuwien.inso.sepm.ticketline.client.exception.BlockedUserException;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
+import at.ac.tuwien.inso.sepm.ticketline.client.exception.EmptyValueException;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.SearchNoMatchException;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.*;
+import at.ac.tuwien.inso.sepm.ticketline.client.service.InvoiceService;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.customer.CustomerSearchFor;
 import at.ac.tuwien.inso.sepm.ticketline.client.rest.TicketRestClient;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.TicketService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
-import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
-import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketDTO;
+import at.ac.tuwien.inso.sepm.ticketline.rest.invoice.InvoiceDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketRepresentationClass;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyStringWrapper;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Window;
 import javafx.util.Callback;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 
-import java.rmi.activation.ActivateFailedException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class TicketController extends TabElement implements LocalizationObserver {
@@ -62,12 +59,16 @@ public class TicketController extends TabElement implements LocalizationObserver
     public Label lblStorno;
 
     @FXML
+    public Button btnPay;
+    @FXML
     public Button btnSuche;
 
-    @Autowired
-    private LocalizationSubject localizationSubject;
-
-
+    @FXML
+    public Label lblPay;
+    @FXML
+    public Button btnStornoInvoice;
+    @FXML
+    public Label lblStornoInvoice;
 
     private TableColumn<TicketRepresentationClass, String> tcName;
     private TableColumn<TicketRepresentationClass, String> tcSurname;
@@ -85,13 +86,21 @@ public class TicketController extends TabElement implements LocalizationObserver
     private final MainController mainController;
     private final SpringFxmlLoader springFxmlLoader;
     private final TicketService ticketService;
+    private final InvoiceService invoiceService;
     private  Page<TicketDTO> ticketPage;
     private TableView<TicketRepresentationClass>currentTableview;
     private TicketSearchFor searchFor = TicketSearchFor.ALL;
 
+    private InvoiceDTO invoiceTMP;
+
+    @Autowired
+    private LocalizationSubject localizationSubject;
 
     void setErrorLblUnvisable(){
         lblStorno.setVisible(false);
+        lblStornoInvoice.setVisible(false);
+        lblPay.setVisible(false);
+        lblNoMatch.setVisible(false);
     }
 
     public Tab getTicketTab() {
@@ -103,10 +112,11 @@ public class TicketController extends TabElement implements LocalizationObserver
     }
 
 
-    public TicketController(MainController mainController, SpringFxmlLoader springFxmlLoader, TicketService ticketService) {
+    public TicketController( MainController mainController, SpringFxmlLoader springFxmlLoader, TicketService ticketService, InvoiceService invoiceService ) {
         this.mainController = mainController;
         this.springFxmlLoader = springFxmlLoader;
         this.ticketService = ticketService;
+        this.invoiceService = invoiceService;
     }
 
     @FXML
@@ -117,7 +127,7 @@ public class TicketController extends TabElement implements LocalizationObserver
         lblStorno.setMaxWidth(100.0);
         localizationSubject.attach(this);
 
-
+        localizationSubject.attach(this);
     }
 
     public void initializePagination(){
@@ -342,12 +352,34 @@ public class TicketController extends TabElement implements LocalizationObserver
                 TicketRepresentationClass ticket = currentTableview.getSelectionModel().getSelectedItem();
                 ticketService.deleteTicketByTicket_Id(ticket.getTicket_id());
 
+                if(ticketService.findOneById(ticket.getTicket_id()).isPaid()) {
+                    List<InvoiceDTO> invoices = invoiceService.findByReservationNumber(ticket.getReservationNumber());
+                    InvoiceDTO invoice = invoices.get(0);
+
+                    List<TicketDTO> tickets = new ArrayList<>();
+                    if(invoice.getTickets()!=null && !invoice.getTickets().isEmpty()) {
+                        for (TicketDTO ticketDTO : invoice.getTickets()) {
+                            if (!ticketDTO.getId().equals(ticket.getTicket_id()) && ticketDTO.getId() != (ticket.getTicket_id())) {
+                                tickets.add(ticketDTO);
+                            }
+                        }
+                    }
+                    invoice.setTickets(tickets);
+                    invoiceService.update(invoice);
+
+                }
+
                 return null;
             }
 
             @Override
             protected void succeeded() {
                 super.succeeded();
+                lblStorno.setVisible(false);
+                lblPay.setVisible(false);
+                lblStornoInvoice.setVisible(false);
+                mainController.showGeneralFeedback(BundleManager.getBundle().getString("ticket.feedbackStorno"));
+
             }
             //ToDo update
             @Override
@@ -358,7 +390,7 @@ public class TicketController extends TabElement implements LocalizationObserver
                     lblStorno.setWrapText(true);
                 } else if (getException().getMessage().trim().equals("500")) {
 
-                    mainController.showGeneralError("Sorry your ticked could not be found!");
+                    mainController.showGeneralError("Sorry your ticket could not be found!");
                 } else {
                     mainController.showGeneralError(getException().toString());
                 }
@@ -375,23 +407,209 @@ public class TicketController extends TabElement implements LocalizationObserver
 
     }
 
+    @FXML
+    private void pay(ActionEvent actionEvent){
+        lblPay.setVisible(false);
+        if(currentTableview.getSelectionModel() != null) {
+            TicketRepresentationClass ticket = currentTableview.getSelectionModel().getSelectedItem();
+            if ((ticket == null)) {
+                lblPay.setText(BundleManager.getBundle().getString("ticket.chooseOne"));
+                lblPay.setVisible(true);
+                lblPay.setWrapText(true);
+                return;
+            }
+
+            try {
+                TicketDTO ticketToCheck= ticketService.findOneById(ticket.getTicket_id());
+                if(ticketToCheck.isPaid()){
+                    lblPay.setText(BundleManager.getBundle().getString("ticket.allreadyPaid"));
+                    lblPay.setVisible(true);
+                    return;
+                }
+            } catch (DataAccessException e) {
+                lblPay.setText(BundleManager.getBundle().getString("ticket.payNotFound"));
+                lblPay.setVisible(true);
+            }
+
+        }
+        else{
+            lblPay.setText(BundleManager.getBundle().getString("ticket.chooseOne"));
+            lblPay.setVisible(true);
+            lblPay.setWrapText(true);
+            return;
+        }
+
+        Task<InvoiceDTO> workerTask = new Task<>() {
+
+            @Override
+            protected InvoiceDTO call() throws Exception {
+                //ToDo fragen wie ich hier die exception abfangen kann
+                TicketRepresentationClass ticket = currentTableview.getSelectionModel().getSelectedItem();
+                System.out.println(ticket.getReservationNumber());
+                ticketService.payTicketByReservation_Id(ticket.getReservationNumber());
+
+                List<TicketDTO> tickets = ticketService
+                    .findByReservationNumber(ticket.getReservationNumber(),new PageRequest(0,Integer.MAX_VALUE))
+                    .getContent();
+
+                InvoiceDTO invoice = new InvoiceDTO.InvoiceDTOBuilder()
+                    .isStorno(false)
+                    .tickets(tickets)
+                    .vendor(mainController.getUser())
+                    .customer(tickets.get(0).getCustomer())
+                    .build();
+
+
+                invoice=invoiceService.create(invoice);
+                TicketController.this.invoiceTMP = invoice;
+                return invoice;
+            }
+
+            @Override
+            protected void succeeded() {
+                super.succeeded();
+                lblStorno.setVisible(false);
+                lblPay.setVisible(false);
+                lblStornoInvoice.setVisible(false);
+                mainController.showGeneralFeedback(BundleManager.getBundle().getString("ticket.feedbackBuy"));
+
+            }
+            //ToDo update
+            @Override
+            protected void failed() {
+                if (getException().getMessage().trim().equals("424")) {
+                    lblPay.setText(BundleManager.getBundle().getString("ticket.allreadyPaid"));
+                    lblPay.setVisible(true);
+                    lblPay.setWrapText(true);
+                } else if (getException().getMessage().trim().equals("500")) {
+
+                    mainController.showGeneralError("Sorry your tickets could not be found!");
+                } else {
+                    mainController.showGeneralError(getException().toString());
+                }
+            }
+
+        };
+
+        workerTask.runningProperty().addListener((observable, oldValue, running) ->
+            mainController.setProgressbarProgress(
+                running ? ProgressBar.INDETERMINATE_PROGRESS : 0)
+        );
+
+        Thread thread = new Thread(workerTask);
+        thread.start();
+
+       while (thread.isAlive()){
+            try {
+                TimeUnit.MILLISECONDS.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        javafx.stage.Window window = pagination.getScene().getWindow();
+        invoiceService.invoiceToPdf(invoiceTMP,window);
+
+    }
+
     @Override
     protected void setTab(Tab tab) {
         ticketTab = tab;
     }
 
+    public void createStornoInvoice( ActionEvent actionEvent ) {
+
+        lblStornoInvoice.setVisible(false);
+        try {
+            TicketRepresentationClass ticket = currentTableview.getSelectionModel().getSelectedItem();
+
+            if(ticket==null){
+                lblStornoInvoice.setText(BundleManager.getBundle().getString("ticket.chooseOne"));
+                lblStornoInvoice.setVisible(true);
+                return;
+            }
+            TicketDTO ticketToCheck= ticketService.findOneById(ticket.getTicket_id());
+            if(!ticketToCheck.isPaid()){
+                lblStornoInvoice.setText(BundleManager.getBundle().getString("ticket.stornoInvoiceNotPaid"));
+                lblStornoInvoice.setVisible(true);
+                return;}
+
+            Page page = ticketService.findByReservationNumber(ticket.getReservationNumber(),new PageRequest(0,Integer.MAX_VALUE));
+            List<TicketDTO> tickets = page.getContent();
+
+
+            if(tickets==null || tickets.isEmpty()){
+                lblStornoInvoice.setText(BundleManager.getBundle().getString("ticket.stornoInvoiceNoTickets"));
+                lblStornoInvoice.setVisible(true);
+                return;}
+            List<TicketDTO> stornoTickets = new ArrayList<>();
+            for(TicketDTO ticketDTO: tickets){
+                if(ticketDTO.isDeleted()){
+                    stornoTickets.add(ticketDTO);
+                }
+            }
+            if(stornoTickets.isEmpty()){
+                lblStornoInvoice.setText(BundleManager.getBundle().getString("ticket.stornoInvoiceNoTickets"));
+                lblStornoInvoice.setVisible(true);
+                return;}
+
+            List<InvoiceDTO> invoices = invoiceService.findByReservationNumber(ticket.getReservationNumber());
+            for(InvoiceDTO invoice : invoices){
+                if(invoice.isStorno()){
+                    for (TicketDTO ticketDTO:invoice.getTickets()){
+                        if(stornoTickets.contains(ticketDTO)){
+                            stornoTickets.remove(ticketDTO);
+                        }
+                    }
+                }
+            }
+
+            InvoiceDTO stornoInvoice = InvoiceDTO.builder()
+                .isStorno(true)
+                .customer(tickets.get(0).getCustomer())
+                .tickets(stornoTickets)
+                .vendor(mainController.getUser())
+                .build();
+            stornoInvoice = invoiceService.create(stornoInvoice);
+
+            Window window = btnStorno.getParent().getScene().getWindow();
+            invoiceService.invoiceToPdf(stornoInvoice,window);
+
+            lblStorno.setVisible(false);
+            lblPay.setVisible(false);
+            lblStornoInvoice.setVisible(false);
+            mainController.showGeneralFeedback(BundleManager.getBundle().getString("ticket.feedbackStornoInvoice"));
+
+
+        } catch (DataAccessException e) {
+            lblStornoInvoice.setText(BundleManager.getBundle().getString("exception.unexpected"));
+            lblStornoInvoice.setVisible(true);
+        } catch (SearchNoMatchException | EmptyValueException e) {
+            lblStornoInvoice.setText(BundleManager.getBundle().getString("ticket.stornoInvoiceNoTickets"));
+            lblStornoInvoice.setVisible(true);
+        }
+
+    }
+
     @Override
     public void update() {
         btnStorno.setText(BundleManager.getBundle().getString("ticket.storno"));
+        lblStorno.setVisible(false);
+        btnStornoInvoice.setText(BundleManager.getBundle().getString("ticket.stornoInvoice"));
+        lblStornoInvoice.setVisible(false);
         tcName.setText(BundleManager.getBundle().getString("customer.fname"));
         tcSurname.setText(BundleManager.getBundle().getString("customer.lname"));
         tcIsPaid.setText(BundleManager.getBundle().getString("ticket.tcIsPaid"));
         tcNumber.setText(BundleManager.getBundle().getString("ticket.ticketNumber"));
         lblNoMatch.setText(BundleManager.getBundle().getString("customer.noMatches"));
         tcSelected.setText(BundleManager.getBundle().getString("ticket.sector"));
+        lblPay.setVisible(false);
+        btnPay.setText(BundleManager.getBundle().getString("ticket.pay"));
         tcIsDeleted.setText(BundleManager.getBundle().getString("ticket.isDeleted"));
-        lblStorno.setText(BundleManager.getBundle().getString("ticket.allready"));
         tfSearch.setPromptText(BundleManager.getBundle().getString("ticket.searchField"));
         btnSuche.setText(BundleManager.getBundle().getString("ticket.search"));
+    }
+
+
+        
     }
 }

@@ -28,24 +28,39 @@
             </HBox>
             <Label fx:id="lblNoMatch" text="%customer.noMatches" />
             <Pagination fx:id="pagination" maxHeight="1.7976931348623157E308"
-                                maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="600.0"
-                                HBox.hgrow="ALWAYS">
-            <HBox.margin>
-                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
-            </HBox.margin>
-            <padding>
-                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
-            </padding>
-        </Pagination>
+                        maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="600.0"
+                        HBox.hgrow="ALWAYS">
+                <HBox.margin>
+                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                </HBox.margin>
+                <padding>
+                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+                </padding>
+            </Pagination>
         </VBox>
     </center>
     <right>
         <HBox spacing="5">
-        <BorderPane.margin>
-              <Insets top="81" right="20" />
-          </BorderPane.margin>
+            <BorderPane.margin>
+                <Insets top="121" right="20" />
+            </BorderPane.margin>
+            <VBox >
+            <BorderPane.margin>
+                <Insets top="121" right="20" />
+            </BorderPane.margin>
             <Button fx:id="btnStorno" text="%ticket.storno" prefHeight="25.0" prefWidth="80.0" onAction="#storno"/>
-            <Label fx:id= "lblStorno" textFill="#cc1d1d" prefHeight="40.0" prefWidth="100.0"/>
+            <Label fx:id= "lblStorno" wrapText="true" textFill="#cc1d1d" prefHeight="40.0" prefWidth="100.0"/>
+            <BorderPane.margin>
+                <Insets top="131" right="20" />
+            </BorderPane.margin>
+            <Button fx:id="btnPay" text="%ticket.pay" prefHeight="25.0" prefWidth="80.0" onAction="#pay"/>
+            <Label fx:id= "lblPay" wrapText="true" textFill="#cc1d1d" prefHeight="40.0" prefWidth="100.0"/>
+            <BorderPane.margin>
+                <Insets top="141" right="20" />
+            </BorderPane.margin>
+            <Button fx:id="btnStornoInvoice" text="%ticket.stornoInvoice" wrapText="true" prefHeight="25.0" prefWidth="130.0" onAction="#createStornoInvoice"/>
+                <Label fx:id= "lblStornoInvoice" wrapText="true" textFill="#cc1d1d" prefHeight="60.0" prefWidth="130.0"/>
+            </VBox>
         </HBox>
 
     </right>

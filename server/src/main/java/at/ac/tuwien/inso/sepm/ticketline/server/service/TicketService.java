@@ -83,6 +83,13 @@ public interface TicketService {
      */
     int ticketCountForEventForSector(Long event_id,char sector);
 
+    /**
+     * pay all tickets with a certain reservationnumber
+     *
+     * @param reservation_Id of the tickets that should be paid
+     */
+    void payTicketByReservation_Id(Long reservation_Id) throws OldVersionException;
+
 
     /**
      *

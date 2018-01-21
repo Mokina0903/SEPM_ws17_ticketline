@@ -135,7 +135,6 @@ public class SimpleEventDTO {
         if (!getId().equals(that.getId())) return false;
         if (!getTitle().equals(that.getTitle())) return false;
         if (!getArtists().equals(that.getArtists())) return false;
-        if (!getDescriptionSummary().equals(that.getDescriptionSummary())) return false;
         if (!getPrice().equals(that.getPrice())) return false;
         if (!getStartOfEvent().equals(that.getStartOfEvent())) return false;
         if (!getEndOfEvent().equals(that.getEndOfEvent())) return false;

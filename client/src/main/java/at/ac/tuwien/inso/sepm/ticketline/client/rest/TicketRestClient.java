@@ -99,6 +99,13 @@ public interface TicketRestClient {
     void deleteTicketByTicket_Id(Long ticket_Id) throws DataAccessException;
 
     /**
+     * pays all tickets with a certain ID
+     *
+     * @param reservation_Id of the ticket that should be paid
+     */
+    void payTicketByReservation_Id(Long reservation_Id) throws DataAccessException;
+
+    /**
      *
      * @param event_Id from the event
      * @return the number of tickets from this event
