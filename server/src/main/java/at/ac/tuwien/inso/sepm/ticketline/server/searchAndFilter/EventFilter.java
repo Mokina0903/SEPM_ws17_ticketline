@@ -1,9 +1,7 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.searchAndFilter;
 
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.HashMap;
 
 public class EventFilter {
@@ -96,8 +94,6 @@ public class EventFilter {
         if (parameters.containsKey("category")) {
             this.category = parameters.get("category");
         }
-        //todo
-
     }
 
     private String minutesToTime(Long minutes) {

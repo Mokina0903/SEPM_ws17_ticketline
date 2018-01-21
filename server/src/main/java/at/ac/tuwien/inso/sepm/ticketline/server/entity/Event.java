@@ -60,7 +60,7 @@ public class Event implements Predicatable{
     private Boolean seatSelection;
 
     @Column(nullable =  false)
-    private String eventCategory;
+    private EventCategory eventCategory;
 
     public Boolean getSeatSelection() {
         return seatSelection;
@@ -173,12 +173,12 @@ public class Event implements Predicatable{
         this.artists = artists;
     }
 
-    public String getEventCategory() {
-        return eventCategory.toString();
+    public EventCategory getEventCategory() {
+        return eventCategory;
     }
 
     public void setEventCategory(EventCategory eventCategory) {
-        this.eventCategory = eventCategory.toString();
+        this.eventCategory = eventCategory;
     }
 
     public static EventBuilder builder(){return new EventBuilder();}

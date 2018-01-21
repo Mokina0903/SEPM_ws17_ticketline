@@ -4,9 +4,6 @@ import at.ac.tuwien.inso.sepm.ticketline.server.entity.QEvent;
 import com.querydsl.core.types.Predicate;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-
 
 @Component
 public class SimpleEventFilterBuilder implements EventFilterBuilder {
@@ -36,9 +33,10 @@ public class SimpleEventFilterBuilder implements EventFilterBuilder {
 
             .notNullAnd(EVENT.startOfEvent::loe, filter.getUpcoming())
             .notNullAnd(EVENT.startOfEvent:: goe, filter.getPast())
-            //todo past, upcomming
-            .notEmptyAnd(EVENT.eventCategory::eq, filter.getCategory())
+            //todo category
+            //.notEmptyAnd(EVENT.category::eq, filter.getCategory())
 
+            //todo also show ausverkauft
             .build();
     }
 
