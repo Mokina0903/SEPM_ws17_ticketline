@@ -66,7 +66,7 @@ public class SimpleTicketRestClient implements TicketRestClient {
                     null,
                     new ParameterizedTypeReference<List<TicketDTO>>() {}
                 );
-            LOGGER.debug("Result status was {} with content {}", tickets.getStatusCode(), tickets.getBody());
+            LOGGER.debug("Result status was {} with content {}", tickets.getStatusCode() /* to minimize traffic, can be removed every time, tickets.getBody()*/);
             return tickets.getBody();
         } catch (HttpStatusCodeException e) {
             throw new DataAccessException("Failed retrieve tickets with status code " + e.getStatusCode().toString());
@@ -250,6 +250,26 @@ public class SimpleTicketRestClient implements TicketRestClient {
         } catch (RestClientException e) {
             throw new DataAccessException(e.getMessage(), e);
         }*/
+    }
+
+    @Override
+    public Long countByEvent_Id(Long event_Id) throws DataAccessException {
+        try {
+            LOGGER.debug("Retrieving ticket by eventId from {}", restClient.getServiceURI(TICKET_URL));
+            ResponseEntity<Long> tickets =
+                restClient.exchange(
+                    restClient.getServiceURI(TICKET_URL+"/event/getTicketCount/"+event_Id),
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<Long>() {}
+                );
+            LOGGER.debug("Result status was {} with content {}", tickets.getStatusCode(), tickets.getBody());
+            return tickets.getBody();
+        } catch (HttpStatusCodeException e) {
+            throw new DataAccessException("Failed retrieve tickets with status code " + e.getStatusCode().toString());
+        } catch (RestClientException e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
     }
 
     @Override

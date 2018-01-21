@@ -1,9 +1,12 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.service;
 
+import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface EventService {
@@ -48,4 +51,23 @@ public interface EventService {
      * @return published Event entry
      */
     Event publishEvent(Event event);
+
+    /**
+     *
+     * @param beginOfMonth begin of the month of which to get the top ten events
+     * @param endOfMonth end of the month of which to get the top ten events
+     * @return a list of events
+     */
+     List<Event> getTop10EventsOfMonth(LocalDateTime beginOfMonth,LocalDateTime endOfMonth);
+
+
+    /**
+     *
+     * @param beginOfMonth begin of the month of which to get the top ten events
+     * @param endOfMonth end of the month of which to get the top ten events
+     * @param category to be filtered
+     * @return a list of events filtered by the given category
+     */
+    List<Event> getTop10EventsOfMonthFilteredByCategory(LocalDateTime beginOfMonth,LocalDateTime endOfMonth, String category);
+
 }

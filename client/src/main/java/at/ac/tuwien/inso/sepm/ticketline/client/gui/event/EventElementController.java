@@ -102,11 +102,6 @@ public class EventElementController implements LocalizationObserver {
         eventImageView.setVisible(false);
     }
 
-
-    public void detailedEventInfo(MouseEvent mouseEvent) {
-
-    }
-
     public void ticketReservationForEvent(ActionEvent actionEvent) {
         DetailedEventDTO event  = null;
         try {
@@ -127,7 +122,7 @@ public class EventElementController implements LocalizationObserver {
             Node root = loader.load("/fxml/customer/customerComponent.fxml");
             CustomerController c = wrapper.getController();
             c.preparePagination();
-            c.setTicketProzessView();
+            c.setTicketProzessView(mainController.getEventTab());
             c.setOldContent(myContainer);
             mainController.getEventTab().setContent(root);
         } else {
@@ -135,7 +130,7 @@ public class EventElementController implements LocalizationObserver {
                 loader.loadAndWrap("/fxml/ticket/hallplan.fxml");
             Node root = loader.load("/fxml/ticket/hallplan.fxml");
             HallplanController c = wrapper.getController();
-            c.initializeData(event, mainController.getCutsomer(), myContainer );
+            c.initializeData(event, mainController.getCutsomer(), myContainer, mainController.getEventTab() );
             mainController.getEventTab().setContent(root);
         }
     }

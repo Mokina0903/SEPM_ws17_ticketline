@@ -98,6 +98,11 @@ public class SimpleTicketService implements TicketService {
     }
 
     @Override
+    public Long countByEvent_IdAndIsDeletedFalse(Long event_Id) {
+        return ticketRepository.countByEvent_IdAndIsDeletedFalse(event_Id);
+    }
+
+    @Override
     public void setTicketsFreeIf30MinsBeforEvent() {
         List<Ticket> stillReservedTickets = ticketRepository.setTicketsFreeIf30MinsBeforeEvent();
         if(stillReservedTickets.isEmpty()){
@@ -105,7 +110,7 @@ public class SimpleTicketService implements TicketService {
         }
 
         for (Ticket ticket : stillReservedTickets) {
-            ticketRepository.delete(ticket);
+            ticketRepository.updateReservationStatusToFalse(ticket.getId());
         }
     }
 

@@ -3,10 +3,7 @@ package at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.BlockedUserException;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.SearchNoMatchException;
-import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationObserver;
-import at.ac.tuwien.inso.sepm.ticketline.client.gui.MainController;
-import at.ac.tuwien.inso.sepm.ticketline.client.gui.TabElement;
-import at.ac.tuwien.inso.sepm.ticketline.client.gui.TabHeaderController;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.*;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.customer.CustomerSearchFor;
 import at.ac.tuwien.inso.sepm.ticketline.client.rest.TicketRestClient;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.TicketService;
@@ -31,6 +28,7 @@ import javafx.util.Callback;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -62,6 +60,12 @@ public class TicketController extends TabElement implements LocalizationObserver
 
     @FXML
     public Label lblStorno;
+
+    @FXML
+    public Button btnSuche;
+
+    @Autowired
+    private LocalizationSubject localizationSubject;
 
 
 
@@ -111,6 +115,8 @@ public class TicketController extends TabElement implements LocalizationObserver
         tabHeaderController.setTitle("Tickets");
         lblStorno.setWrapText(true);
         lblStorno.setMaxWidth(100.0);
+        localizationSubject.attach(this);
+
 
     }
 
@@ -210,6 +216,7 @@ public class TicketController extends TabElement implements LocalizationObserver
         }));
 
         tvTickets.getColumns().addAll(tcNumber, tcName, tcSurname, tcSelected, tcIsPaid, tcIsDeleted);
+
         tvTickets.getItems().addAll(getRepresentationList(tickets.getContent()));
         tvTickets.refresh();
 
@@ -382,8 +389,9 @@ public class TicketController extends TabElement implements LocalizationObserver
         tcNumber.setText(BundleManager.getBundle().getString("ticket.ticketNumber"));
         lblNoMatch.setText(BundleManager.getBundle().getString("customer.noMatches"));
         tcSelected.setText(BundleManager.getBundle().getString("ticket.sector"));
-
-
-
+        tcIsDeleted.setText(BundleManager.getBundle().getString("ticket.isDeleted"));
+        lblStorno.setText(BundleManager.getBundle().getString("ticket.allready"));
+        tfSearch.setPromptText(BundleManager.getBundle().getString("ticket.searchField"));
+        btnSuche.setText(BundleManager.getBundle().getString("ticket.search"));
     }
 }

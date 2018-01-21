@@ -7,6 +7,7 @@ import at.ac.tuwien.inso.sepm.ticketline.client.exception.TicketAlreadyExistsExc
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.*;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.customer.CustomerController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.event.EventController;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.statistics.Top10Controller;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.InvoiceService;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.TicketService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
@@ -25,7 +26,9 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -39,8 +42,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
-import java.awt.*;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -79,6 +80,16 @@ public class HallplanController implements LocalizationObserver {
     public Label lblPriceOfTicketsInE;
     @FXML
     public Label lblTotalSum;
+    @FXML
+    public HBox sectorALabels;
+    @FXML
+    public HBox sectorBLabels;
+    @FXML
+    public HBox sectorCLabels;
+    @FXML
+    public HBox sectorDLabels;
+    @FXML
+    public HBox sectorELabels;
 
     @FXML
     private HallplanCutlineController cutlineContainerController;
@@ -126,6 +137,7 @@ public class HallplanController implements LocalizationObserver {
 
     private DetailedHallDTO hall;
     private Node oldContent;
+    Tab currentTab;
 
      Map<Character, Integer> ticketAmountForEachSector;
     private Map<Character, Double> priceOfEachSector;
@@ -145,20 +157,20 @@ public class HallplanController implements LocalizationObserver {
     }
 
 
-     Map<Character, Label> getTicketAmountForEachSectorLabels() {
+    Map<Character, Label> getTicketAmountForEachSectorLabels() {
         return ticketAmountForEachSectorLabels;
     }
 
-     Map<Character, Label> getPriceOfEachSectorLabels() {
+    Map<Character, Label> getPriceOfEachSectorLabels() {
         return priceOfEachSectorLabels;
     }
 
 
-     Map<Character, Double> getPriceOfEachSector() {
+    Map<Character, Double> getPriceOfEachSector() {
         return priceOfEachSector;
     }
 
-    public Map<Character, Integer> getTicketAmountForEachSector() {
+    Map<Character, Integer> getTicketAmountForEachSector() {
         return ticketAmountForEachSector;
     }
 
@@ -182,11 +194,11 @@ public class HallplanController implements LocalizationObserver {
         selectedSeats.remove(seat);
     }
 
-    public double getTotalSum() {
+    double getTotalSum() {
         return totalSum;
     }
 
-    public void setTotalSum(double totalSum) {
+    void setTotalSum(double totalSum) {
         this.totalSum = totalSum;
     }
 
@@ -225,7 +237,22 @@ public class HallplanController implements LocalizationObserver {
         lblError.setMaxWidth(100);
         lblError.setMinHeight(50);
 
+        setAllLabelsNotManagedAndNotVisible();
         initializeLabelMaps();
+    }
+
+    private void setAllLabelsNotManagedAndNotVisible(){
+
+        sectorALabels.setVisible(false);
+        sectorALabels.setManaged(false);
+        sectorBLabels.setVisible(false);
+        sectorBLabels.setManaged(false);
+        sectorCLabels.setVisible(false);
+        sectorCLabels.setManaged(false);
+        sectorDLabels.setVisible(false);
+        sectorDLabels.setManaged(false);
+        sectorELabels.setVisible(false);
+        sectorELabels.setManaged(false);
     }
 
     private void initializeLabelMaps() {
@@ -246,12 +273,14 @@ public class HallplanController implements LocalizationObserver {
         priceOfEachSectorLabels.put('e', lblPriceOfTicketsInE);
     }
 
-    public void initializeData(DetailedEventDTO event, CustomerDTO customer, Node oldContent) {
+    public void initializeData(DetailedEventDTO event, CustomerDTO customer, Node oldContent, Tab currentTab) {
         this.event = event;
         this.hall = event.getHall();
+        this.currentTab = currentTab;
 
         this.oldContent = oldContent;
 
+        cutlineContainerController.initializeData(event.getPriceInEuro());
 
         if (event.getSeatSelection()) {
             initializeSeats();
@@ -259,8 +288,6 @@ public class HallplanController implements LocalizationObserver {
             initializeSectors();
         }
         setButtonGraphic(backbut, "ARROW_LEFT", Color.DARKGRAY);
-
-        cutlineContainerController.initializeData(event.getPriceInEuro());
 
 
         lbEventNameHeader.setText(event.getTitle());
@@ -360,26 +387,46 @@ public class HallplanController implements LocalizationObserver {
         switch (sector) {
             case 'a':
                 node.getStyleClass().add("sectorA");
+                sectorALabels.setVisible(true);
+                sectorALabels.setManaged(true);
+                cutlineContainerController.setSectorLegendOfSectorVisableAndManagable('a');
                 break;
             case 'b':
                 node.getStyleClass().add("sectorB");
+                sectorBLabels.setVisible(true);
+                sectorBLabels.setManaged(true);
+                cutlineContainerController.setSectorLegendOfSectorVisableAndManagable('b');
+
                 break;
             case 'c':
                 node.getStyleClass().add("sectorC");
+                sectorCLabels.setVisible(true);
+                sectorCLabels.setManaged(true);
+                cutlineContainerController.setSectorLegendOfSectorVisableAndManagable('c');
+
                 break;
             case 'd':
                 node.getStyleClass().add("sectorD");
+                sectorDLabels.setVisible(true);
+                sectorDLabels.setManaged(true);
+                cutlineContainerController.setSectorLegendOfSectorVisableAndManagable('d');
+
                 break;
             case 'e':
                 node.getStyleClass().add("sectorE");
+                sectorELabels.setVisible(true);
+                sectorELabels.setManaged(true);
+                cutlineContainerController.setSectorLegendOfSectorVisableAndManagable('e');
 
+                break;
         }
     }
 
 
     @FXML
     public void backToEventSelection(ActionEvent actionEvent) {
-        mainController.getEventTab().setContent(oldContent);
+        mainController.setCutsomer(null);
+        currentTab.setContent(oldContent);
     }
 
     @FXML
@@ -513,16 +560,23 @@ public class HallplanController implements LocalizationObserver {
 
     private void backToEventTabBeginning() {
 
-
+        Node root;
         customerController.setNormalTabView();
-        SpringFxmlLoader.Wrapper<EventController> wrapper =
+        if(currentTab ==mainController.getEventTab()){
+            SpringFxmlLoader.Wrapper<EventController> wrapper =
             springFxmlLoader.loadAndWrap("/fxml/event/eventComponent.fxml");
-        Node root = springFxmlLoader.load("/fxml/event/eventComponent.fxml");
+            root = springFxmlLoader.load("/fxml/event/eventComponent.fxml");
+            EventController c = wrapper.getController();
+            c.loadEvents();
+        }else{
+            SpringFxmlLoader.Wrapper<Top10Controller> wrapper =
+                springFxmlLoader.loadAndWrap("/fxml/statistics/top10Statistics.fxml");
+            root = springFxmlLoader.load("/fxml/statistics/top10Statistics.fxml");
+            Top10Controller c = wrapper.getController();
+            c.initializeData();
+        }
 
-        EventController c = wrapper.getController();
-
-        c.loadEvents();
-        mainController.getEventTab().setContent(root);
+        currentTab.setContent(root);
         mainController.setCutsomer(null);
         mainController.setEvent(null);
     }

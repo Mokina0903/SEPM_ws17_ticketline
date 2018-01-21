@@ -11,7 +11,7 @@
       fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket.HallplanCutlineController" spacing="20">
 
     <HBox spacing="10">
-        <HBox spacing="5">
+        <HBox fx:id="sectorALegend" spacing="5">
             <VBox styleClass="sectorA, ticketsAdded, seatVbox" maxWidth="50">
                 <Label styleClass="seatLbl" text="1"/>
             </VBox>
@@ -19,7 +19,7 @@
             <Label styleClass="cutlinePricelbl" fx:id="lbPriceA"/>
         </HBox>
 
-        <HBox spacing="7">
+        <HBox fx:id="sectorBLegend" spacing="7">
             <VBox styleClass="sectorB, ticketsAdded, seatVbox">
                 <Label styleClass="seatLbl" text="1"/>
             </VBox>
@@ -27,7 +27,7 @@
             <Label styleClass="cutlinePricelbl" fx:id="lbPriceB"/>
         </HBox>
 
-        <HBox spacing="7">
+        <HBox fx:id="sectorCLegend" spacing="7">
             <VBox styleClass="sectorC, ticketsAdded, seatVbox">
                 <Label styleClass="seatLbl" text="1"/>
             </VBox>
@@ -35,14 +35,14 @@
             <Label styleClass="cutlinePricelbl" text="20.0" fx:id="lbPriceC"/>
         </HBox>
 
-        <HBox spacing="7">
+        <HBox fx:id="sectorDLegend" spacing="7">
             <VBox styleClass="sectorD, ticketsAdded, seatVbox">
                 <Label styleClass="seatLbl" text="1"/>
             </VBox>
             <Label styleClass="cutlineLbl" text="Sector D"/>
             <Label styleClass="cutlinePricelbl" fx:id="lbPriceD"/>
         </HBox>
-        <HBox spacing="7">
+        <HBox fx:id="sectorELegend" spacing="7">
             <VBox styleClass="sectorE, ticketsAdded, seatVbox">
                 <Label styleClass="seatLbl" text="1"/>
             </VBox>
@@ -60,7 +60,7 @@
         <VBox styleClass="cutlineFree">
             <Label styleClass="seatLbl" text="1"/>
         </VBox>
-        <Label styleClass="cutlineLbl" text="%hallplan.free"/>
+        <Label styleClass="freiLbl" text="%hallplan.free"/>
 
         <VBox styleClass="sceneCutline"/>
         <Label styleClass="cutlineLbl" text="%hallplan.scene"/>

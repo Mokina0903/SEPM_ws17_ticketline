@@ -5,6 +5,7 @@ import at.ac.tuwien.inso.sepm.ticketline.client.gui.customer.CustomerController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.event.EventController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.location.LocationController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.news.NewsController;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.statistics.Top10Controller;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket.HallplanController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket.TicketController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.user.UserController;
@@ -68,7 +69,7 @@ public class MainController implements LocalizationObserver {
     private CustomerController customerController;
     private UserController userController;
     private EventController eventController;
-    private LocationController locationController;
+    private Top10Controller top10Controller;
     private TicketController ticketController;
 
     private UserService userService;
@@ -78,7 +79,7 @@ public class MainController implements LocalizationObserver {
 
     private Tab newsTab = new Tab();
     private Tab eventTab = new Tab();
-    private Tab locationTab = new Tab();
+    private Tab topTenTab = new Tab();
     private Tab ticketTab = new Tab();
     private Tab userTab = new Tab();
     private Tab customerTab = new Tab();
@@ -115,6 +116,9 @@ public class MainController implements LocalizationObserver {
         return newsTab;
     }
 
+    public Tab getTopTenTab() {
+        return topTenTab;
+    }
 
     public MainController(
         SpringFxmlLoader springFxmlLoader,
@@ -207,7 +211,7 @@ public class MainController implements LocalizationObserver {
         tpContent.getTabs().clear();
         initTab(newsTab, "NEWSPAPER_ALT");
         initTab(eventTab, "FILM");
-        initTab(locationTab, "MAP_MARKER");
+        initTab(topTenTab, "BAR_CHART");
         initTab(ticketTab, "TICKET");
         initTab(customerTab, "USERS");
         if (detailedUserDTO.getRole() == 1) {
@@ -236,22 +240,9 @@ public class MainController implements LocalizationObserver {
         }
     }
 
-
     private void setListenerForTabs() {
         tpContent.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-
-            if (newValue.equals(eventTab)) {
-                if (eventController == null) {
-                    eventController = (EventController) setTabContent(eventController, "event/eventComponent.fxml", eventTab);
-                    eventController.loadEvents();
-                    // eventController.preparePagination();
-                }
-            } else if (newValue.equals(locationTab)) {
-                if (locationController == null) {
-                    locationController = (LocationController) setTabContent(locationController, "location/locationComponent.fxml", locationTab);
-                    locationController.loadLocations();
-                }
-            } else if (newValue.equals(ticketTab)) {
+            if (newValue.equals(ticketTab)) {
                 if (ticketController == null) {
                     ticketController = (TicketController) setTabContent(ticketController, "ticket/ticketComponent.fxml", ticketTab);
                     ticketController.initializePagination();
@@ -263,11 +254,27 @@ public class MainController implements LocalizationObserver {
                     customerController.initialzeData(customerTab);
                     // customerController.preparePagination();
                 }
-            } else {
+            } else if (newValue.equals(userTab)){
                 if (userController == null) {
                     userController = (UserController) setTabContent(userController, "user/userComponent.fxml", userTab);
                     userController.loadUsers();
                 }
+            } else if (newValue.equals(eventTab)) {
+               // if (eventController == null) {
+                    eventController = (EventController) setTabContent(eventController, "event/eventComponent.fxml", eventTab);
+                    eventController.loadEvents();
+                if(! (customerController == null)){
+                    customerController.setNormalTabView();
+                }
+
+                    // eventController.preparePagination();
+            } else if (newValue.equals(topTenTab)) {
+                top10Controller = (Top10Controller) setTabContent(top10Controller, "statistics/top10Statistics.fxml", topTenTab);
+                top10Controller.initializeData();
+                if(! (customerController == null)){
+                    customerController.setNormalTabView();
+                }
+
             }
         });
     }

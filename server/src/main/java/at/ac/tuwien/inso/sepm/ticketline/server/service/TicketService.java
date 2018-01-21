@@ -83,10 +83,33 @@ public interface TicketService {
      */
     int ticketCountForEventForSector(Long event_id,char sector);
 
+
+    /**
+     *
+     * @param event_Id
+     * @return the number of Tickets within this event
+     */
+    Long countByEvent_IdAndIsDeletedFalse(Long event_Id);
+
+    /**
+     * Checks if tickets from any event are reserved 30mins before event start and sets them free if they are
+     */
     void setTicketsFreeIf30MinsBeforEvent();
 
+    /**
+     *
+     * @param name of a customer
+     * @param request defienes how to read paged from the database
+     * @return the list of Tickets of this customer
+     */
     Page<Ticket>findAllByCustomerName(String name,Pageable request);
 
+    /**
+     *
+     * @param reservationNumber
+     * @param request defienes how to read paged from the database
+     * @return the list of tickets from this reservation number
+     */
     Page<Ticket>findAllByReservationNumber(Long reservationNumber, Pageable request);
 
 }

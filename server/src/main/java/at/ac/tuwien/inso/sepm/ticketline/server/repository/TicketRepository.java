@@ -47,6 +47,13 @@ public interface TicketRepository extends JpaRepository<Ticket,Long>{
     List<Ticket> findByEvent_IdAndIsDeletedFalse(Long event_Id);
 
     /**
+     *
+     * @param event_Id
+     * @return the number of Tickets within this event
+     */
+    Long countByEvent_IdAndIsDeletedFalse(Long event_Id);
+
+    /**
      * find all tickets of specific customer
      *
      * @param customer_Id of the customer to find tickets for
@@ -99,7 +106,7 @@ public interface TicketRepository extends JpaRepository<Ticket,Long>{
      *
      */
     @Query(value = "select * from ticket t join event e on t.event_id=e.id " +
-        "where TIMESTAMPDIFF('MINUTE', CURRENT_TIMESTAMP(), e.start_Of_Event)< 30", nativeQuery = true)
+        "where TIMESTAMPDIFF('MINUTE', CURRENT_TIMESTAMP(), e.start_Of_Event)< 30 AND t.is_Paid = false", nativeQuery = true)
     List<Ticket>setTicketsFreeIf30MinsBeforeEvent();
 
     /**
@@ -128,5 +135,9 @@ public interface TicketRepository extends JpaRepository<Ticket,Long>{
             " WHERE t.reservation_number=:nr "
         , nativeQuery = true)
     Page<Ticket> findByReservationNumberAndIsDeletedFalse(@Param("nr") Long reservationNumber, Pageable request);
+
+    @Modifying
+    @Query(value="UPDATE ticket t SET t.is_Deleted = true WHERE t.id=:id", nativeQuery = true)
+    void updateReservationStatusToFalse(@Param("id") Long id);
 
 }

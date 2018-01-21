@@ -80,4 +80,9 @@ public class SimpleTicketService implements TicketService {
     public void deleteTicketByTicket_Id(Long ticket_Id) throws DataAccessException {
         ticketRestClient.deleteTicketByTicket_Id(ticket_Id);
     }
+
+    @Override
+    public Long countByEvent_Id(Long event_Id) throws DataAccessException {
+        return ticketRestClient.countByEvent_Id(event_Id);
+    }
 }

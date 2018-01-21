@@ -20,7 +20,7 @@
     <children>
         <fx:include source="/fxml/tabHeader.fxml" fx:id="tabHeader"/>
         <VBox spacing="10" alignment="TOP_RIGHT">
-            <Button fx:id="addNewNews" minWidth="30" onAction="#addNewNews"/>
+            <Button fx:id="addNewNews" minWidth="30" styleClass="buyBtn" onAction="#addNewNews"/>
         </VBox>
         <TabPane>
 

@@ -12,7 +12,6 @@ import java.util.List;
 @Table(name = "event")
 public class Event {
 
-    // TODO: David is correct?
     public enum EventCategory
     {
         Musical,
@@ -49,6 +48,7 @@ public class Event {
     private Boolean seatSelection;
 
     @Column(nullable =  false)
+    @Enumerated(EnumType.STRING)
     private EventCategory eventCategory;
 
     public Boolean getSeatSelection() {
@@ -154,7 +154,6 @@ public class Event {
             ", endOfEvent=" + endOfEvent +
             ", seatSelection=" + seatSelection +
             ", hall=" + hall +
-            ", artists=" + artists +
             ", eventCategory=" + eventCategory +
             '}';
     }

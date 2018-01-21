@@ -132,7 +132,7 @@ public class CustomerController extends TabElement implements LocalizationObserv
         isTicketView = false;
         lbNoCustomerError.setVisible(false);
     }
-    public void setTicketProzessView(){
+    public void setTicketProzessView(Tab tab){
         btTickets.setVisible(false);
         btTickets.setDisable(true);
         btNext.setDisable(false);
@@ -142,7 +142,7 @@ public class CustomerController extends TabElement implements LocalizationObserv
         btnAnonymous.setDisable(false);
         btnAnonymous.setVisible(true);
         tabHeaderController.setTitle(BundleManager.getBundle().getString("customer.chooseCustomer"));
-        currentTab = mainController.getEventTab();
+        currentTab = tab;
         isTicketView = true;
     }
 
@@ -451,13 +451,18 @@ public class CustomerController extends TabElement implements LocalizationObserv
         }
 
 
-        c.initializeData(mainController.getEvent(),customer,  customerOverviewRoot);
+        c.initializeData(mainController.getEvent(),customer,  customerOverviewRoot, currentTab);
 
-        mainController.getEventTab().setContent(root);
+       currentTab.setContent(root);
     }
 
-    public void backToEventTab(ActionEvent actionEvent) {
-        mainController.getEventTab().setContent(oldContent);
+    public void backToPreviousTab(ActionEvent actionEvent) {
+        if(currentTab == mainController.getEventTab()){
+            mainController.getEventTab().setContent(oldContent);
+        } else {
+            mainController.getTopTenTab().setContent(oldContent);
+        }
+
         setNormalTabView();
         mainController.setCutsomer(null);
 

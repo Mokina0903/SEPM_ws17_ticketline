@@ -62,9 +62,9 @@
             <Button fx:id="btNew" onAction="#openNewDialog" prefWidth="40.0" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="1" />
             <Button fx:id="btEdit" onAction="#openEditDialog" prefWidth="40.0" GridPane.columnIndex="0" GridPane.rowIndex="2" />
             <Button fx:id="btTickets" onAction="#openEventTab" prefWidth="40.0" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-            <Button fx:id="btNext" text="%customer.next" onAction="#openHallplan" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
-            <Button fx:id="btnAnonymous" text="Anonym" onAction="#openHallplan" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
-            <Button fx:id="btnBackToEvent"  onAction="#backToEventTab" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+            <Button fx:id="btNext" text="%customer.next" styleClass="buyBtn" onAction="#openHallplan" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+            <Button fx:id="btnAnonymous" text="Anonym" styleClass="buyBtn" onAction="#openHallplan" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+            <Button fx:id="btnBackToEvent"  onAction="#backToPreviousTab" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
             <Label fx:id="lbNoCustomerError" textFill="#cc1d1d" GridPane.columnIndex="0" GridPane.rowIndex="7"/>
             <columnConstraints>
                 <ColumnConstraints />

@@ -17,6 +17,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestClientException;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 
 @Component
@@ -113,6 +115,56 @@ public class SimpleEventRestClient implements EventRestClient{
             throw ErrorDTO.ErrorDTOBuilder(e.getResponseBodyAsString());
             //throw new DataAccessException("Failed retrieve Event with status code " + e.getStatusCode().toString());
         } catch (Exception e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<SimpleEventDTO> getTop10EventsOfMonthFilteredbyCategory(LocalDate beginOfMonth, LocalDate endOfMonth, String category) throws DataAccessException {
+        try {
+            LOGGER.debug("Retrieving the events of a certain month from {}", restClient.getServiceURI(EVENT_URL));
+
+            Long start = beginOfMonth.atStartOfDay(ZoneId.of("Europe/Paris")).toEpochSecond();
+            Long end = endOfMonth.atStartOfDay(ZoneId.of("Europe/Paris")).toEpochSecond();
+
+            ResponseEntity<List<SimpleEventDTO>> events =
+                restClient.exchange(
+                    restClient.getServiceURI(EVENT_URL+"/getTopTenFiltered/"+start+"/"+end+"/"+category),
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<List<SimpleEventDTO>>() {
+                    });
+            System.out.println(events.getBody().size());
+            LOGGER.debug("Result status was {} with content {}", events.getStatusCode());
+            return events.getBody();
+        } catch (HttpStatusCodeException e) {
+            throw new DataAccessException("Failed retrieve events with status code " + e.getStatusCode().toString());
+        } catch (RestClientException e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<SimpleEventDTO> getTop10EventsOfMonth(LocalDate beginOfMonth, LocalDate endOfMonth) throws DataAccessException {
+        try {
+            LOGGER.debug("Retrieving the events of a certain month from {}", restClient.getServiceURI(EVENT_URL));
+
+            Long start = beginOfMonth.atStartOfDay(ZoneId.of("Europe/Paris")).toEpochSecond();
+            Long end = endOfMonth.atStartOfDay(ZoneId.of("Europe/Paris")).toEpochSecond();
+
+            ResponseEntity<List<SimpleEventDTO>> events =
+                restClient.exchange(
+                    restClient.getServiceURI(EVENT_URL+"/getTopTen/"+start+"/"+end),
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<List<SimpleEventDTO>>() {
+                    });
+            System.out.println(events.getBody().size());
+            LOGGER.debug("Result status was {}", events.getStatusCode());
+            return events.getBody();
+        } catch (HttpStatusCodeException e) {
+            throw new DataAccessException("Failed retrieve events with status code " + e.getStatusCode().toString());
+        } catch (RestClientException e) {
             throw new DataAccessException(e.getMessage(), e);
         }
     }
