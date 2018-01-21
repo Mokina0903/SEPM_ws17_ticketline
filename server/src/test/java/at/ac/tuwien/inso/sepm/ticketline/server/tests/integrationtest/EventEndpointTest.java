@@ -30,7 +30,6 @@ import static org.hamcrest.core.Is.is;
 import static org.mockito.Matchers.any;
 
 public class EventEndpointTest extends BaseIntegrationTest {
-    // TODO: (David) Change to IntegrationTest
 
     @MockBean
     private LocationRepository locationRepository;
