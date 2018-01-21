@@ -1,6 +1,5 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.mapper;
 
-import at.ac.tuwien.inso.sepm.ticketline.rest.artist.SimpleArtistDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.seat.SeatDTO;
@@ -12,7 +11,6 @@ import at.ac.tuwien.inso.sepm.ticketline.server.entity.Ticket;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Hall;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Location;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Seat;
-import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.artist.ArtistMapper;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.customer.CustomerMapper;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.event.EventMapper;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.eventLocation.seat.SeatMapper;
@@ -33,8 +31,6 @@ import static org.assertj.core.api.Java6Assertions.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class TicketMapperTest {
-
-//ToDo Hall und Seat nullpointer
 
     @Configuration
     @ComponentScan(basePackages = "at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper")
@@ -61,19 +57,16 @@ public class TicketMapperTest {
     // Suppress warning cause inspection does not know that the cdi annotations are added in the code generation step
     private CustomerMapper customerMapper;
 
-    //private static final Customer CUSTOMER = new Customer();
     private static final CustomerDTO CUSTOMERDTO = new CustomerDTO();
-    //private static final Event EVENT = new Event();
     private static final SimpleEventDTO EVENTDTO = new SimpleEventDTO();
     private static final Boolean PAID = false;
     private static final Boolean DELETED = true;
-    private static final Long PRICE = 13456L;
+    private static final Long PRICE = 134562L;
     private static final Long NUMBER = 43L;
     private static final Boolean PAID1 = true;
     private static final Boolean DELETED1 = true;
-    private static final Integer PRICE1 = 134562;
+    private static final Long PRICE1 = 134562L;
     private static final Long NUMBER1 = 243L;
-    //private static final Seat SEAT = new Seat();
     private static final SeatDTO SEATDTO = new SeatDTO();
     private static final Long ID = 1L;
     private static final Long ID1 = 2L;
@@ -107,13 +100,12 @@ public class TicketMapperTest {
 
     private static final String EVENT_ARTIST_FIRSTNAME = "Firstname";
     private static final String EVENT_ARTIST_LASTNAME = "Lastname";
-    private static final Artist EVENT_ARTIST =  Artist.builder()
+    private static final Artist EVENT_ARTIST = Artist.builder()
         .id(1L)
         .artistFirstname(EVENT_ARTIST_FIRSTNAME)
         .artistLastName(EVENT_ARTIST_LASTNAME)
         .build();
     private List<Artist> EVENT_ARTISTS = new ArrayList<>();
-
 
     private Event EVENT = Event.builder()
         .endOfEvent(LocalDateTime.of(2016, 1, 1, 12, 0, 0, 0))
@@ -124,6 +116,7 @@ public class TicketMapperTest {
         .id(2L)
         .seatSelection(true)
         .artists(EVENT_ARTISTS)
+        .category(Event.EventCategory.Musical)
         .hall(HALL)
         .build();
 
@@ -134,9 +127,6 @@ public class TicketMapperTest {
         .sector('A')
         .id(5L)
         .build();
-
-
-
 
     @Test
     public void shouldMapTicketToTicketDTO() {
@@ -167,10 +157,9 @@ public class TicketMapperTest {
         assertThat(ticketDTO.getId()).isEqualTo(ID);
         assertThat(ticketDTO.getPrice()).isEqualTo(PRICE);
         assertThat(ticketDTO.getReservationNumber()).isEqualTo(NUMBER);
-        //assertThat(ticketDTO.getEvent()).isEqualTo(event);
+        assertThat(ticketDTO.getEvent()).isEqualTo(event);
         assertThat(ticketDTO.getSeat()).isEqualTo(seat);
         assertThat(ticketDTO.getCustomer()).isEqualTo(customerDTO);
-
     }
 
     @Test
@@ -199,18 +188,12 @@ public class TicketMapperTest {
         Ticket ticket = ticketMapper.ticketDTOtoTicket(ticketDTO);
 
 
-
-
         assertThat(ticket).isNotNull();
         assertThat(ticket.getId()).isEqualTo(ID);
         assertThat(ticket.getPrice()).isEqualTo(PRICE);
         assertThat(ticket.getReservationNumber()).isEqualTo(NUMBER);
-        //assertThat(ticket.getEvent()).isEqualTo(EVENT);
-        //assertThat(ticket.getSeat()).isEqualTo(SEAT);
         assertThat(ticket.getCustomer()).isEqualTo(CUSTOMER);
-
     }
-
 
     @Test
     public void shouldMapTicketListToTicketDTO() {
@@ -256,7 +239,7 @@ public class TicketMapperTest {
         assertThat(ticketDTO.getId()).isEqualTo(ID);
         assertThat(ticketDTO.getPrice()).isEqualTo(PRICE);
         assertThat(ticketDTO.getReservationNumber()).isEqualTo(NUMBER);
-        //assertThat(ticketDTO.getEvent()).isEqualTo(event);
+        assertThat(ticketDTO.getEvent()).isEqualTo(event);
         assertThat(ticketDTO.getSeat()).isEqualTo(seat);
         assertThat(ticketDTO.getCustomer()).isEqualTo(customerDTO);
 
@@ -265,10 +248,9 @@ public class TicketMapperTest {
         assertThat(ticketDTO.getId()).isEqualTo(ID1);
         assertThat(ticketDTO.getPrice()).isEqualTo(PRICE1);
         assertThat(ticketDTO.getReservationNumber()).isEqualTo(NUMBER1);
-        //assertThat(ticketDTO.getEvent()).isEqualTo(event);
+        assertThat(ticketDTO.getEvent()).isEqualTo(event);
         assertThat(ticketDTO.getSeat()).isEqualTo(seat);
         assertThat(ticketDTO.getCustomer()).isEqualTo(customerDTO);
-
     }
 
     @Test
@@ -310,14 +292,11 @@ public class TicketMapperTest {
         List<Ticket> ticketList = ticketMapper.ticketDTOToTicket(ticketDTOList);
 
 
-
         Ticket ticket = ticketList.get(0);
         assertThat(ticket).isNotNull();
         assertThat(ticket.getId()).isEqualTo(ID);
         assertThat(ticket.getPrice()).isEqualTo(PRICE);
         assertThat(ticket.getReservationNumber()).isEqualTo(NUMBER);
-        //assertThat(ticket.getEvent()).isEqualTo(event);
-        //assertThat(ticket.getSeat()).isEqualTo(SEAT);
         assertThat(ticket.getCustomer()).isEqualTo(CUSTOMER);
 
         ticket = ticketList.get(1);
@@ -325,10 +304,7 @@ public class TicketMapperTest {
         assertThat(ticket.getId()).isEqualTo(ID1);
         assertThat(ticket.getPrice()).isEqualTo(PRICE1);
         assertThat(ticket.getReservationNumber()).isEqualTo(NUMBER1);
-        //assertThat(ticket.getEvent()).isEqualTo(event);
-        //assertThat(ticket.getSeat()).isEqualTo(SEAT);
         assertThat(ticket.getCustomer()).isEqualTo(CUSTOMER);
-
     }
 
 
