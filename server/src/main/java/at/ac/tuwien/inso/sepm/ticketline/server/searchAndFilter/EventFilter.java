@@ -14,8 +14,8 @@ public class EventFilter {
     private LocalDate date;
     private Long startTimeLowerBound;
     private Long startTimeUpperBound;
-    private LocalTime durationLowerBound;
-    private LocalTime durationUpperBound;
+    private Long durationLowerBound;
+    private Long durationUpperBound;
     private Boolean seats;
     private Boolean noSeats;
     private Boolean upcoming;
@@ -35,45 +35,41 @@ public class EventFilter {
         if (parameters.containsKey("priceTo")) {
             this.priceTo = Long.parseLong(parameters.get("priceTo"));
         }
+       /* if (parameters.containsKey("eventDate")) {
+            this.date = parameters.get("eventDate");
+        }*/
         if (parameters.containsKey("timeOfStart")) {
             Long lowerBound = Long.parseLong(parameters.get("timeOfStart"));
             System.out.println("Event has time of start...");
             lowerBound -= 30;
             if (lowerBound < 0) {
-                lowerBound += 24 * 60;
+                lowerBound = 1L;
             }
             this.startTimeLowerBound = lowerBound;
-          /*  LocalTime lowerBound = minutesToTime(startTimeLowerBound);
-            this.startTimeLowerBound = lowerBound;*/
-            System.out.println("Filter Time: " + lowerBound);
+            System.out.println("Filter Time low: " + lowerBound);
 
             Long upperBound = Long.parseLong(parameters.get("timeOfStart"));
+            upperBound += 30;
+            if (upperBound <= 24 * 60) { // ist länger als 24 sdt
+                this.startTimeUpperBound = upperBound;
+                System.out.println("Filter Time up: " + upperBound);
+            }
+        }
+        if (parameters.containsKey("duration")) {
+            Long lowerBound = Long.parseLong(parameters.get("duration"));
+            lowerBound -= 30;
+            if (lowerBound < 0) {
+                lowerBound += 24 * 60;
+            }
+            this.durationLowerBound = lowerBound;
+
+            long upperBound = Long.parseLong(parameters.get("duration"));
             upperBound += 30;
             if (upperBound >= 24 * 60) {
                 upperBound -= 24 * 60;
             }
-
-            //LocalTime upperBound = minutesToTime(startTimeUpperBound);
-            this.startTimeLowerBound = upperBound;
-            System.out.println(upperBound);
-        }
-       /* if (parameters.containsKey("duration")) {
-            long durationLowerBoundInMinutes = Long.parseLong(parameters.get("duration"));
-            durationLowerBoundInMinutes -= 30;
-            if (durationLowerBoundInMinutes < 0) {
-                durationLowerBoundInMinutes += 24 * 60;
-            }
-            LocalTime lowerBound = minutesToTime(durationLowerBoundInMinutes);
-            this.durationLowerBound = lowerBound;
-
-            long durationUpperBoundInMinutes = Long.parseLong(parameters.get("duration"));
-            durationUpperBoundInMinutes += 30;
-            if (durationUpperBoundInMinutes >= 24 * 60) {
-                durationUpperBoundInMinutes -= 24 * 60;
-            }
-            LocalTime upperBound = minutesToTime(durationUpperBoundInMinutes);
             this.durationLowerBound = upperBound;
-        }*/
+        }
         if (parameters.containsKey("seats")) {
             this.seats = true;
         }
@@ -157,19 +153,19 @@ public class EventFilter {
         this.startTimeUpperBound = startTimeUpperBound;
     }
 
-    public LocalTime getDurationLowerBound() {
+    public Long getDurationLowerBound() {
         return durationLowerBound;
     }
 
-    public void setDurationLowerBound(LocalTime durationLowerBound) {
+    public void setDurationLowerBound(Long durationLowerBound) {
         this.durationLowerBound = durationLowerBound;
     }
 
-    public LocalTime getDurationUpperBound() {
+    public Long getDurationUpperBound() {
         return durationUpperBound;
     }
 
-    public void setDurationUpperBound(LocalTime durationUpperBound) {
+    public void setDurationUpperBound(Long durationUpperBound) {
         this.durationUpperBound = durationUpperBound;
     }
 

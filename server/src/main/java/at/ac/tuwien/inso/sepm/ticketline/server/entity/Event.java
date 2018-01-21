@@ -6,8 +6,10 @@ import org.hibernate.annotations.Formula;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +50,9 @@ public class Event implements Predicatable{
     @Column(nullable = false)
     private LocalDateTime endOfEvent;
 
-    @Column(nullable = false)
+    @Column
+    private LocalDate eventDate;
+
     private Long startOfEventTime;
 
     private Long duration;
@@ -125,9 +129,17 @@ public class Event implements Predicatable{
         return startOfEventTime;
     }
 
+    public LocalDate getEventDate() {
+        return eventDate;
+    }
+
+    public void setEventDate() {
+        this.eventDate = startOfEvent.toLocalDate();
+    }
+
     public void setStartOfEventTime() {
-        LocalTime time = startOfEvent.toLocalTime();
-        this.startOfEventTime = Duration.between(LocalTime.MIN, startOfEvent).toMinutes();
+
+        this.startOfEventTime =  Duration.between(LocalTime.MIN, startOfEvent.toLocalTime()).toMinutes();
     }
 
     public void setEndOfEvent(LocalDateTime endOfEvent ) {
@@ -139,8 +151,10 @@ public class Event implements Predicatable{
     }
 
     public void setDuration() {
-        long minutes = Duration.between(startOfEvent, endOfEvent).toMinutes();
-        this.duration = minutes;
+        this.duration = Duration.between(startOfEvent.toLocalTime(), endOfEvent.toLocalTime()).toMinutes();
+        if (duration < 0) {
+            this.duration = 24L*60L;
+        }
     }
 
     public Hall getHall() {
@@ -293,6 +307,7 @@ public class Event implements Predicatable{
             event.setArtists(artists);
             event.setSeatSelection(seatSelection);
             event.setEventCategory(eventCategory);
+            event.setEventDate();
             event.setStartOfEventTime();
             event.setDuration();
             return event;

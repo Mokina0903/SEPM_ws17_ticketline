@@ -4,7 +4,6 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import java.time.LocalTime;
 import java.util.Collection;
 import java.util.function.Function;
 
@@ -17,23 +16,23 @@ public class OptionalBooleanBuilder {
     }
 
     public <T> OptionalBooleanBuilder notNullAnd(Function<T, BooleanExpression> expressionFunction, T value) {
+        System.out.println(value == null);
         if (value != null) {
-            System.out.println("value not null:" +value.toString());
+            System.out.println("value not null:" + value.toString());
 
-            System.out.println(isNumeric(value.toString()) + "&&");
-                System.out.println(value + "went to query!!!!!!!!!!!");
-                return new OptionalBooleanBuilder(predicate.and(expressionFunction.apply(value)));
-            }
+            System.out.println(value + "went to query!!!!!!!!!!!");
+            return new OptionalBooleanBuilder(predicate.and(expressionFunction.apply(value)));
+        }
 
         return this;
     }
 
     public <T> OptionalBooleanBuilder notNullOr(Function<T, BooleanExpression> expressionFunction, T value) {
         if (value != null) {
-      //      if (isNumeric(value.toString()) && Long.parseLong(value.toString()) != -1) {
-                return new OptionalBooleanBuilder(predicate.or(expressionFunction.apply(value)));
-            }
-     //   }
+            //      if (isNumeric(value.toString()) && Long.parseLong(value.toString()) != -1) {
+            return new OptionalBooleanBuilder(predicate.or(expressionFunction.apply(value)));
+        }
+        //   }
         return this;
     }
 
