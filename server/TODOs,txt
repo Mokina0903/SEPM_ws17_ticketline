@@ -33,12 +33,11 @@ TODO: TestPlan:
   + Manuelle Tests schreiben in Exceldatei
   + Manuelle Tests durchführen
   + Csv anpassen (Kategorie)
-    - Kategorie nicht vorhanden
   + Testbericht?
 
 
 TODO: Fragen:
- + Kategorien OK (Done)
+ + Kategorien OK
  + Diverse TODOS im Code
 
 
@@ -62,6 +61,7 @@ TODO:
 - generelles layout nach dem big merge
 
 FRAGEN:
-- kann man reservierte tickets kaufen?
 
--events anzahl von tickets anzeigen -?
+- events anzahl von tickets anzeigen -?
+- genereall green errors
+-
