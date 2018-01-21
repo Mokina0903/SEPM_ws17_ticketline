@@ -232,7 +232,6 @@ public class EventAdvancedSearchController implements LocalizationObserver {
             Double timeInMinutes = slTime.getValue();
             Long timeInMinutesL = timeInMinutes.longValue();
             parameters.set("timeOfStart", timeInMinutesL.toString());
-            System.out.println("looking for time: " + timeInMinutes.intValue());
         }
         if (slDuration.getValue() != 0) {
             Double timeInMinutes = slDuration.getValue();
@@ -253,11 +252,9 @@ public class EventAdvancedSearchController implements LocalizationObserver {
         }
         if (!dpDate.getEditor().getText().isEmpty()) {
             parameters.set("eventDate", dpDate.getValue().toString());
-            System.out.println("Date in AdvSer: " + dpDate.getValue().toString());
         }
         if (!cbCategory.getSelectionModel().getSelectedItem().equals(EventCategory.All)) {
             parameters.set("category", cbCategory.getSelectionModel().getSelectedItem().toString());
-            System.out.println("category " + cbCategory.getSelectionModel().getSelectedItem().toString());
         }
 
 

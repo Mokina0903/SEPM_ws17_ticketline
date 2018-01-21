@@ -83,7 +83,6 @@ public class SimpleEventService implements EventService {
 
     @Override
     public Page<SimpleEventDTO> find(Pageable request, MultiValueMap<String, String> parameters) throws DataAccessException {
-        System.out.println("Events loading...");
         return eventRestClient.find(request, parameters);
     }
 }

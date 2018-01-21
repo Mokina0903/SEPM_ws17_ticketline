@@ -36,9 +36,7 @@ public class UserSimpleProperty {
     }
 
     public void setVersion(int version) {
-        System.out.println(version);
         this.version = new SimpleIntegerProperty(version);
-        System.out.println(version);
     }
 
     public String getUsername() {

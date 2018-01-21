@@ -111,7 +111,6 @@ public class EventEndpoint {
 
         List<SimpleEventDTO> checklist= eventMapper.eventToSimpleEventDTO(eventService.getTop10EventsOfMonthFilteredByCategory(startOfMonth, endOfMonth, category));
 
-        System.out.println(checklist.size());
         return checklist;
     }
 

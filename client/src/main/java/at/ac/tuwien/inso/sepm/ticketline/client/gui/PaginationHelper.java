@@ -214,7 +214,6 @@ public class PaginationHelper {
 
         lvElements.setStyle("-fx-background-color: transparent;");
         if (!events.getContent().isEmpty()) {
-            System.out.println("size: " + events.getContent().size());
             for (SimpleEventDTO element : events.getContent()) {
                 SpringFxmlLoader.Wrapper<EventElementController> wrapper =
                     springFxmlLoader.loadAndWrap("/fxml/event/eventElement.fxml");

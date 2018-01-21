@@ -38,7 +38,6 @@ public class SimpleArtistService implements ArtistService{
     @Override
     public Page<Artist> find(HashMap<String, String> parameters, Pageable request) {
         Predicate predicate = filterBuilder.buildOr(new ArtistFilter(parameters));
-        System.out.println("predicate artist simple find:_____________________   "+predicate);
         Iterable<Artist> artists = artistRepository.findAll(predicate);
         List<Artist> artistList = Lists.newArrayList(artists);
         int start = request.getOffset();

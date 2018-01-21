@@ -157,7 +157,6 @@ public class SimpleEventRestClient implements EventRestClient {
                     null,
                     new ParameterizedTypeReference<List<SimpleEventDTO>>() {
                     });
-            System.out.println(events.getBody().size());
             LOGGER.debug("Result status was {} with content {}", events.getStatusCode());
             return events.getBody();
         } catch (HttpStatusCodeException e) {
@@ -182,7 +181,6 @@ public class SimpleEventRestClient implements EventRestClient {
                     null,
                     new ParameterizedTypeReference<List<SimpleEventDTO>>() {
                     });
-            System.out.println(events.getBody().size());
             LOGGER.debug("Result status was {}", events.getStatusCode());
             return events.getBody();
         } catch (HttpStatusCodeException e) {

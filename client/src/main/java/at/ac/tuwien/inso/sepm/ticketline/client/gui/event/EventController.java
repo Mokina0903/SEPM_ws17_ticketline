@@ -140,7 +140,6 @@ public class EventController extends TabElement implements LocalizationObserver 
                     }
                 }
                 paginationHelper.setSearchFor(searchFor);
-                System.out.println(searchFor);
             }
         );
 
@@ -245,17 +244,6 @@ public class EventController extends TabElement implements LocalizationObserver 
                         // TITLE;ARTIST_FIRST_NAME;ARTIST_LAST_NAME;DESCRIPTION;START_OF_EVENT;END_OF_EVENT;PRICE;HALL_ID
                         String[] column = line.split(cvsSplitBy);
 
-                        // Column size = 8
-
-                        /*
-                        System.out.println("---- " + cnt++ + " ----");
-                        for (String s : column) {
-                            System.out.print(s+ "\t");
-                        }
-                        System.out.println();
-                        */
-
-
                         // TODO: (David) Check input, duplicates?, end before begin?
 
                         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
@@ -281,7 +269,6 @@ public class EventController extends TabElement implements LocalizationObserver 
                             .build();
 
                         detailedEventDTO = eventService.publishEvent(detailedEventDTO);
-                        //System.out.println("---- " + detailedEventDTO.getId() + " ----");
                     }
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();

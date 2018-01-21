@@ -192,7 +192,6 @@ public class CustomerController extends TabElement implements LocalizationObserv
         try {
             Pageable request = new PageRequest(0, CUSTOMER_PER_PAGE);
             customer = customerService.findAll(request);
-            System.out.println("*************************** " + customer.getTotalElements());
             int amount = customer.getTotalPages();
             pagination.setPageCount(amount);
             preparePagination(customer);
@@ -345,7 +344,6 @@ public class CustomerController extends TabElement implements LocalizationObserv
             wrapper.getController().setUpdate(true);
             currentTab.setContent(wrapper.getLoadedObject());
         }
-        System.out.println("Wieder da");
     }
 
     @FXML

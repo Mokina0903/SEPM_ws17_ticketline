@@ -37,10 +37,8 @@ public class ArtistEndpoint {
                                       @QuerydslPredicate(root = Artist.class)Predicate predicate,
                                       @RequestParam HashMap<String,String> parameters) {
         Pageable request = new PageRequest(pageIndex, artistsPerPage, Sort.Direction.ASC, "artistLastName");
-        System.out.println("PARAMS: " + parameters.toString());
         Page<Artist> artistPage = artistService.find(parameters, request);
         List<SimpleArtistDTO> dtos = artistMapper.artistToSimpleArtistDTO(artistPage.getContent());
-        System.out.println("LIST::: " +dtos.size());
         return new PageImpl<>(dtos, request, artistPage.getTotalElements());
     }
 }

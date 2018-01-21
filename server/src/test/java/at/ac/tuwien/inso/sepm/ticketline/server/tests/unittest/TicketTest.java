@@ -99,8 +99,6 @@ public class TicketTest extends BaseTestUnit {
             .then().extract().response();
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
 
-        System.out.println(response.asString());
-
         Assert.assertThat(ticketRepository.findAll().size(),is(1));
 
 

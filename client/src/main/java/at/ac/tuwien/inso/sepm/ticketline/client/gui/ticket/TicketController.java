@@ -445,7 +445,6 @@ public class TicketController extends TabElement implements LocalizationObserver
             protected InvoiceDTO call() throws Exception {
 
                 TicketRepresentationClass ticket = currentTableview.getSelectionModel().getSelectedItem();
-                System.out.println(ticket.getReservationNumber());
                 ticketService.payTicketByReservation_Id(ticket.getReservationNumber());
 
                 List<TicketDTO> tickets = ticketService

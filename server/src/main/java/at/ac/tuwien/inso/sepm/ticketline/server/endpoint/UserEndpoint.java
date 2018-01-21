@@ -61,7 +61,6 @@ public class UserEndpoint {
         User user=userService.findOneByName(userName);
         DetailedUserDTO userDTO = userMapper.userToDetailedUserDTO(user);
         userDTO.setNotSeen(newsMapper.newsToSimpleNewsDTO(user.getNotSeen()));
-        System.out.println(userDTO.getVersion());
         return userDTO;
     }
 

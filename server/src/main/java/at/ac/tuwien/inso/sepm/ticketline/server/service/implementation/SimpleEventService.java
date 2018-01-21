@@ -124,7 +124,6 @@ public class SimpleEventService implements EventService {
         Predicate predicate = filterBuilder.buildAnd(new EventFilter(parameters));
        // Predicate predicateArtist = artistFilterBuilder.buildAnd(new ArtistFilter(parameters));
 
-        System.out.println("predicate events adv find:_____________________   "+predicate);
         Iterable<Event> events = eventRepository.findAll(predicate);
         List<Event> eventList = Lists.newArrayList(events);
         int start = request.getOffset();
@@ -140,7 +139,6 @@ public class SimpleEventService implements EventService {
     @Override
     public Page<Event> find(HashMap<String, String> parameters, Pageable request) {
         Predicate predicate = filterBuilder.buildOr(new EventFilter(parameters));
-        System.out.println("predicate events simple find:_____________________   "+predicate);
         Iterable<Event> events = eventRepository.findAll(predicate);
         List<Event> eventList = Lists.newArrayList(events);
         int start = request.getOffset();
@@ -224,7 +222,7 @@ public class SimpleEventService implements EventService {
             }
             newartistList.add(newArtist);
         }
-        
+
         event.setArtists(newartistList);
 
 

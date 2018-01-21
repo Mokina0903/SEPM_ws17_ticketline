@@ -81,10 +81,8 @@ public class LocationEndpoint {
                                              @QuerydslPredicate(root = Event.class)Predicate predicate,
                                              @RequestParam HashMap<String,String> parameters) {
         Pageable request = new PageRequest(pageIndex, locationsPerPage, Sort.Direction.ASC, "description");
-        System.out.println("PARAMS loc: " + parameters.toString());
         Page<Location> locationPage = locationService.find(parameters, request);
         List<SimpleLocationDTO> dtos = locationMapper.locationToSimpleLocationDTO(locationPage.getContent());
-        System.out.println("LIST loc::: " +dtos.size());
         return new PageImpl<>(dtos, request, locationPage.getTotalElements());
     }
 

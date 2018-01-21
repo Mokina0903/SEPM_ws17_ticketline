@@ -45,10 +45,8 @@ public class SimpleLocationService implements LocationService{
     @Override
     public Page<Location> find(HashMap<String, String> parameters, Pageable request) {
         Predicate predicate = filterBuilder.buildOr(new LocationFilter(parameters));
-        System.out.println("LOC Service Predicate: ....." + predicate);
         Iterable<Location> events = locationRepository.findAll(predicate);
         List<Location> eventList = Lists.newArrayList(events);
-        System.out.println("LOCATION service: list:.... " + eventList.size());
         int start = request.getOffset();
         int end = (start + request.getPageSize()) > eventList.size() ? eventList.size() : (start + request.getPageSize());
         return new PageImpl<>(eventList.subList(start, end), request, eventList.size());

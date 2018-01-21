@@ -37,37 +37,28 @@ public class EventFilter {
         }
         if (parameters.containsKey("eventDate")) {
             date = parameters.get("eventDate");
-
-            System.out.println("Date in filter : " + this.date);
         }
         if (parameters.containsKey("timeOfStart")) {
-            System.out.println(parameters.get("timeOfStart"));
-
             Long lowerBound = Long.parseLong(parameters.get("timeOfStart"));
-            System.out.println("Event has time of start...");
             lowerBound -= 30;
             if (lowerBound < 0) {
                 lowerBound += 24L*60L;
             }
             this.startTimeLowerBound = lowerBound;
-            System.out.println("Filter Time low: " + lowerBound);
 
             Long upperBound = Long.parseLong(parameters.get("timeOfStart"));
             upperBound += 30;
             if (upperBound > 24L * 60L) {// ist länger als 24 sdt
                 upperBound -= 24L * 60L;
             }
-            System.out.println("Filter Time up: " + upperBound);
             this.startTimeUpperBound = upperBound;
         }
         if (parameters.containsKey("duration")) {
-            System.out.println("Duration: " + parameters.get("duration"));
             Long lowerBound = Long.parseLong(parameters.get("duration"));
             lowerBound -= 30;
             if (lowerBound < 0) {
                 lowerBound = 1L;
             }
-            System.out.println("Dur low: " + lowerBound);
             this.durationLowerBound = lowerBound;
 
             long upperBound = Long.parseLong(parameters.get("duration"));
@@ -76,7 +67,6 @@ public class EventFilter {
                 upperBound = 24L * 60L;
             }
             this.durationLowerBound = upperBound;
-            System.out.println("Dur up: " + upperBound);
 
         }
         if (parameters.containsKey("seats")) {
@@ -99,7 +89,6 @@ public class EventFilter {
     private String minutesToTime(Long minutes) {
         Long hours = minutes / 60;
         Long minutesLeft = minutes % 60;
-        System.out.println("Time in Filter: " + hours + " : " + minutesLeft);
         String time = String.format("%02d:%02d", hours, minutesLeft);
         return time;
 

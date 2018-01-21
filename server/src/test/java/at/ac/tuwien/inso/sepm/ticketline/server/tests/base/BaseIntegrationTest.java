@@ -80,9 +80,6 @@ public abstract class BaseIntegrationTest {
 
         User user = userRepository.findByUserName(ADMIN_USERNAME).get();
 
-        System.out.println(passwort);
-        System.out.println(user.getPassword());
-
         validAdminTokenWithPrefix = Strings
             .join(
                 AuthenticationConstants.TOKEN_PREFIX,

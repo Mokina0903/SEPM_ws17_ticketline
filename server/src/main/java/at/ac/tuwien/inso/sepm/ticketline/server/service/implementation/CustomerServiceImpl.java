@@ -37,7 +37,6 @@ public class CustomerServiceImpl implements CustomerService {
         int start = request.getOffset();
         int end = (start + request.getPageSize()) > customer.size() ? customer.size() : (start + request.getPageSize());
         Page<Customer> e = new PageImpl<>(customer.subList(start, end), request, customer.size());
-        System.out.println( " IN SERVIC SERver custom: _______________ " + e.getContent().size());
 
         return new PageImpl<>(customer.subList(start, end), request, customer.size());
     }
@@ -71,12 +70,10 @@ public class CustomerServiceImpl implements CustomerService {
         format.replace(".", "");
         format.replace("'", "");
         format.replace(":", "");
-        System.out.println(format);
         char[] myChar = format.toCharArray();
 
         String seq = "" + myChar[myChar.length - 1] + myChar[1] + myChar[0] + myChar[myChar.length - 3] + myChar[myChar.length - 2] + myChar[myChar.length - 4];
         Long knr = Long.valueOf(seq);
-        System.out.println(knr);
         customer.setKnr(knr);
         Customer c = customerRepository.save(customer);
         return c;
