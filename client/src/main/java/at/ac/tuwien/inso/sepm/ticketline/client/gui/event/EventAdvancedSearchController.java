@@ -156,7 +156,7 @@ public class EventAdvancedSearchController implements LocalizationObserver {
 
         setButtonGraphic(btOk, "CHECK", Color.OLIVE);
         setButtonGraphic(btCancel, "TIMES", Color.CRIMSON);
-        setButtonGraphic(dpResetButton,"ERASER",Color.CRIMSON);
+        setButtonGraphic(dpResetButton,"TRASH",Color.GRAY);
     }
 
     private void setUpSlider(Slider slider, Label infoLabel) {
