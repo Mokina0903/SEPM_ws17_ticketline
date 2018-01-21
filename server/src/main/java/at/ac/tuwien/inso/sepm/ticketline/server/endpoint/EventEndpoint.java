@@ -48,6 +48,18 @@ public class EventEndpoint {
         return new PageImpl<>(dtos, request, eventPage.getTotalElements());
     }
 
+    @RequestMapping(value = "/{pageIndex}/{eventsPerPage}/{artistId}", method = RequestMethod.GET)
+    @ApiOperation(value = "Get list of simple upcoming event entries")
+    public Page<SimpleEventDTO> findAllByArtistId(@PathVariable("pageIndex")int pageIndex,
+                                                  @PathVariable("eventsPerPage")int eventsPerPage,
+                                                  @PathVariable("artistId") long artistId) {
+        //mapping of Event to EventDTO
+        Pageable request = new PageRequest(pageIndex, eventsPerPage, Sort.Direction.ASC, "start_of_event");
+        Page<Event> eventPage = eventService.findAllByArtistId(artistId,request);
+        List<SimpleEventDTO> dtos = eventMapper.eventToSimpleEventDTO(eventPage.getContent());
+        return new PageImpl<>(dtos, request, eventPage.getTotalElements());
+    }
+
     @RequestMapping(method = RequestMethod.GET)
     @ApiOperation(value = "Get list of simple event entries")
     public List<SimpleEventDTO> findAll() {
