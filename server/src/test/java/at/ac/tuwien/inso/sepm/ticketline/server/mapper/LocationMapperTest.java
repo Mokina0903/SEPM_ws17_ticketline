@@ -4,14 +4,10 @@ package at.ac.tuwien.inso.sepm.ticketline.server.mapper;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.hall.SimpleHallDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.location.DetailedLocationDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.location.SimpleLocationDTO;
-import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.seat.SeatDTO;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Hall;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Location;
-import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Seat;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.eventLocation.hall.HallMapper;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.eventLocation.location.LocationMapper;
-import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.eventLocation.seat.SeatMapper;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +22,6 @@ import static org.assertj.core.api.Java6Assertions.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class LocationMapperTest {
-
 
     @Configuration
     @ComponentScan(basePackages = "at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper")
@@ -50,7 +45,6 @@ public class LocationMapperTest {
     private static final Integer NUMBER = 2;
     private static final Integer ZIP = 4;
 
-    //private static List<SimpleHallDTO> HALLDTO = new ArrayList<>();
     private static final Long ID = 1L;
     private static Location LOCATION = Location.builder()
         .id(1L)
@@ -67,9 +61,6 @@ public class LocationMapperTest {
         .description("Description of the hall")
         .location(LOCATION)
         .build();
-
-
-
 
     @Test
     public void shouldMapLocationToSimpleLocationDTO() {
@@ -104,23 +95,6 @@ public class LocationMapperTest {
     }
 
     @Test
-    public void shouldMapSimpleLocationDTOToLocation() {
-        SimpleLocationDTO locationDTO = new SimpleLocationDTO.SimpleLocationDTOBuilder()
-            .city(CITY)
-            .country(COUNTRY)
-            .description(DESCRIPTION)
-            .street(STREET)
-            .houseNr(NUMBER)
-            .zip(ZIP)
-            .id(ID)
-            .build();
-
-        //ToDo Mapper in die Richtung gibt es nicht ist das absicht?
-        Assert.assertTrue(true);
-
-    }
-
-    @Test
     public void shouldMapLocationToDetailedLocationDTO() {
         List<Hall> HALL = new ArrayList<>();
         HALL.add(HALLENTITY);
@@ -147,7 +121,6 @@ public class LocationMapperTest {
         assertThat(locationDTO.getDescription()).isEqualTo(DESCRIPTION);
         assertThat(locationDTO.getStreet()).isEqualTo(STREET);
         assertThat(locationDTO.getEventHalls()).isEqualTo(HALLDTO);
-
     }
 
     @Test
@@ -176,9 +149,5 @@ public class LocationMapperTest {
         assertThat(location.getCountry()).isEqualTo(COUNTRY);
         assertThat(location.getDescription()).isEqualTo(DESCRIPTION);
         assertThat(location.getStreet()).isEqualTo(STREET);
-        //assertThat(location.getEventHalls()).isEqualTo(HALL);
-        //ToDo Hall nullpointer
     }
-
-
 }

@@ -5,22 +5,21 @@ import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Hall;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Location;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Seat;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.eventLocation.seat.SeatMapper;
-import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.user.UserMapper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import static org.assertj.core.api.Java6Assertions.assertThat;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class SeatMapperTest {
-
 
     @Configuration
     @ComponentScan(basePackages = "at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper")
@@ -52,8 +51,6 @@ public class SeatMapperTest {
     private static final Long ID = 1L;
 
 
-
-
     @Test
     public void shouldMapSeatToSeatDTO() {
         Seat seat = Seat.builder()
@@ -75,8 +72,6 @@ public class SeatMapperTest {
         assertThat(seatDTO.getNr()).isEqualTo(NUMBER);
         assertThat(seatDTO.getRow()).isEqualTo(ROW);
         assertThat(seatDTO.getSector()).isEqualTo(SECTOR);
-        //assertThat(seatDTO.getHall()).isEqualTo(HALL);
-        //ToDo gibt es absichtlich kein SeatDTO.getHall?
     }
 
     @Test
@@ -94,8 +89,6 @@ public class SeatMapperTest {
         assertThat(seat.getNr()).isEqualTo(NUMBER);
         assertThat(seat.getRow()).isEqualTo(ROW);
         assertThat(seat.getSector()).isEqualTo(SECTOR);
-        //assertThat(seat.getHall()).isEqualTo(HALL);
-        //ToDo gibt es absichtlich kein SeatDTO.getHall?
     }
 
 

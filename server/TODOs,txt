@@ -24,7 +24,7 @@ TODO: IntegrationTests:
   + TicketEndpoint (Done)
   + UserEndpoint (Done)
 
-TODO: MapperTests
+Done: MapperTests
   + ArtistMapperTest (Done)
   + CustomerMapperTest (Done)
   + EventMapperTest (Done)
@@ -32,7 +32,7 @@ TODO: MapperTests
   + LocationMapperTest (Done)
   + NewsMapperTest (Done)
   + SeatMapperTest (Done)
-  + TicketMapperTest
+  + TicketMapperTest (Done)
   + UserMapperTest (Done)
 
 
