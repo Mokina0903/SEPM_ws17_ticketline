@@ -4,6 +4,8 @@ import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.QEvent;
 import com.querydsl.core.types.dsl.StringExpression;
 import com.querydsl.core.types.dsl.StringPath;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QueryDslPredicateExecutor;
@@ -82,6 +84,17 @@ public interface EventRepository extends JpaRepository<Event, Long>,
      */
     @Query(value = "Select * from event e where e.end_of_event > now() and e.title = :title and e.end_of_event =:date",  nativeQuery = true)
     List<Event> findAllUpcomingByTitleAndDate(@Param("title") String title, @Param("date") LocalDate date);
+
+    /**
+     * filter events by artist
+     *
+     * @param artistId of artist
+     * @param request of page
+     * @return page with filtered events
+     */
+    @Query(value = "Select * from Event where id in (SELECT event_id FROM ARTISTS_OF_EVENT where artist_id=:artistId)"
+    , nativeQuery = true)
+    Page<Event> findAllByArtistId( @Param("artistId") Long artistId, Pageable request);
 
     //todo find by type, implement type in event (enum)
     //todo find by duration (+-30 min)
