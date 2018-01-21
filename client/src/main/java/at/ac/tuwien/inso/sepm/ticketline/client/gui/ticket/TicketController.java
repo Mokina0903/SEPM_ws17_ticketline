@@ -388,7 +388,10 @@ public class TicketController extends TabElement implements LocalizationObserver
                 } else if (getException().getMessage().trim().equals("500")) {
 
                     mainController.showGeneralError("Sorry your ticket could not be found!");
-                } else {
+                } else if (getException().getMessage().equals("Failed retrieve ticket with status code 404")) {
+
+                    updateList();
+                }else {
                     mainController.showGeneralError(getException().toString());
                 }
             }

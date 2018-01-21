@@ -68,9 +68,6 @@ public class CustomerEndpoint {
             throw new InvalidIdException("No valid knr!");
 
         if (!customer.correctVersion(customerDTO.getVersion())) {
-            System.out.println(customer);
-            System.out.println("This is new");
-            System.out.println(customerMapper.customerDTOToCustomer(customerDTO));
             if (!customer.equalsUpdate(customerMapper.customerDTOToCustomer(customerDTO))) {
                 throw new OldVersionException();
             }

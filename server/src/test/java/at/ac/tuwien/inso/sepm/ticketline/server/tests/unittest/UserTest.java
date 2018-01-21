@@ -472,7 +472,6 @@ public class UserTest extends BaseTestUnit {
         if (news != null) {
             Assert.assertTrue(news.size() == 0);
         }
-        System.out.println("2");
         news = newsRepository.findOldNewsByUser(userRepository.findOneByUserName(USER_USERNAME + "123").getId());
         Assert.assertTrue(news != null);
         if (news != null) {
