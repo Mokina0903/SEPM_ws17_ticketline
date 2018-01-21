@@ -102,11 +102,6 @@ public class EventElementController implements LocalizationObserver {
         eventImageView.setVisible(false);
     }
 
-
-    public void detailedEventInfo(MouseEvent mouseEvent) {
-
-    }
-
     public void ticketReservationForEvent(ActionEvent actionEvent) {
         DetailedEventDTO event  = null;
         try {
