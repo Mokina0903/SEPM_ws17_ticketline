@@ -12,19 +12,26 @@ import at.ac.tuwien.inso.sepm.ticketline.server.tests.base.TestDTOs;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import static org.mockito.BDDMockito.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.BDDMockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import static at.ac.tuwien.inso.sepm.ticketline.server.tests.base.TestConstants.*;
+import static at.ac.tuwien.inso.sepm.ticketline.server.tests.base.TestDTOs.defaultCustomer;
 import static at.ac.tuwien.inso.sepm.ticketline.server.tests.base.TestDTOs.defaultEvent;
 import static at.ac.tuwien.inso.sepm.ticketline.server.tests.base.TestDTOs.defaultTicket;
 import static org.hamcrest.core.Is.is;
@@ -283,7 +290,36 @@ public class TicketEndpointTest extends BaseIntegrationTest {
     }
 
     @Test
+    public void paginationTicketAsAnonym(){
+        List<Ticket> ticketList = new ArrayList<>();
+        ticketList.add(defaultTicket(1L));
+        ticketList.add(defaultTicket(2L));
+        ticketList.add(defaultTicket(3L));
+        ticketList.add(defaultTicket(4L));
+        //Page<Ticket> page = (Page<Ticket>) ticketList;
+        Pageable request = new PageRequest(1, 4, Sort.Direction.ASC, "id");
+        //BDDMockito.given(ticketRepository.findAll(request)).willReturn(page);
+        Response response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .when().get(TICKET_PAGE, 1, 4)
+            .then().extract().response();
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED.value()));
+    }
+
+
+    @Test
     public void paginationTicketAsAdmin(){
+        List<Ticket> ticketList = new ArrayList<>();
+        ticketList.add(defaultTicket(1L));
+        ticketList.add(defaultTicket(2L));
+        ticketList.add(defaultTicket(3L));
+        ticketList.add(defaultTicket(4L));
+        Page<Ticket> page = (Page<Ticket>) ticketList;
+        Pageable request = new PageRequest(1, 4, Sort.Direction.ASC, "id");
+        BDDMockito.given(ticketRepository.findAll(request)).willReturn(page);
+
+
 
         Response response = RestAssured
             .given()
@@ -293,37 +329,6 @@ public class TicketEndpointTest extends BaseIntegrationTest {
             .then().extract().response();
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
