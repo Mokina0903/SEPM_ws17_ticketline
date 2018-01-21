@@ -195,6 +195,10 @@ public class SimpleInvoiceService implements InvoiceService{
                    e.printStackTrace();
                }*/
 
+               pdfDocument.getCurrentAccessPermission().setCanFillInForm(false);
+               pdfDocument.getCurrentAccessPermission().setReadOnly();
+
+
                FileChooser fileChooser = new FileChooser();
                fileChooser.setInitialFileName((invoiceDTO.isStorno()?"Reversal":"Invoice")+invoiceDTO.getInvoiceNumber()+".pdf");
                fileChooser.setTitle("Save "+(invoiceDTO.isStorno()?"Reversal":"Invoice")+"PDF");
