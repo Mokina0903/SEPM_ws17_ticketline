@@ -36,6 +36,16 @@ public interface EventRestClient {
      */
     Page<SimpleEventDTO> findAllUpcoming(Pageable request) throws DataAccessException;
 
+    /**
+     * Find all events with given artist ordered by Date ascending
+     *
+     * @param request page to load
+     * @param artistId
+     * @return list of events
+     * @throws DataAccessException in case something went wrong
+     */
+    Page<SimpleEventDTO> findAllByArtistId(Long artistId, Pageable request) throws DataAccessException;
+
     // TODO: (David) Javadoc
     DetailedEventDTO publishEvent(DetailedEventDTO detailedEventDTO) throws DataAccessException;
 
