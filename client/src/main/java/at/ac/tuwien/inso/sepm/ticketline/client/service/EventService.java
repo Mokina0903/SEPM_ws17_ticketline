@@ -38,7 +38,23 @@ public interface EventService {
      */
     Page<SimpleEventDTO> findAllUpcoming(Pageable request) throws DataAccessException,SearchNoMatchException;
 
-    // TODO: (David) Javadoc
+    /**
+     * Find all events with given artist ordered by Date ascending
+     *
+     * @param request page to load
+     * @param artistId
+     * @return list of events
+     * @throws DataAccessException in case something went wrong
+     */
+    Page<SimpleEventDTO> findAllByArtistId(Long artistId, Pageable request) throws DataAccessException;
+
+    /**
+     * create new Event entry
+     *
+     * @param detailedEventDTO to be saved
+     * @return detailedEventDTO with generated data
+     * @throws DataAccessException in case something went wrong
+     */
     DetailedEventDTO publishEvent(DetailedEventDTO detailedEventDTO) throws DataAccessException;
 
     /**

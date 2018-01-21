@@ -43,6 +43,11 @@ public class SimpleEventService implements EventService {
     }
 
     @Override
+    public Page<SimpleEventDTO> findAllByArtistId( Long artistId, Pageable request ) throws DataAccessException {
+        return eventRestClient.findAllByArtistId(artistId,request);
+    }
+
+    @Override
     public DetailedEventDTO publishEvent(DetailedEventDTO detailedEventDTO) throws DataAccessException {
         return eventRestClient.publishEvent(detailedEventDTO);
     }

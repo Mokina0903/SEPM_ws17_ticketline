@@ -101,10 +101,10 @@ public class SimpleEventRestClient implements EventRestClient {
     @Override
     public Page<SimpleEventDTO> findAllByArtistId( Long artistId, Pageable request ) throws DataAccessException {
         try {
-            LOGGER.debug("Retrieving all upcoming events from {}", restClient.getServiceURI(EVENT_URL));
+            LOGGER.debug("Retrieving all upcoming events by ArtistId from {}", restClient.getServiceURI(EVENT_URL));
             ResponseEntity<RestResponsePage<SimpleEventDTO>> events =
                 restClient.exchange(
-                    restClient.getServiceURI(EVENT_URL + "/" + request.getPageNumber() + "/" + request.getPageSize()),
+                    restClient.getServiceURI(EVENT_URL + "/" + request.getPageNumber() + "/" + request.getPageSize()+"/"+artistId),
                     HttpMethod.GET,
                     null,
                     new ParameterizedTypeReference<RestResponsePage<SimpleEventDTO>>() {
