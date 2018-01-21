@@ -1,10 +1,12 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.tests.unittest;
 
 
+import at.ac.tuwien.inso.sepm.ticketline.rest.news.DetailedNewsDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.user.DetailedUserDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.user.SimpleUserDTO;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.News;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.User;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.news.NewsMapper;
 import at.ac.tuwien.inso.sepm.ticketline.server.tests.base.BaseTestUnit;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
@@ -12,6 +14,7 @@ import com.jayway.restassured.response.Response;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
@@ -21,6 +24,9 @@ import static at.ac.tuwien.inso.sepm.ticketline.server.tests.base.TestConstants.
 import static org.hamcrest.core.Is.is;
 
 public class UserTest extends BaseTestUnit {
+
+    @Autowired
+    private NewsMapper newsMapper;
 
     @Before
     public void setUp() {
@@ -359,7 +365,7 @@ public class UserTest extends BaseTestUnit {
             .contentType(ContentType.JSON)
             .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
             .body(DetailedUserDTO.builder()
-                .userName(USER_USERNAME + 1)
+                .userName(USER_USERNAME + "test1")
                 .password(encoder.encode(USER_PASSWORD))
                 .blocked(false)
                 .role(2)
@@ -372,9 +378,9 @@ public class UserTest extends BaseTestUnit {
             .given()
             .contentType(ContentType.JSON)
             .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
-            .when().get(USER_ENDPOINT_FIND, USER_USERNAME + 1)
+            .when().get(USER_ENDPOINT_FIND, USER_USERNAME + "test1")
             .then().extract().response();
-        Assert.assertTrue(response.asString().contains(USER_USERNAME + 1));
+        Assert.assertTrue(response.asString().contains(USER_USERNAME + "test1"));
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
 
     }
@@ -449,16 +455,25 @@ public class UserTest extends BaseTestUnit {
             .contentType(ContentType.JSON)
             .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
             .body(DetailedUserDTO.builder()
-                .userName(USER_USERNAME + 1)
+                .userName(USER_USERNAME + "123")
                 .password(encoder.encode(USER_PASSWORD))
                 .blocked(false)
                 .role(2)
+                .notSeen(newsMapper.newsToSimpleNewsDTO(newsRepository.findAllByOrderByPublishedAtDesc()))
                 .build())
             .when().post(USER_ENDPOINT)
             .then().extract().response();
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
 
-        List<News> news = newsRepository.findNotSeenByUser(userRepository.findOneByUserName(USER_USERNAME + 1).getId());
+
+
+        List<News> news = newsRepository.findNotSeenByUser(userRepository.findOneByUserName(USER_USERNAME + "123").getId());
+        Assert.assertTrue(news != null);
+        if (news != null) {
+            Assert.assertTrue(news.size() == 0);
+        }
+        System.out.println("2");
+        news = newsRepository.findOldNewsByUser(userRepository.findOneByUserName(USER_USERNAME + "123").getId());
         Assert.assertTrue(news != null);
         if (news != null) {
             Assert.assertTrue(news.size() > 0);
