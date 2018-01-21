@@ -12,7 +12,6 @@ import java.util.List;
 @Table(name = "event")
 public class Event {
 
-    // TODO: David is correct?
     public enum EventCategory
     {
         Musical,
