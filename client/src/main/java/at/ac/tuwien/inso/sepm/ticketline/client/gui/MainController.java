@@ -17,6 +17,7 @@ import at.ac.tuwien.inso.sepm.ticketline.rest.event.DetailedEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.user.DetailedUserDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -33,6 +34,8 @@ import org.controlsfx.glyphfont.Glyph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class MainController implements LocalizationObserver {
@@ -287,8 +290,47 @@ public class MainController implements LocalizationObserver {
 
     public void showGeneralError(String text) {
         generalErrors.setText(text);
+        generalErrors.setStyle("-fx-text-fill:white");
         generalErrors.setVisible(true);
         LOGGER.info(text);
+        Task<Void> workerTask = new Task<Void>() {
+
+            @Override
+            protected Void call() throws Exception {
+
+
+                TimeUnit.SECONDS.sleep(5);
+                MainController.this.setGeneralErrorUnvisable();
+
+                return null;
+            }
+
+        };
+
+        new Thread(workerTask).start();
+
+    }
+    public void showGeneralFeedback(String text){
+        generalErrors.setText(text);
+        generalErrors.setStyle("-fx-text-fill:chartreuse");
+        generalErrors.setVisible(true);
+        LOGGER.info(text);
+
+        Task<Void> workerTask = new Task<Void>() {
+
+            @Override
+            protected Void call() throws Exception {
+
+                TimeUnit.SECONDS.sleep(5);
+
+                MainController.this.setGeneralErrorUnvisable();
+                return null;
+            }
+
+        };
+
+        new Thread(workerTask).start();
+
     }
 
     public void setGeneralErrorUnvisable() {

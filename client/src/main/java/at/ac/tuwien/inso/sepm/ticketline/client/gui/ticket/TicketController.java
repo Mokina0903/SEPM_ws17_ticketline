@@ -373,6 +373,8 @@ public class TicketController extends TabElement implements LocalizationObserver
                 lblStorno.setVisible(false);
                 lblPay.setVisible(false);
                 lblStornoInvoice.setVisible(false);
+                mainController.showGeneralFeedback(BundleManager.getBundle().getString("ticket.feedbackStorno"));
+
             }
             //ToDo update
             @Override
@@ -464,6 +466,8 @@ public class TicketController extends TabElement implements LocalizationObserver
                 lblStorno.setVisible(false);
                 lblPay.setVisible(false);
                 lblStornoInvoice.setVisible(false);
+                mainController.showGeneralFeedback(BundleManager.getBundle().getString("ticket.feedbackBuy"));
+
             }
             //ToDo update
             @Override
@@ -568,6 +572,8 @@ public class TicketController extends TabElement implements LocalizationObserver
             lblStorno.setVisible(false);
             lblPay.setVisible(false);
             lblStornoInvoice.setVisible(false);
+            mainController.showGeneralFeedback(BundleManager.getBundle().getString("ticket.feedbackStornoInvoice"));
+
 
         } catch (DataAccessException e) {
             lblStornoInvoice.setText(BundleManager.getBundle().getString("exception.unexpected"));

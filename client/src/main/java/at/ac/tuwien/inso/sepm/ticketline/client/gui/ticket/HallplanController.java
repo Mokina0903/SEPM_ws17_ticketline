@@ -420,7 +420,11 @@ public class HallplanController implements LocalizationObserver {
                 ticketService.reservationPdf(ticketsSaved,window);
             }
 
-
+            if(tickets.get(0).isPaid()){
+                mainController.showGeneralFeedback(BundleManager.getBundle().getString("ticket.feedbackBuy"));
+            }else {
+                mainController.showGeneralFeedback(BundleManager.getBundle().getString("ticket.feedbackReserve"));
+            }
             backToEventTabBeginning();
 
 
