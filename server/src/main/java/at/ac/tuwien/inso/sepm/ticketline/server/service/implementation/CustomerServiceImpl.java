@@ -44,7 +44,7 @@ public class CustomerServiceImpl implements CustomerService {
         if (!validateIdOrKnr(id)) {
             throw new InvalidIdException("Given id was not valid.");
         }
-        // TODO: (Verena) Passt das so auch?
+
         Optional<Customer> customer = customerRepository.findOneById(id);
 
         if (customer == null) {
