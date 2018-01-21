@@ -7,6 +7,7 @@ import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -98,7 +99,9 @@ public class EventAdvancedSearchController implements LocalizationObserver {
     @FXML
     private RadioButton rbPast;
     @FXML
-    DatePicker dpDate;
+    private DatePicker dpDate;
+    @FXML
+    private ChoiceBox<EventCatgory> cbCategory;
 
     @FXML
     private Button btOk;
@@ -122,7 +125,6 @@ public class EventAdvancedSearchController implements LocalizationObserver {
     private final LocationService locationService;
     private Node oldContent;
 
-
     private GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
     private final int FONT_SIZE = 16;
 
@@ -143,6 +145,8 @@ public class EventAdvancedSearchController implements LocalizationObserver {
 
         setUpSlider(slTime, lbTimeInfo);
         setUpSlider(slDuration, lbDurationInfo);
+        cbCategory.setItems(FXCollections.observableArrayList( EventCatgory.values()));
+        cbCategory.setValue(EventCatgory.All);
 
         rbUpcoming.setSelected(true);
         rbSeatsNo.setSelected(true);
@@ -231,26 +235,31 @@ public class EventAdvancedSearchController implements LocalizationObserver {
             Double timeInMinutes = slDuration.getValue();
             parameters.set("duration", timeInMinutes.toString());
         }
-        if (rbSeatsNo.isSelected() == false) {
+        if (!rbSeatsNo.isSelected()) {
             parameters.set("noSeats", "toFilter");
         }
-        if (rbSeatsYes.isSelected() == false) {
+        if (!rbSeatsYes.isSelected()) {
             parameters.set("seats", "toFilter");
         }
-        if (rbUpcoming.isSelected() == false) {
+        if (!rbUpcoming.isSelected()) {
             parameters.set("upcoming", "toFilter");
         }
-        if (rbPast.isSelected() == false) {
+        if (!rbPast.isSelected()) {
             parameters.set("past", "toFilter");
         }
-/*
         if (!dpDate.getEditor().getText().isEmpty()) {
             parameters.set("eventDate", dpDate.getValue().toString());
+            System.out.println("Date in AdvSer: " + dpDate.getValue().toString());
         }
-*/
+        if (!cbCategory.getSelectionModel().getSelectedItem().equals(EventCatgory.All)) {
+            parameters.set("category", cbCategory.getSelectionModel().getSelectedItem().toString());
+            System.out.println("category " + cbCategory.getSelectionModel().getSelectedItem().toString());
+        }
+
+
 
         //type
-        //seats
+
         //old
         paginationHelper.setSearchFor(EventSearchFor.ALL);
         paginationHelper.setParameters(parameters);

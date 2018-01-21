@@ -66,7 +66,7 @@
                      </children>
                   </HBox>
                   <Label fx:id="lbEventDate" text="%events.date" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <DatePicker maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <DatePicker fx:id="dpDate" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                   <Label fx:id="lbEventTime" text="%events.time" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                   <HBox maxWidth="1.7976931348623157E308" prefHeight="25.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                      <children>
@@ -89,7 +89,7 @@
                      </GridPane.margin>
                   </HBox>
                   <Label fx:id="lbEventType" text="%events.type" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                  <ChoiceBox maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                  <ChoiceBox fx:id="cbCategory" maxWidth="1.7976931348623157E308" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                   <Label fx:id="lbEventSeats" text="%events.seats" GridPane.columnIndex="2" GridPane.rowIndex="3" />
                   <Label text="%events.past" GridPane.columnIndex="2" GridPane.rowIndex="5" />
                   <HBox maxWidth="1.7976931348623157E308" minWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="4">

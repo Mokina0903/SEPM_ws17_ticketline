@@ -4,6 +4,7 @@ import at.ac.tuwien.inso.sepm.ticketline.server.entity.QEvent;
 import com.querydsl.core.types.Predicate;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 
@@ -22,18 +23,22 @@ public class SimpleEventFilterBuilder implements EventFilterBuilder {
             .notNullAnd(EVENT.price::loe, filter.getPriceTo())
             .notNullAnd(EVENT.price::goe, filter.getPriceFrom())
 
+            .notEmptyAnd(EVENT.eventDate::eq, filter.getDate())
+
             .notNullAnd(EVENT.startOfEventTime::loe, filter.getStartTimeUpperBound())
             .notNullAnd(EVENT.startOfEventTime::goe, filter.getStartTimeLowerBound())
-            //todo filter time
+
             .notNullAnd(EVENT.duration::loe, filter.getDurationUpperBound())
             .notNullAnd(EVENT.duration::goe, filter.getDurationLowerBound())
 
             .notNullAnd(EVENT.seatSelection::ne, filter.getNoSeats())
             .notNullAnd(EVENT.seatSelection::eq, filter.getSeats())
 
- /*           .notNullAnd(EVENT.endOfEvent::before, LocalTime.now())
-            .notNullAnd(EVENT.startOfEvent::after, filter.getSeats())*/
-            // .notNullAnd(EVENT.duration::before, filter.getDuration())*/
+            .notNullAnd(EVENT.startOfEvent::loe, filter.getUpcoming())
+            .notNullAnd(EVENT.startOfEvent:: goe, filter.getPast())
+            //todo past, upcomming
+            .notEmptyAnd(EVENT.eventCategory::eq, filter.getCategory())
+
             .build();
     }
 

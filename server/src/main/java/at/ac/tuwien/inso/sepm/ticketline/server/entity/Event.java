@@ -50,8 +50,7 @@ public class Event implements Predicatable{
     @Column(nullable = false)
     private LocalDateTime endOfEvent;
 
-    @Column
-    private LocalDate eventDate;
+    private String eventDate;
 
     private Long startOfEventTime;
 
@@ -61,7 +60,7 @@ public class Event implements Predicatable{
     private Boolean seatSelection;
 
     @Column(nullable =  false)
-    private EventCategory eventCategory;
+    private String eventCategory;
 
     public Boolean getSeatSelection() {
         return seatSelection;
@@ -129,12 +128,13 @@ public class Event implements Predicatable{
         return startOfEventTime;
     }
 
-    public LocalDate getEventDate() {
+    public String getEventDate() {
         return eventDate;
     }
 
     public void setEventDate() {
-        this.eventDate = startOfEvent.toLocalDate();
+        LocalDate date = startOfEvent.toLocalDate();
+        this.eventDate = date.toString();
     }
 
     public void setStartOfEventTime() {
@@ -173,12 +173,12 @@ public class Event implements Predicatable{
         this.artists = artists;
     }
 
-    public EventCategory getEventCategory() {
-        return eventCategory;
+    public String getEventCategory() {
+        return eventCategory.toString();
     }
 
     public void setEventCategory(EventCategory eventCategory) {
-        this.eventCategory = eventCategory;
+        this.eventCategory = eventCategory.toString();
     }
 
     public static EventBuilder builder(){return new EventBuilder();}

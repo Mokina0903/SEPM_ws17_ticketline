@@ -9,12 +9,15 @@ import at.ac.tuwien.inso.sepm.ticketline.server.exception.NotFoundException;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.*;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.Location.HallRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.Location.LocationRepository;
+import at.ac.tuwien.inso.sepm.ticketline.server.searchAndFilter.ArtistFilter;
 import at.ac.tuwien.inso.sepm.ticketline.server.searchAndFilter.EventFilter;
+import at.ac.tuwien.inso.sepm.ticketline.server.searchAndFilter.SimpleArtistFilterBuilder;
 import at.ac.tuwien.inso.sepm.ticketline.server.searchAndFilter.SimpleEventFilterBuilder;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.EventService;
 import com.google.common.collect.Lists;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.impl.JPAQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +44,8 @@ public class SimpleEventService implements EventService {
 
     @Autowired
     SimpleEventFilterBuilder filterBuilder;
+    @Autowired
+    SimpleArtistFilterBuilder artistFilterBuilder;
 
     public SimpleEventService(EventRepository eventRepository, LocationRepository locationRepository, HallRepository hallRepository, ArtistRepository artistRepository) {
         this.eventRepository = eventRepository;
@@ -89,13 +94,28 @@ public class SimpleEventService implements EventService {
 
  /* join:
  * https://stackoverflow.com/questions/23837988/querydsl-jpql-how-to-build-a-join-query
+ *
+ *
+ * public Contact getContact(long providerId, long contactId) {
+    QProvider provider = QProvider.provider;
+    QContact contact = QContact.contact;
+    return new JPAQuery(em).from(provider)
+        .innerJoin(provider.contact, contact)
+        .where(provider.id.eq(providerId), contact.id.eq(contactId))
+        .singleResult(contact);
+}
  * */
 
     //todo implement search with or
 
+
+    //JPAQuery<?> query = new JPAQuery<Void>(entityManager);
+
     @Override
     public Page<Event> findByAdvancedSearch(HashMap<String, String> parameters, Pageable request) {
         Predicate predicate = filterBuilder.buildAnd(new EventFilter(parameters));
+       // Predicate predicateArtist = artistFilterBuilder.buildAnd(new ArtistFilter(parameters));
+
         System.out.println("predicate events adv find:_____________________   "+predicate);
         Iterable<Event> events = eventRepository.findAll(predicate);
         List<Event> eventList = Lists.newArrayList(events);

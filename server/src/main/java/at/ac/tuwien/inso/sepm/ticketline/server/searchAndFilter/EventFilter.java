@@ -2,6 +2,7 @@ package at.ac.tuwien.inso.sepm.ticketline.server.searchAndFilter;
 
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.HashMap;
 
@@ -11,15 +12,16 @@ public class EventFilter {
     private String description;
     private Long priceFrom;
     private Long priceTo;
-    private LocalDate date;
+    private String date;
     private Long startTimeLowerBound;
     private Long startTimeUpperBound;
     private Long durationLowerBound;
     private Long durationUpperBound;
     private Boolean seats;
     private Boolean noSeats;
-    private Boolean upcoming;
-    private Boolean past;
+    private LocalDateTime upcoming;
+    private LocalDateTime past;
+    private String category;
 
 
     public EventFilter(HashMap<String, String> parameters) {
@@ -35,40 +37,49 @@ public class EventFilter {
         if (parameters.containsKey("priceTo")) {
             this.priceTo = Long.parseLong(parameters.get("priceTo"));
         }
-       /* if (parameters.containsKey("eventDate")) {
-            this.date = parameters.get("eventDate");
-        }*/
+        if (parameters.containsKey("eventDate")) {
+            date = parameters.get("eventDate");
+
+            System.out.println("Date in filter : " + this.date);
+        }
         if (parameters.containsKey("timeOfStart")) {
+            System.out.println(parameters.get("timeOfStart"));
+
             Long lowerBound = Long.parseLong(parameters.get("timeOfStart"));
             System.out.println("Event has time of start...");
             lowerBound -= 30;
             if (lowerBound < 0) {
-                lowerBound = 1L;
+                lowerBound += 24L*60L;
             }
             this.startTimeLowerBound = lowerBound;
             System.out.println("Filter Time low: " + lowerBound);
 
             Long upperBound = Long.parseLong(parameters.get("timeOfStart"));
             upperBound += 30;
-            if (upperBound <= 24 * 60) { // ist länger als 24 sdt
-                this.startTimeUpperBound = upperBound;
-                System.out.println("Filter Time up: " + upperBound);
+            if (upperBound > 24L * 60L) {// ist länger als 24 sdt
+                upperBound -= 24L * 60L;
             }
+            System.out.println("Filter Time up: " + upperBound);
+            this.startTimeUpperBound = upperBound;
         }
         if (parameters.containsKey("duration")) {
+            System.out.println("Duration: " + parameters.get("duration"));
             Long lowerBound = Long.parseLong(parameters.get("duration"));
             lowerBound -= 30;
             if (lowerBound < 0) {
-                lowerBound += 24 * 60;
+                lowerBound = 1L;
             }
+            System.out.println("Dur low: " + lowerBound);
             this.durationLowerBound = lowerBound;
 
             long upperBound = Long.parseLong(parameters.get("duration"));
             upperBound += 30;
             if (upperBound >= 24 * 60) {
-                upperBound -= 24 * 60;
+                upperBound = 24L * 60L;
             }
             this.durationLowerBound = upperBound;
+            System.out.println("Dur up: " + upperBound);
+
         }
         if (parameters.containsKey("seats")) {
             this.seats = true;
@@ -77,12 +88,14 @@ public class EventFilter {
             this.noSeats = true;
         }
         if (parameters.containsKey("upcoming")) {
-            this.upcoming = true;
+            this.upcoming = LocalDateTime.now().plusMinutes(30);
         }
         if (parameters.containsKey("past")) {
-            this.past = true;
+            this.past = LocalDateTime.now();
         }
-
+        if (parameters.containsKey("category")) {
+            this.category = parameters.get("category");
+        }
         //todo
 
     }
@@ -129,11 +142,11 @@ public class EventFilter {
         this.priceTo = priceTo;
     }
 
-    public LocalDate getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
@@ -185,19 +198,27 @@ public class EventFilter {
         this.noSeats = noSeats;
     }
 
-    public Boolean getUpcoming() {
+    public LocalDateTime getUpcoming() {
         return upcoming;
     }
 
-    public void setUpcoming(Boolean upcoming) {
+    public void setUpcoming(LocalDateTime upcoming) {
         this.upcoming = upcoming;
     }
 
-    public Boolean getPast() {
+    public LocalDateTime getPast() {
         return past;
     }
 
-    public void setPast(Boolean past) {
+    public void setPast(LocalDateTime past) {
         this.past = past;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 }
