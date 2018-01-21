@@ -14,6 +14,7 @@ import javafx.stage.Window;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.encryption.InvalidPasswordException;
 import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
+import org.apache.pdfbox.pdmodel.interactive.form.PDField;
 import org.apache.pdfbox.pdmodel.interactive.form.PDTextField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -222,6 +223,10 @@ public class SimpleTicketService implements TicketService {
                 field = (PDTextField) acroForm.getFields().get(40);
                 field.setValue(getTotalPriceInEuro(tickets)+"\u20ac");
 
+                for(PDField pdField :acroForm.getFields()){
+
+                    pdField.setReadOnly(true);
+                }
             }
 
 
