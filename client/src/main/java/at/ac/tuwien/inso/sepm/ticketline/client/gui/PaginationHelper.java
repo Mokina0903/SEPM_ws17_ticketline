@@ -202,7 +202,7 @@ public class PaginationHelper {
         return lvElements;
     }
 
-    private Node loadEventElements(Page<SimpleEventDTO> events, ListView<VBox> lvElements) {
+    private void loadEventElements(Page<SimpleEventDTO> events, ListView<VBox> lvElements) {
         pagination.setPageCount(events.getTotalPages());
 
         lvElements.setStyle("-fx-background-color: transparent;");
@@ -216,10 +216,9 @@ public class PaginationHelper {
             }
         }
         controller.setMatchInfoLabel(events.getTotalElements());
-        return lvElements;
     }
 
-    private Node loadLocationElements(Page<SimpleLocationDTO> locations, ListView<VBox> lvElements) {
+    private void loadLocationElements(Page<SimpleLocationDTO> locations, ListView<VBox> lvElements) {
         pagination.setPageCount(locations.getTotalPages());
         lvElements.setStyle("-fx-background-color: transparent;");
         if (!locations.getContent().isEmpty()) {
@@ -231,10 +230,10 @@ public class PaginationHelper {
             }
         }
         controller.setMatchInfoLabel(locations.getTotalElements());
-        return lvElements;
+
     }
 
-    private Node loadArtistElements(Page<SimpleArtistDTO> artists, ListView<VBox> lvElements) {
+    private void loadArtistElements(Page<SimpleArtistDTO> artists, ListView<VBox> lvElements) {
         pagination.setPageCount(artists.getTotalPages());
         lvElements.setStyle("-fx-background-color: transparent;");
         if (!artists.getContent().isEmpty()) {
@@ -246,7 +245,6 @@ public class PaginationHelper {
             }
         }
         controller.setMatchInfoLabel(artists.getTotalElements());
-        return lvElements;
     }
 
     private Page<SimpleEventDTO> loadAdvancedSearchEventPage(Integer pageIndex) {

@@ -147,6 +147,7 @@ public class EventAdvancedSearchController implements LocalizationObserver {
         setUpSlider(slDuration, lbDurationInfo);
         cbCategory.setItems(FXCollections.observableArrayList( EventCatgory.values()));
         cbCategory.setValue(EventCatgory.All);
+        dpDate.setEditable(false);
 
         rbUpcoming.setSelected(true);
         rbSeatsNo.setSelected(true);
@@ -227,13 +228,14 @@ public class EventAdvancedSearchController implements LocalizationObserver {
         }
         if (slTime.getValue() != 0) {
             Double timeInMinutes = slTime.getValue();
-            Long timeInMinutesInt = timeInMinutes.longValue();
-            parameters.set("timeOfStart", timeInMinutesInt.toString());
+            Long timeInMinutesL = timeInMinutes.longValue();
+            parameters.set("timeOfStart", timeInMinutesL.toString());
             System.out.println("looking for time: " + timeInMinutes.intValue());
         }
         if (slDuration.getValue() != 0) {
             Double timeInMinutes = slDuration.getValue();
-            parameters.set("duration", timeInMinutes.toString());
+            Long timeInMinutesL = timeInMinutes.longValue();
+            parameters.set("duration", timeInMinutesL.toString());
         }
         if (!rbSeatsNo.isSelected()) {
             parameters.set("noSeats", "toFilter");
