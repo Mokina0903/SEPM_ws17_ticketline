@@ -280,6 +280,7 @@ public class HallplanController implements LocalizationObserver {
 
         this.oldContent = oldContent;
 
+        cutlineContainerController.initializeData(event.getPriceInEuro());
 
         if (event.getSeatSelection()) {
             initializeSeats();
@@ -287,8 +288,6 @@ public class HallplanController implements LocalizationObserver {
             initializeSectors();
         }
         setButtonGraphic(backbut, "ARROW_LEFT", Color.DARKGRAY);
-
-        cutlineContainerController.initializeData(event.getPriceInEuro());
 
 
         lbEventNameHeader.setText(event.getTitle());
@@ -390,26 +389,35 @@ public class HallplanController implements LocalizationObserver {
                 node.getStyleClass().add("sectorA");
                 sectorALabels.setVisible(true);
                 sectorALabels.setManaged(true);
+                cutlineContainerController.setSectorLegendOfSectorVisableAndManagable('a');
                 break;
             case 'b':
                 node.getStyleClass().add("sectorB");
                 sectorBLabels.setVisible(true);
                 sectorBLabels.setManaged(true);
+                cutlineContainerController.setSectorLegendOfSectorVisableAndManagable('b');
+
                 break;
             case 'c':
                 node.getStyleClass().add("sectorC");
                 sectorCLabels.setVisible(true);
                 sectorCLabels.setManaged(true);
+                cutlineContainerController.setSectorLegendOfSectorVisableAndManagable('c');
+
                 break;
             case 'd':
                 node.getStyleClass().add("sectorD");
                 sectorDLabels.setVisible(true);
                 sectorDLabels.setManaged(true);
+                cutlineContainerController.setSectorLegendOfSectorVisableAndManagable('d');
+
                 break;
             case 'e':
                 node.getStyleClass().add("sectorE");
                 sectorELabels.setVisible(true);
                 sectorELabels.setManaged(true);
+                cutlineContainerController.setSectorLegendOfSectorVisableAndManagable('e');
+
                 break;
         }
     }
