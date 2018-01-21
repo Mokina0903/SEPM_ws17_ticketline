@@ -92,6 +92,14 @@ public class EventController extends TabElement implements LocalizationObserver 
     @Autowired
     private PaginationHelper paginationHelper;
 
+    public PaginationHelper getPaginationHelper() {
+        return paginationHelper;
+    }
+
+    public void setPaginationHelper( PaginationHelper paginationHelper ) {
+        this.paginationHelper = paginationHelper;
+    }
+
     public Tab getEventTab() {
         return eventTab;
     }

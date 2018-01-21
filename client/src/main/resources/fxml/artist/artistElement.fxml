@@ -38,7 +38,7 @@
          <Insets />
       </VBox.margin>
     </GridPane>
-    <Button fx:id="ticketReservationButton" text="%events.tickets">
+    <Button fx:id="ticketReservationButton" text="%events.events" onAction="#eventButtonClicked">
       <VBox.margin>
          <Insets />
       </VBox.margin></Button>
