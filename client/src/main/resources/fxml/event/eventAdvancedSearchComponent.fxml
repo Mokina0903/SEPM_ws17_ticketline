@@ -71,7 +71,7 @@
                   <HBox maxWidth="1.7976931348623157E308" prefHeight="25.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
                      <children>
                         <Slider fx:id="slTime" maxWidth="1.7976931348623157E308" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-                        <Label fx:id="lbTimeInfo" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="50.0" />
+                        <Label fx:id="lbTimeInfo" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="60.0" />
                      </children>
                      <GridPane.margin>
                         <Insets right="10.0" />
@@ -82,7 +82,7 @@
                      <children>
                         <Slider fx:id="slDuration" maxWidth="1.7976931348623157E308" prefWidth="200.0" HBox.hgrow="ALWAYS" />
                         <Label fx:id="lbDurationInfo" />
-                        <Label fx:id="lbDurationInfo" minWidth="-Infinity" prefWidth="50.0" />
+                        <Label fx:id="lbDurationInfo" minWidth="-Infinity" prefWidth="60.0" />
                      </children>
                      <GridPane.margin>
                         <Insets right="10.0" />
