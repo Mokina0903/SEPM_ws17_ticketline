@@ -64,6 +64,15 @@ public interface EventService {
     Page<Event> findByAdvancedSearch(HashMap<String, String> parameters, Pageable request);
 
     /**
+     * filter events by artist
+     *
+     * @param artistId of artist
+     * @param request of page
+     * @return page with filtered events
+     */
+    Page<Event> findAllByArtistId(Long artistId, Pageable request);
+
+    /**
      * find page of events by parameters
      *
      * @param parameters for filtering

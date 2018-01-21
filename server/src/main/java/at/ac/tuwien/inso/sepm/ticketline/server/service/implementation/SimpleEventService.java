@@ -125,6 +125,11 @@ public class SimpleEventService implements EventService {
     }
 
     @Override
+    public Page<Event> findAllByArtistId( Long artistId, Pageable request ) {
+        return eventRepository.findAllByArtistId(artistId,request);
+    }
+
+    @Override
     public Page<Event> find(HashMap<String, String> parameters, Pageable request) {
         Predicate predicate = filterBuilder.buildOr(new EventFilter(parameters));
         System.out.println("predicate events simple find:_____________________   "+predicate);
