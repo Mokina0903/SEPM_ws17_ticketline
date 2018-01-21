@@ -5,14 +5,18 @@ import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationObserver;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationSubject;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.MainController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.customer.CustomerController;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.news.NewsAddFormularController;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.news.NewsController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket.HallplanController;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.EventService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
+import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.DetailedEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -29,7 +33,7 @@ import java.time.format.FormatStyle;
 
 @Component
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
-public class EventElementController implements LocalizationObserver{
+public class EventElementController implements LocalizationObserver {
 
     private static final DateTimeFormatter EVENT_DTF =
         DateTimeFormatter.ofLocalizedDateTime(FormatStyle.LONG, FormatStyle.SHORT);
@@ -57,7 +61,8 @@ public class EventElementController implements LocalizationObserver{
     @FXML
     public Label lblArtist;
 
-
+    private EventService eventService;
+    private SimpleEventDTO simpleEventDTO;
     private MainController mainController;
     private SpringFxmlLoader loader;
 
@@ -66,10 +71,7 @@ public class EventElementController implements LocalizationObserver{
 
     @Autowired
     private LocalizationSubject localizationSubject;
-    private EventService eventService;
-    private SimpleEventDTO simpleEventDTO;
 
-    //removed eventservice from constr to autowired
     public EventElementController(MainController mainController, SpringFxmlLoader loader) {
         this.mainController = mainController;
         this.loader = loader;
@@ -82,8 +84,8 @@ public class EventElementController implements LocalizationObserver{
 
     public void initializeData(EventService eventService, SimpleEventDTO simpleEventDTO, Node myContainer) {
 
-        this.eventService = eventService;
         this.simpleEventDTO = simpleEventDTO;
+        this.eventService = eventService;
         this.myContainer = myContainer;
 
         lblStartDate.setText(EVENT_DTF.format(simpleEventDTO.getStartOfEvent()));

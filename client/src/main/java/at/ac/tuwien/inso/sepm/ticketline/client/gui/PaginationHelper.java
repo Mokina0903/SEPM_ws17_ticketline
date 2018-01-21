@@ -195,7 +195,7 @@ public class PaginationHelper {
             @Override
             protected void failed() {
                 super.failed();
-                mainController.showGeneralError("Failure at load Artists: " + getException().getMessage());
+                mainController.showGeneralError("Failure at load Events: " + getException().getMessage());
             }
         };
 
@@ -253,6 +253,49 @@ public class PaginationHelper {
         controller.setMatchInfoLabel(artists.getTotalElements());
     }
 
+    private Page<SimpleEventDTO> loadAdvancedSearchEventPage(Integer pageIndex) {
+        Pageable request = new PageRequest(pageIndex, ENTRIES_PER_PAGE);
+        try {
+            Page<SimpleEventDTO> events = eventService.findAdvanced(request, parameters);
+            return events;
+        } catch (DataAccessException e) {
+            LOGGER.warn("Could not access data for event pagination");
+        }
+        return null;
+    }
+
+    private Page<SimpleEventDTO> loadEventPage(Integer pageIndex) {
+        Pageable request = new PageRequest(pageIndex, ENTRIES_PER_PAGE);
+        try {
+            Page<SimpleEventDTO> events = eventService.find(request, parameters);
+            return events;
+        } catch (DataAccessException e) {
+            LOGGER.warn("Could not access data for event pagination");
+        }
+        return null;
+    }
+
+    private Page<SimpleLocationDTO> loadLocationPage(Integer pageIndex) {
+        Pageable request = new PageRequest(pageIndex, ENTRIES_PER_PAGE);
+        try {
+            Page<SimpleLocationDTO> locations = locationService.find(request, parameters);
+            return locations;
+        } catch (DataAccessException e) {
+            LOGGER.warn("Could not access data for event pagination");
+        }
+        return null;
+    }
+
+    private Page<SimpleArtistDTO> loadArtistPage(Integer pageIndex) {
+        Pageable request = new PageRequest(pageIndex, ENTRIES_PER_PAGE);
+        try {
+            Page<SimpleArtistDTO> artists = artistService.find(request, parameters);
+            return artists;
+        } catch (DataAccessException e) {
+            LOGGER.warn("Could not access data for event pagination");
+        }
+        return null;
+    }
 
     public EventSearchFor getSearchFor() {
         return searchFor;
