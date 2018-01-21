@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -25,7 +24,7 @@ public class SimpleEventService implements EventService {
 
     private final EventRestClient eventRestClient;
 
-    public SimpleEventService( EventRestClient eventRestClient ) {
+    public SimpleEventService(EventRestClient eventRestClient) {
         this.eventRestClient = eventRestClient;
     }
 
@@ -35,19 +34,19 @@ public class SimpleEventService implements EventService {
     }
 
     @Override
-    public DetailedEventDTO findById( Long id ) throws DataAccessException {
+    public DetailedEventDTO findById(Long id) throws DataAccessException {
         return eventRestClient.findById(id);
     }
 
     @Override
-    public Page<SimpleEventDTO> findAllUpcoming(Pageable request) throws DataAccessException,SearchNoMatchException {
+    public Page<SimpleEventDTO> findAllUpcoming(Pageable request) throws DataAccessException, SearchNoMatchException {
 
         return eventRestClient.findAllUpcoming(request);
     }
 
     @Override
-    public Page<SimpleEventDTO> findAllByArtistId( Long artistId, Pageable request ) throws DataAccessException {
-        return eventRestClient.findAllByArtistId(artistId,request);
+    public Page<SimpleEventDTO> findAllByArtistId(Long artistId, Pageable request) throws DataAccessException {
+        return eventRestClient.findAllByArtistId(artistId, request);
     }
 
     @Override
@@ -57,7 +56,7 @@ public class SimpleEventService implements EventService {
 
     @Override
     public List<SimpleEventDTO> getTop10EventsOfMonth(LocalDate beginOfMonth, LocalDate endOfMonth) throws DataAccessException {
-        return eventRestClient.getTop10EventsOfMonth(beginOfMonth,endOfMonth);
+        return eventRestClient.getTop10EventsOfMonth(beginOfMonth, endOfMonth);
     }
 
     @Override
@@ -67,10 +66,10 @@ public class SimpleEventService implements EventService {
 
     @Override
     public boolean checkDates(LocalDate beginDate, LocalDate endDate) {
-        if(beginDate == null || endDate == null){
+        if (beginDate == null || endDate == null) {
             return false;
         }
-        if(beginDate.isAfter(endDate)){
+        if (beginDate.isAfter(endDate)) {
             return false;
         }
 
@@ -78,13 +77,13 @@ public class SimpleEventService implements EventService {
     }
 
     @Override
-    public Page<SimpleEventDTO> findAdvanced(Pageable request, MultiValueMap<String, String> parameters) throws DataAccessException{
-        return  eventRestClient.findAdvanced(request, parameters);
+    public Page<SimpleEventDTO> findAdvanced(Pageable request, MultiValueMap<String, String> parameters) throws DataAccessException {
+        return eventRestClient.findAdvanced(request, parameters);
     }
 
     @Override
     public Page<SimpleEventDTO> find(Pageable request, MultiValueMap<String, String> parameters) throws DataAccessException {
         System.out.println("Events loading...");
-        return  eventRestClient.find(request, parameters);
+        return eventRestClient.find(request, parameters);
     }
 }

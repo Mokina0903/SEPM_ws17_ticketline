@@ -20,9 +20,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.HashMap;
 import java.util.List;
 
 @Component
@@ -102,12 +99,12 @@ public class SimpleEventRestClient implements EventRestClient {
     }
 
     @Override
-    public Page<SimpleEventDTO> findAllByArtistId( Long artistId, Pageable request ) throws DataAccessException {
+    public Page<SimpleEventDTO> findAllByArtistId(Long artistId, Pageable request) throws DataAccessException {
         try {
             LOGGER.debug("Retrieving all upcoming events by ArtistId from {}", restClient.getServiceURI(EVENT_URL));
             ResponseEntity<RestResponsePage<SimpleEventDTO>> events =
                 restClient.exchange(
-                    restClient.getServiceURI(EVENT_URL + "/" + request.getPageNumber() + "/" + request.getPageSize()+"/"+artistId),
+                    restClient.getServiceURI(EVENT_URL + "/" + request.getPageNumber() + "/" + request.getPageSize() + "/" + artistId),
                     HttpMethod.GET,
                     null,
                     new ParameterizedTypeReference<RestResponsePage<SimpleEventDTO>>() {
@@ -118,7 +115,8 @@ public class SimpleEventRestClient implements EventRestClient {
             throw new DataAccessException("Failed retrieve events with status code " + e.getStatusCode().toString());
         } catch (RestClientException e) {
             throw new DataAccessException(e.getMessage(), e);
-        }    }
+        }
+    }
 
     @Override
     public DetailedEventDTO publishEvent(DetailedEventDTO detailedEventDTO) throws DataAccessException, ErrorDTO {
@@ -154,7 +152,7 @@ public class SimpleEventRestClient implements EventRestClient {
 
             ResponseEntity<List<SimpleEventDTO>> events =
                 restClient.exchange(
-                    restClient.getServiceURI(EVENT_URL+"/getTopTenFiltered/"+start+"/"+end+"/"+category),
+                    restClient.getServiceURI(EVENT_URL + "/getTopTenFiltered/" + start + "/" + end + "/" + category),
                     HttpMethod.GET,
                     null,
                     new ParameterizedTypeReference<List<SimpleEventDTO>>() {
@@ -179,7 +177,7 @@ public class SimpleEventRestClient implements EventRestClient {
 
             ResponseEntity<List<SimpleEventDTO>> events =
                 restClient.exchange(
-                    restClient.getServiceURI(EVENT_URL+"/getTopTen/"+start+"/"+end),
+                    restClient.getServiceURI(EVENT_URL + "/getTopTen/" + start + "/" + end),
                     HttpMethod.GET,
                     null,
                     new ParameterizedTypeReference<List<SimpleEventDTO>>() {

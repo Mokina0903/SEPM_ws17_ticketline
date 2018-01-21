@@ -9,7 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.util.MultiValueMap;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 public interface EventRestClient {
@@ -42,7 +41,7 @@ public interface EventRestClient {
     /**
      * Find all events with given artist ordered by Date ascending
      *
-     * @param request page to load
+     * @param request  page to load
      * @param artistId
      * @return list of events
      * @throws DataAccessException in case something went wrong
@@ -66,29 +65,27 @@ public interface EventRestClient {
      * @throws DataAccessException in case something went wrong
      */
     Page<SimpleEventDTO> find(Pageable request, MultiValueMap<String, String> parameters) throws DataAccessException;
-    
+
     /**
      * publishes a new Event
      *
      * @param detailedEventDTO to be published
      * @return DetailedEventDTO of published Event
      * @throws DataAccessException in case something went wrong
-     * @throws ErrorDTO in case something went wrong (http Status)
+     * @throws ErrorDTO            in case something went wrong (http Status)
      */
     DetailedEventDTO publishEvent(DetailedEventDTO detailedEventDTO) throws DataAccessException, ErrorDTO;
 
     /**
-     *
      * @param beginOfMonth the start of the month where to get the top events
-     * @param endOfMonth the end of the month where to get the top events
+     * @param endOfMonth   the end of the month where to get the top events
      * @return a list of events, without category search
      */
     List<SimpleEventDTO> getTop10EventsOfMonth(LocalDate beginOfMonth, LocalDate endOfMonth) throws DataAccessException;
 
     /**
-     *
      * @param beginOfMonth the start of the month where to get the top events
-     * @param endOfMonth the end of the month where to get the top events
+     * @param endOfMonth   the end of the month where to get the top events
      * @return a list of events, with category search
      */
     List<SimpleEventDTO> getTop10EventsOfMonthFilteredbyCategory(LocalDate beginOfMonth, LocalDate endOfMonth, String category) throws DataAccessException;

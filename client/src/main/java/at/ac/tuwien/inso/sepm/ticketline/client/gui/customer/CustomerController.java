@@ -6,14 +6,9 @@ import at.ac.tuwien.inso.sepm.ticketline.client.gui.*;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket.HallplanController;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.CustomerService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
-import at.ac.tuwien.inso.sepm.ticketline.client.util.JavaFXUtils;
-import at.ac.tuwien.inso.sepm.ticketline.rest.PageableDAO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
-import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketRepresentationClass;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
-import com.sun.javafx.tools.packager.bundlers.Bundler;
 import javafx.beans.binding.Bindings;
-import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -113,7 +108,7 @@ public class CustomerController extends TabElement implements LocalizationObserv
     public Tab getCurrentTab() {
 
         currentTableview.getItems().clear();
-        List<CustomerDTO>reloadedTickets =(loadPage(customer.getNumber()).getContent());
+        List<CustomerDTO> reloadedTickets = (loadPage(customer.getNumber()).getContent());
         currentTableview.getItems().addAll(reloadedTickets);
         currentTableview.refresh();
         return currentTab;
@@ -125,7 +120,7 @@ public class CustomerController extends TabElement implements LocalizationObserv
         this.customerService = customerService;
     }
 
-    public void setNormalTabView(){
+    public void setNormalTabView() {
         btTickets.setVisible(true);
         btTickets.setDisable(false);
         btNext.setDisable(true);
@@ -135,11 +130,12 @@ public class CustomerController extends TabElement implements LocalizationObserv
         btnBackToEvent.setVisible(false);
         btnBackToEvent.setDisable(true);
         tabHeaderController.setTitle(BundleManager.getBundle().getString("customer.customer"));
-        currentTab=customerTab;
+        currentTab = customerTab;
         isTicketView = false;
         lbNoCustomerError.setVisible(false);
     }
-    public void setTicketProzessView(Tab tab){
+
+    public void setTicketProzessView(Tab tab) {
         btTickets.setVisible(false);
         btTickets.setDisable(true);
         btNext.setDisable(false);
@@ -153,12 +149,12 @@ public class CustomerController extends TabElement implements LocalizationObserv
         isTicketView = true;
     }
 
-    public void initialzeData(Tab customerTab){
-       this.customerTab = customerTab;
-       currentTab = customerTab;
+    public void initialzeData(Tab customerTab) {
+        this.customerTab = customerTab;
+        currentTab = customerTab;
     }
 
-    public void setOldContent(Node oldContent){
+    public void setOldContent(Node oldContent) {
         this.oldContent = oldContent;
     }
 
@@ -364,9 +360,9 @@ public class CustomerController extends TabElement implements LocalizationObserv
     @Override
     public void update() {
 
-        if(isTicketView){
+        if (isTicketView) {
             tabHeaderController.setTitle(BundleManager.getBundle().getString("customer.chooseCustomer"));
-        }else{
+        } else {
             tabHeaderController.setTitle(BundleManager.getBundle().getString("customer.customer"));
         }
 
@@ -380,8 +376,8 @@ public class CustomerController extends TabElement implements LocalizationObserv
         tcBirthdate.setText(BundleManager.getBundle().getString("customer.birthdate"));
         tcNumber.setText(BundleManager.getBundle().getString("customer.number"));
         btNext.setText(BundleManager.getBundle().getString("customer.next"));
-        if(lbNoCustomerError.isVisible()){
-            lbNoCustomerError.setText(BundleManager.getBundle().getString("customer.chooseCustomer")+"!");
+        if (lbNoCustomerError.isVisible()) {
+            lbNoCustomerError.setText(BundleManager.getBundle().getString("customer.chooseCustomer") + "!");
         }
     }
 
@@ -434,13 +430,13 @@ public class CustomerController extends TabElement implements LocalizationObserv
             springFxmlLoader.loadAndWrap("/fxml/ticket/hallplan.fxml");
         Node root = springFxmlLoader.load("/fxml/ticket/hallplan.fxml");
         HallplanController c = wrapper.getController();
-        if(!(actionEvent.getSource()== btnAnonymous) && currentTableview.getSelectionModel().getSelectedItem()==null){
-            lbNoCustomerError.setText(BundleManager.getBundle().getString("customer.chooseCustomer")+"!");
+        if (!(actionEvent.getSource() == btnAnonymous) && currentTableview.getSelectionModel().getSelectedItem() == null) {
+            lbNoCustomerError.setText(BundleManager.getBundle().getString("customer.chooseCustomer") + "!");
             lbNoCustomerError.setVisible(true);
             return;
         }
         CustomerDTO customer;
-        if(actionEvent.getSource()==btnAnonymous){
+        if (actionEvent.getSource() == btnAnonymous) {
             long l = 0;
             CustomerDTO anonymousCustomer = null;
             try {
@@ -453,20 +449,20 @@ public class CustomerController extends TabElement implements LocalizationObserv
                 e.printStackTrace();
             }
             mainController.setCutsomer(anonymousCustomer);
-            customer=anonymousCustomer;
-        }else{
+            customer = anonymousCustomer;
+        } else {
             mainController.setCutsomer(currentTableview.getSelectionModel().getSelectedItem());
-            customer= currentTableview.getSelectionModel().getSelectedItem();
+            customer = currentTableview.getSelectionModel().getSelectedItem();
         }
 
 
-        c.initializeData(mainController.getEvent(),customer,  customerOverviewRoot, currentTab);
+        c.initializeData(mainController.getEvent(), customer, customerOverviewRoot, currentTab);
 
-       currentTab.setContent(root);
+        currentTab.setContent(root);
     }
 
     public void backToPreviousTab(ActionEvent actionEvent) {
-        if(currentTab == mainController.getEventTab()){
+        if (currentTab == mainController.getEventTab()) {
             mainController.getEventTab().setContent(oldContent);
         } else {
             mainController.getTopTenTab().setContent(oldContent);

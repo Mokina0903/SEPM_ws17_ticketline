@@ -1,25 +1,18 @@
 package at.ac.tuwien.inso.sepm.ticketline.client.gui.event;
 
-import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
-import at.ac.tuwien.inso.sepm.ticketline.client.exception.SearchNoMatchException;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.*;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.ArtistService;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.EventService;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.LocationService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.DetailedEventDTO;
-import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
+import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.hall.DetailedHallDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
-import javafx.scene.control.Pagination;
-import javafx.scene.control.Tab;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
@@ -29,9 +22,6 @@ import org.controlsfx.glyphfont.GlyphFontRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -93,10 +83,6 @@ public class EventController extends TabElement implements LocalizationObserver 
     private final int EVENTS_PER_PAGE = 7;
 
 
-    private GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
-    private final int FONT_SIZE = 16;
-
-
     @Autowired
     private LocalizationSubject localizationSubject;
     @Autowired
@@ -106,7 +92,7 @@ public class EventController extends TabElement implements LocalizationObserver 
         return paginationHelper;
     }
 
-    public void setPaginationHelper( PaginationHelper paginationHelper ) {
+    public void setPaginationHelper(PaginationHelper paginationHelper) {
         this.paginationHelper = paginationHelper;
     }
 
@@ -133,7 +119,7 @@ public class EventController extends TabElement implements LocalizationObserver 
         tabHeaderController.setIcon(FontAwesome.Glyph.FILM);
         localizationSubject.attach(this);
         btnAddEvent.setGraphic(fontAwesome.create("PLUS"));
-      
+
         ObservableList<String> searchForList = FXCollections.observableArrayList();
         searchForList.addAll(searchForEvent, searchForLocation, searchForArtist);
         update();
@@ -142,21 +128,21 @@ public class EventController extends TabElement implements LocalizationObserver 
         //todo show free seats for events
 
         cbSearch.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
-            if (newValue != null) {
-                if (newValue.equals(searchForEvent)) {
-                    searchFor = EventSearchFor.EVENT;
-                    tfSearchFor.setPromptText(BundleManager.getBundle().getString("events.searchForEvent"));
-                } else if (newValue.equals(searchForLocation)) {
-                    searchFor = EventSearchFor.LOCATION;
-                    tfSearchFor.setPromptText(BundleManager.getBundle().getString("events.searchForLocation"));
+                if (newValue != null) {
+                    if (newValue.equals(searchForEvent)) {
+                        searchFor = EventSearchFor.EVENT;
+                        tfSearchFor.setPromptText(BundleManager.getBundle().getString("events.searchForEvent"));
+                    } else if (newValue.equals(searchForLocation)) {
+                        searchFor = EventSearchFor.LOCATION;
+                        tfSearchFor.setPromptText(BundleManager.getBundle().getString("events.searchForLocation"));
 
-                } else {
-                    searchFor = EventSearchFor.ARTIST;
-                    tfSearchFor.setPromptText(BundleManager.getBundle().getString("events.searchForArtist"));
+                    } else {
+                        searchFor = EventSearchFor.ARTIST;
+                        tfSearchFor.setPromptText(BundleManager.getBundle().getString("events.searchForArtist"));
+                    }
                 }
-            }
                 paginationHelper.setSearchFor(searchFor);
-            System.out.println(searchFor);
+                System.out.println(searchFor);
             }
         );
 
@@ -165,7 +151,6 @@ public class EventController extends TabElement implements LocalizationObserver 
         btSearch.setGraphic(fontAwesome.create("SEARCH").size(FONT_SIZE));
         paginationHelper.initData(pagination, springFxmlLoader, eventService, locationService, artistService, this, mainController);
     }
-
 
 
     @FXML
@@ -187,7 +172,7 @@ public class EventController extends TabElement implements LocalizationObserver 
     }
 
 
-    private MultiValueMap<String,String> setParametersForEventSearch() {
+    private MultiValueMap<String, String> setParametersForEventSearch() {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         if (!tfSearchFor.getText().isEmpty() && !tfSearchFor.getText().equals(" ")) {
             params.add("title", tfSearchFor.getText());
@@ -196,13 +181,12 @@ public class EventController extends TabElement implements LocalizationObserver 
         return params;
     }
 
-    private MultiValueMap<String,String> setParametersForLocationSearch() {
+    private MultiValueMap<String, String> setParametersForLocationSearch() {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         if (!tfSearchFor.getText().isEmpty() && !tfSearchFor.getText().equals(" ")) {
             if (isNumeric(tfSearchFor.getText())) {
                 params.add("zip", tfSearchFor.getText());
-            }
-            else {
+            } else {
                 params.add("descriptionEvent", tfSearchFor.getText());
                 params.add("city", tfSearchFor.getText());
                 params.add("street", tfSearchFor.getText());
@@ -211,7 +195,7 @@ public class EventController extends TabElement implements LocalizationObserver 
         return params;
     }
 
-    private MultiValueMap<String,String> setParametersForArtistSearch() {
+    private MultiValueMap<String, String> setParametersForArtistSearch() {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         if (!tfSearchFor.getText().isEmpty() && !tfSearchFor.getText().equals(" ")) {
             params.add("artistFirstName", tfSearchFor.getText());
@@ -373,10 +357,9 @@ public class EventController extends TabElement implements LocalizationObserver 
     public void update() {
         tabHeaderController.setTitle(BundleManager.getBundle().getString("events.events"));
         btAdvSearch.setText(BundleManager.getBundle().getString("events.advSearch"));
-        if (numberOfMatches== 0) {
+        if (numberOfMatches == 0) {
             lbMatchInfo.setText(BundleManager.getBundle().getString("general.noMatches"));
-        }
-        else {
+        } else {
             lbMatchInfo.setText(BundleManager.getBundle().getString("general.matches") + " " + numberOfMatches);
         }
         searchForArtist = BundleManager.getBundle().getString("artist.artist");

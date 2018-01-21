@@ -10,7 +10,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.util.MultiValueMap;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 public interface EventService {
@@ -30,7 +29,7 @@ public interface EventService {
      * @return Detailed event
      * @throws DataAccessException in case something went wrong
      */
-    DetailedEventDTO findById( Long id) throws DataAccessException;
+    DetailedEventDTO findById(Long id) throws DataAccessException;
 
     /**
      * Find all upcoming events(that has not yet ended) ordered by Date ascending
@@ -39,7 +38,7 @@ public interface EventService {
      * @return list of upcoming events
      * @throws DataAccessException in case something went wrong
      */
-    Page<SimpleEventDTO> findAllUpcoming(Pageable request) throws DataAccessException,SearchNoMatchException;
+    Page<SimpleEventDTO> findAllUpcoming(Pageable request) throws DataAccessException, SearchNoMatchException;
 
     /**
      * publishes a new Event
@@ -47,38 +46,35 @@ public interface EventService {
      * @param detailedEventDTO to be published
      * @return DetailedEventDTO of published Event
      * @throws DataAccessException in case something went wrong
-     * @throws ErrorDTO in case something went wrong (http Status)
+     * @throws ErrorDTO            in case something went wrong (http Status)
      */
     DetailedEventDTO publishEvent(DetailedEventDTO detailedEventDTO) throws DataAccessException, ErrorDTO;
 
     /**
-     *
      * @param beginOfMonth the start of the month where to get the top events
-     * @param endOfMonth the end of the month where to get the top events
+     * @param endOfMonth   the end of the month where to get the top events
      * @return a list of events, without category search
      */
     List<SimpleEventDTO> getTop10EventsOfMonth(LocalDate beginOfMonth, LocalDate endOfMonth) throws DataAccessException;
 
     /**
-     *
      * @param beginOfMonth the start of the month where to get the top events
-     * @param endOfMonth the end of the month where to get the top events
+     * @param endOfMonth   the end of the month where to get the top events
      * @return a list of events, with category search
      */
     List<SimpleEventDTO> getTop10EventsOfMonthFilteredbyCategory(LocalDate beginOfMonth, LocalDate endOfMonth, String category) throws DataAccessException;
 
     /**
-     *
      * @param beginDate
      * @param endDate
      * @return false, when beginDate is after endDate, or one of them is null
      */
     boolean checkDates(LocalDate beginDate, LocalDate endDate);
-    
+
     /**
      * Find all events with given artist ordered by Date ascending
      *
-     * @param request page to load
+     * @param request  page to load
      * @param artistId
      * @return list of events
      * @throws DataAccessException in case something went wrong
@@ -88,7 +84,7 @@ public interface EventService {
     /**
      * Find all events by combined search parameters ordered by Date ascending
      *
-     * @param request page to load
+     * @param request    page to load
      * @param parameters for filter and search
      * @return Page of upcoming events
      * @throws DataAccessException in case something went wrong
@@ -98,7 +94,7 @@ public interface EventService {
     /**
      * Find all events by search parameters ordered by Date ascending
      *
-     * @param request page to load
+     * @param request    page to load
      * @param parameters for filter and search
      * @return Page of upcoming events
      * @throws DataAccessException in case something went wrong
