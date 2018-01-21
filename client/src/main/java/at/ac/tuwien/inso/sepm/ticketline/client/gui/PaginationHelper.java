@@ -57,7 +57,7 @@ public class PaginationHelper {
 
     public void initData(Pagination pagination, SpringFxmlLoader springFxmlLoader,
                          EventService eventService, LocationService locationService,
-                         ArtistService artistService, EventController controller, MainController mainController) {
+                         ArtistService artistService, EventController controller, MainController mainController, BorderPane bp) {
         this.pagination = pagination;
         this.springFxmlLoader = springFxmlLoader;
         this.eventService = eventService;
@@ -65,6 +65,7 @@ public class PaginationHelper {
         this.artistService = artistService;
         this.controller = controller;
         this.mainController = mainController;
+        this.bPContainer = bp;
     }
 
     public void setUpPagination() {

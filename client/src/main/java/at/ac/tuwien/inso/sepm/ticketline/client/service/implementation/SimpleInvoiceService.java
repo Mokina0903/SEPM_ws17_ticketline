@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -62,8 +63,14 @@ public class SimpleInvoiceService implements InvoiceService{
     @Override
     public File invoiceToPdf(InvoiceDTO invoiceDTO, Window window) {
 
-        URL formTemplate = getClass().getResource("/invoice_template/Invoice_Template_new.pdf") ;
-           try (PDDocument pdfDocument = PDDocument.load(new File(formTemplate.getPath()))) {
+        File f;
+        try {
+            f = new File(getClass().getResource("/invoice_template/Invoice_Template_new.pdf").toURI());
+        } catch(URISyntaxException e) {
+            f = new File(getClass().getResource("/invoice_template/Invoice_Template_new.pdf").getPath());
+        }
+
+           try (PDDocument pdfDocument = PDDocument.load(f)) {
 
                PDAcroForm acroForm = pdfDocument.getDocumentCatalog().getAcroForm();
 

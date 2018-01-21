@@ -54,8 +54,6 @@ public class EventController extends TabElement implements LocalizationObserver 
     @FXML
     private ChoiceBox<String> cbSearch;
     @FXML
-    public BorderPane bPEventContainer;
-    @FXML
     public BorderPane eventRootContainer;
     @FXML
     public Label lbMatchInfo;
@@ -149,7 +147,7 @@ public class EventController extends TabElement implements LocalizationObserver 
         cbSearch.getSelectionModel().selectFirst();
 
         btSearch.setGraphic(fontAwesome.create("SEARCH").size(FONT_SIZE));
-        paginationHelper.initData(pagination, springFxmlLoader, eventService, locationService, artistService, this, mainController);
+        paginationHelper.initData(pagination, springFxmlLoader, eventService, locationService, artistService, this, mainController, eventRootContainer);
     }
 
 
