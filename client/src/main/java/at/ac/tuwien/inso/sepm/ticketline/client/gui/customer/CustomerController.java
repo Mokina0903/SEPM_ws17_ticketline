@@ -8,6 +8,7 @@ import at.ac.tuwien.inso.sepm.ticketline.client.service.CustomerService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.JavaFXUtils;
 import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
+import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketRepresentationClass;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
 import com.sun.javafx.tools.packager.bundlers.Bundler;
 import javafx.beans.binding.Bindings;
@@ -109,6 +110,11 @@ public class CustomerController extends TabElement implements LocalizationObserv
     }
 
     public Tab getCurrentTab() {
+
+        currentTableview.getItems().clear();
+        List<CustomerDTO>reloadedTickets =(loadPage(customer.getNumber()).getContent());
+        currentTableview.getItems().addAll(reloadedTickets);
+        currentTableview.refresh();
         return currentTab;
     }
 
@@ -342,6 +348,7 @@ public class CustomerController extends TabElement implements LocalizationObserv
             wrapper.getController().setUpdate(true);
             currentTab.setContent(wrapper.getLoadedObject());
         }
+        System.out.println("Wieder da");
     }
 
     @FXML
@@ -381,6 +388,7 @@ public class CustomerController extends TabElement implements LocalizationObserv
     protected void setTab(Tab tab) {
         customerTab = tab;
     }
+
 
     public void loadCustomer() {
 

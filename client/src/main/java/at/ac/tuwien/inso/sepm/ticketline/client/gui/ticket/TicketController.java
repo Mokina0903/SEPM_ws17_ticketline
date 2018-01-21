@@ -345,7 +345,6 @@ public class TicketController extends TabElement implements LocalizationObserver
 
             @Override
             protected Void call() throws Exception {
-                //ToDo fragen wie ich hier die exception abfangen kann
                 TicketRepresentationClass ticket = currentTableview.getSelectionModel().getSelectedItem();
                 ticketService.deleteTicketByTicket_Id(ticket.getTicket_id());
 
@@ -377,8 +376,9 @@ public class TicketController extends TabElement implements LocalizationObserver
                 lblStornoInvoice.setVisible(false);
                 mainController.showGeneralFeedback(BundleManager.getBundle().getString("ticket.feedbackStorno"));
 
+                updateList();
+
             }
-            //ToDo update
             @Override
             protected void failed() {
                 if (getException().getMessage().trim().equals("424")) {
@@ -440,7 +440,7 @@ public class TicketController extends TabElement implements LocalizationObserver
 
             @Override
             protected InvoiceDTO call() throws Exception {
-                //ToDo fragen wie ich hier die exception abfangen kann
+
                 TicketRepresentationClass ticket = currentTableview.getSelectionModel().getSelectedItem();
                 System.out.println(ticket.getReservationNumber());
                 ticketService.payTicketByReservation_Id(ticket.getReservationNumber());
@@ -469,9 +469,9 @@ public class TicketController extends TabElement implements LocalizationObserver
                 lblPay.setVisible(false);
                 lblStornoInvoice.setVisible(false);
                 mainController.showGeneralFeedback(BundleManager.getBundle().getString("ticket.feedbackBuy"));
-
+                updateList();
             }
-            //ToDo update
+
             @Override
             protected void failed() {
                 if (getException().getMessage().trim().equals("424")) {
@@ -585,6 +585,13 @@ public class TicketController extends TabElement implements LocalizationObserver
             lblStornoInvoice.setVisible(true);
         }
 
+    }
+
+    private void updateList(){
+        currentTableview.getItems().clear();
+        List<TicketRepresentationClass>reloadedTickets = getRepresentationList(loadPage(ticketPage.getNumber()).getContent());
+        currentTableview.getItems().addAll(reloadedTickets);
+        currentTableview.refresh();
     }
 
     @Override

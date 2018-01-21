@@ -50,21 +50,27 @@ public class SimpleTicketService implements TicketService {
     public void deleteTicketByTicket_Id(Long ticket_Id) throws NotFoundException, OldVersionException {
 
         Ticket ticket = ticketRepository.getOne(ticket_Id);
+        System.out.println("Hallo1");
         if(ticket.isPaid()) {
+            System.out.println("Hallo2");
             Ticket ticket1 = ticketRepository.findOne(ticket_Id);
             if(ticket1 == null){
+                System.out.println("Hallo3");
                 throw new NotFoundException();
             }
             if(ticket1.isDeleted()){
+                System.out.println("Hallo4");
                 throw new OldVersionException();
             }
-
+            System.out.println("Hallo5");
             ticketRepository.deleteFlagTicketByTicket_Id(ticket_Id);
 
         }
         else{
+            System.out.println("Hallo6");
             ticketRepository.deleteTicketByTicket_Id(ticket_Id);
         }
+        System.out.println("Ende");
     }
 
 
