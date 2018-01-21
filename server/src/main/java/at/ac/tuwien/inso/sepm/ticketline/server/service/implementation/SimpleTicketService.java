@@ -7,8 +7,10 @@ import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Seat;
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.*;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.TicketRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.TicketService;
+import org.hibernate.LazyInitializationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -76,9 +78,11 @@ public class SimpleTicketService implements TicketService {
             if (isBooked(ticket.getEvent().getId(), ticket.getSeat().getId())) {
                 throw new AlreadyExistsException("Ticket already sold.");
             }
-            ticket.setDeleted(false);
-            ticket.setReservationNumber(reservationNR);
-            ticket.setReservationDate(LocalDateTime.now());
+
+                ticket.setDeleted(false);
+                ticket.setReservationNumber(reservationNR);
+                ticket.setReservationDate(LocalDateTime.now());
+
         }
         tickets = ticketRepository.save(tickets);
         reservationNR+=+ tickets.get(0).getId();
@@ -120,5 +124,6 @@ public class SimpleTicketService implements TicketService {
     @Override
     public Boolean isBooked(Long eventId,Long seatId){
         return ticketRepository.findByEvent_idAndSeat_idAndIsDeletedFalse(eventId,seatId).isPresent();
+
     }
 }

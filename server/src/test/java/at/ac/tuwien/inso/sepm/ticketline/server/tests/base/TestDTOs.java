@@ -11,10 +11,13 @@ import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketDTO;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Artist;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Customer;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.Ticket;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Hall;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Location;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Seat;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -238,6 +241,20 @@ public abstract class TestDTOs {
             .title(EVENT_TITLE)
             .hall(defaultHall())
             .seatSelection(true)
+            .build();
+    }
+
+    public static Ticket defaultTicket(long ID){
+        return Ticket.builder()
+            .isDeleted(false)
+            .id(ID)
+            .seat(defaultSeat(5L, 3, 5))
+            .reservationNumber(45633565L)
+            .isPaid(true)
+            .event(defaultEvent())
+            .customer(defaultCustomer())
+            .price(5738L)
+            .reservationDate(LocalDateTime.of(2020, 4, 12, 4, 59))
             .build();
     }
 

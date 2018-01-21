@@ -83,7 +83,13 @@ public abstract class TestConstants {
 
     // --------------------- ARTIST ---------------------
     public static final String TICKET_ENDPOINT = "/tickets";
-
+    public static final String TICKET_CUSTOMER = "/tickets/customer/{customerId}";
+    public static final String TICKET_EVENT = "/tickets/event/{eventId}";
+    public static final String TICKET_EVENT_SECTOR = "/tickets/event/{eventId}/{sector}";
+    public static final String TICKET_EVENT_SEAT = "/tickets/isBooked/{eventId}/{seatId}";
+    public static final String TICKET_FREE = "/tickets/isFree/{eventId}/{sector}";
+    public static final String TICKET_TICKET = "/tickets/{ticketId}";
+    public static final String TICKET_PAGE = "/tickets/{pageIndex}/{ticketsPerPage}";
     // -------------------- LOCATION --------------------
     public static final long LOCATION_ID = 1L;
     public static final String LOCATION_DESCRIPTION = "description";
