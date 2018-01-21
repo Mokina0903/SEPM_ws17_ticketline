@@ -27,15 +27,6 @@ public class CustomerEndpointTest extends BaseIntegrationTest {
     @MockBean
     private CustomerRepository customerRepository;
 
-    //@Autowired
-    //private CustomerService customerService;
-
-    //@Before
-    public void setUp() {
-        //setUpDefaultCustomers();
-    }
-
-    // get /customer/{pageIndex}/{customerPerPage}        Get list of customer entries
     @Test
     public void findAllCustomerAsAnonymous() {
         Response response = RestAssured
@@ -58,7 +49,6 @@ public class CustomerEndpointTest extends BaseIntegrationTest {
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
     }
 
-    // get /customer/findWithKnr/{knr}        Get one spezific customer entry by knr
     @Test
     public void findByCustomerKnrAsAnonymous() {
         Response response = RestAssured
@@ -83,7 +73,6 @@ public class CustomerEndpointTest extends BaseIntegrationTest {
     }
 
 
-    // get /customer/findName/{pageIndex}/{customerPerPage}/{name}        Gets all customers with the given name
     @Test
     public void findByNameAsAnonymous() {
         Mockito.when(customerRepository
@@ -114,11 +103,6 @@ public class CustomerEndpointTest extends BaseIntegrationTest {
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
     }
 
-
-
-    //todo Validation Tests fail
-
-    //post /customer/create        Create and save the given customer
     @Test
     public void createCustomerAsAnonymous() {
         Response response = RestAssured
@@ -162,8 +146,6 @@ public class CustomerEndpointTest extends BaseIntegrationTest {
 
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.NOT_ACCEPTABLE.value()));
     }
-
-    //post /customer/update        Update and save the given customer
 
     @Test
     public void updateCustomerAsAnonymous() {
@@ -254,7 +236,6 @@ public class CustomerEndpointTest extends BaseIntegrationTest {
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.NOT_FOUND.value()));
     }
 
-    //get /customer/{id}        Get one spezific customer entry by id
     @Test
     public void idCustomerAsAnonymous() {
         Response response = RestAssured
@@ -288,6 +269,4 @@ public class CustomerEndpointTest extends BaseIntegrationTest {
             .then().extract().response();
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.NOT_FOUND.value()));
     }
-
-
 }

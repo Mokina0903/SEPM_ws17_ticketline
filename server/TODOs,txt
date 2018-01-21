@@ -16,7 +16,7 @@ TODO bis 22.01
 
 
 TODO: IntegrationTests:
-  + CustomerEndpoint
+  + CustomerEndpoint (Done)
   + EventEndpoint (Done)
   + InvoiceEndpoint
   + LocationEndpoint
