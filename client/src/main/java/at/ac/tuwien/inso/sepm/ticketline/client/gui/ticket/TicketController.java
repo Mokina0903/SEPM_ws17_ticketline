@@ -5,8 +5,6 @@ import at.ac.tuwien.inso.sepm.ticketline.client.exception.EmptyValueException;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.SearchNoMatchException;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.*;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.InvoiceService;
-import at.ac.tuwien.inso.sepm.ticketline.client.gui.customer.CustomerSearchFor;
-import at.ac.tuwien.inso.sepm.ticketline.client.rest.TicketRestClient;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.TicketService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
 import at.ac.tuwien.inso.sepm.ticketline.rest.invoice.InvoiceDTO;
@@ -31,7 +29,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -607,9 +604,5 @@ public class TicketController extends TabElement implements LocalizationObserver
         tcIsDeleted.setText(BundleManager.getBundle().getString("ticket.isDeleted"));
         tfSearch.setPromptText(BundleManager.getBundle().getString("ticket.searchField"));
         btnSuche.setText(BundleManager.getBundle().getString("ticket.search"));
-    }
-
-
-        
     }
 }
