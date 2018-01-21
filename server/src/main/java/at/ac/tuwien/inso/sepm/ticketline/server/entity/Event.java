@@ -1,16 +1,21 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.entity;
 
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Hall;
+import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "event")
-public class Event {
+public class Event implements Predicatable{
 
     public enum EventCategory
     {
@@ -43,6 +48,12 @@ public class Event {
 
     @Column(nullable = false)
     private LocalDateTime endOfEvent;
+
+    private String eventDate;
+
+    private Long startOfEventTime;
+
+    private Long duration;
 
     @Column(nullable = false)
     private Boolean seatSelection;
@@ -113,8 +124,37 @@ public class Event {
         return endOfEvent;
     }
 
-    public void setEndOfEvent( LocalDateTime endOfEvent ) {
+    public Long getStartOfEventTime() {
+        return startOfEventTime;
+    }
+
+    public String getEventDate() {
+        return eventDate;
+    }
+
+    public void setEventDate() {
+        LocalDate date = startOfEvent.toLocalDate();
+        this.eventDate = date.toString();
+    }
+
+    public void setStartOfEventTime() {
+
+        this.startOfEventTime =  Duration.between(LocalTime.MIN, startOfEvent.toLocalTime()).toMinutes();
+    }
+
+    public void setEndOfEvent(LocalDateTime endOfEvent ) {
         this.endOfEvent = endOfEvent;
+    }
+
+    public long getDuration() {
+        return duration;
+    }
+
+    public void setDuration() {
+        this.duration = Duration.between(startOfEvent.toLocalTime(), endOfEvent.toLocalTime()).toMinutes();
+        if (duration < 0) {
+            this.duration = 24L*60L;
+        }
     }
 
     public Hall getHall() {
@@ -266,6 +306,9 @@ public class Event {
             event.setArtists(artists);
             event.setSeatSelection(seatSelection);
             event.setEventCategory(eventCategory);
+            event.setEventDate();
+            event.setStartOfEventTime();
+            event.setDuration();
             return event;
         }
     }

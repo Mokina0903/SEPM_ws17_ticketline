@@ -96,10 +96,12 @@ public class SecurityConfiguration{
             h2AccessMatcher = h2ConsoleConfigurationProperties.getAccessMatcher();
         }
 
-/*        @Override
+/*
+        @Override
         public void configure(WebSecurity web) throws Exception {
             web.ignoring().antMatchers(HttpMethod.POST, "/authentication/**");
-        }*/
+        }
+*/
 
         @Override
         protected void configure(HttpSecurity http) throws Exception {

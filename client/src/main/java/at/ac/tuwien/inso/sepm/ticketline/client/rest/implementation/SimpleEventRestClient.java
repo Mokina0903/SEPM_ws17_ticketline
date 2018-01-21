@@ -10,26 +10,30 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Component;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestClientException;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.HashMap;
 import java.util.List;
 
 @Component
-public class SimpleEventRestClient implements EventRestClient{
+public class SimpleEventRestClient implements EventRestClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SimpleEventRestClient.class);
     private static final String EVENT_URL = "/event";
 
     private final RestClient restClient;
 
-    public SimpleEventRestClient( RestClient restClient ) {
+    public SimpleEventRestClient(RestClient restClient) {
         this.restClient = restClient;
     }
 
@@ -55,15 +59,16 @@ public class SimpleEventRestClient implements EventRestClient{
     }
 
     @Override
-    public DetailedEventDTO findById( Long id ) throws DataAccessException {
+    public DetailedEventDTO findById(Long id) throws DataAccessException {
         try {
             LOGGER.debug("Retrieving event by id from {}", restClient.getServiceURI(EVENT_URL));
             ResponseEntity<DetailedEventDTO> event =
                 restClient.exchange(
-                    restClient.getServiceURI(EVENT_URL+"/"+id),
+                    restClient.getServiceURI(EVENT_URL + "/" + id),
                     HttpMethod.GET,
                     null,
-                    new ParameterizedTypeReference<DetailedEventDTO>() {}
+                    new ParameterizedTypeReference<DetailedEventDTO>() {
+                    }
                 );
             LOGGER.debug("Result status was {} with content {}", event.getStatusCode(), event.getBody());
             return event.getBody();
@@ -82,7 +87,7 @@ public class SimpleEventRestClient implements EventRestClient{
             LOGGER.debug("Retrieving all upcoming events from {}", restClient.getServiceURI(EVENT_URL));
             ResponseEntity<RestResponsePage<SimpleEventDTO>> events =
                 restClient.exchange(
-                    restClient.getServiceURI(EVENT_URL + "/"+request.getPageNumber()+"/"+request.getPageSize()),
+                    restClient.getServiceURI(EVENT_URL + "/" + request.getPageNumber() + "/" + request.getPageSize()),
                     HttpMethod.GET,
                     null,
                     new ParameterizedTypeReference<RestResponsePage<SimpleEventDTO>>() {
@@ -97,6 +102,25 @@ public class SimpleEventRestClient implements EventRestClient{
     }
 
     @Override
+    public Page<SimpleEventDTO> findAllByArtistId( Long artistId, Pageable request ) throws DataAccessException {
+        try {
+            LOGGER.debug("Retrieving all upcoming events by ArtistId from {}", restClient.getServiceURI(EVENT_URL));
+            ResponseEntity<RestResponsePage<SimpleEventDTO>> events =
+                restClient.exchange(
+                    restClient.getServiceURI(EVENT_URL + "/" + request.getPageNumber() + "/" + request.getPageSize()+"/"+artistId),
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<RestResponsePage<SimpleEventDTO>>() {
+                    });
+            LOGGER.debug("Result status was {} with content {}", events.getStatusCode(), events.getBody());
+            return events.getBody();
+        } catch (HttpStatusCodeException e) {
+            throw new DataAccessException("Failed retrieve events with status code " + e.getStatusCode().toString());
+        } catch (RestClientException e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }    }
+
+    @Override
     public DetailedEventDTO publishEvent(DetailedEventDTO detailedEventDTO) throws DataAccessException, ErrorDTO {
         try {
             LOGGER.debug("Publish Event", restClient.getServiceURI(EVENT_URL));
@@ -104,9 +128,10 @@ public class SimpleEventRestClient implements EventRestClient{
             ResponseEntity<DetailedEventDTO> event =
                 restClient.exchange(
                     restClient.getServiceURI(EVENT_URL),
-                HttpMethod.POST,
-                httpEntity,
-                new ParameterizedTypeReference<DetailedEventDTO>() {}
+                    HttpMethod.POST,
+                    httpEntity,
+                    new ParameterizedTypeReference<DetailedEventDTO>() {
+                    }
                 );
 
             LOGGER.debug("Result status was {} with content {}", event.getStatusCode(), event.getBody());
@@ -168,4 +193,80 @@ public class SimpleEventRestClient implements EventRestClient{
             throw new DataAccessException(e.getMessage(), e);
         }
     }
+
+
+// https://stackoverflow.com/questions/8297215/spring-resttemplate-get-with-parameters
+
+/*    HttpHeaders headers = new HttpHeaders();
+    headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+
+    UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+        .queryParam("title", title)
+        ...
+
+    HttpEntity<?> entity = new HttpEntity<>(headers);
+
+    HttpEntity<String> response = restTemplate.exchange(
+        builder.build().encode().toUri(),
+        HttpMethod.GET,
+        entity,
+        String.class);*/
+
+//https://docs.spring.io/spring-data/commons/docs/current/reference/html/#core.web.type-safe
+
+
+    @Override
+    public Page<SimpleEventDTO> findAdvanced(Pageable request, MultiValueMap<String, String> parameters) throws DataAccessException {
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+
+            String url = EVENT_URL + "/advSearch/" + request.getPageNumber() + "/" + request.getPageSize();
+
+            UriComponents builder = UriComponentsBuilder.fromPath(url)
+                .queryParams(parameters).build();
+            HttpEntity<?> entity = new HttpEntity<>(headers);
+
+            ResponseEntity<RestResponsePage<SimpleEventDTO>> events =
+                restClient.exchange(
+                    restClient.getServiceURI(builder.toUriString()),
+                    HttpMethod.GET,
+                    entity,
+                    new ParameterizedTypeReference<RestResponsePage<SimpleEventDTO>>() {
+                    });
+            return events.getBody();
+        } catch (HttpStatusCodeException e) {
+            throw new DataAccessException("Failed retrieve events with status code " + e.getStatusCode().toString());
+        } catch (RestClientException e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public Page<SimpleEventDTO> find(Pageable request, MultiValueMap<String, String> parameters) throws DataAccessException {
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+
+            String url = EVENT_URL + "/search/" + request.getPageNumber() + "/" + request.getPageSize();
+
+            UriComponents builder = UriComponentsBuilder.fromPath(url)
+                .queryParams(parameters).build();
+            HttpEntity<?> entity = new HttpEntity<>(headers);
+
+            ResponseEntity<RestResponsePage<SimpleEventDTO>> events =
+                restClient.exchange(
+                    restClient.getServiceURI(builder.toUriString()),
+                    HttpMethod.GET,
+                    entity,
+                    new ParameterizedTypeReference<RestResponsePage<SimpleEventDTO>>() {
+                    });
+            return events.getBody();
+        } catch (HttpStatusCodeException e) {
+            throw new DataAccessException("Failed retrieve events with status code " + e.getStatusCode().toString());
+        } catch (RestClientException e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+    }
+
 }

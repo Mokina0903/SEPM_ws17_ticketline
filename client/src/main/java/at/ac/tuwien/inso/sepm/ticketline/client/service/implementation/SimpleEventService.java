@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.MultiValueMap;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -45,6 +46,11 @@ public class SimpleEventService implements EventService {
     }
 
     @Override
+    public Page<SimpleEventDTO> findAllByArtistId( Long artistId, Pageable request ) throws DataAccessException {
+        return eventRestClient.findAllByArtistId(artistId,request);
+    }
+
+    @Override
     public DetailedEventDTO publishEvent(DetailedEventDTO detailedEventDTO) throws DataAccessException, ErrorDTO {
         return eventRestClient.publishEvent(detailedEventDTO);
     }
@@ -69,5 +75,16 @@ public class SimpleEventService implements EventService {
         }
 
         return true;
+    }
+
+    @Override
+    public Page<SimpleEventDTO> findAdvanced(Pageable request, MultiValueMap<String, String> parameters) throws DataAccessException{
+        return  eventRestClient.findAdvanced(request, parameters);
+    }
+
+    @Override
+    public Page<SimpleEventDTO> find(Pageable request, MultiValueMap<String, String> parameters) throws DataAccessException {
+        System.out.println("Events loading...");
+        return  eventRestClient.find(request, parameters);
     }
 }

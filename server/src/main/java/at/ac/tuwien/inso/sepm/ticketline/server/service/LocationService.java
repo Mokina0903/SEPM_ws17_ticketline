@@ -1,20 +1,35 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.service;
 
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Hall;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Location;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Seat;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.util.MultiValueMap;
 
+import java.util.HashMap;
 import java.util.List;
 
 public interface LocationService {
 
+
     /**
-     * Find a single location entry by id.
+     * Find location entries by search parameters.
      *
-     * @param locationId the is of the location entry
-     * @return Optional containing the location entry
+     * @param parameters map of search parameters
+     * @param request Pagable request
+     * @return Page containing the location entries
      */
-    Location findLocationById( Long locationId);
+    Page<Location> find(HashMap<String, String> parameters, Pageable request);
+
+        /**
+         * Find a single location entry by id.
+         *
+         * @param locationId the is of the location entry
+         * @return Optional containing the location entry
+         */
+    Location findLocationById(Long locationId);
 
     /**
      * Find all Locations

@@ -2,6 +2,7 @@ package at.ac.tuwien.inso.sepm.ticketline.client.rest.implementation;
 
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.rest.LocationRestClient;
+import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.hall.DetailedHallDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.hall.SimpleHallDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.location.DetailedLocationDTO;
@@ -9,12 +10,18 @@ import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.location.SimpleLocat
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.*;
 import org.springframework.stereotype.Component;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestClientException;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 
 @Component
@@ -108,5 +115,33 @@ public class SimpleLocationsRestClient implements LocationRestClient{
         } catch (RestClientException e) {
             throw new DataAccessException(e.getMessage(), e);
         }
+    }
+
+    @Override
+    public Page<SimpleLocationDTO> find(Pageable request, MultiValueMap<String, String> parameters) throws DataAccessException {
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+
+            String url = LOCATIONS_URL + "/locationSearch/" + request.getPageNumber() + "/" + request.getPageSize();
+
+            UriComponents builder = UriComponentsBuilder.fromPath(url)
+                .queryParams(parameters).build();
+            HttpEntity<?> entity = new HttpEntity<>(headers);
+
+            ResponseEntity<RestResponsePage<SimpleLocationDTO>> locations =
+                restClient.exchange(
+                    restClient.getServiceURI(builder.toUriString()),
+                    HttpMethod.GET,
+                    entity,
+                    new ParameterizedTypeReference<RestResponsePage<SimpleLocationDTO>>() {
+                    });
+            return locations.getBody();
+        } catch (HttpStatusCodeException e) {
+            throw new DataAccessException("Failed retrieve events with status code " + e.getStatusCode().toString());
+        } catch (RestClientException e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+
     }
 }

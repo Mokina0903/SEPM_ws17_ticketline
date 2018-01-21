@@ -1,12 +1,11 @@
 package at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.location;
 
+import at.ac.tuwien.inso.sepm.ticketline.rest.PageableDAO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import java.util.List;
-
 @ApiModel(value = "SimpleLocationDTO", description = "A simple DTO for location entries via rest")
-public class SimpleLocationDTO {
+public class SimpleLocationDTO implements PageableDAO{
     @ApiModelProperty(readOnly = true, name = "The automatically generated database id")
     private Long id;
 

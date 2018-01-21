@@ -36,6 +36,9 @@ public class CustomerServiceImpl implements CustomerService {
         List<Customer> customer = customerRepository.findAll();
         int start = request.getOffset();
         int end = (start + request.getPageSize()) > customer.size() ? customer.size() : (start + request.getPageSize());
+        Page<Customer> e = new PageImpl<>(customer.subList(start, end), request, customer.size());
+        System.out.println( " IN SERVIC SERver custom: _______________ " + e.getContent().size());
+
         return new PageImpl<>(customer.subList(start, end), request, customer.size());
     }
 

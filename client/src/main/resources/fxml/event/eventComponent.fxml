@@ -2,12 +2,9 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ChoiceBox?>
-<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Pagination?>
-<?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -15,104 +12,90 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="eventRootContainer" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.event.EventController">
+<BorderPane fx:id="eventRootContainer" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.event.EventController">
+
     <top>
-
-        <fx:include source="/fxml/tabHeader.fxml" fx:id="tabHeader"/>
-
+        <fx:include fx:id="tabHeader" source="/fxml/tabHeader.fxml" />
     </top>
     <center>
         <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
             <children>
-                <GridPane hgap="5.0" maxHeight="-Infinity" prefHeight="150.0" vgap="5.0" VBox.vgrow="ALWAYS">
-                    <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="20.0"/>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="20.0"/>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-                    </columnConstraints>
-                    <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                    </rowConstraints>
-                    <children>
-                        <Label text="%events.title"/>
-                        <Label text="%events.content" GridPane.rowIndex="1"/>
-                        <Label text="%events.type" GridPane.rowIndex="2"/>
-                        <Label text="%events.seats" GridPane.rowIndex="3"/>
-                        <Label text="%artist.fname" GridPane.columnIndex="6"/>
-                        <Label text="%artist.lname" GridPane.columnIndex="6" GridPane.rowIndex="1"/>
-                        <Label text="%events.price" GridPane.columnIndex="3"/>
-                        <Label text="%events.duration" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
-                        <Label text="%events.date" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
-                        <Label text="%events.time" GridPane.columnIndex="3" GridPane.rowIndex="3"/>
-                        <TextField GridPane.columnIndex="1"/>
-                        <TextField GridPane.columnIndex="1" GridPane.rowIndex="1"/>
-                        <TextField GridPane.columnIndex="7"/>
-                        <TextField GridPane.columnIndex="7" GridPane.rowIndex="1"/>
-                        <ChoiceBox prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
-                        <CheckBox mnemonicParsing="false" text="CheckBox" GridPane.columnIndex="1"
-                                  GridPane.rowIndex="3"/>
-                        <Slider GridPane.columnIndex="4" GridPane.rowIndex="1"/>
-                        <DatePicker GridPane.columnIndex="4" GridPane.rowIndex="2"/>
-                        <Label text="RangeSlider doesnt work" GridPane.columnIndex="4"/>
-                        <Label text="RangeSlider doesnt work" GridPane.columnIndex="4" GridPane.rowIndex="3"/>
-                    </children>
+                <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
                     <VBox.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
-                    </VBox.margin>
-                    <padding>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
-                    </padding>
-                </GridPane>
-                <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="600.0"
-                      VBox.vgrow="ALWAYS">
-                    <VBox.margin>
-                        <Insets/>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                     </VBox.margin>
                     <children>
-                        <Pagination fx:id="pagination" maxHeight="1.7976931348623157E308"
-                                    maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="600.0"
-                                    HBox.hgrow="ALWAYS">
-                            <HBox.margin>
-                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
-                            </HBox.margin>
-                            <padding>
-                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
-                            </padding>
-                        </Pagination>
-                        <GridPane hgap="10.0" maxWidth="-Infinity" prefWidth="77.0" vgap="20">
-                            <Button text="search" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
-                            <Button fx:id="btnAddEvent" styleClass="buyBtn" onAction="#openCSVImportWindow"
-                                    GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                        <GridPane hgap="5.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" vgap="10.0" HBox.hgrow="ALWAYS">
                             <columnConstraints>
-                                <ColumnConstraints/>
+                                <ColumnConstraints halignment="LEFT" maxWidth="-Infinity" minWidth="300.0" prefWidth="430.0" />
+                                <ColumnConstraints hgrow="ALWAYS" maxWidth="-Infinity" minWidth="40.0" prefWidth="40.0" />
+                        <ColumnConstraints halignment="CENTER" minWidth="50.0" prefWidth="50.0" />
+
+                                <ColumnConstraints halignment="LEFT" maxWidth="1.7976931348623157E308" minWidth="200.0" prefWidth="110.0" />
                             </columnConstraints>
                             <rowConstraints>
-                                <RowConstraints/>
-                                <RowConstraints/>
-                                <RowConstraints/>
-                                <RowConstraints/>
+                                <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
+                                <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                             </rowConstraints>
+                            <children>
+                                <HBox>
+                                    <children>
+                                        <TextField fx:id="tfSearchFor" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="400.0" />
+                                        <ChoiceBox fx:id="cbSearch" maxWidth="-Infinity" minWidth="30.0" prefWidth="30.0" />
+                                    </children>
+                                </HBox>
+                                <Button fx:id="btAdvSearch" maxWidth="1.7976931348623157E308" minWidth="200.0" mnemonicParsing="false" onAction="#openAdvancedSearch" text="%events.advSearch" GridPane.halignment="LEFT" GridPane.rowIndex="1" />
+                                <Button fx:id="btSearch" defaultButton="true" minWidth="40.0" onAction="#search" prefWidth="40.0" GridPane.columnIndex="1" />
+                        <Label fx:id="lbMatchInfo" prefHeight="16.0" prefWidth="163.0" GridPane.columnIndex="3">
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font></Label>
+                            </children>
                             <HBox.margin>
-                                <Insets left="5.0" right="5.0" top="5.0"/>
+                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                             </HBox.margin>
                         </GridPane>
+                    </children>
+                </HBox>
+                <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="600.0" VBox.vgrow="ALWAYS">
+                    <VBox.margin>
+                        <Insets />
+                    </VBox.margin>
+                    <children>
+                        <Pagination fx:id="pagination" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="600.0" HBox.hgrow="ALWAYS">
+                            <HBox.margin>
+                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                            </HBox.margin>
+                            <padding>
+                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                            </padding>
+                        </Pagination>
+                  <GridPane hgap="5.0" prefWidth="77.0" vgap="5.0">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="30.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                               <Button fx:id="btnAddEvent" minWidth="40.0" onAction="#openCSVImportWindow" prefWidth="40.0" text="+" />
+                     </children>
+                     <HBox.margin>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </HBox.margin>
+                  </GridPane>
                     </children>
                 </HBox>
             </children>
         </VBox>
     </center>
     <padding>
-        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
     </padding>
 
 </BorderPane>

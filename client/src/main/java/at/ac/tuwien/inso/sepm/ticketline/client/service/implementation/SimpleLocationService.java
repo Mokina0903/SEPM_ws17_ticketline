@@ -9,7 +9,10 @@ import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.location.DetailedLoc
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.location.SimpleLocationDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.MultiValueMap;
 
 import java.util.List;
 
@@ -42,5 +45,12 @@ public class SimpleLocationService implements LocationService{
     @Override
     public List<SimpleHallDTO> findAllHalls() throws DataAccessException {
         return locationRestClient.findAllHalls();
+    }
+
+    @Override
+    public Page<SimpleLocationDTO> find(Pageable request, MultiValueMap<String, String> parameters) throws DataAccessException{
+        System.out.println("Locations loading...");
+
+        return locationRestClient.find(request, parameters);
     }
 }

@@ -3,10 +3,16 @@ package at.ac.tuwien.inso.sepm.ticketline.client.gui.event;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.SearchNoMatchException;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.*;
+import at.ac.tuwien.inso.sepm.ticketline.client.service.ArtistService;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.EventService;
+import at.ac.tuwien.inso.sepm.ticketline.client.service.LocationService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
+import at.ac.tuwien.inso.sepm.ticketline.rest.event.DetailedEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -14,9 +20,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Pagination;
 import javafx.scene.control.Tab;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
-import javafx.util.Callback;
+import javafx.scene.paint.Color;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.GlyphFont;
 import org.controlsfx.glyphfont.GlyphFontRegistry;
@@ -27,6 +33,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Component
 public class EventController extends TabElement implements LocalizationObserver {
@@ -38,23 +53,44 @@ public class EventController extends TabElement implements LocalizationObserver 
     @FXML
     public Pagination pagination;
     @FXML
+    private Button btSearch;
+    @FXML
+    private Button btAdvSearch;
+    @FXML
     public Button btnAddEvent;
 
     @FXML
+    private TextField tfSearchFor;
+    @FXML
+    private ChoiceBox<String> cbSearch;
+    @FXML
+    public BorderPane bPEventContainer;
+    @FXML
     public BorderPane eventRootContainer;
+    @FXML
+    public Label lbMatchInfo;
     @FXML
     private TabHeaderController tabHeaderController;
 
+    private EventSearchFor searchFor = EventSearchFor.EVENT;
+    private long numberOfMatches;
+
+
     private Tab eventTab;
 
-    private Page<SimpleEventDTO> events;
-
+    private String searchForArtist = BundleManager.getBundle().getString("artist.artist");
+    private String searchForEvent = BundleManager.getBundle().getString("events.events");
+    private String searchForLocation = BundleManager.getBundle().getString("location.location");
     private final MainController mainController;
     private final SpringFxmlLoader springFxmlLoader;
     private final EventService eventService;
+    private final LocationService locationService;
+    private final ArtistService artistService;
+
+    private GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
+    private final int FONT_SIZE = 16;
 
     private final int EVENTS_PER_PAGE = 7;
-    private EventSearchFor searchFor;
 
 
     private GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
@@ -63,6 +99,16 @@ public class EventController extends TabElement implements LocalizationObserver 
 
     @Autowired
     private LocalizationSubject localizationSubject;
+    @Autowired
+    private PaginationHelper paginationHelper;
+
+    public PaginationHelper getPaginationHelper() {
+        return paginationHelper;
+    }
+
+    public void setPaginationHelper( PaginationHelper paginationHelper ) {
+        this.paginationHelper = paginationHelper;
+    }
 
     public Tab getEventTab() {
         return eventTab;
@@ -73,67 +119,105 @@ public class EventController extends TabElement implements LocalizationObserver 
     }
 
 
-    public EventController(MainController mainController, SpringFxmlLoader springFxmlLoader, EventService eventService) {
+    public EventController(MainController mainController, SpringFxmlLoader springFxmlLoader, EventService eventService,
+                           LocationService locationService, ArtistService artistService) {
         this.mainController = mainController;
         this.springFxmlLoader = springFxmlLoader;
         this.eventService = eventService;
+        this.locationService = locationService;
+        this.artistService = artistService;
     }
 
     @FXML
     private void initialize() {
         tabHeaderController.setIcon(FontAwesome.Glyph.FILM);
-        tabHeaderController.setTitle(BundleManager.getBundle().getString("events.events"));
         localizationSubject.attach(this);
         btnAddEvent.setGraphic(fontAwesome.create("PLUS"));
-        /*
-        lvEventElements.getSelectionModel()
-            .selectedIndexProperty()
-            .addListener((observable, oldvalue, newValue) -> {
+      
+        ObservableList<String> searchForList = FXCollections.observableArrayList();
+        searchForList.addAll(searchForEvent, searchForLocation, searchForArtist);
+        update();
+        lbMatchInfo.setVisible(false);
 
-                Platform.runLater(() -> {
-                    lvEventElements.getSelectionModel().clearSelection();
-                });
+        //todo show free seats for events
 
-            });
-            */
-    }
+        cbSearch.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
+            if (newValue != null) {
+                if (newValue.equals(searchForEvent)) {
+                    searchFor = EventSearchFor.EVENT;
+                    tfSearchFor.setPromptText(BundleManager.getBundle().getString("events.searchForEvent"));
+                } else if (newValue.equals(searchForLocation)) {
+                    searchFor = EventSearchFor.LOCATION;
+                    tfSearchFor.setPromptText(BundleManager.getBundle().getString("events.searchForLocation"));
 
-    public void preparePagination() {
-        //all customer at start or searchfield is empty
-        LOGGER.info("prepareing Pagination for the event overview");
-        try {
-            Pageable request = new PageRequest(0, EVENTS_PER_PAGE);
-            Page<SimpleEventDTO> page = eventService.findAllUpcoming(request);
-            int amount = page.getTotalPages();
-            events = eventService.findAllUpcoming(request);
-            pagination.setPageCount(amount);
-            preparePagination(events);
-        } catch (DataAccessException e) {
-            LOGGER.warn("Could not access total number of customers");
-        } catch (SearchNoMatchException e) {
-            noMatchFound();
-        }
-    }
-
-    public void preparePagination(Page<SimpleEventDTO> events) {
-
-/*        if (customer == null || customer.isEmpty()) {
-            noMatchFound();
-        } else {*/
-        LOGGER.info("search matches");
-
-        //lbNoMatch.setVisible(false);
-        //   int numOfCustomers = customer.size();
-        //    pagination.setPageCount(numOfCustomers / CUSTOMER_PER_PAGE + 1);
-        pagination.setCurrentPageIndex(0);
-        //      }
-        pagination.setPageFactory(new Callback<Integer, Node>() {
-
-            @Override
-            public Node call(Integer pageIndex) {
-                return createPage(pageIndex);
+                } else {
+                    searchFor = EventSearchFor.ARTIST;
+                    tfSearchFor.setPromptText(BundleManager.getBundle().getString("events.searchForArtist"));
+                }
             }
-        });
+                paginationHelper.setSearchFor(searchFor);
+            System.out.println(searchFor);
+            }
+        );
+
+        cbSearch.getSelectionModel().selectFirst();
+
+        btSearch.setGraphic(fontAwesome.create("SEARCH").size(FONT_SIZE));
+        paginationHelper.initData(pagination, springFxmlLoader, eventService, locationService, artistService, this, mainController);
+    }
+
+
+
+    @FXML
+    private void search() {
+        MultiValueMap<String, String> parameters;
+        if (searchFor.equals(EventSearchFor.EVENT)) {
+            LOGGER.info("preparing Pagination for the event search");
+            parameters = setParametersForEventSearch();
+
+        } else if (searchFor.equals(EventSearchFor.LOCATION)) {
+            LOGGER.info("preparing Pagination for the locations search");
+            parameters = setParametersForLocationSearch();
+        } else {
+            LOGGER.info("preparing Pagination for the artist search");
+            parameters = setParametersForArtistSearch();
+        }
+        paginationHelper.setParameters(parameters);
+        paginationHelper.setUpPagination();
+    }
+
+
+    private MultiValueMap<String,String> setParametersForEventSearch() {
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        if (!tfSearchFor.getText().isEmpty() && !tfSearchFor.getText().equals(" ")) {
+            params.add("title", tfSearchFor.getText());
+            params.add("description", tfSearchFor.getText());
+        }
+        return params;
+    }
+
+    private MultiValueMap<String,String> setParametersForLocationSearch() {
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        if (!tfSearchFor.getText().isEmpty() && !tfSearchFor.getText().equals(" ")) {
+            if (isNumeric(tfSearchFor.getText())) {
+                params.add("zip", tfSearchFor.getText());
+            }
+            else {
+                params.add("descriptionEvent", tfSearchFor.getText());
+                params.add("city", tfSearchFor.getText());
+                params.add("street", tfSearchFor.getText());
+            }
+        }
+        return params;
+    }
+
+    private MultiValueMap<String,String> setParametersForArtistSearch() {
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        if (!tfSearchFor.getText().isEmpty() && !tfSearchFor.getText().equals(" ")) {
+            params.add("artistFirstName", tfSearchFor.getText());
+            params.add("artistLastName", tfSearchFor.getText());
+        }
+        return params;
     }
 
     @FXML
@@ -145,124 +229,168 @@ public class EventController extends TabElement implements LocalizationObserver 
         eventTab.setContent(root);
     }
 
-    private Page<SimpleEventDTO> loadPage(int pageIndex) {
+    @FXML
+    public void openAdvancedSearch(ActionEvent actionEvent) {
+        LOGGER.info("opening the advanced event search dialog.");
+        searchFor = EventSearchFor.ALL;
 
-        try {
-            switch (searchFor) {
-                case ALL:
-                    Pageable request = new PageRequest(pageIndex, EVENTS_PER_PAGE);
+        SpringFxmlLoader.Wrapper<EventAdvancedSearchController> wrapper =
+            springFxmlLoader.loadAndWrap("/fxml/event/eventAdvancedSearchComponent.fxml");
+        wrapper.getController().initializeData(eventRootContainer);
+        eventTab.setContent(wrapper.getLoadedObject());
+    }
 
-                    events = eventService.findAllUpcoming(request);
-                    pagination.setPageCount(events.getTotalPages());
-                    break;
-                case ARTIST:
-                    /*customer = customerService.findByName(tfSearch.getText(), 0, Integer.MAX_VALUE);
-                    page = customerService.findByName(tfSearch.getText(), pageIndex, CUSTOMER_PER_PAGE);
-                    pagination.setPageCount(customer.size() / CUSTOMER_PER_PAGE + 1);*/
+    public void loadEvents() {
+        search();
+    }
 
-                    break;
-                case PRICE:
-                    /*page = eventService.findByPrice(Long.parseLong(tfSearch.getText()));
-                    pagination.setPageCount(1);*/
-                    break;
+
+    public void publishEvent(ActionEvent actionEvent) {
+
+        Task<Void> workerTask = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+
+                // TODO: (David) csvFile == Textbox
+                String csvFile = "import.csv";
+                String cvsSplitBy = ";";
+                BufferedReader br = null;
+                try {
+                    String line = "";
+                    br = new BufferedReader(new FileReader(csvFile));
+                    int cnt = 1;
+                    while ((line = br.readLine()) != null) {
+                        // TITLE;ARTIST_FIRST_NAME;ARTIST_LAST_NAME;DESCRIPTION;START_OF_EVENT;END_OF_EVENT;PRICE;HALL_ID
+                        String[] column = line.split(cvsSplitBy);
+
+                        // Column size = 8
+
+                        /*
+                        System.out.println("---- " + cnt++ + " ----");
+                        for (String s : column) {
+                            System.out.print(s+ "\t");
+                        }
+                        System.out.println();
+                        */
+
+
+                        // TODO: (David) Check input, duplicates?, end before begin?
+
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+                        String title = column[0];
+                        String firstName = column[1];
+                        String lastName = column[2];
+                        String description = column[3];
+                        LocalDateTime start = LocalDateTime.parse(column[4], formatter);
+                        LocalDateTime end = LocalDateTime.parse(column[5], formatter);
+                        Long price = Long.valueOf(column[6]);
+                        DetailedHallDTO hall = DetailedHallDTO.builder().id(Long.valueOf(column[7])).description("desc").build();
+
+                        DetailedEventDTO detailedEventDTO = DetailedEventDTO.builder()
+                            .title(title)
+                            //.artistFirstname(firstName) TODO: (Von Verena an David) those methods are not implemented jet, when they are remove those comments
+                            // .artistLastName(lastName)
+                            .description(description)
+                            .startOfEvent(start)
+                            .endOfEvent(end)
+                            .price(price)
+                            .hall(hall)
+                            .build();
+
+                        detailedEventDTO = eventService.publishEvent(detailedEventDTO);
+                        //System.out.println("---- " + detailedEventDTO.getId() + " ----");
+                    }
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    if (br != null) {
+                        try {
+                            br.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                return null;
             }
 
-        } catch (SearchNoMatchException e) {
-            noMatchFound();
-        } catch (DataAccessException e) {
-            LOGGER.warn("Could not access find events");
-        }
-        return events;
-    }
-
-    private Node createPage(int pageIndex) {
-        pagination.setCurrentPageIndex(pageIndex);
-        Page<SimpleEventDTO> events = loadPage(pageIndex);
-        ListView<VBox> lvEventElements = new ListView<>();
-        lvEventElements.setStyle("-fx-background-color: transparent;");
-
-        if (!events.getContent().isEmpty()) {
-            for (SimpleEventDTO event : events.getContent()) {
-                SpringFxmlLoader.Wrapper<EventElementController> wrapper =
-                    springFxmlLoader.loadAndWrap("/fxml/event/eventElement.fxml");
-                wrapper.getController().initializeData(eventService,event, eventRootContainer);
-                lvEventElements.getItems().add(wrapper.getController().vbEventElement);
+            @Override
+            protected void succeeded() {
+                super.succeeded();
+                loadEvents();
             }
+
+            @Override
+            protected void failed() {
+                super.failed();
+                loadEvents();
+                mainController.showGeneralError("Failure at PublishEvents: " + getException().getMessage());
+            }
+        };
+
+        workerTask.runningProperty().addListener((observable, oldValue, running) ->
+            mainController.setProgressbarProgress(
+                running ? ProgressBar.INDETERMINATE_PROGRESS : 0)
+        );
+
+        new Thread(workerTask).start();
+    }
+
+    public boolean isNumeric(String s) {
+        return s != null && s.matches("[-+]?\\d*\\.?\\d+");
+    }
+
+    public Pagination getPagination() {
+        return pagination;
+    }
+
+    public void setPagination(Pagination pagination) {
+        this.pagination = pagination;
+    }
+
+    public void setMatchInfoLabel(long matches) {
+        if (matches == 0) {
+            lbMatchInfo.setText(BundleManager.getBundle().getString("general.noMatches"));
+            lbMatchInfo.setTextFill(Color.CRIMSON);
+        } else {
+            lbMatchInfo.setText(BundleManager.getBundle().getString("general.matches") + " " + matches);
+            lbMatchInfo.setTextFill(Color.BLACK);
         }
-        return lvEventElements;
+        numberOfMatches = matches;
+        lbMatchInfo.setVisible(true);
     }
-
-    private void noMatchFound() {
-        LOGGER.info("no search match");
-        //lbNoMatch.setVisible(true);
-
-        //set empty tv
-    }
-
-    @Override
-    public void update() {
-        tabHeaderController.setTitle(BundleManager.getBundle().getString("events.events"));
-    }
-
 
     @Override
     protected void setTab(Tab tab) {
         eventTab = tab;
     }
 
-    public void loadEvents() {
 
-        searchFor = EventSearchFor.ALL; //toDO: Add Searchfunctions
-
-        preparePagination();
-
-
-/*
-        ObservableList<VBox> lvEventsChildren = lvEventElements.getItems();
-        lvEventsChildren.clear();
-
-
-        Task<List<SimpleEventDTO>> taskNewNews = new Task<>() {
-            @Override
-            protected List<SimpleEventDTO> call() throws DataAccessException, InterruptedException {
-
-                return eventService.findAll();
-            }
-
-            @Override
-            protected void succeeded() {
-                super.succeeded();
-                if (!getValue().isEmpty() ) {
-                    for (SimpleEventDTO event : getValue()) {
-
-                        SpringFxmlLoader.Wrapper<EventElementController> wrapper =
-                            springFxmlLoader.loadAndWrap("/fxml/event/eventElement.fxml");
-                        wrapper.getController().initializeData(eventService,event);
-
-                        lvEventsChildren.add(wrapper.getController().vbEventElement);
-                    }
-
-                }
-
-            }
-
-            @Override
-            protected void failed() {
-                if(getValue()==null || getValue().isEmpty()) {
-                    super.failed();
-                    JavaFXUtils.createExceptionDialog(getException(),
-                        lvEventElements.getScene().getWindow()).showAndWait();
-                }
-            }
-        };
-        taskNewNews.runningProperty().addListener((observable, oldValue, running) ->
-            mainController.setProgressbarProgress(
-                running ? ProgressBar.INDETERMINATE_PROGRESS : 0)
-        );
-
-
-        new Thread(taskNewNews).start();
-        */
+    @Override
+    public void update() {
+        tabHeaderController.setTitle(BundleManager.getBundle().getString("events.events"));
+        btAdvSearch.setText(BundleManager.getBundle().getString("events.advSearch"));
+        if (numberOfMatches== 0) {
+            lbMatchInfo.setText(BundleManager.getBundle().getString("general.noMatches"));
+        }
+        else {
+            lbMatchInfo.setText(BundleManager.getBundle().getString("general.matches") + " " + numberOfMatches);
+        }
+        searchForArtist = BundleManager.getBundle().getString("artist.artist");
+        searchForEvent = BundleManager.getBundle().getString("events.events");
+        searchForLocation = BundleManager.getBundle().getString("location.location");
+        ObservableList<String> searchForList = FXCollections.observableArrayList();
+        searchForList.addAll(searchForEvent, searchForLocation, searchForArtist);
+        cbSearch.setItems(searchForList);
+        if (searchFor.equals(EventSearchFor.EVENT)) {
+            tfSearchFor.setPromptText(BundleManager.getBundle().getString("events.searchForEvent"));
+        } else if (searchFor.equals(EventSearchFor.LOCATION)) {
+            tfSearchFor.setPromptText(BundleManager.getBundle().getString("events.searchForLocation"));
+        } else {
+            tfSearchFor.setPromptText(BundleManager.getBundle().getString("events.searchForArtist"));
+        }
     }
-
 }

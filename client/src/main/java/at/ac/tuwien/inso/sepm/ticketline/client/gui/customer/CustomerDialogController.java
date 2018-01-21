@@ -269,6 +269,9 @@ public class CustomerDialogController implements LocalizationObserver {
 
     @FXML
     public void handleOk(ActionEvent actionEvent) {
+
+        //todo implement task like in user
+
         LOGGER.info("Creating or saving customer.");
         mainController.setGeneralErrorUnvisable();
         lblVersionException.setVisible(false);
@@ -312,9 +315,7 @@ public class CustomerDialogController implements LocalizationObserver {
 
         if (!customerService.checkIfCustomerValid(customer)){
             LOGGER.error("Cutomer to be saved was invalid!");
-
-            //todo: check if email already in use if new customer
-    //        lbInvalidCustomer.setVisible(true);
+            //        lbInvalidCustomer.setVisible(true);
             return;
         }
         lbInvalidCustomer.setVisible(false);
