@@ -104,6 +104,7 @@ public class Top10Controller extends TabElement implements LocalizationObserver 
         barChartTop10.setTitle("Top 10 Events");
         comBoxCategory.getSelectionModel().select(0);
         btnGoToBuying.setGraphic(fontAwesome.create("TICKET").size(FONT_SIZE));
+        applyFilter.setGraphic(fontAwesome.create("REFRESH").size(FONT_SIZE));
 
         lblNoEventChoosen.setVisible(false);
         lblNoEventChoosen.setWrapText(true);
@@ -182,6 +183,8 @@ public class Top10Controller extends TabElement implements LocalizationObserver 
 
     private void applyStatsToChart(List<SimpleEventDTO> topTenEvents) {
 
+        fromDate.getStyleClass().remove("error");
+        toDate.getStyleClass().remove("error");
         if(btnGoToBuying.getStyleClass().contains("buyBtn")){
             btnGoToBuying.getStyleClass().remove("buyBtn");
         }
@@ -316,7 +319,6 @@ public class Top10Controller extends TabElement implements LocalizationObserver 
         tabHeaderController.setTitle(BundleManager.getBundle().getString("statistics.top10Statistics"));
         lblFromDate.setText(BundleManager.getBundle().getString("statistics.fromDate"));
         lblToDate.setText(BundleManager.getBundle().getString("statistics.toDate"));
-        applyFilter.setText(BundleManager.getBundle().getString("statistics.apply"));
 
         if (lblNoEventChoosen.isVisible()) {
             lblNoEventChoosen.setText(BundleManager.getBundle().getString("statistics.noEvetChoosen"));

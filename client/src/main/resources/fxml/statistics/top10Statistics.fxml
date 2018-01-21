@@ -64,7 +64,7 @@
             <DatePicker fx:id="fromDate"/>
             <Label fx:id="lblToDate" prefWidth="25" text="%statistics.toDate"/>
             <DatePicker fx:id="toDate"/>
-            <Button fx:id="applyFilter" prefWidth="100" onAction="#getTopTenEvents" text="%statistics.apply"/>
+            <Button fx:id="applyFilter" prefWidth="70" onAction="#getTopTenEvents"/>
             <Button fx:id="btnGoToBuying" onAction="#goToTicketProzess" prefWidth="70"/>
             <Label fx:id="lblNoEventChoosen" text="%statistics.noEvetChoosen" textFill="crimson"/>
         </HBox>
