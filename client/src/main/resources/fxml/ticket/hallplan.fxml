@@ -30,30 +30,32 @@
 
     </top>
     <center>
+        <ScrollPane prefWidth="900" prefHeight="600">
+
+            <BorderPane.margin>
+                <Insets left="20"/>
+            </BorderPane.margin>
+
         <VBox spacing="20">
             <BorderPane.margin>
                 <Insets left="20"/>
             </BorderPane.margin>
             <HBox alignment="CENTER">
-            <GridPane maxWidth="500" maxHeight="600" fx:id="seatsContainerGV" hgap="10" vgap="10">
-                <BorderPane.margin>
-                    <Insets left="20.0"/>
-                </BorderPane.margin>
+            <GridPane fx:id="seatsContainerGV" hgap="10" vgap="10">
             </GridPane>
             </HBox>
             <HBox alignment="CENTER">
 
                 <Rectangle styleClass="scene" width="300" height="30"/>
             </HBox>
-
         </VBox>
-
+    </ScrollPane>
     </center>
     <right>
 
         <VBox >
             <BorderPane.margin>
-                <Insets bottom="5.0" top="20.0" left="25.0" right="400.0"/>
+                <Insets bottom="5.0" top="20.0" left="25.0" right="20.0"/>
             </BorderPane.margin>
             <VBox spacing="10">
                 <VBox>

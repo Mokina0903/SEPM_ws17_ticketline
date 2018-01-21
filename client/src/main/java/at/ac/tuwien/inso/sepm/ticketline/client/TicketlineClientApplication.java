@@ -35,7 +35,6 @@ public class TicketlineClientApplication extends SpringFxApplication {
         stage.centerOnScreen();
         stage.setWidth(1200);
         stage.setHeight(800);
-        stage.setResizable(false);
         stage.show();
         stage.setOnCloseRequest(event -> {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);

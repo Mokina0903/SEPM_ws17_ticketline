@@ -9,7 +9,7 @@
 <HBox xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
       fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket.SectorElementController"
-      prefHeight="200.0" prefWidth="800.0" styleClass="sectorHbox" fx:id="hBSector">
+      prefHeight="100.0" prefWidth="500.0" styleClass="sectorHbox" fx:id="hBSector">
 
     <Button fx:id="btnDecrease" onAction="#decreaseSeatCount"/>
 
