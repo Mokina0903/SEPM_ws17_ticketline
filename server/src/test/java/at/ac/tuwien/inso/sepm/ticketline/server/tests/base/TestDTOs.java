@@ -9,13 +9,18 @@ import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.location.DetailedLoc
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.seat.SeatDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketDTO;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Customer;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Hall;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Location;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Seat;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static at.ac.tuwien.inso.sepm.ticketline.server.tests.base.TestConstants.*;
 
-public abstract class TestDTOs extends BaseTestUnit {
+public abstract class TestDTOs {
 
     public static SimpleEventDTO setUpSimpleEventDTO() {
         List<SimpleArtistDTO> artists = new ArrayList<>();
@@ -138,6 +143,48 @@ public abstract class TestDTOs extends BaseTestUnit {
             .surname(CUSTOMER_SURNAME)
             .mail(CUSTOMER_MAIL)
             .birthDate(CUSTOMER_BIRTHDATE)
+            .build();
+    }
+
+    public static List<Seat> defaultSeats() {
+        Seat[] seats = new Seat[] {
+            defaultSeat(1,1,1),
+            defaultSeat(2,2,1),
+            defaultSeat(3,3,1),
+            defaultSeat(4,4,1),
+            defaultSeat(5,5,1)
+        };
+
+        return Arrays.asList(seats);
+    }
+
+    public static Seat defaultSeat(long id, int nr, int row) {
+        return Seat.builder()
+            .id(id)
+            .nr(nr)
+            .row(row)
+            .sector('a')
+            .build();
+    }
+
+    public static Hall defaultHall() {
+        return Hall.builder()
+            .id(HALL_ID)
+            .description(HALL_DESCRIPTION)
+            .seats(defaultSeats())
+            .build();
+    }
+
+    public static Location defaultLocation() {
+        return Location.builder()
+            .id(LOCATION_ID)
+            .description(LOCATION_DESCRIPTION)
+            .country(LOCATION_COUNTRY)
+            .city(LOCATION_CITY)
+            .zip(LOCATION_ZIP)
+            .street(LOCATION_STREET)
+            .houseNr(LOCATION_HOUSENR)
+            .eventHalls(Collections.singletonList(defaultHall()))
             .build();
     }
 

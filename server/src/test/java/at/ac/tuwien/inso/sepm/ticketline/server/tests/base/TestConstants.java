@@ -81,26 +81,26 @@ public abstract class TestConstants {
     public static final String TICKET_ENDPOINT = "/tickets";
 
     // -------------------- LOCATION --------------------
-    protected static final long LOCATION_ID = 1L;
-    protected static final String LOCATION_DESCRIPTION = "description";
-    protected static final String LOCATION_CITY= "TestCity";
-    protected static final String LOCATION_COUNTRY = "TestCountry";
-    protected static final int LOCATION_HOUSENR = 123;
-    protected static final String LOCATION_STREET = "TestStreet";
-    protected static final int LOCATION_ZIP = 1234;
+    public static final long LOCATION_ID = 1L;
+    public static final String LOCATION_DESCRIPTION = "description";
+    public static final String LOCATION_CITY= "TestCity";
+    public static final String LOCATION_COUNTRY = "TestCountry";
+    public static final int LOCATION_HOUSENR = 123;
+    public static final String LOCATION_STREET = "TestStreet";
+    public static final int LOCATION_ZIP = 1234;
 
     // ---------------------- HALL ----------------------
-    protected static final long HALL_ID = 1L;
-    protected static final String HALL_DESCRIPTION = "Test Hall 1";
+    public static final long HALL_ID = 1L;
+    public static final String HALL_DESCRIPTION = "Test Hall 1";
 
     // ---------------------- SEAT ----------------------
-    protected static final Long SEAT_ID = 1L;
-    protected static final int SEAT_NR = 1;
-    protected static final char SEAT_SECTOR = 'a';
-    protected static final int SEAT_ROW = 1;
+    public static final Long SEAT_ID = 1L;
+    public static final int SEAT_NR = 1;
+    public static final char SEAT_SECTOR = 'a';
+    public static final int SEAT_ROW = 1;
 
     // --------------------- TICKET ---------------------
-    protected static final Long TICKET_RESERVATIONNR = 10001L;
-    protected static final Long TICKET_ID = 1L;
-    protected static final long TICKET_PRICE = 100;
+    public static final Long TICKET_RESERVATIONNR = 10001L;
+    public static final Long TICKET_ID = 1L;
+    public static final long TICKET_PRICE = 100;
 }
