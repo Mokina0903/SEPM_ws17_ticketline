@@ -12,6 +12,7 @@ import javafx.stage.Window;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.encryption.InvalidPasswordException;
 import org.apache.pdfbox.pdmodel.interactive.form.PDAcroForm;
+import org.apache.pdfbox.pdmodel.interactive.form.PDField;
 import org.apache.pdfbox.pdmodel.interactive.form.PDTextField;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -177,7 +178,12 @@ public class SimpleInvoiceService implements InvoiceService{
                    field = (PDTextField) acroForm.getFields().get(40);
                    field.setValue((invoiceDTO.isStorno()?"-":"")+invoiceDTO.getTotalPriceInEuro()+"\u20ac");
 
+                   for(PDField pdField :acroForm.getFields()){
+
+                       pdField.setReadOnly(true);
+                   }
                }
+
 
                // Save the filled out form.
 /*
