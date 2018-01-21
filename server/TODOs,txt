@@ -24,6 +24,18 @@ TODO: IntegrationTests:
   + TicketEndpoint (Done)
   + UserEndpoint (Done)
 
+TODO: MapperTests
+  + ArtistMapperTest (Done)
+  + CustomerMapperTest (Done)
+  + EventMapperTest (Done)
+  + HallMapperTest (Done)
+  + LocationMapperTest (Done)
+  + NewsMapperTest (Done)
+  + SeatMapperTest (Done)
+  + TicketMapperTest
+  + UserMapperTest (Done)
+
+
 TODO: UnitTests:
   + CustomerEndpoint
   + EventEndpoint
@@ -49,6 +61,7 @@ TODO: Fragen:
 
 TODO: Datagenerator:
   + User anlegen für Alle
+  + News mit Bildern erweitern
 
 TODO: Infrastruktur für Präsendation installieren
 

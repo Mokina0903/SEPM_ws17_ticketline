@@ -32,8 +32,8 @@ public class EventMapperTest {
     @Configuration
     @ComponentScan(basePackages = "at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper")
     public static class EventMapperTestConfiguration {
-    }
 
+    }
 
     @Autowired
     private EventMapper eventMapper;
@@ -54,20 +54,21 @@ public class EventMapperTest {
 
     private static final String EVENT_ARTIST_FIRSTNAME = "Firstname";
     private static final String EVENT_ARTIST_LASTNAME = "Lastname";
-    private static final Artist EVENT_ARTIST =  Artist.builder()
+    private static final Artist EVENT_ARTIST = Artist.builder()
         .id(1L)
         .artistFirstname(EVENT_ARTIST_FIRSTNAME)
         .artistLastName(EVENT_ARTIST_LASTNAME)
         .build();
     private static final List<Artist> EVENT_ARTISTS = new ArrayList<>();
 
-    private static final SimpleArtistDTO EVENT_ARTIST_DTO =  SimpleArtistDTO.builder()
+    private static final SimpleArtistDTO EVENT_ARTIST_DTO = SimpleArtistDTO.builder()
         .id(1L)
         .artistFirstname(EVENT_ARTIST_FIRSTNAME)
         .artistLastName(EVENT_ARTIST_LASTNAME)
         .build();
     private static final List<SimpleArtistDTO> EVENT_ARTISTS_DTO = new ArrayList<>();
 
+    private static final Event.EventCategory EVENT_CATEGORY = Event.EventCategory.Musical;
 
     private final static Location LOCATION = Location.builder()
         .id(1L)
@@ -88,7 +89,6 @@ public class EventMapperTest {
         .street("Street")
         .houseNr(1)
         .build();
-
 
     private static final Hall HALL = Hall.builder()
         .id(1L)
@@ -135,7 +135,6 @@ public class EventMapperTest {
 
     @Test
     public void shouldMapEventsToDetailedEventsDTO() {
-
         Event event = Event.builder()
             .id(EVENT_ID)
             .artists(EVENT_ARTISTS)
@@ -144,22 +143,22 @@ public class EventMapperTest {
             .price(EVENT_PRICE)
             .startOfEvent(EVENT_START)
             .endOfEvent(EVENT_END)
+            .category(EVENT_CATEGORY)
             .hall(HALL)
             .build();
         DetailedEventDTO detailedEventDTO = eventMapper.eventToDetailedEventDTO(event);
         assertThat(detailedEventDTO).isNotNull();
         assertThat(detailedEventDTO.getId()).isEqualTo(1L);
+
         for (int i = 0; i < EVENT_ARTISTS.size(); i++) {
             assertThat(detailedEventDTO.getArtists().get(i).getId()).isEqualTo(EVENT_ARTISTS.get(i).getId());
             assertThat(detailedEventDTO.getArtists().get(i).getArtistFirstName()).isEqualTo(EVENT_ARTISTS.get(i).getArtistFirstName());
             assertThat(detailedEventDTO.getArtists().get(i).getArtistLastName()).isEqualTo(EVENT_ARTISTS.get(i).getArtistLastName());
         }
+
         assertThat(detailedEventDTO.getArtists().size()).isEqualTo(EVENT_ARTISTS.size());
         assertThat(detailedEventDTO.getTitle()).isEqualTo(EVENT_TITLE);
 
-        //todo detailed description gets trimmed??
-        System.out.println(detailedEventDTO.getDescription());
-        System.out.println(EVENT_DESCRIPTION);
         assertThat(detailedEventDTO.getDescription()).isEqualTo(EVENT_DESCRIPTION);
 
         assertThat(detailedEventDTO.getPrice()).isEqualTo(EVENT_PRICE);
@@ -177,58 +176,26 @@ public class EventMapperTest {
             .price(EVENT_PRICE)
             .startOfEvent(EVENT_START)
             .endOfEvent(EVENT_END)
+            .category(EVENT_CATEGORY.name())
             .hall(HALL_DTO)
             .build();
         Event event = eventMapper.detailedEventDTOToEvent(detailedEventDTO);
         assertThat(event).isNotNull();
         assertThat(event.getId()).isEqualTo(1L);
+        assertThat(event.getEventCategory()).isEqualTo(EVENT_CATEGORY);
+
         for (int i = 0; i < EVENT_ARTISTS_DTO.size(); i++) {
             assertThat(event.getArtists().get(i).getId()).isEqualTo(EVENT_ARTISTS.get(i).getId());
             assertThat(event.getArtists().get(i).getArtistFirstName()).isEqualTo(EVENT_ARTISTS.get(i).getArtistFirstName());
             assertThat(event.getArtists().get(i).getArtistLastName()).isEqualTo(EVENT_ARTISTS.get(i).getArtistLastName());
         }
+
         assertThat(event.getArtists().size()).isEqualTo(EVENT_ARTISTS.size());
         assertThat(event.getTitle()).isEqualTo(EVENT_TITLE);
-        // TODO: (Moni) Solve this Please
-
         assertThat(event.getDescription()).isEqualTo(EVENT_DESCRIPTION);
         assertThat(event.getPrice()).isEqualTo(EVENT_PRICE);
         assertThat(event.getStartOfEvent()).isEqualTo(EVENT_START);
         assertThat(event.getEndOfEvent()).isEqualTo(EVENT_END);
-    }
-
-    @Test
-    public void CategoryTest() {
-        // TODO: David is correct?
-        Event event = Event.builder()
-            .id(EVENT_ID)
-            .title(EVENT_TITLE)
-            .artists(EVENT_ARTISTS)
-            .description(EVENT_DESCRIPTION_SUMMARY)
-            .price(EVENT_PRICE)
-            .startOfEvent(EVENT_START)
-            .endOfEvent(EVENT_END)
-            .category(Event.EventCategory.Musical)
-            .build();
-        SimpleEventDTO simpleEventDTO = eventMapper.eventToSimpleEventDTO(event);
-
-        //System.out.println(simpleEventDTO.getEventCategory());
-
-        DetailedEventDTO detailedEventDTO = DetailedEventDTO.builder()
-            .id(EVENT_ID)
-            .artists(EVENT_ARTISTS_DTO)
-            .title(EVENT_TITLE)
-            .description(EVENT_DESCRIPTION)
-            .price(EVENT_PRICE)
-            .startOfEvent(EVENT_START)
-            .endOfEvent(EVENT_END)
-            .hall(HALL_DTO)
-            .category("Musical")
-            .build();
-        Event event2 = eventMapper.detailedEventDTOToEvent(detailedEventDTO);
-
-        //System.out.println(event2.getEventCategory());
-
     }
 
     @Test
@@ -241,17 +208,20 @@ public class EventMapperTest {
             .price(EVENT_PRICE)
             .startOfEvent(EVENT_START)
             .endOfEvent(EVENT_END)
+            .category(EVENT_CATEGORY)
             .build();
         SimpleEventDTO simpleEventDTO = eventMapper.eventToSimpleEventDTO(event);
         assertThat(simpleEventDTO).isNotNull();
         assertThat(simpleEventDTO.getId()).isEqualTo(1L);
         assertThat(simpleEventDTO.getTitle()).isEqualTo(EVENT_TITLE);
+        assertThat(simpleEventDTO.getEventCategory()).isEqualTo(EVENT_CATEGORY.name());
 
         for (int i = 0; i < EVENT_ARTISTS_DTO.size(); i++) {
             assertThat(event.getArtists().get(i).getId()).isEqualTo(EVENT_ARTISTS.get(i).getId());
             assertThat(event.getArtists().get(i).getArtistFirstName()).isEqualTo(EVENT_ARTISTS.get(i).getArtistFirstName());
             assertThat(event.getArtists().get(i).getArtistLastName()).isEqualTo(EVENT_ARTISTS.get(i).getArtistLastName());
         }
+
         assertThat(event.getArtists().size()).isEqualTo(EVENT_ARTISTS.size());
         assertThat(simpleEventDTO.getDescriptionSummary()).isEqualTo(EVENT_DESCRIPTION_SUMMARY);
         assertThat(simpleEventDTO.getPrice()).isEqualTo(EVENT_PRICE);
@@ -269,54 +239,24 @@ public class EventMapperTest {
             .price(EVENT_PRICE)
             .startOfEvent(EVENT_START)
             .endOfEvent(EVENT_END)
+            .category(EVENT_CATEGORY)
             .build();
         SimpleEventDTO simpleEventDTO = eventMapper.eventToSimpleEventDTO(event);
         assertThat(simpleEventDTO).isNotNull();
         assertThat(simpleEventDTO.getId()).isEqualTo(1L);
         assertThat(simpleEventDTO.getTitle()).isEqualTo(EVENT_TITLE);
+        assertThat(simpleEventDTO.getEventCategory()).isEqualTo(EVENT_CATEGORY.name());
 
         for (int i = 0; i < EVENT_ARTISTS_DTO.size(); i++) {
             assertThat(event.getArtists().get(i).getId()).isEqualTo(EVENT_ARTISTS.get(i).getId());
             assertThat(event.getArtists().get(i).getArtistFirstName()).isEqualTo(EVENT_ARTISTS.get(i).getArtistFirstName());
             assertThat(event.getArtists().get(i).getArtistLastName()).isEqualTo(EVENT_ARTISTS.get(i).getArtistLastName());
         }
+
         assertThat(event.getArtists().size()).isEqualTo(EVENT_ARTISTS.size());
         assertThat(simpleEventDTO.getDescriptionSummary()).isEqualTo(EVENT_DESCRIPTION_SUMMARY);
         assertThat(simpleEventDTO.getPrice()).isEqualTo(EVENT_PRICE);
         assertThat(simpleEventDTO.getStartOfEvent()).isEqualTo(EVENT_START);
         assertThat(simpleEventDTO.getEndOfEvent()).isEqualTo(EVENT_END);
     }
-
-/*
-//not needed?
-
-    @Test
-    public void shouldMapSimpleEventsDTOToEvents() {
-        SimpleEventDTO simpleEventDTO = SimpleEventDTO.builder()
-            .id(EVENT_ID)
-            .artists(EVENT_ARTISTS_DTO)
-            .title(EVENT_TITLE)
-            .descriptionSummary(EVENT_DESCRIPTION_SUMMARY)
-            .price(EVENT_PRICE)
-            .startOfEvent(EVENT_START)
-            .endOfEvent(EVENT_END)
-            .buildAnd();
-        Event event = eventMapper.simpleEventDTOToEven
-        t(simpleEventDTO);
-        assertThat(event).isNotNull();
-        assertThat(event.getId()).isEqualTo(1L);
-        assertThat(event.getTitle()).isEqualTo(EVENT_TITLE);
-
-        for (int i = 0; i < EVENT_ARTISTS_DTO.size(); i++) {
-            assertThat(event.getArtists().get(i).getId()).isEqualTo(EVENT_ARTISTS.get(i).getId());
-            assertThat(event.getArtists().get(i).getArtistFirstName()).isEqualTo(EVENT_ARTISTS.get(i).getArtistFirstName());
-            assertThat(event.getArtists().get(i).getArtistLastName()).isEqualTo(EVENT_ARTISTS.get(i).getArtistLastName());
-        }
-        assertThat(event.getArtists().size()).isEqualTo(EVENT_ARTISTS.size());
-        assertThat(event.getDescription()).isEqualTo(EVENT_DESCRIPTION_SUMMARY);
-        assertThat(event.getPrice()).isEqualTo(EVENT_PRICE);
-        assertThat(event.getStartOfEvent()).isEqualTo(EVENT_START);
-        assertThat(event.getEndOfEvent()).isEqualTo(EVENT_END);
-    }
-*/
 }

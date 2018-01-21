@@ -3,7 +3,6 @@ package at.ac.tuwien.inso.sepm.ticketline.server.mapper;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.hall.DetailedHallDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.hall.SimpleHallDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.location.DetailedLocationDTO;
-import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.location.SimpleLocationDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.seat.SeatDTO;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Hall;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Location;
@@ -11,7 +10,6 @@ import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Seat;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.eventLocation.hall.HallMapper;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.eventLocation.location.LocationMapper;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.eventLocation.seat.SeatMapper;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +24,6 @@ import static org.assertj.core.api.Java6Assertions.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class HallMapperTest {
-
 
     @Configuration
     @ComponentScan(basePackages = "at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper")
@@ -47,7 +44,6 @@ public class HallMapperTest {
     @SuppressWarnings("SpringJavaAutowiredMembersInspection")
     // Suppress warning cause inspection does not know that the cdi annotations are added in the code generation step
     private LocationMapper locationMapper;
-
 
     private static final DetailedLocationDTO LOCATIONDTO = new DetailedLocationDTO();
     private static final String DESCRIPTION = "Giant";
@@ -77,9 +73,6 @@ public class HallMapperTest {
         .id(5L)
         .build();
 
-
-
-
     @Test
     public void shouldMapHallToSimpleHallDTO() {
         List<Seat> seats = new ArrayList<>();
@@ -100,23 +93,7 @@ public class HallMapperTest {
         SimpleHallDTO hallDTO = hallListDTO.get(0);
         assertThat(hallDTO.getId()).isEqualTo(ID);
         assertThat(hallDTO.getDescription()).isEqualTo(DESCRIPTION);
-
     }
-
-
-    @Test
-    public void shouldMapSimpleHallDTOToHall() {
-        SimpleHallDTO hallDTO = new SimpleHallDTO.SimpleHallDTOBuilder()
-            .description(DESCRIPTION)
-            .id(ID)
-            .build();
-
-
-        //ToDo Mapper in die Richtung gibt es nicht ist das absicht?
-        Assert.assertTrue(true);
-
-    }
-
 
     @Test
     public void shouldMapHallToDetailedHallDTO() {
@@ -133,17 +110,14 @@ public class HallMapperTest {
 
         DetailedHallDTO hallDTO = hallMapper.hallToDetailedHallDTO(hall);
 
-        List <SeatDTO> seatDTO = seatMapper.seatToSeatDTO(seats);
+        List<SeatDTO> seatDTO = seatMapper.seatToSeatDTO(seats);
 
         assertThat(hallDTO).isNotNull();
         assertThat(hallDTO.getId()).isEqualTo(ID);
         assertThat(hallDTO.getDescription()).isEqualTo(DESCRIPTION);
         assertThat(hallDTO.getLocation()).isEqualTo(locationDTO);
         assertThat(hallDTO.getSeats()).isEqualTo(seatDTO);
-
     }
-
-//ToDo Hall und Seat nullpointer
 
     @Test
     public void shouldMapDetailedLocationDTOToLocation() {
@@ -159,14 +133,11 @@ public class HallMapperTest {
 
         Hall hall = hallMapper.detailedHallDTOToHall(hallDTO);
 
-
-
         assertThat(hall).isNotNull();
         assertThat(hall.getId()).isEqualTo(ID);
         assertThat(hall.getDescription()).isEqualTo(DESCRIPTION);
-        //assertThat(hall.getLocation()).isEqualTo(LOCATION);
-        //assertThat(hall.getSeats()).isEqualTo(seats);
-
+        assertThat(hall.getLocation()).isEqualTo(new Location());
+        assertThat(hall.getSeats().toString()).isEqualTo(seats.toString());
     }
 
 }
