@@ -182,6 +182,11 @@ public class Top10Controller extends TabElement implements LocalizationObserver 
 
     private void applyStatsToChart(List<SimpleEventDTO> topTenEvents) {
 
+        if(btnGoToBuying.getStyleClass().contains("buyBtn")){
+            btnGoToBuying.getStyleClass().remove("buyBtn");
+        }
+        selectedID = -1;
+
         XYChart.Series<Number, String> series = new XYChart.Series<Number, String>();
         LOGGER.info("Applying stats to char, top 10 event list size: " + topTenEvents.size());
 
