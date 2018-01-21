@@ -107,7 +107,6 @@ public class SimpleUserService implements UserService {
     @Override
     public User resetPassword(User user) {
         user.setPassword((new BCryptPasswordEncoder(10)).encode(user.getPassword()));
-        userRepository.save(user);
-        return null;
+        return userRepository.save(user);
     }
 }

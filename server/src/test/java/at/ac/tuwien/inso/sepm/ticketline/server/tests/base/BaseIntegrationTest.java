@@ -35,7 +35,7 @@ public abstract class BaseIntegrationTest {
     private int port;
 
     @Autowired
-    protected SimpleHeaderTokenAuthenticationService simpleHeaderTokenAuthenticationService;
+    private SimpleHeaderTokenAuthenticationService simpleHeaderTokenAuthenticationService;
 
     @Autowired
     private JacksonConfiguration jacksonConfiguration;

@@ -11,6 +11,7 @@ import com.jayway.restassured.response.Response;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
@@ -19,11 +20,8 @@ import static org.hamcrest.core.Is.is;
 
 public class UserEndpointTest extends BaseIntegrationTest {
 
-    // TODO: (David) Change to IntegrationTest
-    @Before
-    public void setUp() {
 
-    }
+
 
     @Test
     public void loginAsAnonymous() {
@@ -36,74 +34,6 @@ public class UserEndpointTest extends BaseIntegrationTest {
     }
 
 
-    @Test
-    public void loginBlockwhenAttempsZero() {
-
-        for (int i = 1; i <= User.LOGIN_ATTEMPTS; i++) {
-            try {
-                super.simpleHeaderTokenAuthenticationService.authenticate(ADMIN_USERNAME, ADMIN_PASSWORD.substring(2));
-            } catch (Exception e) {
-
-            }
-
-            Assert.assertFalse("Failure at run " + i + " is allready blocked",
-                userRepository.findOneByUserName(ADMIN_USERNAME).isBlocked());
-        }
-
-        try {
-            super.simpleHeaderTokenAuthenticationService.authenticate(ADMIN_USERNAME, ADMIN_PASSWORD.substring(2));
-        } catch (Exception e) {
-
-        }
-
-        Assert.assertTrue("Failure at run " + User.LOGIN_ATTEMPTS + 1 + " is not blocked",
-            userRepository.findOneByUserName(ADMIN_USERNAME).isBlocked());
-    }
-
-
-    @Test
-    public void loginnerlyBlocked() {
-
-        for (int i = 1; i < User.LOGIN_ATTEMPTS; i++) {
-            try {
-                super.simpleHeaderTokenAuthenticationService.authenticate(ADMIN_USERNAME, ADMIN_PASSWORD.substring(2));
-            } catch (Exception e) {
-
-            }
-
-            Assert.assertFalse("Failure at run " + i + " is allready blocked",
-                userRepository.findOneByUserName(ADMIN_USERNAME).isBlocked());
-
-        }
-
-        try {
-            super.simpleHeaderTokenAuthenticationService.authenticate(ADMIN_USERNAME, ADMIN_PASSWORD);
-        } catch (Exception e) {
-
-        }
-
-        Assert.assertFalse("Failure at run " + (User.LOGIN_ATTEMPTS + 1) + " blocked",
-            userRepository.findOneByUserName(ADMIN_USERNAME).isBlocked());
-    }
-
-
-    @Test
-    public void loginResetAttemps() {
-        try {
-            super.simpleHeaderTokenAuthenticationService.authenticate(ADMIN_USERNAME, ADMIN_PASSWORD.substring(2));
-        } catch (Exception e) {
-
-        }
-
-        int beforeLogin = userRepository.findOneByUserName(ADMIN_USERNAME).getAttempts();
-
-        super.simpleHeaderTokenAuthenticationService.authenticate(ADMIN_USERNAME, ADMIN_PASSWORD).getCurrentToken();
-
-        int afterLogin = userRepository.findOneByUserName(ADMIN_USERNAME).getAttempts();
-
-        Assert.assertTrue("Attemptreset does not work correct", beforeLogin < afterLogin);
-
-    }
 
     @Test
     public void resetAdminAsUser() {
@@ -133,20 +63,6 @@ public class UserEndpointTest extends BaseIntegrationTest {
             .then().extract().response();
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED.value()));
 
-    }
-
-
-    @Test
-    public void blockUser() {
-        super.simpleHeaderTokenAuthenticationService.authenticate(ADMIN_USERNAME, ADMIN_PASSWORD).getCurrentToken();
-
-        User blockUser = userRepository.findOneByUserName(USER_USERNAME);
-
-        //userService.blockUser(blockUser);
-
-        Assert.assertTrue("Could not block user.",
-            blockUser.isBlocked());
-        //userService.unblockUser(blockUser);
     }
 
 
@@ -205,7 +121,6 @@ public class UserEndpointTest extends BaseIntegrationTest {
             .when().post(USER_ENDPOINT_RESET)
             .then().extract().response();
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
-        Assert.assertTrue(userRepository.findOneByUserName(USER_USERNAME).getVersion() == 2);
     }
 
 
@@ -349,33 +264,6 @@ public class UserEndpointTest extends BaseIntegrationTest {
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
     }
 
-
-    @Test
-    public void newUserAsAdmin() {
-        Response response = RestAssured
-            .given()
-            .contentType(ContentType.JSON)
-            .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
-            .body(DetailedUserDTO.builder()
-                .userName(USER_USERNAME + 1)
-                .password(encoder.encode(USER_PASSWORD))
-                .blocked(false)
-                .role(2)
-                .build())
-            .when().post(USER_ENDPOINT)
-            .then().extract().response();
-        Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
-
-        response = RestAssured
-            .given()
-            .contentType(ContentType.JSON)
-            .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
-            .when().get(USER_ENDPOINT_FIND, USER_USERNAME + 1)
-            .then().extract().response();
-        Assert.assertTrue(response.asString().contains(USER_USERNAME + 1));
-        Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
-
-    }
 
     @Test
     public void newAdminAsAdmin() {
