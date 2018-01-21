@@ -61,9 +61,9 @@
             </items>
             </ComboBox>
             <Label fx:id="lblFromDate" prefWidth="40" text="%statistics.fromDate"/>
-            <DatePicker fx:id="fromDate"/>
+            <DatePicker fx:id="fromDate" editable="false"/>
             <Label fx:id="lblToDate" prefWidth="25" text="%statistics.toDate"/>
-            <DatePicker fx:id="toDate"/>
+            <DatePicker fx:id="toDate"  editable="false"/>
             <Button fx:id="applyFilter" prefWidth="70" onAction="#getTopTenEvents"/>
             <Button fx:id="btnGoToBuying" onAction="#goToTicketProzess" prefWidth="70"/>
             <Label fx:id="lblNoEventChoosen" text="%statistics.noEvetChoosen" textFill="crimson"/>

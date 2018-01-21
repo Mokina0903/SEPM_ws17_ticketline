@@ -60,7 +60,7 @@
         <VBox styleClass="cutlineFree">
             <Label styleClass="seatLbl" text="1"/>
         </VBox>
-        <Label styleClass="cutlineLbl" text="%hallplan.free"/>
+        <Label styleClass="freiLbl" text="%hallplan.free"/>
 
         <VBox styleClass="sceneCutline"/>
         <Label styleClass="cutlineLbl" text="%hallplan.scene"/>

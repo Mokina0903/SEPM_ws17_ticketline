@@ -36,8 +36,16 @@
 -fx-min-heit: 50px;
 -fx-max-width: 50px;
 -fx-max-heit: 50px;
--fx-spacing: 10px;
+-fx-spacing:12px;
+
 -fx-effect: dropshadow(three-pass-box, derive(GREENYELLOW, -20%), 10, 0, 4, 4);
+}
+
+.freiLbl{
+-fx-min-width: 55px;
+-fx-min-heit: 50px;
+-fx-max-width: 55px;
+-fx-max-heit: 50px;
 }
 
 .cutlineLbl{

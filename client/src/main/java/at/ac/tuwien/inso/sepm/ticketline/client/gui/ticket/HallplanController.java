@@ -157,20 +157,20 @@ public class HallplanController implements LocalizationObserver {
     }
 
 
-     Map<Character, Label> getTicketAmountForEachSectorLabels() {
+    Map<Character, Label> getTicketAmountForEachSectorLabels() {
         return ticketAmountForEachSectorLabels;
     }
 
-     Map<Character, Label> getPriceOfEachSectorLabels() {
+    Map<Character, Label> getPriceOfEachSectorLabels() {
         return priceOfEachSectorLabels;
     }
 
 
-     Map<Character, Double> getPriceOfEachSector() {
+    Map<Character, Double> getPriceOfEachSector() {
         return priceOfEachSector;
     }
 
-    public Map<Character, Integer> getTicketAmountForEachSector() {
+    Map<Character, Integer> getTicketAmountForEachSector() {
         return ticketAmountForEachSector;
     }
 
@@ -194,11 +194,11 @@ public class HallplanController implements LocalizationObserver {
         selectedSeats.remove(seat);
     }
 
-    public double getTotalSum() {
+    double getTotalSum() {
         return totalSum;
     }
 
-    public void setTotalSum(double totalSum) {
+    void setTotalSum(double totalSum) {
         this.totalSum = totalSum;
     }
 
