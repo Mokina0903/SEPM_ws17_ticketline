@@ -1,5 +1,7 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.tests.base;
 
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -69,6 +71,7 @@ public abstract class TestConstants {
     public static final String EVENT_DESCRIPTION = "Event Description";
     public static final String EVENT_TITLE = "Event Title";
     public static final long EVENT_PRICE = 100;
+    public static final Event.EventCategory EVENT_CATEGORY = Event.EventCategory.Musical;
     public static LocalDateTime EVENT_START =
         LocalDateTime.of(2017, 11, 29, 12, 15, 0, 0);
     public static LocalDateTime EVENT_ENDE = EVENT_START.plusHours(2);

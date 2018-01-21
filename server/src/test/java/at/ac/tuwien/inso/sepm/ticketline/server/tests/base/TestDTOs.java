@@ -41,6 +41,7 @@ public abstract class TestDTOs {
             .price(EVENT_PRICE)
             .title(EVENT_TITLE)
             .seatSelection(true)
+            .category(EVENT_CATEGORY.name())
             .build();
 
         return simpleEventDTO;
@@ -77,6 +78,7 @@ public abstract class TestDTOs {
             .title(EVENT_TITLE)
             .hall(detailedHallDTO)
             .seatSelection(true)
+            .category(EVENT_CATEGORY.name())
             .build();
 
         return detailedEventDTO;
@@ -230,6 +232,7 @@ public abstract class TestDTOs {
             .startOfEvent(EVENT_START)
             .endOfEvent(EVENT_START.plusHours(2))
             .artists(Collections.singletonList(defaultArtist()))
+            .category(EVENT_CATEGORY)
             .price(EVENT_PRICE)
             .description(EVENT_DESCRIPTION)
             .title(EVENT_TITLE)

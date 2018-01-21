@@ -15,8 +15,8 @@ import at.ac.tuwien.inso.sepm.ticketline.server.repository.Location.LocationRepo
 import at.ac.tuwien.inso.sepm.ticketline.server.service.EventService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -43,12 +43,12 @@ public class SimpleEventService implements EventService {
     }
 
     @Override
-    public Event findOne( Long id ) {
+    public Event findOne(Long id) {
         return eventRepository.findOneById(id).orElseThrow(NotFoundException::new);
     }
 
     @Override
-    public Page<Event> findAllUpcomingAsc(Pageable request ) {
+    public Page<Event> findAllUpcomingAsc(Pageable request) {
         //get whole list of repository and create a page
         List<Event> events = eventRepository.findAllUpcoming();
         int start = request.getOffset();
@@ -65,11 +65,8 @@ public class SimpleEventService implements EventService {
 
     @Override
     public Event publishEvent(Event event) {
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        if (event.getStartOfEvent().isEqual(event.getEndOfEvent()) || event.getEndOfEvent().isBefore(event.getStartOfEvent()))
+            throw new IllegalValueException("end before start");
 
         if (event.getDescription().isEmpty() || event.getTitle().isEmpty())
             throw new EmptyFieldException("");
@@ -84,7 +81,7 @@ public class SimpleEventService implements EventService {
         }
 
         // Find Hall
-        Hall hall = hallRepository.findOneByDescriptionAndLocation(location.getId(),event.getHall().getDescription());
+        Hall hall = hallRepository.findOneByDescriptionAndLocation(location.getId(), event.getHall().getDescription());
 
         if (hall == null) {
             throw new NotFoundException("Hall " + event.getHall().getDescription() + " " + location.getDescription());
@@ -107,16 +104,21 @@ public class SimpleEventService implements EventService {
 
 
         List<Artist> newartistList = new ArrayList<>();
+        if (event.getArtists().size() == 0) {
+            throw new EmptyFieldException("Artist list empty");
+        }
+
         for (Artist artist : event.getArtists()) {
-            Artist newArtist = artistRepository.findByArtistFirstNameAndArtistLastName(artist.getArtistFirstName(),artist.getArtistLastName());
+            Artist newArtist = artistRepository.findByArtistFirstNameAndArtistLastName(artist.getArtistFirstName(), artist.getArtistLastName());
             if (newArtist == null) {
                 artist.setId(0L);
                 newArtist = artistRepository.save(artist);
             }
             newartistList.add(newArtist);
         }
-
+        
         event.setArtists(newartistList);
+
 
         Event rEvent = eventRepository.save(event);
 
