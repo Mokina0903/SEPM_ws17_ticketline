@@ -102,7 +102,7 @@ public class EventAdvancedSearchController implements LocalizationObserver {
     @FXML
     private DatePicker dpDate;
     @FXML
-    private ChoiceBox<EventCatgory> cbCategory;
+    private ChoiceBox<EventCategory> cbCategory;
 
     @FXML
     private Button btOk;
@@ -146,8 +146,8 @@ public class EventAdvancedSearchController implements LocalizationObserver {
 
         setUpSlider(slTime, lbTimeInfo);
         setUpSlider(slDuration, lbDurationInfo);
-        cbCategory.setItems(FXCollections.observableArrayList( EventCatgory.values()));
-        cbCategory.setValue(EventCatgory.All);
+        cbCategory.setItems(FXCollections.observableArrayList( EventCategory.values()));
+        cbCategory.setValue(EventCategory.All);
         dpDate.setEditable(false);
 
         rbUpcoming.setSelected(true);
@@ -255,7 +255,7 @@ public class EventAdvancedSearchController implements LocalizationObserver {
             parameters.set("eventDate", dpDate.getValue().toString());
             System.out.println("Date in AdvSer: " + dpDate.getValue().toString());
         }
-        if (!cbCategory.getSelectionModel().getSelectedItem().equals(EventCatgory.All)) {
+        if (!cbCategory.getSelectionModel().getSelectedItem().equals(EventCategory.All)) {
             parameters.set("category", cbCategory.getSelectionModel().getSelectedItem().toString());
             System.out.println("category " + cbCategory.getSelectionModel().getSelectedItem().toString());
         }
