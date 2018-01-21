@@ -27,6 +27,7 @@
 
             <Label fx:id="lbCustomerNumberText" text="%customer.number" GridPane.columnIndex="0" />
             <Label fx:id="lbCustomerNumber" GridPane.columnIndex="1" />
+            <TextField fx:id="tfLname" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
             <Label fx:id="lbCustomerName" text="%customer.lname_" GridPane.columnIndex="0" GridPane.rowIndex="1" />
 
@@ -51,7 +52,7 @@
                 </buttons>
             </ButtonBar>
             <Label fx:id="lblVersionException" textFill="crimson" text="%customer.version" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-         <TextField fx:id="tfLname" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
          <columnConstraints>
             <ColumnConstraints />
             <ColumnConstraints />

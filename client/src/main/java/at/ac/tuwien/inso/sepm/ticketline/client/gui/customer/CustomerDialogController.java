@@ -14,6 +14,7 @@ import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -318,49 +319,87 @@ public class CustomerDialogController implements LocalizationObserver {
         }
         lbInvalidCustomer.setVisible(false);
 
+        Task<Void> workerTask = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                if (!isUpdate) {
+                    LOGGER.info("customer will be created");
 
-        try {
-            if (!isUpdate) {
-                LOGGER.info("customer will be created");
+                    customerService.saveCustomer(customer);
+                } else {
+                    LOGGER.info("customer will be edited");
 
-                customerService.saveCustomer(customer);
-            } else {
-                LOGGER.info("customer will be edited");
+                    customerService.updateCustomer(customer);
+                }
+                return null;
+            }
 
-                customerService.updateCustomer(customer);
+            @Override
+            protected void succeeded() {
+                super.succeeded();
                 isUpdate = false;
-            }
-            customerController.getCurrentTab().setContent(oldContent);
-
-        } catch (DataAccessException e) {
-            LOGGER.warn("Customer could not have been saved because of technical issues");
-            mainController.showGeneralError("Not able to save Customer!");
-           // e.printStackTrace();
-        }
-        catch(OldVersionException e){
-            System.out.println("Hallo1");
-            LOGGER.info("Customer has been changed since you started editing.");
-            lblVersionException.setVisible(true);
-            System.out.println("Hallo2");
-            lblVersionException.setText(BundleManager.getBundle().getString("customer.version"));
-            System.out.println("Hallo3");
-            try {
-                System.out.println("Hallo4");
-                CustomerDTO customerHelp = customerService.findByNumber(customer.getKnr());
-                System.out.println("Hallo5");
-                version = customerHelp.getVersion();
-                System.out.println("Hallo6");
-            } catch (DataAccessException e1) {
-                LOGGER.warn("Customer could not have been saved because of technical issues");
-                mainController.showGeneralError("Not able to save Customer!");
                 customerController.getCurrentTab().setContent(oldContent);
-            } catch (SearchNoMatchException e1) {
-                LOGGER.error("Customer is not in the Database");
-                throw new Error();
             }
-        }
+
+            @Override
+            protected void failed() {
 
 
+                if (getException().getMessage().equals("424")) {
+                    LOGGER.info("Customer has been changed since you started editing.");
+                    lblVersionException.setVisible(true);
+                    lblVersionException.setText(BundleManager.getBundle().getString("customer.version"));
+                    getCustomer();
+                } else {
+                    LOGGER.warn("Customer could not have been saved because of technical issues");
+                    mainController.showGeneralError("Not able to save Customer!");
+                }
+            }
+
+        };
+
+        workerTask.runningProperty().addListener((observable, oldValue, running) ->
+            mainController.setProgressbarProgress(
+                running ? ProgressBar.INDETERMINATE_PROGRESS : 0)
+        );
+
+        new Thread(workerTask).start();
+
+    }
+
+    public void getCustomer() {
+        Task<Void> workerTask = new Task<Void>() {
+            CustomerDTO customerHelp;
+            @Override
+            protected Void call() throws Exception {
+                customerHelp = customerService.findByNumber(customer.getKnr());
+
+                return null;
+            }
+
+            @Override
+            protected void succeeded() {
+
+                super.succeeded();
+                customerController.loadCustomer();
+                version = customerHelp.getVersion();
+                customer.setVersion(customerHelp.getVersion());
+            }
+
+            @Override
+            protected void failed() {
+                super.failed();
+                //if(getException() == new DataAccessException())
+                mainController.showGeneralError("Failure at loadCustomer: " + getException().getMessage());
+            }
+        };
+
+        workerTask.runningProperty().addListener((observable, oldValue, running) ->
+            mainController.setProgressbarProgress(
+                running ? ProgressBar.INDETERMINATE_PROGRESS : 0)
+        );
+
+        new Thread(workerTask).start();
     }
 
     @Override
