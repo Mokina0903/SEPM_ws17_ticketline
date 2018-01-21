@@ -30,19 +30,30 @@
 
     </top>
     <center>
-
+        <VBox spacing="20">
+            <BorderPane.margin>
+                <Insets left="20"/>
+            </BorderPane.margin>
+            <HBox alignment="CENTER">
             <GridPane maxWidth="500" maxHeight="600" fx:id="seatsContainerGV" hgap="10" vgap="10">
                 <BorderPane.margin>
                     <Insets left="20.0"/>
                 </BorderPane.margin>
             </GridPane>
+            </HBox>
+            <HBox alignment="CENTER">
+
+                <Rectangle styleClass="scene" width="300" height="30"/>
+            </HBox>
+
+        </VBox>
 
     </center>
     <right>
 
-        <VBox>
+        <VBox >
             <BorderPane.margin>
-                <Insets bottom="5.0" top="20.0" left="20.0" right="100.0"/>
+                <Insets bottom="5.0" top="20.0" left="25.0" right="400.0"/>
             </BorderPane.margin>
             <VBox spacing="10">
                 <VBox>
@@ -55,63 +66,57 @@
                 </HBox>
 
                 <VBox fx:id="lblSectorTicketAmountAndPriceOverview" spacing="10">
-                <HBox fx:id="sectorALabels" spacing="5">
-                    <Label fx:id="lblAmountOfTicketsInA"/>
-                    <Label text=" x Sector A "/>
-                    <Label fx:id="lblPriceOfTicketsInA"/>
-                </HBox>
-                <HBox fx:id="sectorBLabels" spacing="5">
-                    <Label fx:id="lblAmountOfTicketsInB"/>
-                    <Label text=" x Sector B "/>
-                    <Label fx:id="lblPriceOfTicketsInB"/>
-                </HBox>
-                <HBox fx:id="sectorCLabels" spacing="5">
-                    <Label fx:id="lblAmountOfTicketsInC"/>
-                    <Label text=" x Sector C "/>
-                    <Label fx:id="lblPriceOfTicketsInC"/>
-                </HBox>
-                <HBox fx:id="sectorDLabels" spacing="5">
-                    <Label fx:id="lblAmountOfTicketsInD"/>
-                    <Label text=" x Sector D "/>
-                    <Label fx:id="lblPriceOfTicketsInD"/>
-                </HBox>
-                <HBox fx:id="sectorELabels" spacing="5">
-                    <Label fx:id="lblAmountOfTicketsInE"/>
-                    <Label text=" x Sector E "/>
-                    <Label fx:id="lblPriceOfTicketsInE"/>
-                </HBox>
+                    <HBox fx:id="sectorALabels" spacing="5">
+                        <Label fx:id="lblAmountOfTicketsInA"/>
+                        <Label text=" x Sector A "/>
+                        <Label fx:id="lblPriceOfTicketsInA"/>
+                    </HBox>
+                    <HBox fx:id="sectorBLabels" spacing="5">
+                        <Label fx:id="lblAmountOfTicketsInB"/>
+                        <Label text=" x Sector B "/>
+                        <Label fx:id="lblPriceOfTicketsInB"/>
+                    </HBox>
+                    <HBox fx:id="sectorCLabels" spacing="5">
+                        <Label fx:id="lblAmountOfTicketsInC"/>
+                        <Label text=" x Sector C "/>
+                        <Label fx:id="lblPriceOfTicketsInC"/>
+                    </HBox>
+                    <HBox fx:id="sectorDLabels" spacing="5">
+                        <Label fx:id="lblAmountOfTicketsInD"/>
+                        <Label text=" x Sector D "/>
+                        <Label fx:id="lblPriceOfTicketsInD"/>
+                    </HBox>
+                    <HBox fx:id="sectorELabels" spacing="5">
+                        <Label fx:id="lblAmountOfTicketsInE"/>
+                        <Label text=" x Sector E "/>
+                        <Label fx:id="lblPriceOfTicketsInE"/>
+                    </HBox>
 
-                <HBox spacing="5">
-                    <Label text="%hallplan.total"/>
-                    <Label fx:id="lblTotalSum"/>
-                </HBox>
+                    <HBox spacing="5">
+                        <Label text="%hallplan.total"/>
+                        <Label fx:id="lblTotalSum"/>
+                    </HBox>
 
-            </VBox>
+                </VBox>
                 <HBox spacing="4">
-                    <Label text="%hallplan.amountOfTickets" />
+                    <Label text="%hallplan.amountOfTickets"/>
                     <Label fx:id="ticketAmountLb"/>
                 </HBox>
                 <Button fx:id="reserveBut" onAction="#reserveTickets" text="%hallplan.reserveTickets"/>
-                <Button fx:id="buyBut" onAction="#buyTickets" text="%hallplan.buy" />
-                <Button fx:id="backbut" onAction="#backToEventSelection" />
+                <Button fx:id="buyBut" onAction="#buyTickets" text="%hallplan.buy"/>
+                <Button fx:id="backbut" onAction="#backToEventSelection"/>
                 <Label fx:id="lblError" textFill="#cc1d1d" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
             </VBox>
         </VBox>
 
     </right>
     <bottom>
-        <VBox>
-            <BorderPane.margin>
-                <Insets bottom="10.0" top="15.0" left="25.0"/>
-            </BorderPane.margin>
-            <HBox>
-                <padding>
-                    <Insets bottom="10.0" left="200.0" right="5.0" top="5.0"/>
-                </padding>
-                <Rectangle styleClass="scene" width="300" height="30"/>
-            </HBox>
+        <HBox spacing="10">
+            <padding>
+                <Insets bottom="10.0" left="20" right="300.0" top="10.0"/>
+            </padding>
             <fx:include fx:id="cutlineContainer" source="hallplanCutline.fxml"/>
-        </VBox>
+        </HBox>
     </bottom>
 </BorderPane>
 
