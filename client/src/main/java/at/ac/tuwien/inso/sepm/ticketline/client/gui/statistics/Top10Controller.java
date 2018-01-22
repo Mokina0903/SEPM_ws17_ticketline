@@ -97,7 +97,12 @@ public class Top10Controller extends TabElement implements LocalizationObserver 
         xAxis.setTickLabelRotation(90);
         yAxis.setLabel("Sales");
         yAxis.setTickLabelRotation(90);
+
+        barChartTop10.setTitle(BundleManager.getBundle().getString("statistics.top10events"));
+        barChartTop10.setAnimated(false);
         loadTopTenEventsNow();
+
+
 
         comBoxCategory.getSelectionModel().select(0);
         btnGoToBuying.setGraphic(fontAwesome.create("TICKET").size(FONT_SIZE));
