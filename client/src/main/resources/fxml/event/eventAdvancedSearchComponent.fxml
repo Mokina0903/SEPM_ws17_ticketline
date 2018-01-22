@@ -143,7 +143,6 @@
                   <Label fx:id="lbLocationTitle" alignment="BOTTOM_LEFT" text="%events.title" GridPane.rowIndex="1" />
                   <Label fx:id="lbLocationZip" alignment="BOTTOM_LEFT" text="%location.zip" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <Label fx:id="lbLocationCountry" alignment="BOTTOM_LEFT" text="%location.country" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                  <ChoiceBox fx:id="cbLocationCountry" maxWidth="1.7976931348623157E308" prefWidth="150.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                   <TextField fx:id="tfLocationZip" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                   <TextField fx:id="tfLocationStreet" GridPane.rowIndex="4" />
                   <TextField fx:id="tfLocationCity" GridPane.columnIndex="1" GridPane.rowIndex="4" />
@@ -154,6 +153,7 @@
                         <Button fx:id="btOkLocation" maxWidth="-Infinity" onAction="#handleOkLocation" prefWidth="40.0" />
                      </children>
                   </HBox>
+                  <TextField fx:id="tfLocationCountry" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                </children>
                <padding>
                   <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />

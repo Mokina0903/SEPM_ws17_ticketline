@@ -119,6 +119,7 @@ public class PaginationHelper {
             protected void succeeded() {
                 super.succeeded();
                 loadEventElements(events, lvElements);
+                controller.resetChoicebox();
             }
 
             @Override

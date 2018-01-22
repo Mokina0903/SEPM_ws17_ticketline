@@ -96,7 +96,7 @@ public class EventAdvancedSearchController implements LocalizationObserver {
     @FXML
     private TextField tfLocationCity;
     @FXML
-    private ChoiceBox cbLocationCountry;
+    private TextField tfLocationCountry;
 
     @FXML
     private Slider slTime = new Slider(0, 24 * 60, 120);
@@ -250,22 +250,22 @@ public class EventAdvancedSearchController implements LocalizationObserver {
     public void handleOkLocation(ActionEvent actionEvent) {
         //todo
         MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
-        if (!tfLocationTitle.getText().isEmpty()){
+        if (!tfLocationTitle.getText().isEmpty() || tfLocationTitle.getText().equals(" ")){
             parameters.set("descriptionEvent", tfLocationTitle.getText());
         }
-        if (!tfLocationStreet.getText().isEmpty()) {
+        if (!tfLocationStreet.getText().isEmpty() || tfLocationStreet.getText().equals(" ")) {
             parameters.set("street", tfLocationStreet.getText());
         }
-        if (!tfLocationCity.getText().isEmpty()) {
+        if (!tfLocationCity.getText().isEmpty() || tfLocationCity.getText().equals(" ")) {
             parameters.set("city", tfLocationCity.getText());
         }
-        if (!tfLocationZip.getText().isEmpty()) {
+        if (!tfLocationZip.getText().isEmpty() || tfLocationZip.getText().equals(" ")) {
             //todo check if numeric
             parameters.set("zip", tfLocationZip.getText());
         }
-/*        if (!tfLocationCountry.getText().isEmpty) {
-
-        }*/
+        if (!tfLocationCountry.getText().isEmpty() || tfLocationCountry.getText().equals(" ")) {
+            parameters.set("country", tfLocationCountry.getText());
+        }
         paginationHelper.setSearchFor(EventSearchFor.LOCATION_ADV);
         paginationHelper.setParameters(parameters);
         paginationHelper.setUpPagination();
