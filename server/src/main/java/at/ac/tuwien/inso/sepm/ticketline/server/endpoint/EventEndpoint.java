@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -48,7 +49,12 @@ public class EventEndpoint {
         //mapping of Event to EventDTO
         Pageable request = new PageRequest(pageIndex, eventsPerPage, Sort.Direction.ASC, "start_of_event");
         Page<Event> eventPage = eventService.findAllUpcomingAsc(request);
-        List<SimpleEventDTO> dtos = eventMapper.eventToSimpleEventDTO(eventPage.getContent());
+        List<SimpleEventDTO> dtos = new ArrayList<>();
+        for(Event event:eventPage.getContent()){
+            SimpleEventDTO simpleEventDTO = eventMapper.eventToSimpleEventDTO(event);
+            simpleEventDTO.setSeatCount(event.getHall().getSeats().size());
+            dtos.add(simpleEventDTO);
+        }
         return new PageImpl<>(dtos, request, eventPage.getTotalElements());
     }
 
@@ -60,7 +66,12 @@ public class EventEndpoint {
         //mapping of Event to EventDTO
         Pageable request = new PageRequest(pageIndex, eventsPerPage);
         Page<Event> eventPage = eventService.findAllByArtistId(artistId,request);
-        List<SimpleEventDTO> dtos = eventMapper.eventToSimpleEventDTO(eventPage.getContent());
+        List<SimpleEventDTO> dtos = new ArrayList<>();
+        for(Event event:eventPage.getContent()){
+            SimpleEventDTO simpleEventDTO = eventMapper.eventToSimpleEventDTO(event);
+            simpleEventDTO.setSeatCount(event.getHall().getSeats().size());
+            dtos.add(simpleEventDTO);
+        }
         return new PageImpl<>(dtos, request, eventPage.getTotalElements());
     }
 
@@ -128,7 +139,12 @@ public class EventEndpoint {
                                              @RequestParam HashMap<String,String> parameters) {
         Pageable request = new PageRequest(pageIndex, eventsPerPage, Sort.Direction.ASC, "start_of_event");
         Page<Event> eventPage = eventService.findByAdvancedSearch(parameters, request);
-        List<SimpleEventDTO> dtos = eventMapper.eventToSimpleEventDTO(eventPage.getContent());
+        List<SimpleEventDTO> dtos = new ArrayList<>();
+        for(Event event:eventPage.getContent()){
+            SimpleEventDTO simpleEventDTO = eventMapper.eventToSimpleEventDTO(event);
+            simpleEventDTO.setSeatCount(event.getHall().getSeats().size());
+            dtos.add(simpleEventDTO);
+        }
         return new PageImpl<>(dtos, request, eventPage.getTotalElements());
     }
 
@@ -139,7 +155,12 @@ public class EventEndpoint {
                                              @RequestParam HashMap<String,String> parameters) {
         Pageable request = new PageRequest(pageIndex, eventsPerPage, Sort.Direction.ASC, "start_of_event");
         Page<Event> eventPage = eventService.find(parameters, request);
-        List<SimpleEventDTO> dtos = eventMapper.eventToSimpleEventDTO(eventPage.getContent());
+        List<SimpleEventDTO> dtos = new ArrayList<>();
+        for(Event event:eventPage.getContent()){
+            SimpleEventDTO simpleEventDTO = eventMapper.eventToSimpleEventDTO(event);
+            simpleEventDTO.setSeatCount(event.getHall().getSeats().size());
+            dtos.add(simpleEventDTO);
+        }
         return new PageImpl<>(dtos, request, eventPage.getTotalElements());
     }
 

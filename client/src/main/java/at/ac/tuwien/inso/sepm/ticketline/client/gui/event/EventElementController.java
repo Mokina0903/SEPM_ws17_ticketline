@@ -5,29 +5,23 @@ import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationObserver;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationSubject;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.MainController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.customer.CustomerController;
-import at.ac.tuwien.inso.sepm.ticketline.client.gui.news.NewsAddFormularController;
-import at.ac.tuwien.inso.sepm.ticketline.client.gui.news.NewsController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket.HallplanController;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.EventService;
+import at.ac.tuwien.inso.sepm.ticketline.client.service.TicketService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
 import at.ac.tuwien.inso.sepm.ticketline.rest.artist.SimpleArtistDTO;
-import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.DetailedEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.Glyph;
-import org.controlsfx.glyphfont.GlyphFont;
 import org.controlsfx.glyphfont.GlyphFontRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -68,6 +62,7 @@ public class EventElementController implements LocalizationObserver {
     public Label lblFreeTickets;
 
     private EventService eventService;
+    private final TicketService ticketService;
     private SimpleEventDTO simpleEventDTO;
     private MainController mainController;
     private SpringFxmlLoader loader;
@@ -78,7 +73,8 @@ public class EventElementController implements LocalizationObserver {
     @Autowired
     private LocalizationSubject localizationSubject;
 
-    public EventElementController(MainController mainController, SpringFxmlLoader loader) {
+    public EventElementController( TicketService ticketService, MainController mainController, SpringFxmlLoader loader ) {
+        this.ticketService = ticketService;
         this.mainController = mainController;
         this.loader = loader;
     }
@@ -116,6 +112,22 @@ public class EventElementController implements LocalizationObserver {
         //glyph.setFontSize(FONT_SIZE);
         ticketReservationButton.setGraphic(glyph);
 
+        long ticketCountTotal = simpleEventDTO.getSeatCount();
+        long ticketCount=0;
+        try {
+             ticketCount= ticketService.countByEvent_Id(simpleEventDTO.getId());
+        } catch (DataAccessException e) {
+            mainController.showGeneralError(BundleManager.getBundle().getString("exception.unexpected"));
+        }
+        lblFreeTickets.setText(ticketCount+"/"+ticketCountTotal);
+        if(ticketCount==ticketCountTotal){
+            lblFreeTickets.setStyle("-fx-text-fill : red");
+        }else if((ticketCountTotal-ticketCount)<=15){
+            lblFreeTickets.setStyle("-fx-text-fill:orange");
+        }else{
+            lblFreeTickets.setStyle("-fx-text-fill:green");
+
+        }
     }
 
     public void ticketReservationForEvent(ActionEvent actionEvent) {

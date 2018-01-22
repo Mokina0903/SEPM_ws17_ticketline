@@ -223,7 +223,7 @@ public class EventMapperTest {
         }
 
         assertThat(event.getArtists().size()).isEqualTo(EVENT_ARTISTS.size());
-        assertThat(simpleEventDTO.getDescriptionSummary()).isEqualTo(EVENT_DESCRIPTION_SUMMARY);
+        assertThat(simpleEventDTO.getDescription()).isEqualTo(EVENT_DESCRIPTION_SUMMARY);
         assertThat(simpleEventDTO.getPrice()).isEqualTo(EVENT_PRICE);
         assertThat(simpleEventDTO.getStartOfEvent()).isEqualTo(EVENT_START);
         assertThat(simpleEventDTO.getEndOfEvent()).isEqualTo(EVENT_END);
@@ -254,7 +254,7 @@ public class EventMapperTest {
         }
 
         assertThat(event.getArtists().size()).isEqualTo(EVENT_ARTISTS.size());
-        assertThat(simpleEventDTO.getDescriptionSummary()).isEqualTo(EVENT_DESCRIPTION_SUMMARY);
+        assertThat(simpleEventDTO.getDescription()).isEqualTo(EVENT_DESCRIPTION_SUMMARY);
         assertThat(simpleEventDTO.getPrice()).isEqualTo(EVENT_PRICE);
         assertThat(simpleEventDTO.getStartOfEvent()).isEqualTo(EVENT_START);
         assertThat(simpleEventDTO.getEndOfEvent()).isEqualTo(EVENT_END);

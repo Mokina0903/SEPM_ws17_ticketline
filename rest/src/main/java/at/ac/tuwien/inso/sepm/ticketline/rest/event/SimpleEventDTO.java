@@ -37,6 +37,16 @@ public class SimpleEventDTO implements PageableDAO{
     @ApiModelProperty(required = true, name = "The Event category")
     private String eventCategory;
 
+    private long seatCount;
+
+    public long getSeatCount() {
+        return seatCount;
+    }
+
+    public void setSeatCount( long seatCount ) {
+        this.seatCount = seatCount;
+    }
+
     public Long getId() {
         return id;
     }
@@ -176,6 +186,7 @@ public class SimpleEventDTO implements PageableDAO{
         private LocalDateTime endOfEvent;
         private Boolean seatSelection;
         private String eventCategory;
+        private long seatCount;
 
         public SimpleEventDTOBuilder id(Long id){
             this.id = id;
@@ -221,6 +232,10 @@ public class SimpleEventDTO implements PageableDAO{
             this.eventCategory = eventCategory;
             return this;
         }
+        public SimpleEventDTOBuilder seatCount(long seatCount){
+            this.seatCount = seatCount;
+            return this;
+        }
 
         public SimpleEventDTO build(){
             SimpleEventDTO event = new SimpleEventDTO();
@@ -232,6 +247,7 @@ public class SimpleEventDTO implements PageableDAO{
             event.setStartOfEvent(startOfEvent);
             event.setEndOfEvent(endOfEvent);
             event.setEventCategory(eventCategory);
+            event.setSeatCount(seatCount);
             return event;
         }
     }
