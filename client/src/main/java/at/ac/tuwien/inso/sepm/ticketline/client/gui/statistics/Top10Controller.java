@@ -65,6 +65,8 @@ public class Top10Controller extends TabElement implements LocalizationObserver 
     @FXML
     public Label lblNoEventChoosen;
     @FXML
+    public Label lblCategory;
+    @FXML
     private TabHeaderController tabHeaderController;
 
     private MainController mainController;
@@ -95,7 +97,8 @@ public class Top10Controller extends TabElement implements LocalizationObserver 
         xAxis.setTickLabelRotation(90);
         yAxis.setLabel("Sales");
         yAxis.setTickLabelRotation(90);
-        barChartTop10.setTitle("Top 10 Events");
+        loadTopTenEventsNow();
+
         comBoxCategory.getSelectionModel().select(0);
         btnGoToBuying.setGraphic(fontAwesome.create("TICKET").size(FONT_SIZE));
         applyFilter.setGraphic(fontAwesome.create("REFRESH").size(FONT_SIZE));
@@ -108,37 +111,42 @@ public class Top10Controller extends TabElement implements LocalizationObserver 
         tabHeaderController.setIcon(FontAwesome.Glyph.BAR_CHART);
         tabHeaderController.setTitle(BundleManager.getBundle().getString("statistics.top10Statistics"));
 
+    }
+
+    private void loadTopTenEventsNow(){
+
         LocalDate now = LocalDate.now();
         LocalDate beginOfThisMonth = LocalDateTime.of(now.getYear(), now.getMonth(), 1, 0, 0).toLocalDate();
         LocalDate endOfThisMonth = LocalDateTime.of(now.getYear(), now.getMonth(), now.getMonth().length(now.isLeapYear()), 0, 0).toLocalDate();
 
+        Task<List<SimpleEventDTO>> getTopTenEventsNow = new Task<List<SimpleEventDTO>>() {
+            @Override
+            protected List<SimpleEventDTO> call() throws Exception {
+                return eventService.getTop10EventsOfMonth(beginOfThisMonth, endOfThisMonth);
+            }
 
-        // TODO: (Verena) Laedt leider nicht im Thread, dadurch kurzes Freezing
-        try {
-            topTenEventsNow = eventService.getTop10EventsOfMonth(beginOfThisMonth, endOfThisMonth);
-        } catch (DataAccessException e) {
-            mainController.showGeneralError("Not able to load top10 Events right now. Server faild to access the data.");
-            e.printStackTrace();
-        }
+            @Override
+            protected void succeeded() {
+                LOGGER.info("Task succeeded");
+                super.succeeded();
+                applyStatsToChart(getValue());
+            }
 
-        applyStatsToChart(topTenEventsNow);
+            @Override
+            protected void failed() {
+                LOGGER.debug("Loading top ten events failed.");
+                if (getValue() == null || getValue().isEmpty()) {
+                    super.failed();
+                    mainController.showGeneralError("Not able to load top10 Events right now. Server faild to access the data.");
+                }
+            }
 
-        /*
-        fromDate.setValue(beginOfThisMonth);
-        toDate.setValue(endOfThisMonth);
-
-        barChartTop10.getData().clear();
-        XYChart.Series<Number, String> series = new XYChart.Series<Number, String>();
-
-        for (int i = 1; i <= 10; i++) {
-            series.getData().add(new XYChart.Data<Number, String>(0, ""));
-        }
-
-        barChartTop10.getData().addAll(series);
-
-        getTopTenEvents(null);
-        */
-
+        };
+        getTopTenEventsNow.runningProperty().addListener((observable, oldValue, running) ->
+            mainController.setProgressbarProgress(
+                running ? ProgressBar.INDETERMINATE_PROGRESS : 0)
+        );
+        new Thread(getTopTenEventsNow).start();
     }
 
 
@@ -328,6 +336,8 @@ public class Top10Controller extends TabElement implements LocalizationObserver 
         tabHeaderController.setTitle(BundleManager.getBundle().getString("statistics.top10Statistics"));
         lblFromDate.setText(BundleManager.getBundle().getString("statistics.fromDate"));
         lblToDate.setText(BundleManager.getBundle().getString("statistics.toDate"));
+        lblCategory.setText(BundleManager.getBundle().getString("statistics.category"));
+        barChartTop10.setTitle(BundleManager.getBundle().getString("%statistics.top10events"));
 
         if (lblNoEventChoosen.isVisible()) {
             lblNoEventChoosen.setText(BundleManager.getBundle().getString("statistics.noEvetChoosen"));

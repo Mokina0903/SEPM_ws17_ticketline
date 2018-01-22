@@ -46,7 +46,7 @@
             <BorderPane.margin>
                 <Insets left="90" bottom="12" right="15"/>
             </BorderPane.margin>
-            <Label prefWidth="70" text="%statistics.category"/>
+            <Label prefWidth="70" fx:id="lblCategory" text="%statistics.category"/>
             <ComboBox fx:id="comBoxCategory">
             <items>
                 <FXCollections fx:factory="observableArrayList">
