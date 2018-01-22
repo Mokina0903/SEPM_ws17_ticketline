@@ -90,10 +90,10 @@ Done: MapperTests
 TODO: UnitTests:
   + CustomerEndpoint
   + EventEndpoint (Done)
-  + InvoiceEndpoint
-  + LocationEndpoint
-  + NewsEndpoint
-  + TicketEndpoint
+  + InvoiceEndpoint (Done)
+  + LocationEndpoint (Done)
+  + NewsEndpoint (Done)
+  + TicketEndpoint (Done)
   + UserEndpoint (Done)
 
 TODO: TestPlan:

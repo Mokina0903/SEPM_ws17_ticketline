@@ -12,8 +12,7 @@ import org.junit.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
-import static at.ac.tuwien.inso.sepm.ticketline.server.tests.base.TestConstants.ARTIST_FIRSTNAME;
-import static at.ac.tuwien.inso.sepm.ticketline.server.tests.base.TestConstants.EVENT_START;
+import static at.ac.tuwien.inso.sepm.ticketline.server.tests.base.TestConstants.*;
 import static org.hamcrest.core.Is.is;
 
 public class EventTest extends BaseTestUnit {
@@ -54,7 +53,8 @@ public class EventTest extends BaseTestUnit {
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
 
         DetailedEventDTO detailedEventDTOResponse = response.as(DetailedEventDTO.class);
-
+        detailedEventDTO.setId(0L);
+        detailedEventDTOResponse.setId(0L);
         Assert.assertThat(detailedEventDTO, is(detailedEventDTOResponse));
     }
 
@@ -111,6 +111,7 @@ public class EventTest extends BaseTestUnit {
     @Test
     public void publishEventAsAdminEventDuplicate() {
         DetailedEventDTO detailedEventDTO = TestDTOs.setUpDetailedEventDTO();
+        detailedEventDTO.setDescription(EVENT_DESCRIPTION);
 
         Response response = RestAssured
             .given()

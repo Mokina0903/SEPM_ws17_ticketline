@@ -1,9 +1,13 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.tests.unittest;
 
+import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
+import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
+import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.seat.SeatDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketDTO;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Ticket;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Seat;
+import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.event.EventMapper;
 import at.ac.tuwien.inso.sepm.ticketline.server.tests.base.BaseTestUnit;
 import at.ac.tuwien.inso.sepm.ticketline.server.tests.base.TestDTOs;
 import com.jayway.restassured.RestAssured;
@@ -12,14 +16,15 @@ import com.jayway.restassured.response.Response;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
-import static at.ac.tuwien.inso.sepm.ticketline.server.tests.base.TestConstants.TICKET_ENDPOINT;
-import static at.ac.tuwien.inso.sepm.ticketline.server.tests.base.TestConstants.TICKET_ID;
+import static at.ac.tuwien.inso.sepm.ticketline.server.tests.base.TestConstants.*;
 import static at.ac.tuwien.inso.sepm.ticketline.server.tests.base.TestDTOs.*;
 import static org.hamcrest.core.Is.is;
 
@@ -39,6 +44,9 @@ public class TicketTest extends BaseTestUnit {
     // TODO: get /tickets/isFree/{eventId}/{sector} Search for free seats for event in sector
     // TODO: get /tickets/{pageIndex}/{ticketsPerPage} Get list of ticket entries
     // TODO: get /tickets/{ticketId} Get information about a specific ticket entry
+
+    @Autowired
+    private EventMapper eventMapper;
 
     @Before
     public void setUp() {
@@ -100,9 +108,26 @@ public class TicketTest extends BaseTestUnit {
     public void loseReservationAfterTime() {
         // TODO: David
 
-        setUpDefaultEvent(LocalDateTime.now().plusMinutes(20));
+        Event event = setUpDefaultEvent(LocalDateTime.now().plusMinutes(10));
 
-        List<TicketDTO> ticketDTOList = TestDTOs.setUpTicketDTO();
+        CustomerDTO customer = TestDTOs.setUpCustomerDTO();
+
+        SimpleEventDTO simpleEventDTO = eventMapper.eventToSimpleEventDTO(event) ;
+
+        List<SeatDTO> seat = TestDTOs.setUpSeatDTO();
+
+        List<TicketDTO> ticketDTOList = new ArrayList<>();
+
+        ticketDTOList.add(TicketDTO.builder()
+            .id(TICKET_ID)
+            .isDeleted(false)
+            .isPaid(true)
+            .price(TICKET_PRICE)
+            .reservationNumber(TICKET_RESERVATIONNR)
+            .customer(customer)
+            .seat(seat.get(0))
+            .event(simpleEventDTO)
+            .build());
 
         Response response = RestAssured
             .given()
@@ -113,8 +138,13 @@ public class TicketTest extends BaseTestUnit {
             .then().extract().response();
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
 
-        Assert.assertThat(ticketRepository.findAll().size(),is(1));
+        int tickets = ticketRepository.findAll().size();
 
+        System.out.println(eventRepository.findAll().size());
+
+        ticketRepository.deleteAlloldReservations(30L);
+
+        Assert.assertThat(tickets,is(ticketRepository.findAll().size()));
 
         // TODO: Implement here
         /*

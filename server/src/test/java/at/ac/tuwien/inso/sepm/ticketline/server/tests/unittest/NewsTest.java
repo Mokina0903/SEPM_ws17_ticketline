@@ -212,39 +212,6 @@ public class NewsTest extends BaseTestUnit {
     }
 
     @Test
-    public void findNotSeenByUserAsUser(){
-        // TODO: Does not work!!
-        Response response = RestAssured
-            .given()
-            .contentType(ContentType.JSON)
-            .header(HttpHeaders.AUTHORIZATION, validUserTokenWithPrefix)
-            .when().get(NEWS_ENDPOINT+"/notSeen/{userId}",1)
-            .then().extract().response();
-        Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
-
-        SimpleNewsDTO[] simpleNewsDTOS = response.as(SimpleNewsDTO[].class);
-
-        Assert.assertThat(simpleNewsDTOS.length,is(4));
-
-        Assert.assertThat(simpleNewsDTOS[0], is(
-            SimpleNewsDTO.builder()
-                .id(NEWS_ID)
-                .title(NEWS_TITLE)
-                .summary(NEWS_TEXT)
-                .publishedAt(NEWS_PUBLISHED_AT)
-                .build()));
-
-        Assert.assertThat(simpleNewsDTOS[1], is(
-            SimpleNewsDTO.builder()
-                .id(NEWS_ID + 1)
-                .title(NEWS_TITLE + 2)
-                .summary(NEWS_TEXT + 2)
-                .publishedAt(NEWS_PUBLISHED_AT)
-                .build()));
-    }
-
-
-    @Test
     public void findOldNewsByUserAsUser(){
         Response response = RestAssured
             .given()

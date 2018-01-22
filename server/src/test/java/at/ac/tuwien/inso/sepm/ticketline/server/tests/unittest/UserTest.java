@@ -3,7 +3,6 @@ package at.ac.tuwien.inso.sepm.ticketline.server.tests.unittest;
 
 import at.ac.tuwien.inso.sepm.ticketline.rest.user.DetailedUserDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.user.SimpleUserDTO;
-import at.ac.tuwien.inso.sepm.ticketline.server.entity.News;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.User;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.news.NewsMapper;
 import at.ac.tuwien.inso.sepm.ticketline.server.tests.base.BaseTestUnit;
@@ -16,8 +15,6 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-
-import java.util.List;
 
 import static at.ac.tuwien.inso.sepm.ticketline.server.tests.base.TestConstants.*;
 import static org.hamcrest.core.Is.is;
@@ -442,39 +439,6 @@ public class UserTest extends BaseTestUnit {
             .when().post(USER_ENDPOINT)
             .then().extract().response();
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.CONFLICT.value()));
-    }
-
-
-    @Test
-    public void newNewsForNewUserAsAdmin() {
-        setupDefaultNews();
-
-        Response response = RestAssured
-            .given()
-            .contentType(ContentType.JSON)
-            .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
-            .body(DetailedUserDTO.builder()
-                .userName(USER_USERNAME + "123")
-                .password(encoder.encode(USER_PASSWORD))
-                .blocked(false)
-                .role(2)
-                .notSeen(newsMapper.newsToSimpleNewsDTO(newsRepository.findAllByOrderByPublishedAtDesc()))
-                .build())
-            .when().post(USER_ENDPOINT)
-            .then().extract().response();
-        Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
-
-
-        List<News> news = newsRepository.findNotSeenByUser(userRepository.findOneByUserName(USER_USERNAME + "123").getId());
-        Assert.assertTrue(news != null);
-        if (news != null) {
-            Assert.assertTrue(news.size() == 0);
-        }
-        news = newsRepository.findOldNewsByUser(userRepository.findOneByUserName(USER_USERNAME + "123").getId());
-        Assert.assertTrue(news != null);
-        if (news != null) {
-            Assert.assertTrue(news.size() > 0);
-        }
     }
 
     @Test
