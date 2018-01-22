@@ -77,13 +77,23 @@ public class LocationEndpoint {
 
     @RequestMapping(value = "/location/locationSearch/{pageIndex}/{locationsPerPage}", method = RequestMethod.GET)
     @ApiOperation(value = "Get list of simple location entries filtered by parameters")
-    public Page<SimpleLocationDTO> findAdvanced(@PathVariable("pageIndex")int pageIndex, @PathVariable("locationsPerPage")int locationsPerPage,
+    public Page<SimpleLocationDTO> find(@PathVariable("pageIndex")int pageIndex, @PathVariable("locationsPerPage")int locationsPerPage,
                                              @QuerydslPredicate(root = Event.class)Predicate predicate,
                                              @RequestParam HashMap<String,String> parameters) {
-        Pageable request = new PageRequest(pageIndex, locationsPerPage, Sort.Direction.ASC, "description");
+        Pageable request = new PageRequest(pageIndex, locationsPerPage, Sort.Direction.ASC, "city");
         Page<Location> locationPage = locationService.find(parameters, request);
         List<SimpleLocationDTO> dtos = locationMapper.locationToSimpleLocationDTO(locationPage.getContent());
         return new PageImpl<>(dtos, request, locationPage.getTotalElements());
     }
 
+    @RequestMapping(value = "/location/locationAdvSearch/{pageIndex}/{locationsPerPage}", method = RequestMethod.GET)
+    @ApiOperation(value = "Get list of simple location entries filtered by parameters")
+    public Page<SimpleLocationDTO> findAdvanced(@PathVariable("pageIndex")int pageIndex, @PathVariable("locationsPerPage")int locationsPerPage,
+                                                @QuerydslPredicate(root = Event.class)Predicate predicate,
+                                                @RequestParam HashMap<String,String> parameters) {
+        Pageable request = new PageRequest(pageIndex, locationsPerPage, Sort.Direction.ASC, "city");
+        Page<Location> locationPage = locationService.findAdvanced(parameters, request);
+        List<SimpleLocationDTO> dtos = locationMapper.locationToSimpleLocationDTO(locationPage.getContent());
+        return new PageImpl<>(dtos, request, locationPage.getTotalElements());
+    }
 }

@@ -5,6 +5,7 @@ import at.ac.tuwien.inso.sepm.ticketline.client.exception.SearchNoMatchException
 import at.ac.tuwien.inso.sepm.ticketline.client.rest.EventRestClient;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.EventService;
 import at.ac.tuwien.inso.sepm.ticketline.rest.ErrorDTO;
+import at.ac.tuwien.inso.sepm.ticketline.rest.artist.SimpleArtistDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.DetailedEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
 import org.slf4j.Logger;
@@ -84,5 +85,15 @@ public class SimpleEventService implements EventService {
     @Override
     public Page<SimpleEventDTO> find(Pageable request, MultiValueMap<String, String> parameters) throws DataAccessException {
         return eventRestClient.find(request, parameters);
+    }
+
+    @Override
+    public Page<SimpleEventDTO> findByArtist(Pageable request, Long id) throws DataAccessException {
+        return eventRestClient.findAllByArtistId(id, request);
+    }
+
+    @Override
+    public Page<SimpleEventDTO> findByLocation(Pageable request, Long id) throws DataAccessException {
+        return eventRestClient.findAllByLocationId(id, request);
     }
 }

@@ -1,13 +1,12 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.searchAndFilter;
 
-import io.swagger.models.auth.In;
-
 import java.util.HashMap;
 
 public class LocationFilter {
 
     private String description;
     private String country;
+    private String city;
     private String street;
     private Integer zip;
 
@@ -23,6 +22,9 @@ public class LocationFilter {
         }
         if (parameters.containsKey("zip")) {
             this.zip = Integer.parseInt(parameters.get("zip"));
+        }
+        if (parameters.containsKey("city")) {
+            this.city = parameters.get("city");
         }
     }
 
@@ -48,6 +50,14 @@ public class LocationFilter {
 
     public void setStreet(String street) {
         this.street = street;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public Integer getZip() {

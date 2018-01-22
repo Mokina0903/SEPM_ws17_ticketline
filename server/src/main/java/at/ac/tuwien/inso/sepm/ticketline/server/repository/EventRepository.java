@@ -122,9 +122,21 @@ public interface EventRepository extends JpaRepository<Event, Long>,
      * @return page with filtered events
      */
     @Query(value = "Select * from Event where id in (SELECT event_id FROM ARTISTS_OF_EVENT where artist_id=:artistId) " +
-        "order by start_of_event asc #pageable"
+        "and end_of_event > now() /*#pageable*/"
     , nativeQuery = true)
     Page<Event> findAllByArtistId( @Param("artistId") Long artistId, Pageable request);
+
+    /**
+     * filter events by location
+     *
+     * @param locationId of location
+     * @param request of page
+     * @return page with filtered events
+     */
+    @Query(value = "SELECT e.* FROM EVENT e join hall h on e.hall_id = h.id where h.location_id = :locationId " +
+        "and e.end_of_event > now() /*#pageable*/"
+        , nativeQuery = true)
+    Page<Event> findAllByLocationId( @Param("locationId") Long locationId, Pageable request);
 
     //todo find by type, implement type in event (enum)
     //todo find by duration (+-30 min)

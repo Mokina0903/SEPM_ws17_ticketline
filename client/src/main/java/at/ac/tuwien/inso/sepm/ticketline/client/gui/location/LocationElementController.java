@@ -82,7 +82,7 @@ public class LocationElementController implements LocalizationObserver {
 
     @FXML
     private void loadEvents() {
-        paginationHelper.setSearchFor(EventSearchFor.EVENTS_BY_ARTIST);
+        paginationHelper.setSearchFor(EventSearchFor.EVENTS_BY_LOCATION);
         paginationHelper.setLocationDTO(simpleLocationDTO);
         paginationHelper.setUpPagination();
         /*

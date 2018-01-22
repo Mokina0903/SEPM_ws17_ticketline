@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -83,49 +84,10 @@ public class SimpleEventService implements EventService {
         return null;
     }
 
-
-
-    // https://spring.io/blog/2011/04/26/advanced-spring-data-jpa-specifications-and-querydsl/
-    // http://www.baeldung.com/rest-api-search-language-spring-data-specifications
-    private QEvent event = QEvent.event;
-    private BooleanExpression eventHasTitle = event.title.eq("test");
-    private BooleanExpression eventInFuture = event.startOfEvent.after(LocalDateTime.now());
-
-/*    private Page<Event> findByTitleInFuture() {
-        Iterable<Event> list = eventRepository.findAll(eventHasTitle.and(eventInFuture));
-        List<Event> eventList = Lists.newArrayList(events);
-        return new PageImpl<>(eventList, request, eventList.size());
-    }*/
-
- /* join:
- * https://stackoverflow.com/questions/23837988/querydsl-jpql-how-to-build-a-join-query
- *
- *
- * public Contact getContact(long providerId, long contactId) {
-    QProvider provider = QProvider.provider;
-    QContact contact = QContact.contact;
-    return new JPAQuery(em).from(provider)
-        .innerJoin(provider.contact, contact)
-        .where(provider.id.eq(providerId), contact.id.eq(contactId))
-        .singleResult(contact);
-}
- * */
-
-    //todo implement search with or
-
-
-    //JPAQuery<?> query = new JPAQuery<Void>(entityManager);
-
     @Override
     public Page<Event> findByAdvancedSearch(HashMap<String, String> parameters, Pageable request) {
         Predicate predicate = filterBuilder.buildAnd(new EventFilter(parameters));
-       // Predicate predicateArtist = artistFilterBuilder.buildAnd(new ArtistFilter(parameters));
-
-        Iterable<Event> events = eventRepository.findAll(predicate);
-        List<Event> eventList = Lists.newArrayList(events);
-        int start = request.getOffset();
-        int end = (start + request.getPageSize()) > eventList.size() ? eventList.size() : (start + request.getPageSize());
-        return new PageImpl<>(eventList.subList(start, end), request, eventList.size());
+        return eventRepository.findAll(predicate, request);
     }
 
     @Override
@@ -134,37 +96,16 @@ public class SimpleEventService implements EventService {
     }
 
     @Override
+    public Page<Event> findAllByLocationId(Long locationId, Pageable request) {
+        return eventRepository.findAllByLocationId(locationId, request);
+    }
+
+    @Override
     public Page<Event> find(HashMap<String, String> parameters, Pageable request) {
         Predicate predicate = filterBuilder.buildOr(new EventFilter(parameters));
-        Iterable<Event> events = eventRepository.findAll(predicate);
-        List<Event> eventList = Lists.newArrayList(events);
-        int start = request.getOffset();
-        int end = (start + request.getPageSize()) > eventList.size() ? eventList.size() : (start + request.getPageSize());
-        return new PageImpl<>(eventList.subList(start, end), request, eventList.size());
+        return eventRepository.findAll(predicate, request);
     }
 
-   /* @Override
-    public Page<Event> find(String search, Pageable request) {
-        MyPredicatesBuilder builder = new MyPredicatesBuilder("event");
-        if (search != null) {
-            try {
-                search = URLDecoder.decode(search, "UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                LOGGER.warn("Error while encoding search path");
-            }
-
-            Pattern pattern = Pattern.compile("(\\w+?)(:|<|>)([a-zA-Z0-9_.\\s]+?),");
-            Matcher matcher = pattern.matcher(search + ",");
-            while (matcher.find()) {
-                builder.with(matcher.group(1), matcher.group(2), matcher.group(3));
-            }
-        }
-        Iterable<Event> events = eventRepository.findAll(builder.buildAnd());
-
-        List<Event> eventList = Lists.newArrayList(events);
-        return new PageImpl<>(eventList, request, eventList.size());
-    }
-*/
 
     @Override
     public Event publishEvent(Event event) {

@@ -75,6 +75,16 @@ public interface EventService {
     Page<Event> findAllByArtistId(Long artistId, Pageable request);
 
     /**
+     * filter events by location
+     *
+     * @param locationId of location
+     * @param request of page
+     * @return page with filtered events
+     */
+    Page<Event> findAllByLocationId(Long locationId, Pageable request);
+
+
+    /**
      * find page of events by parameters
      *
      * @param parameters for filtering

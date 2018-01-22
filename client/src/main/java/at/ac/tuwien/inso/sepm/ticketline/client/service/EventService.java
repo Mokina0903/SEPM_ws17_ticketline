@@ -3,8 +3,10 @@ package at.ac.tuwien.inso.sepm.ticketline.client.service;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.SearchNoMatchException;
 import at.ac.tuwien.inso.sepm.ticketline.rest.ErrorDTO;
+import at.ac.tuwien.inso.sepm.ticketline.rest.artist.SimpleArtistDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.DetailedEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
+import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.location.SimpleLocationDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.util.MultiValueMap;
@@ -101,4 +103,23 @@ public interface EventService {
      */
     Page<SimpleEventDTO> find(Pageable request, MultiValueMap<String, String> parameters) throws DataAccessException;
 
+    /**
+     * Find all events by artist ordered by Date ascending
+     *
+     * @param request page to load
+     * @param id find Events from Artist with this ID
+     * @return Page of upcoming events
+     * @throws DataAccessException in case something went wrong
+     */
+    Page<SimpleEventDTO> findByArtist(Pageable request, Long id) throws DataAccessException;
+
+    /**
+     * Find all events by location ordered by Date ascending
+     *
+     * @param request page to load
+     * @param id find Events from location with this ID
+     * @return Page of upcoming events
+     * @throws DataAccessException in case something went wrong
+     */
+    Page<SimpleEventDTO> findByLocation(Pageable request, Long id) throws DataAccessException;
 }

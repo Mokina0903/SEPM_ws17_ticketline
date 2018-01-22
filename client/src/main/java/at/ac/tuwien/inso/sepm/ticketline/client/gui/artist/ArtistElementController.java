@@ -6,6 +6,7 @@ import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationObserver;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationSubject;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.MainController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.PaginationHelper;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.event.EventController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.event.EventSearchFor;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.ArtistService;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.EventService;
@@ -50,6 +51,8 @@ public class ArtistElementController implements LocalizationObserver {
 
     @Autowired
     private PaginationHelper paginationHelper;
+    @Autowired
+    private EventController eventController;
 
     Node myContainer;
 
