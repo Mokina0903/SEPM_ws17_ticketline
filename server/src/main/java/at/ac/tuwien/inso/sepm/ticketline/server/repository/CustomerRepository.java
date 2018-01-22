@@ -28,11 +28,6 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
      */
     Optional<Customer> findOneById(Long id);
 
-    /**
-     *
-     * @return a list of customer, though the size of the list is dependent of the pageable object
-     */
-    List<Customer> findAll();
 
     /**
      *

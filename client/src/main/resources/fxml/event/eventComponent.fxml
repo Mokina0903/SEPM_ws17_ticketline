@@ -43,7 +43,7 @@
                                 <HBox>
                                     <children>
                                         <TextField fx:id="tfSearchFor" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="400.0" />
-                                        <ChoiceBox fx:id="cbSearch" maxWidth="-Infinity" minWidth="30.0" prefWidth="30.0" />
+                                        <ChoiceBox fx:id="cbSearch" maxWidth="-Infinity" minWidth="150.0" prefWidth="150.0" />
                                     </children>
                                 </HBox>
                                 <Button fx:id="btAdvSearch" maxWidth="1.7976931348623157E308" minWidth="200.0" mnemonicParsing="false" onAction="#openAdvancedSearch" text="%events.advSearch" GridPane.halignment="LEFT" GridPane.rowIndex="1" />

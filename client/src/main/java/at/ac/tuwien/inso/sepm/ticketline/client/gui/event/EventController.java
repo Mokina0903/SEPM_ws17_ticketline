@@ -113,8 +113,6 @@ public class EventController extends TabElement implements LocalizationObserver 
         update();
         lbMatchInfo.setVisible(false);
 
-        //todo show free seats for events
-
         cbSearch.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
                 if (newValue != null) {
                     if (newValue.equals(searchForEvent)) {
@@ -123,7 +121,6 @@ public class EventController extends TabElement implements LocalizationObserver 
                     } else if (newValue.equals(searchForLocation)) {
                         searchFor = EventSearchFor.LOCATION;
                         tfSearchFor.setPromptText(BundleManager.getBundle().getString("events.searchForLocation"));
-
                     } else {
                         searchFor = EventSearchFor.ARTIST;
                         tfSearchFor.setPromptText(BundleManager.getBundle().getString("events.searchForArtist"));

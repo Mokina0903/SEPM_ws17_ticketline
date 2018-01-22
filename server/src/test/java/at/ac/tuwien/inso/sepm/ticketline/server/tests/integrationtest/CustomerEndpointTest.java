@@ -11,10 +11,16 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import static at.ac.tuwien.inso.sepm.ticketline.server.tests.base.TestConstants.*;
 import static at.ac.tuwien.inso.sepm.ticketline.server.tests.base.TestDTOs.defaultCustomer;
@@ -26,6 +32,9 @@ public class CustomerEndpointTest extends BaseIntegrationTest {
 
     @MockBean
     private CustomerRepository customerRepository;
+
+    private final Pageable REQUEST= new PageRequest(0, 10);
+
 
     @Test
     public void findAllCustomerAsAnonymous() {
@@ -39,7 +48,11 @@ public class CustomerEndpointTest extends BaseIntegrationTest {
 
     @Test
     public void findAllCustomerAsUser() {
-        Mockito.when(customerRepository.findAll()).thenReturn(Collections.singletonList(defaultCustomer()));
+        List<Customer> customerList = Collections.singletonList(defaultCustomer());
+        Page<Customer> customers = new PageImpl<>(customerList);
+
+        Mockito.when(customerRepository.findAll(any(Pageable.class))).thenReturn(customers);
+
         Response response = RestAssured
             .given()
             .contentType(ContentType.JSON)
@@ -47,6 +60,7 @@ public class CustomerEndpointTest extends BaseIntegrationTest {
             .when().get(CUSTOMER_ENDPOINT + CUSTOMER_PAGE_INDEX + CUSTOMER_PER_PAGE, 0, Integer.MAX_VALUE)
             .then().extract().response();
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
+
     }
 
     @Test
@@ -75,9 +89,10 @@ public class CustomerEndpointTest extends BaseIntegrationTest {
 
     @Test
     public void findByNameAsAnonymous() {
+        Page<Customer> customers = Mockito.mock(Page.class);
         Mockito.when(customerRepository
-            .findByNameStartingWithIgnoreCaseOrSurnameStartingWithIgnoreCase(CUSTOMER_NAME, CUSTOMER_NAME))
-            .thenReturn(Collections.singletonList(defaultCustomer()));
+            .findByNameStartingWithIgnoreCaseOrSurnameStartingWithIgnoreCase(CUSTOMER_NAME, CUSTOMER_NAME, REQUEST))
+            .thenReturn(customers);
 
         Response response = RestAssured
             .given()
@@ -90,9 +105,11 @@ public class CustomerEndpointTest extends BaseIntegrationTest {
 
     @Test
     public void findByNameAsUser() {
+        List<Customer> customerList = Collections.singletonList(defaultCustomer());
+        Page<Customer> customers = new PageImpl<>(customerList);
         Mockito.when(customerRepository
-            .findByNameStartingWithIgnoreCaseOrSurnameStartingWithIgnoreCase(CUSTOMER_NAME, CUSTOMER_NAME))
-            .thenReturn(Collections.singletonList(defaultCustomer()));
+            .findByNameStartingWithIgnoreCaseOrSurnameStartingWithIgnoreCase(any(String.class), any(String.class), any(Pageable.class)))
+            .thenReturn(customers);
 
         Response response = RestAssured
             .given()
