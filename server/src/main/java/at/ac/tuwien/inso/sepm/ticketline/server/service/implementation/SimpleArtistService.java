@@ -38,17 +38,13 @@ public class SimpleArtistService implements ArtistService{
     @Override
     public Page<Artist> find(HashMap<String, String> parameters, Pageable request) {
         Predicate predicate = filterBuilder.buildOr(new ArtistFilter(parameters));
-        Iterable<Artist> artists = artistRepository.findAll(predicate);
-        List<Artist> artistList = Lists.newArrayList(artists);
-        int start = request.getOffset();
-        int end = (start + request.getPageSize()) > artistList.size() ? artistList.size() : (start + request.getPageSize());
-        return new PageImpl<>(artistList.subList(start, end), request, artistList.size());
-
+        return artistRepository.findAll(predicate, request);
     }
 
     @Override
     public Page<Artist> findByAdvancedSearch(HashMap<String, String> parameters, Pageable request) {
         Predicate predicate = filterBuilder.buildAnd(new ArtistFilter(parameters));
+        System.out.println("Prd in adv search Art: " + predicate);
         return artistRepository.findAll(predicate, request);
     }
 }

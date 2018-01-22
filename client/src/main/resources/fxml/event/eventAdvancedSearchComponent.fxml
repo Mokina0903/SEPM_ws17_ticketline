@@ -186,7 +186,7 @@
                   <TextField fx:id="tfArtistLName" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                   <HBox alignment="TOP_RIGHT" GridPane.columnIndex="2">
                      <children>
-                        <Button fx:id="btOkArtist" maxWidth="-Infinity" onAction="#handleOk" prefWidth="40.0" />
+                        <Button fx:id="btOkArtist" maxWidth="-Infinity" onAction="#handleOkArtist" prefWidth="40.0" />
                      </children>
                   </HBox>
                   <HBox alignment="TOP_RIGHT" GridPane.columnIndex="2" GridPane.rowIndex="2">

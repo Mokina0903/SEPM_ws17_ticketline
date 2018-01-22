@@ -240,7 +240,7 @@ public class EventAdvancedSearchController implements LocalizationObserver {
         if (!tfArtistLName.getText().isEmpty()) {
             parameters.set("artistLastName", tfArtistLName.getText());
         }
-        paginationHelper.setSearchFor(EventSearchFor.ARTIST);
+        paginationHelper.setSearchFor(EventSearchFor.ARTIST_ADV);
         paginationHelper.setParameters(parameters);
         paginationHelper.setUpPagination();
         eventController.getEventTab().setContent(oldContent);
