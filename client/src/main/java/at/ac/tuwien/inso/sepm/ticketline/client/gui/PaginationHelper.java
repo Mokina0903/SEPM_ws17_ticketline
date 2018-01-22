@@ -81,14 +81,13 @@ public class PaginationHelper {
     private Node createPage(Integer pageIndex) {
         ListView<VBox> lvElements;
 
-        if (searchFor.equals(EventSearchFor.EVENT) || searchFor.equals(EventSearchFor.ALL)) { //todo
-            lvElements = loadEvents(pageIndex);
-        }
-        else if (searchFor.equals(EventSearchFor.LOCATION)) {
-            lvElements = loadLocations(pageIndex);
-
-        } else {
+        if (searchFor.equals(EventSearchFor.ARTIST) || searchFor.equals(EventSearchFor.ARTIST_ADV))  { //todo
             lvElements = loadArtists(pageIndex);
+        }
+        else if (searchFor.equals(EventSearchFor.LOCATION) || searchFor.equals(EventSearchFor.LOCATION_ADV)) {
+            lvElements = loadLocations(pageIndex);
+        } else {
+            lvElements = loadEvents(pageIndex);
         }
         return lvElements;
     }
@@ -108,10 +107,10 @@ public class PaginationHelper {
                 } else if(searchFor.equals(EventSearchFor.ALL)){
                     events = eventService.findAdvanced(request,parameters);
                 } else if (searchFor.equals(EventSearchFor.EVENTS_BY_ARTIST)) {
-                 //todo   events = eventService.findByArtist(request, artistDTO);
+                 // events = eventService.findByArtist(request, artistDTO);
                 }
                 else {
-               //     events = eventService.findByLocation(request, locationDTO);
+               //    events = eventService.findByLocation(request, locationDTO);
                 }
                 return events;
             }
@@ -147,7 +146,11 @@ public class PaginationHelper {
             @Override
             protected Page<SimpleLocationDTO> call() throws DataAccessException {
                 Pageable request = new PageRequest(pageIndex, ENTRIES_PER_PAGE);
+                if (searchFor.equals(searchFor.LOCATION))
                 locations = locationService.find(request, parameters);
+                else {
+                    locations = locationService.findAdvanced(request, parameters);
+                }
                 return locations;
             }
 
@@ -183,7 +186,11 @@ public class PaginationHelper {
             @Override
             protected Page<SimpleArtistDTO> call() throws DataAccessException {
                 Pageable request = new PageRequest(pageIndex, ENTRIES_PER_PAGE);
-                artists = artistService.find(request, parameters);
+                if (searchFor.equals(EventSearchFor.ARTIST)) {
+                    artists = artistService.find(request, parameters);
+                } else {
+                    artists = artistService.findAdvanced(request, parameters);
+                }
                 return artists;
             }
 
