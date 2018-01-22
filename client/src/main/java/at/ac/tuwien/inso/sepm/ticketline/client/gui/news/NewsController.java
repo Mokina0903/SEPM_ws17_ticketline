@@ -117,52 +117,6 @@ public class NewsController extends TabElement implements LocalizationObserver{
         vbNewsBoxChildrenNew.clear();
         vbNewsBoxChildrenOld.clear();
 
-        /*
-        try {
-            TimeUnit.SECONDS.sleep(1);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        Long userID = mainController.getUser().getId();
-
-        try {
-            this.oldNews = newsService.findOldNewsByUser(userID);
-            this.newNews = newsService.findNotSeenByUser(userID);
-
-        } catch (DataAccessException e) {
-
-            JavaFXUtils.createExceptionDialog(e,
-                vbNewsElements.getScene().getWindow()).showAndWait();
-            //e.printStackTrace();
-        }
-
-
-        if (NewsController.this.newNews != null && !NewsController.this.newNews.isEmpty() ) {
-            for (SimpleNewsDTO newsDTO : NewsController.this.newNews) {
-
-                SpringFxmlLoader.Wrapper<NewsElementController> wrapper =
-                    springFxmlLoader.loadAndWrap("/fxml/news/newsElement.fxml");
-                wrapper.getController().initializeData(newsDTO, newsService, mainController, NewsController.this, userService);
-                Label title = wrapper.getController().getLblTitle();
-                title.setText("(NEW)" + title.getText());
-                wrapper.getLoadedObject().setStyle("-fx-background-color:rgba(220, 229, 244, .7)");
-
-                vbNewsBoxChildren.add(wrapper.getController().vbNewsElement);
-            }
-
-        }
-        if (NewsController.this.oldNews != null && !NewsController.this.oldNews.isEmpty() ) {
-            for (SimpleNewsDTO oldNewsDTO : NewsController.this.oldNews) {
-
-                SpringFxmlLoader.Wrapper<NewsElementController> wrapper =
-                    springFxmlLoader.loadAndWrap("/fxml/news/newsElement.fxml");
-                wrapper.getController().initializeData(oldNewsDTO, newsService, mainController, NewsController.this, userService);
-
-                vbNewsBoxChildren.add(wrapper.getController().vbNewsElement);
-            }
-
-        }
-*/
 
 
         Task<List<SimpleNewsDTO>> taskNewNews = new Task<>() {

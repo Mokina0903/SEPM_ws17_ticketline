@@ -7,15 +7,14 @@ import at.ac.tuwien.inso.sepm.ticketline.client.gui.MainController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.TabHeaderController;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.NewsService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
+import at.ac.tuwien.inso.sepm.ticketline.client.util.JavaFXUtils;
 import at.ac.tuwien.inso.sepm.ticketline.rest.news.DetailedNewsDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
@@ -74,6 +73,7 @@ NewsAddFormularController implements LocalizationObserver {
     private SpringFxmlLoader springFxmlLoader;
 
     private NewsService newsService;
+
 
     private Node oldContent;
 
@@ -157,15 +157,46 @@ NewsAddFormularController implements LocalizationObserver {
 
         builder.text(textArea.getText());
         newNews = builder.build();
-        try {
-            newNews = newsService.publishNews(newNews);
-            mainController.showGeneralFeedback(BundleManager.getBundle().getString("news.feedbackPublish"));
-            c.loadNews();
-            c.getNewsTab().setContent(oldContent);
-        } catch (DataAccessException e) {
-            LOGGER.warn("Could not save news. Data AccessException");
-            mainController.showGeneralError("Not able to save the News because of technical issues.");
-        }
+
+        Task<Void> workerTask = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                addImgBtn.setDisable(true);
+                backWithoutSaveBtn.setDisable(true);
+                saveBtn.setDisable(true);
+
+                newNews = newsService.publishNews(newNews);
+
+                return null;
+            }
+            @Override
+            protected void succeeded() {
+                super.succeeded();
+                addImgBtn.setDisable(false);
+                backWithoutSaveBtn.setDisable(false);
+                saveBtn.setDisable(false);
+                mainController.showGeneralFeedback(BundleManager.getBundle().getString("news.feedbackPublish"));
+                c.loadNews();
+                c.getNewsTab().setContent(oldContent);
+            }
+            @Override
+            protected void failed() {
+
+                addImgBtn.setDisable(false);
+                backWithoutSaveBtn.setDisable(false);
+                saveBtn.setDisable(false);
+                LOGGER.warn("Could not save news. Data AccessException");
+                mainController.showGeneralError("Not able to save the News because of technical issues.");
+
+            }
+        };
+        workerTask.runningProperty().addListener((observable, oldValue, running) ->
+            mainController.setProgressbarProgress(
+                running ? ProgressBar.INDETERMINATE_PROGRESS : 0)
+        );
+        new Thread(workerTask).start();
+
+
     }
 
     public void addImage(ActionEvent actionEvent) {

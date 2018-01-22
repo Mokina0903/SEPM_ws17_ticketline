@@ -92,13 +92,7 @@ public class NewsElementController {
         backButton.setVisible(false);
         backButton.setDisable(true);
 
-        try {
-            userService.removeFromUserNotSeen(mainController.getUser().getId(),simpleNewsDTO.getId());
-        } catch (DataAccessException e) {
-            LOGGER.debug("Not possible to load the simple news!");
-            mainController.showGeneralError("Can not close the detailed view of this news.");
-            //e.printStackTrace();
-        }
+        newsController.loadNews();
 
     }
 
@@ -107,6 +101,7 @@ public class NewsElementController {
         Task<DetailedNewsDTO> task = new Task<>() {
             @Override
             protected DetailedNewsDTO call() throws DataAccessException {
+                userService.removeFromUserNotSeen(mainController.getUser().getId(),simpleNewsDTO.getId());
 
                 return newsService.findById(simpleNewsDTO.getId());
             }
@@ -122,7 +117,6 @@ public class NewsElementController {
                     newsImageView.setVisible(true);
                     newsImageView.setManaged(true);
                 }
-
                 backButton.setVisible(true);
                 backButton.setDisable(false);
                 vbNewsElement.setStyle("-fx-background-color:rgba(245, 245, 245,0)");
