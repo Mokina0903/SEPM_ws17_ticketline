@@ -5,12 +5,9 @@ import at.ac.tuwien.inso.sepm.ticketline.client.service.ArtistService;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.EventService;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.LocationService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
-import at.ac.tuwien.inso.sepm.ticketline.rest.event.DetailedEventDTO;
-import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.hall.DetailedHallDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -25,13 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 @Component
 public class EventController extends TabElement implements LocalizationObserver {
@@ -223,89 +213,6 @@ public class EventController extends TabElement implements LocalizationObserver 
 
     public void loadEvents() {
         search();
-    }
-
-
-    public void publishEvent(ActionEvent actionEvent) {
-
-        Task<Void> workerTask = new Task<Void>() {
-            @Override
-            protected Void call() throws Exception {
-
-                // TODO: (David) csvFile == Textbox
-                String csvFile = "import.csv";
-                String cvsSplitBy = ";";
-                BufferedReader br = null;
-                try {
-                    String line = "";
-                    br = new BufferedReader(new FileReader(csvFile));
-                    int cnt = 1;
-                    while ((line = br.readLine()) != null) {
-                        // TITLE;ARTIST_FIRST_NAME;ARTIST_LAST_NAME;DESCRIPTION;START_OF_EVENT;END_OF_EVENT;PRICE;HALL_ID
-                        String[] column = line.split(cvsSplitBy);
-
-                        // TODO: (David) Check input, duplicates?, end before begin?
-
-                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-
-                        String title = column[0];
-                        String firstName = column[1];
-                        String lastName = column[2];
-                        String description = column[3];
-                        LocalDateTime start = LocalDateTime.parse(column[4], formatter);
-                        LocalDateTime end = LocalDateTime.parse(column[5], formatter);
-                        Long price = Long.valueOf(column[6]);
-                        DetailedHallDTO hall = DetailedHallDTO.builder().id(Long.valueOf(column[7])).description("desc").build();
-
-                        DetailedEventDTO detailedEventDTO = DetailedEventDTO.builder()
-                            .title(title)
-                            //.artistFirstname(firstName) TODO: (Von Verena an David) those methods are not implemented jet, when they are remove those comments
-                            // .artistLastName(lastName)
-                            .description(description)
-                            .startOfEvent(start)
-                            .endOfEvent(end)
-                            .price(price)
-                            .hall(hall)
-                            .build();
-
-                        detailedEventDTO = eventService.publishEvent(detailedEventDTO);
-                    }
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    if (br != null) {
-                        try {
-                            br.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-                return null;
-            }
-
-            @Override
-            protected void succeeded() {
-                super.succeeded();
-                loadEvents();
-            }
-
-            @Override
-            protected void failed() {
-                super.failed();
-                loadEvents();
-                mainController.showGeneralError("Failure at PublishEvents: " + getException().getMessage());
-            }
-        };
-
-        workerTask.runningProperty().addListener((observable, oldValue, running) ->
-            mainController.setProgressbarProgress(
-                running ? ProgressBar.INDETERMINATE_PROGRESS : 0)
-        );
-
-        new Thread(workerTask).start();
     }
 
     public boolean isNumeric(String s) {

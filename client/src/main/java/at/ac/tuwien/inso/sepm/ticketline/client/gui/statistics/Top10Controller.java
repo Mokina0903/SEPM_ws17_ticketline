@@ -4,14 +4,11 @@ import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.*;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.customer.CustomerController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.news.NewsController;
-import at.ac.tuwien.inso.sepm.ticketline.client.gui.news.NewsElementController;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.EventService;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.TicketService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
-import at.ac.tuwien.inso.sepm.ticketline.client.util.JavaFXUtils;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.DetailedEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
-import at.ac.tuwien.inso.sepm.ticketline.rest.news.SimpleNewsDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -35,9 +32,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 
 @Component
@@ -118,6 +113,8 @@ public class Top10Controller extends TabElement implements LocalizationObserver 
         LocalDate beginOfThisMonth = LocalDateTime.of(now.getYear(), now.getMonth(), 1, 0, 0).toLocalDate();
         LocalDate endOfThisMonth = LocalDateTime.of(now.getYear(), now.getMonth(), now.getMonth().length(now.isLeapYear()), 0, 0).toLocalDate();
 
+
+        // TODO: (Verena) Laedt leider nicht im Thread, dadurch kurzes Freezing
         try {
             topTenEventsNow = eventService.getTop10EventsOfMonth(beginOfThisMonth, endOfThisMonth);
         } catch (DataAccessException e) {
@@ -126,6 +123,22 @@ public class Top10Controller extends TabElement implements LocalizationObserver 
         }
 
         applyStatsToChart(topTenEventsNow);
+
+        /*
+        fromDate.setValue(beginOfThisMonth);
+        toDate.setValue(endOfThisMonth);
+
+        barChartTop10.getData().clear();
+        XYChart.Series<Number, String> series = new XYChart.Series<Number, String>();
+
+        for (int i = 1; i <= 10; i++) {
+            series.getData().add(new XYChart.Data<Number, String>(0, ""));
+        }
+
+        barChartTop10.getData().addAll(series);
+
+        getTopTenEvents(null);
+        */
 
     }
 
@@ -182,7 +195,7 @@ public class Top10Controller extends TabElement implements LocalizationObserver 
     }
 
     private void applyStatsToChart(List<SimpleEventDTO> topTenEvents) {
-
+        barChartTop10.getData().clear();
         fromDate.getStyleClass().remove("error");
         toDate.getStyleClass().remove("error");
         if(btnGoToBuying.getStyleClass().contains("buyBtn")){
@@ -202,7 +215,6 @@ public class Top10Controller extends TabElement implements LocalizationObserver 
             }
         }
 
-        barChartTop10.getData().clear();
         barChartTop10.getData().addAll(series);
         setUpEventHandler(series);
 

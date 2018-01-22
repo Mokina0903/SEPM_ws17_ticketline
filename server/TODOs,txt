@@ -5,9 +5,52 @@ TODO: Diverse TODOS im Code lösen
 TODO: Alle Protokolle nochmals durchsehen
 TODO: Vollständigkeit der Dokumente prüfen
 
+TODO: Fehler beim Testen gefunden
+ + Authentifizierungs-Controller:
+   - Bei Enter betätigung automatisches einlogen
+
+ + News-Controller:
+   - Wann wird news Liste neue geladen? gesehen/nicht gesehen
+   - Add News kein Sprachenwechsel
+
+ + Event-Controller:
+   - Gefundene Treffer nur Punkte
+
+ + Customer-Controller:
+   - Fenster evt. kleiner?
+   - Sprache ändert sich nicht in der Tabelle
+   - Add Customer kein Sprachwechsel
+
+ + Ticket-Controller:
+   - Tabelle Tickets Customer hüpft
+   - Tickets: vl. symbole statt text?
+   - Tickets Fehlermeldung wird abgeschnitt
+
+ + User-Controller:
+   - Passwort zurücksetzen umstellen auf Symbol
+   - Passwort zurücksetzen geht auch ohne Auswahl
+
+ + Event-Controller:
+   - EventSearch kein Sprachwechsel
+
+
+ + Statistik-Controller:
+   - kein Sprachenwechsel
+
+ + Controller-Benutzer:
+   - Kein Sprachwechsel
+   - Tabelle Rolle nur Zahlen
+   - Benutzer editieren: Kein Sprachenwechsel
+
+
+ + Hallplan-Controller:
+  - Hallplan kein Sprachwechsel möglich
+
+
 -------------------------------------- David --------------------------------------
 
 TODO: Mergen (Done)
+
 
 TODO bis 22.01
  + Fehler finden
@@ -58,7 +101,7 @@ TODO: TestPlan:
 
 
 TODO: Fragen:
- + Kategorien OK
+ + Kategorien OK (Done)
  + Diverse TODOS im Code
 
 
@@ -66,11 +109,16 @@ TODO: Fragen:
 TODO: Datagenerator:
   + User anlegen für Alle
   + News mit Bildern erweitern
+  + Mehr news erzeugen?
+  + News bei User (Done)
+  + Build Konflikte loesen (Done)
 
 TODO: Infrastruktur für Präsendation installieren
 
 
 TODO: Jar-File erstellen
+
+
 
 ------------------------Verena---------------------------------
 TODO:
