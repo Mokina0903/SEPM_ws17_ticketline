@@ -159,7 +159,7 @@ public interface TicketRepository extends JpaRepository<Ticket,Long>{
     @Transactional
     @Query(value = "DELETE Ticket  WHERE is_paid = false AND event_id in "
         +"(Select id as event_id from event where DATEADD('DAY',-30,now()) < start_of_event AND "
-        +"start_of_event < DATEADD('MINUTE',-1 * :minute,now()))", nativeQuery = true)
+        +"start_of_event < DATEADD('MINUTE',-1 * :minutes ,now()))", nativeQuery = true)
     void deleteAlloldReservations(@Param("minutes") Long minutes);
 
 
