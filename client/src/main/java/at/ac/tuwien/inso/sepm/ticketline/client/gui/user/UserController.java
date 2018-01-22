@@ -106,7 +106,6 @@ public class UserController extends TabElement implements LocalizationObserver{
     }
 
     public void loadUsers(){
-        mainController.setGeneralErrorUnvisable();
         Task<List<SimpleUserDTO>> taskloadUsers = new Task<>() {
             @Override
             protected List<SimpleUserDTO> call() throws DataAccessException {
@@ -145,7 +144,6 @@ public class UserController extends TabElement implements LocalizationObserver{
 
     @FXML
     public void unlockUser(ActionEvent actionEvent) {
-        mainController.setGeneralErrorUnvisable();
         lblinvalidAction.setVisible(false);
 
         UserSimpleProperty userSimpleProperty = userTableView.getSelectionModel().getSelectedItem();
@@ -192,7 +190,6 @@ public class UserController extends TabElement implements LocalizationObserver{
 
     @FXML
     public void lockUser(ActionEvent actionEvent) {
-        mainController.setGeneralErrorUnvisable();
         lblinvalidAction.setVisible(false);
 
         UserSimpleProperty userSimpleProperty = userTableView.getSelectionModel().getSelectedItem();

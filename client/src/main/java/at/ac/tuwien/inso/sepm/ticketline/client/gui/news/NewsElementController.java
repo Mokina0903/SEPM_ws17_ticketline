@@ -86,7 +86,6 @@ public class NewsElementController {
 
     public void backToSimpleNewsView(ActionEvent actionEvent) {
         LOGGER.info("Closing the detailed view of the news element.");
-        mainController.setGeneralErrorUnvisable();
         lblText.setText(simpleNewsDTO.getSummary());
         newsImageView.setManaged(false);
         newsImageView.setVisible(false);
@@ -105,7 +104,6 @@ public class NewsElementController {
 
     public void detailedNews(MouseEvent mouseEvent) {
         LOGGER.info("Loading the detail view of this news element");
-        mainController.setGeneralErrorUnvisable();
         Task<DetailedNewsDTO> task = new Task<>() {
             @Override
             protected DetailedNewsDTO call() throws DataAccessException {

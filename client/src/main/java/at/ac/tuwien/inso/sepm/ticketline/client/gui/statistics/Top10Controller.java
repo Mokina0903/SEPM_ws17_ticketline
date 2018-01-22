@@ -91,7 +91,6 @@ public class Top10Controller extends TabElement implements LocalizationObserver 
     }
 
     public void initializeData() {
-        mainController.setGeneralErrorUnvisable();
         xAxis.setLabel("Events");
         xAxis.setTickLabelRotation(90);
         yAxis.setLabel("Sales");
@@ -145,7 +144,6 @@ public class Top10Controller extends TabElement implements LocalizationObserver 
 
     public void getTopTenEvents(ActionEvent actionEvent) {
 
-        mainController.setGeneralErrorUnvisable();
         LocalDate beginDate = fromDate.getValue();
         LocalDate endDate = toDate.getValue();
         String category = comBoxCategory.getSelectionModel().getSelectedItem();
@@ -270,7 +268,6 @@ public class Top10Controller extends TabElement implements LocalizationObserver 
 
     @FXML
     public void goToTicketProzess(ActionEvent actionEvent) {
-        mainController.setGeneralErrorUnvisable();
         if (selectedID == -1) {
             lblNoEventChoosen.setVisible(true);
             return;

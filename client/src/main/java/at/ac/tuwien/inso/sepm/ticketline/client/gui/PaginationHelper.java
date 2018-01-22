@@ -95,7 +95,6 @@ public class PaginationHelper {
 
 
     private ListView<VBox> loadEvents(Integer pageIndex) {
-        mainController.setGeneralErrorUnvisable();
         ListView<VBox> lvElements = new ListView<>();
 
         Task<Page<SimpleEventDTO>> taskloadEvents = new Task<>() {
@@ -139,7 +138,6 @@ public class PaginationHelper {
     }
 
     private ListView<VBox> loadLocations(Integer pageIndex) {
-        mainController.setGeneralErrorUnvisable();
         ListView<VBox> lvElements = new ListView<>();
 
         Task<Page<SimpleLocationDTO>> taskloadEvents = new Task<>() {
@@ -174,7 +172,6 @@ public class PaginationHelper {
     }
 
     private ListView<VBox> loadArtists(Integer pageIndex) {
-        mainController.setGeneralErrorUnvisable();
         ListView<VBox> lvElements = new ListView<>();
 
         Task<Page<SimpleArtistDTO>> taskloadEvents = new Task<>() {

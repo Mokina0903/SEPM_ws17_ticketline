@@ -223,7 +223,6 @@ public class UserDialogController implements LocalizationObserver {
     @FXML
     public void saveUserData(ActionEvent actionEvent) {
 
-        mainController.setGeneralErrorUnvisable();
 
         lblInvalidUsername.setVisible(false);
         versionLb.setVisible(false);

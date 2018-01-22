@@ -258,7 +258,6 @@ public class CustomerDialogController implements LocalizationObserver {
 
     @FXML
     public void handleCancel(ActionEvent actionEvent) {
-        mainController.setGeneralErrorUnvisable();
         LOGGER.info("Canceled action.");
 
         if (isUpdate) {
@@ -273,7 +272,6 @@ public class CustomerDialogController implements LocalizationObserver {
         //todo implement task like in user
 
         LOGGER.info("Creating or saving customer.");
-        mainController.setGeneralErrorUnvisable();
         lblVersionException.setVisible(false);
 
         String mail = tfEmail.getText();

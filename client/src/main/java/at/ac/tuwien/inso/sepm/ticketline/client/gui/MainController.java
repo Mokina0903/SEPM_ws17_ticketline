@@ -43,7 +43,6 @@ public class MainController implements LocalizationObserver {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MainController.class);
 
-
     private static final int TAB_ICON_FONT_SIZE = 20;
     @FXML
     public Label generalErrors;
@@ -318,6 +317,8 @@ public class MainController implements LocalizationObserver {
 
     }
     public void showGeneralFeedback(String text){
+
+
         generalErrors.setText(text);
         generalErrors.setStyle("-fx-text-fill:chartreuse");
         generalErrors.setVisible(true);
@@ -340,7 +341,7 @@ public class MainController implements LocalizationObserver {
 
     }
 
-    public void setGeneralErrorUnvisable() {
+    private void setGeneralErrorUnvisable() {
         generalErrors.setVisible(false);
     }
 

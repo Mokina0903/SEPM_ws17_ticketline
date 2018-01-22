@@ -126,7 +126,6 @@ NewsAddFormularController implements LocalizationObserver {
     public void saveNewNews(ActionEvent actionEvent) {
         LOGGER.info("Saving new news.");
 
-        mainController.setGeneralErrorUnvisable();
         lblInvalidTitle.setVisible(false);
         lblInvalidText.setVisible(false);
 
@@ -171,7 +170,6 @@ NewsAddFormularController implements LocalizationObserver {
 
     public void addImage(ActionEvent actionEvent) {
         LOGGER.info("Adding Image to new news.");
-        mainController.setGeneralErrorUnvisable();
 
         String home = System.getProperty("user.home");
         FileChooser fc = new FileChooser();
