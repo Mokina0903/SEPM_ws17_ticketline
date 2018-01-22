@@ -114,19 +114,12 @@ public class EventEndpoint {
         return checklist;
     }
 
-/*    @RequestMapping(method = RequestMethod.GET, value = "/advSearch/{pageIndex}/{eventsPerPage}\"")
-    @ResponseBody
-    public Page<Event> search(@RequestParam(value = "search") String search,@PathVariable("pageIndex")int pageIndex, @PathVariable("eventsPerPage")int eventsPerPage) {
-        Pageable request = new PageRequest(pageIndex, eventsPerPage, Sort.Direction.ASC, "start_of_event");
-        return eventService.find(search, request);
-    }*/
-
     @RequestMapping(value = "/advSearch/{pageIndex}/{eventsPerPage}", method = RequestMethod.GET)
     @ApiOperation(value = "Get list of simple event entries filtered by parameters")
     public Page<SimpleEventDTO> findAdvanced(@PathVariable("pageIndex")int pageIndex, @PathVariable("eventsPerPage")int eventsPerPage,
                                              @QuerydslPredicate(root = Event.class)Predicate predicate,
                                              @RequestParam HashMap<String,String> parameters) {
-        Pageable request = new PageRequest(pageIndex, eventsPerPage, Sort.Direction.ASC, "start_of_event");
+        Pageable request = new PageRequest(pageIndex, eventsPerPage, Sort.Direction.ASC, "startOfEvent");
         Page<Event> eventPage = eventService.findByAdvancedSearch(parameters, request);
         List<SimpleEventDTO> dtos = eventMapper.eventToSimpleEventDTO(eventPage.getContent());
         return new PageImpl<>(dtos, request, eventPage.getTotalElements());
@@ -137,7 +130,7 @@ public class EventEndpoint {
     public Page<SimpleEventDTO> find(@PathVariable("pageIndex")int pageIndex, @PathVariable("eventsPerPage")int eventsPerPage,
                                              @QuerydslPredicate(root = Event.class)Predicate predicate,
                                              @RequestParam HashMap<String,String> parameters) {
-        Pageable request = new PageRequest(pageIndex, eventsPerPage, Sort.Direction.ASC, "start_of_event");
+        Pageable request = new PageRequest(pageIndex, eventsPerPage, new Sort(Sort.Direction.ASC, "startOfEvent"));
         Page<Event> eventPage = eventService.find(parameters, request);
         List<SimpleEventDTO> dtos = eventMapper.eventToSimpleEventDTO(eventPage.getContent());
         return new PageImpl<>(dtos, request, eventPage.getTotalElements());

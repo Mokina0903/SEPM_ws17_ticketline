@@ -45,4 +45,10 @@ public class SimpleArtistService implements ArtistService{
         return new PageImpl<>(artistList.subList(start, end), request, artistList.size());
 
     }
+
+    @Override
+    public Page<Artist> findByAdvancedSearch(HashMap<String, String> parameters, Pageable request) {
+        Predicate predicate = filterBuilder.buildAnd(new ArtistFilter(parameters));
+        return artistRepository.findAll(predicate, request);
+    }
 }

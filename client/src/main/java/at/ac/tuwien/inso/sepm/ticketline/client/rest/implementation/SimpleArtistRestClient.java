@@ -54,4 +54,31 @@ public class SimpleArtistRestClient implements ArtistRestClient{
             throw new DataAccessException(e.getMessage(), e);
         }
     }
+
+    @Override
+    public Page<SimpleArtistDTO> findAdvanced(Pageable request, MultiValueMap<String, String> parameters) throws DataAccessException {
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+
+            String url = ARTIST_URL + "/advSearch/" + request.getPageNumber() + "/" + request.getPageSize();
+
+            UriComponents builder = UriComponentsBuilder.fromPath(url)
+                .queryParams(parameters).build();
+            HttpEntity<?> entity = new HttpEntity<>(headers);
+
+            ResponseEntity<RestResponsePage<SimpleArtistDTO>> events =
+                restClient.exchange(
+                    restClient.getServiceURI(builder.toUriString()),
+                    HttpMethod.GET,
+                    entity,
+                    new ParameterizedTypeReference<RestResponsePage<SimpleArtistDTO>>() {
+                    });
+            return events.getBody();
+        } catch (HttpStatusCodeException e) {
+            throw new DataAccessException("Failed retrieve artists with status code " + e.getStatusCode().toString());
+        } catch (RestClientException e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+    }
 }

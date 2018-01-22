@@ -13,16 +13,6 @@ import java.util.List;
 
 public interface LocationService {
 
-
-    /**
-     * Find location entries by search parameters.
-     *
-     * @param parameters map of search parameters
-     * @param request Pagable request
-     * @return Page containing the location entries
-     */
-    Page<Location> find(HashMap<String, String> parameters, Pageable request);
-
         /**
          * Find a single location entry by id.
          *
@@ -61,4 +51,22 @@ public interface LocationService {
      * @return list of free seats
      */
     List<Seat> findFreeSeatsForEventInSector( Long event_id, char sector);
+
+    /**
+     * Find location entries by search parameters.
+     *
+     * @param parameters map of search parameters
+     * @param request Pagable request
+     * @return Page containing the location entries
+     */
+    Page<Location> find(HashMap<String, String> parameters, Pageable request);
+
+    /**
+     * Filter location entries by search parameters.
+     *
+     * @param parameters map of search parameters
+     * @param request Pagable request
+     * @return Page containing the location entries
+     */
+    Page<Location> findAdvanced(HashMap<String, String> parameters, Pageable request);
 }

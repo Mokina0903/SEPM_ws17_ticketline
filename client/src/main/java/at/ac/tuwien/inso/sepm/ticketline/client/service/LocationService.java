@@ -57,4 +57,14 @@ public interface LocationService {
      * @throws DataAccessException in case something went wrong
      */
     Page<SimpleLocationDTO> find(Pageable request, MultiValueMap<String, String> parameters) throws DataAccessException;
+
+    /**
+     * Find all Locations by search parameters ordered by City ascending
+     *
+     * @param request page to load
+     * @param parameters search parameters
+     * @return Page of upcoming locations
+     * @throws DataAccessException in case something went wrong
+     */
+    Page<SimpleLocationDTO> findAdvanced(Pageable request, MultiValueMap<String, String> parameters) throws DataAccessException;
 }

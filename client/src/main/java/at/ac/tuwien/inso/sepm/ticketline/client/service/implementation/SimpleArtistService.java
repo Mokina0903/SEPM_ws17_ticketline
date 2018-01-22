@@ -27,4 +27,9 @@ public class SimpleArtistService implements ArtistService{
     public Page<SimpleArtistDTO> find(Pageable request, MultiValueMap<String, String> parameters) throws DataAccessException {
         return artistRestClient.find(request, parameters);
     }
+
+    @Override
+    public Page<SimpleArtistDTO> findAdvanced(Pageable request, MultiValueMap<String, String> parameters) throws DataAccessException {
+        return artistRestClient.findAdvanced(request, parameters);
+    }
 }

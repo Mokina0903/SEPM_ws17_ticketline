@@ -2,7 +2,6 @@ package at.ac.tuwien.inso.sepm.ticketline.client.rest.implementation;
 
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.rest.LocationRestClient;
-import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.hall.DetailedHallDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.hall.SimpleHallDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.location.DetailedLocationDTO;
@@ -138,10 +137,37 @@ public class SimpleLocationsRestClient implements LocationRestClient{
                     });
             return locations.getBody();
         } catch (HttpStatusCodeException e) {
-            throw new DataAccessException("Failed retrieve events with status code " + e.getStatusCode().toString());
+            throw new DataAccessException("Failed retrieve locations with status code " + e.getStatusCode().toString());
         } catch (RestClientException e) {
             throw new DataAccessException(e.getMessage(), e);
         }
 
+    }
+
+    @Override
+    public Page<SimpleLocationDTO> findAdvanced(Pageable request, MultiValueMap<String, String> parameters) throws DataAccessException{
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+
+            String url = LOCATIONS_URL + "/locationAdvSearch/" + request.getPageNumber() + "/" + request.getPageSize();
+
+            UriComponents builder = UriComponentsBuilder.fromPath(url)
+                .queryParams(parameters).build();
+            HttpEntity<?> entity = new HttpEntity<>(headers);
+
+            ResponseEntity<RestResponsePage<SimpleLocationDTO>> locations =
+                restClient.exchange(
+                    restClient.getServiceURI(builder.toUriString()),
+                    HttpMethod.GET,
+                    entity,
+                    new ParameterizedTypeReference<RestResponsePage<SimpleLocationDTO>>() {
+                    });
+            return locations.getBody();
+        } catch (HttpStatusCodeException e) {
+            throw new DataAccessException("Failed retrieve locations with status code " + e.getStatusCode().toString());
+        } catch (RestClientException e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
     }
 }

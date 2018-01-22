@@ -72,6 +72,10 @@ public class EventAdvancedSearchController implements LocalizationObserver {
     private Label lbArtistFName;
     @FXML
     private Label lbArtistLName;
+    @FXML
+    private TextField tfArtistFName;
+    @FXML
+    private TextField tfArtistLName;
 
     @FXML
     private TextField tfEventTitle;
@@ -85,6 +89,14 @@ public class EventAdvancedSearchController implements LocalizationObserver {
 
     @FXML
     private TextField tfLocationTitle;
+    @FXML
+    private TextField tfLocationStreet;
+    @FXML
+    private TextField tfLocationZip;
+    @FXML
+    private TextField tfLocationCity;
+    @FXML
+    private ChoiceBox cbLocationCountry;
 
     @FXML
     private Slider slTime = new Slider(0, 24 * 60, 120);
@@ -106,6 +118,11 @@ public class EventAdvancedSearchController implements LocalizationObserver {
 
     @FXML
     private Button btOk;
+    @FXML
+    private Button btOkLocation;
+    @FXML
+    private Button btOkArtist;
+
     @FXML
     private Button btCancel;
 
@@ -155,6 +172,8 @@ public class EventAdvancedSearchController implements LocalizationObserver {
         rbSeatsYes.setSelected(true);
 
         setButtonGraphic(btOk, "CHECK", Color.OLIVE);
+        setButtonGraphic(btOkArtist, "CHECK", Color.OLIVE);
+        setButtonGraphic(btOkLocation, "CHECK", Color.OLIVE);
         setButtonGraphic(btCancel, "TIMES", Color.CRIMSON);
         setButtonGraphic(dpResetButton,"TRASH",Color.GRAY);
     }
@@ -209,6 +228,27 @@ public class EventAdvancedSearchController implements LocalizationObserver {
 
     void initializeData(Node oldContent) {
         this.oldContent = oldContent;
+    }
+
+
+    @FXML
+    public void handleOkArtist(ActionEvent actionEvent) {
+        MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
+        if (!tfArtistFName.getText().isEmpty()) {
+            parameters.set("artistFirstName", tfArtistFName.getText());
+        }
+        if (!tfArtistLName.getText().isEmpty()) {
+            parameters.set("artistLastName", tfArtistLName.getText());
+        }
+        paginationHelper.setSearchFor(EventSearchFor.ARTIST);
+        paginationHelper.setParameters(parameters);
+        paginationHelper.setUpPagination();
+        eventController.getEventTab().setContent(oldContent);
+    }
+
+    @FXML
+    public void handleOkLocation(ActionEvent actionEvent) {
+        //todo
     }
 
     @FXML

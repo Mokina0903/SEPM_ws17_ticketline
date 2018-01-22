@@ -191,26 +191,6 @@ public class SimpleEventRestClient implements EventRestClient {
     }
 
 
-// https://stackoverflow.com/questions/8297215/spring-resttemplate-get-with-parameters
-
-/*    HttpHeaders headers = new HttpHeaders();
-    headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-
-    UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-        .queryParam("title", title)
-        ...
-
-    HttpEntity<?> entity = new HttpEntity<>(headers);
-
-    HttpEntity<String> response = restTemplate.exchange(
-        builder.build().encode().toUri(),
-        HttpMethod.GET,
-        entity,
-        String.class);*/
-
-//https://docs.spring.io/spring-data/commons/docs/current/reference/html/#core.web.type-safe
-
-
     @Override
     public Page<SimpleEventDTO> findAdvanced(Pageable request, MultiValueMap<String, String> parameters) throws DataAccessException {
         try {
