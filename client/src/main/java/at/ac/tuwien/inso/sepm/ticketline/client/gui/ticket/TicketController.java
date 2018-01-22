@@ -22,6 +22,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Window;
 import javafx.util.Callback;
 import org.controlsfx.glyphfont.FontAwesome;
+import org.controlsfx.glyphfont.GlyphFont;
+import org.controlsfx.glyphfont.GlyphFontRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,6 +92,9 @@ public class TicketController extends TabElement implements LocalizationObserver
 
     private InvoiceDTO invoiceTMP;
 
+    private GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
+    private final int FONT_SIZE = 16;
+
     @Autowired
     private LocalizationSubject localizationSubject;
 
@@ -125,6 +130,7 @@ public class TicketController extends TabElement implements LocalizationObserver
         localizationSubject.attach(this);
 
         localizationSubject.attach(this);
+        btnSuche.setGraphic(fontAwesome.create("SEARCH").size(FONT_SIZE));
     }
 
     public void initializePagination(){
@@ -161,7 +167,6 @@ public class TicketController extends TabElement implements LocalizationObserver
         TableView<TicketRepresentationClass> tvTickets = new TableView<>();
 
         Page<TicketDTO> tickets = loadPage(pageIndex);
-
 
         tvTickets.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         tvTickets.setFixedCellSize(25);
