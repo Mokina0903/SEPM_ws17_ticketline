@@ -10,8 +10,9 @@ TODO: Fehler beim Testen gefunden
    - Bei Enter betätigung automatisches einlogen
 
  + News-Controller:
-   - Wann wird news Liste neue geladen? gesehen/nicht gesehen
+   - Wann wird news Liste neue geladen? gesehen/nicht gesehen (Done)
    - Add News kein Sprachenwechsel
+   - Add News mit Bild dauert lange (Done)
 
  + Event-Controller:
    - Gefundene Treffer nur Punkte
@@ -36,6 +37,7 @@ TODO: Fehler beim Testen gefunden
 
  + Statistik-Controller:
    - kein Sprachenwechsel
+   - Statistik lädt beim ersten mal langsam (Done)
 
  + Controller-Benutzer:
    - Kein Sprachwechsel
