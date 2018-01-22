@@ -58,7 +58,7 @@ public class EventEndpoint {
                                                   @PathVariable("eventsPerPage")int eventsPerPage,
                                                   @PathVariable("artistId") long artistId) {
         //mapping of Event to EventDTO
-        Pageable request = new PageRequest(pageIndex, eventsPerPage);
+        Pageable request = new PageRequest(pageIndex, eventsPerPage,Sort.Direction.ASC, "start_of_event");
         Page<Event> eventPage = eventService.findAllByArtistId(artistId,request);
         List<SimpleEventDTO> dtos = eventMapper.eventToSimpleEventDTO(eventPage.getContent());
         return new PageImpl<>(dtos, request, eventPage.getTotalElements());

@@ -121,8 +121,7 @@ public interface EventRepository extends JpaRepository<Event, Long>,
      * @param request of page
      * @return page with filtered events
      */
-    @Query(value = "Select * from Event where id in (SELECT event_id FROM ARTISTS_OF_EVENT where artist_id=:artistId) " +
-        "order by start_of_event asc #pageable"
+    @Query(value = "Select * from Event where id in (SELECT event_id FROM ARTISTS_OF_EVENT where artist_id=:artistId) /*#pageable*/"
     , nativeQuery = true)
     Page<Event> findAllByArtistId( @Param("artistId") Long artistId, Pageable request);
 
