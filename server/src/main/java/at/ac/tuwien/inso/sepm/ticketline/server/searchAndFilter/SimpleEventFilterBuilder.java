@@ -45,6 +45,7 @@ public class SimpleEventFilterBuilder implements EventFilterBuilder {
         return new OptionalBooleanBuilder(EVENT.isNotNull())
             .notEmptyAnd(EVENT.title::containsIgnoreCase, filter.getTitle())
             .notEmptyOr(EVENT.description::containsIgnoreCase, filter.getDescription())
+            .notNullAnd(EVENT.startOfEvent::goe, filter.getPast())
             .build();
     }
 }

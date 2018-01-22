@@ -171,9 +171,10 @@ public class EventController extends TabElement implements LocalizationObserver 
 
     private MultiValueMap<String, String> setParametersForEventSearch() {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.set("past", "toFilter");
         if (!tfSearchFor.getText().isEmpty() && !tfSearchFor.getText().equals(" ")) {
-            params.add("title", tfSearchFor.getText());
-            params.add("description", tfSearchFor.getText());
+            params.set("title", tfSearchFor.getText());
+            params.set("description", tfSearchFor.getText());
         }
         return params;
     }
@@ -184,9 +185,9 @@ public class EventController extends TabElement implements LocalizationObserver 
             if (isNumeric(tfSearchFor.getText())) {
                 params.add("zip", tfSearchFor.getText());
             } else {
-                params.add("descriptionEvent", tfSearchFor.getText());
-                params.add("city", tfSearchFor.getText());
-                params.add("street", tfSearchFor.getText());
+                params.set("descriptionEvent", tfSearchFor.getText());
+                params.set("city", tfSearchFor.getText());
+                params.set("street", tfSearchFor.getText());
             }
         }
         return params;
@@ -195,8 +196,8 @@ public class EventController extends TabElement implements LocalizationObserver 
     private MultiValueMap<String, String> setParametersForArtistSearch() {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         if (!tfSearchFor.getText().isEmpty() && !tfSearchFor.getText().equals(" ")) {
-            params.add("artistFirstName", tfSearchFor.getText());
-            params.add("artistLastName", tfSearchFor.getText());
+            params.set("artistFirstName", tfSearchFor.getText());
+            params.set("artistLastName", tfSearchFor.getText());
         }
         return params;
     }
