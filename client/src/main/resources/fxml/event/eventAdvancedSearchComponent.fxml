@@ -17,7 +17,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="500.0" prefWidth="650.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.event.EventAdvancedSearchController">
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="500.0" prefWidth="650.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.event.EventAdvancedSearchController">
 
     <top>
         <fx:include fx:id="tabHeader" source="/fxml/tabHeader.fxml" />
@@ -151,7 +151,7 @@
                   <Label fx:id="lbLocationCity" alignment="BOTTOM_LEFT" contentDisplay="CENTER" text="%location.city" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                   <HBox alignment="TOP_RIGHT" GridPane.columnIndex="2">
                      <children>
-                        <Button fx:id="btOkLocation" maxWidth="-Infinity" onAction="#handleOk" prefWidth="40.0" />
+                        <Button fx:id="btOkLocation" maxWidth="-Infinity" onAction="#handleOkLocation" prefWidth="40.0" />
                      </children>
                   </HBox>
                </children>

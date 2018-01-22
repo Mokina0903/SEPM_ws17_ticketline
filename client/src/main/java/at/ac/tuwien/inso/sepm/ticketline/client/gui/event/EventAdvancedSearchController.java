@@ -250,11 +250,22 @@ public class EventAdvancedSearchController implements LocalizationObserver {
     public void handleOkLocation(ActionEvent actionEvent) {
         //todo
         MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
-        if (!tfLocationTitle.getText().isEmpty()) {}
-        if (!tfLocationStreet.getText().isEmpty()) {}
-        if (!tfLocationCity.getText().isEmpty()) {}
-        if (!tfLocationZip.getText().isEmpty()) {}
-        // todo country
+        if (!tfLocationTitle.getText().isEmpty()){
+            parameters.set("descriptionEvent", tfLocationTitle.getText());
+        }
+        if (!tfLocationStreet.getText().isEmpty()) {
+            parameters.set("street", tfLocationStreet.getText());
+        }
+        if (!tfLocationCity.getText().isEmpty()) {
+            parameters.set("city", tfLocationCity.getText());
+        }
+        if (!tfLocationZip.getText().isEmpty()) {
+            //todo check if numeric
+            parameters.set("zip", tfLocationZip.getText());
+        }
+/*        if (!tfLocationCountry.getText().isEmpty) {
+
+        }*/
         paginationHelper.setSearchFor(EventSearchFor.LOCATION_ADV);
         paginationHelper.setParameters(parameters);
         paginationHelper.setUpPagination();

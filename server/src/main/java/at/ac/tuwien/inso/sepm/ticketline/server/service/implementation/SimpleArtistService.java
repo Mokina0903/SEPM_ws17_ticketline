@@ -44,7 +44,6 @@ public class SimpleArtistService implements ArtistService{
     @Override
     public Page<Artist> findByAdvancedSearch(HashMap<String, String> parameters, Pageable request) {
         Predicate predicate = filterBuilder.buildAnd(new ArtistFilter(parameters));
-        System.out.println("Prd in adv search Art: " + predicate);
         return artistRepository.findAll(predicate, request);
     }
 }

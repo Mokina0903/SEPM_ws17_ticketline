@@ -99,6 +99,11 @@ public class SimpleEventService implements EventService {
     }
 
     @Override
+    public Page<Event> findAllByLocationId(Long locationId, Pageable request) {
+        return eventRepository.findAllByLocationId(locationId, request);
+    }
+
+    @Override
     public Page<Event> find(HashMap<String, String> parameters, Pageable request) {
         Predicate predicate = filterBuilder.buildOr(new EventFilter(parameters));
         return eventRepository.findAll(predicate, request);

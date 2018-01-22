@@ -110,7 +110,7 @@ public class PaginationHelper {
                     events = eventService.findByArtist(request, artistDTO.getId());
                 }
                 else {
-                  // events = eventService.findByLocation(request, locationDTO);
+                   events = eventService.findByLocation(request, locationDTO.getId());
                 }
                 return events;
             }

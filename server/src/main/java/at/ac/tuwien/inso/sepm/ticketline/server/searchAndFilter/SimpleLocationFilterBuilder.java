@@ -16,10 +16,10 @@ public class SimpleLocationFilterBuilder implements LocationFilterBuilder{
 
         return new OptionalBooleanBuilder(LOCATION.isNotNull())
             .notEmptyAnd(LOCATION.description::containsIgnoreCase, filter.getDescription())
-            .notEmptyAnd(LOCATION.city::containsIgnoreCase, filter.getCountry())
+            .notEmptyAnd(LOCATION.city::containsIgnoreCase, filter.getCity())
             .notEmptyAnd(LOCATION.street::containsIgnoreCase, filter.getStreet())
             .notNullAnd(LOCATION.zip::eq, filter.getZip())
-            .notNullAnd(LOCATION.country::eq, filter.getCountry())
+            .notEmptyAnd(LOCATION.country::containsIgnoreCase, filter.getCountry())
             .build();
     }
 
@@ -27,8 +27,9 @@ public class SimpleLocationFilterBuilder implements LocationFilterBuilder{
     public Predicate buildOr(LocationFilter filter) {
         return new OptionalBooleanBuilder(LOCATION.isNotNull())
             .notEmptyAnd(LOCATION.description::containsIgnoreCase, filter.getDescription())
-            .notEmptyOr(LOCATION.city::containsIgnoreCase, filter.getCountry())
+            .notEmptyOr(LOCATION.country::containsIgnoreCase, filter.getCountry())
             .notEmptyOr(LOCATION.street::containsIgnoreCase, filter.getStreet())
+            .notEmptyOr(LOCATION.city::containsIgnoreCase, filter.getCity())
             .notNullAnd(LOCATION.zip::eq, filter.getZip())
             .build();
     }

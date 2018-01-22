@@ -129,7 +129,7 @@ public interface EventRepository extends JpaRepository<Event, Long>,
     /**
      * filter events by location
      *
-     * @param locationId of eventHall
+     * @param locationId of location
      * @param request of page
      * @return page with filtered events
      */

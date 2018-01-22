@@ -119,6 +119,26 @@ public class SimpleEventRestClient implements EventRestClient {
     }
 
     @Override
+    public Page<SimpleEventDTO> findAllByLocationId(Long locationId, Pageable request) throws DataAccessException {
+        try {
+            LOGGER.debug("Retrieving all upcoming events by LocationId from {}", restClient.getServiceURI(EVENT_URL));
+            ResponseEntity<RestResponsePage<SimpleEventDTO>> events =
+                restClient.exchange(
+                    restClient.getServiceURI(EVENT_URL + "/findByLocationId" + request.getPageNumber() + "/" + request.getPageSize() + "/" + locationId),
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<RestResponsePage<SimpleEventDTO>>() {
+                    });
+            LOGGER.debug("Result status was {} with content {}", events.getStatusCode(), events.getBody());
+            return events.getBody();
+        } catch (HttpStatusCodeException e) {
+            throw new DataAccessException("Failed retrieve events with status code " + e.getStatusCode().toString());
+        } catch (RestClientException e) {
+            throw new DataAccessException(e.getMessage(), e);
+        }
+    }
+
+    @Override
     public DetailedEventDTO publishEvent(DetailedEventDTO detailedEventDTO) throws DataAccessException, ErrorDTO {
         try {
             LOGGER.debug("Publish Event", restClient.getServiceURI(EVENT_URL));

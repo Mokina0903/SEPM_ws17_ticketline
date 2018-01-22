@@ -49,6 +49,16 @@ public interface EventRestClient {
     Page<SimpleEventDTO> findAllByArtistId(Long artistId, Pageable request) throws DataAccessException;
 
     /**
+     * Find all events with given location ordered by Date ascending
+     *
+     * @param request  page to load
+     * @param id of Location
+     * @return list of events
+     * @throws DataAccessException in case something went wrong
+     */
+    Page<SimpleEventDTO> findAllByLocationId(Long id, Pageable request) throws DataAccessException;
+
+    /**
      * Find all events by combined search parameters ordered by Date ascending
      *
      * @param request page to load
@@ -89,5 +99,6 @@ public interface EventRestClient {
      * @return a list of events, with category search
      */
     List<SimpleEventDTO> getTop10EventsOfMonthFilteredbyCategory(LocalDate beginOfMonth, LocalDate endOfMonth, String category) throws DataAccessException;
+
 
 }
