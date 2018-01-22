@@ -99,7 +99,7 @@ public class EventAdvancedSearchController implements LocalizationObserver {
     private TextField tfLocationCountry;
 
     @FXML
-    private Slider slTime = new Slider(0, 24 * 60, 120);
+    private Slider slTime;
     @FXML
     private Slider slDuration;
 
@@ -125,6 +125,8 @@ public class EventAdvancedSearchController implements LocalizationObserver {
 
     @FXML
     private Button btCancel;
+    @FXML
+    private Button btReset;
 
 
     @FXML
@@ -163,7 +165,7 @@ public class EventAdvancedSearchController implements LocalizationObserver {
 
         setUpSlider(slTime, lbTimeInfo);
         setUpSlider(slDuration, lbDurationInfo);
-        cbCategory.setItems(FXCollections.observableArrayList( EventCategory.values()));
+        cbCategory.setItems(FXCollections.observableArrayList(EventCategory.values()));
         cbCategory.setValue(EventCategory.All);
         dpDate.setEditable(false);
 
@@ -175,7 +177,9 @@ public class EventAdvancedSearchController implements LocalizationObserver {
         setButtonGraphic(btOkArtist, "CHECK", Color.OLIVE);
         setButtonGraphic(btOkLocation, "CHECK", Color.OLIVE);
         setButtonGraphic(btCancel, "TIMES", Color.CRIMSON);
-        setButtonGraphic(dpResetButton,"TRASH",Color.GRAY);
+        setButtonGraphic(dpResetButton, "TRASH", Color.GRAY);
+        setButtonGraphic(btReset, "TRASH", Color.GRAY);
+
     }
 
     private void setUpSlider(Slider slider, Label infoLabel) {
@@ -250,7 +254,7 @@ public class EventAdvancedSearchController implements LocalizationObserver {
     public void handleOkLocation(ActionEvent actionEvent) {
         //todo
         MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
-        if (!tfLocationTitle.getText().isEmpty() || tfLocationTitle.getText().equals(" ")){
+        if (!tfLocationTitle.getText().isEmpty() || tfLocationTitle.getText().equals(" ")) {
             parameters.set("descriptionEvent", tfLocationTitle.getText());
         }
         if (!tfLocationStreet.getText().isEmpty() || tfLocationStreet.getText().equals(" ")) {
@@ -318,19 +322,40 @@ public class EventAdvancedSearchController implements LocalizationObserver {
             parameters.set("category", cbCategory.getSelectionModel().getSelectedItem().toString());
         }
 
-
-
-        //type
-
-        //old
         paginationHelper.setSearchFor(EventSearchFor.ALL);
         paginationHelper.setParameters(parameters);
         paginationHelper.setUpPagination();
         eventController.getEventTab().setContent(oldContent);
     }
 
+    @FXML
+    public void resetSearchfields() {
+        tfEventTitle.setText("");
+        tfEventDescription.setText("");
+        tfEventPriceFrom.setText("");
+        tfEventPriceTo.setText("");
+        slTime.setValue(0);
+        slDuration.setValue(0);
+        rbSeatsNo.setSelected(true);
+        rbSeatsYes.setSelected(true);
+        rbUpcoming.setSelected(true);
+        rbPast.setSelected(false);
+        dpDate.getEditor().setText("");
+        cbCategory.setValue(EventCategory.All);
 
-    public void onDPResetButtonClicked( ActionEvent actionEvent ) {
+        tfLocationTitle.setText("");
+        tfLocationStreet.setText("");
+        tfLocationZip.setText("");
+        tfLocationCity.setText("");
+        tfLocationCountry.setText("");
+
+        cbCategory.getSelectionModel().selectFirst();
+        tfArtistFName.setText("");
+        tfArtistLName.setText("");
+    }
+
+
+    public void onDPResetButtonClicked(ActionEvent actionEvent) {
         dpDate.setValue(null);
     }
 
@@ -351,19 +376,22 @@ public class EventAdvancedSearchController implements LocalizationObserver {
         lbEventDuration.setText(BundleManager.getBundle().getString("events.duration"));
         lbEventType.setText(BundleManager.getBundle().getString("events.type"));
         lbEventSeats.setText(BundleManager.getBundle().getString("events.seats"));
+
+        rbUpcoming.setText(BundleManager.getBundle().getString("events.future"));
+        rbPast.setText(BundleManager.getBundle().getString("events.old"));
+        rbSeatsNo.setText(BundleManager.getBundle().getString("general.no"));
+        rbSeatsYes.setText(BundleManager.getBundle().getString("general.yes"));
+
         lbLocation.setText(BundleManager.getBundle().getString("location.location"));
         lbLocationTitle.setText(BundleManager.getBundle().getString("events.title"));
         lbLocationZip.setText(BundleManager.getBundle().getString("location.zip"));
         lbLocationStreet.setText(BundleManager.getBundle().getString("location.street"));
         lbLocationCity.setText(BundleManager.getBundle().getString("location.city"));
         lbLocationCountry.setText(BundleManager.getBundle().getString("location.country"));
+
         lbArtist.setText(BundleManager.getBundle().getString("artist.artist"));
         lbArtistFName.setText(BundleManager.getBundle().getString("artist.fname"));
         lbArtistLName.setText(BundleManager.getBundle().getString("artist.lname"));
-        rbUpcoming.setId(BundleManager.getBundle().getString("events.upcoming"));
-        rbPast.setId(BundleManager.getBundle().getString("events.past"));
-        rbSeatsNo.setId(BundleManager.getBundle().getString("events.seatsNo"));
-        rbSeatsYes.setId(BundleManager.getBundle().getString("events.seatsYes"));
 
     }
 }
