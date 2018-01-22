@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane fx:id="customerOverviewRoot" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.customer.CustomerController">
+<BorderPane fx:id="customerOverviewRoot" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.customer.CustomerController">
 
     <top>
         <fx:include fx:id="tabHeader" source="/fxml/tabHeader.fxml" />
@@ -20,19 +20,19 @@
     <center>
         <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefWidth="600.0">
             <children>
-                <GridPane maxHeight="-Infinity" prefHeight="100.0" prefWidth="463.0" vgap="5.0" VBox.vgrow="ALWAYS">
+                <GridPane maxHeight="-Infinity" prefHeight="57.0" prefWidth="583.0" vgap="5.0" VBox.vgrow="ALWAYS">
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="300.0" prefWidth="340.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="424.0" minWidth="10.0" prefWidth="338.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="424.0" minWidth="10.0" prefWidth="67.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="424.0" minWidth="10.0" prefWidth="203.0" />
                     </columnConstraints>
                     <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <children>
                         <TextField fx:id="tfSearch" promptText="%customer.searchField" />
                         <Button fx:id="btSearch" defaultButton="true" mnemonicParsing="false" onAction="#search" prefWidth="40.0" GridPane.columnIndex="1" />
-                        <Label fx:id="lbNoMatch" text="%customer.noMatches" textFill="#cc1d1d" GridPane.rowIndex="1" />
+                        <Label fx:id="lbNoMatch" prefHeight="19.0" prefWidth="175.0" text="%customer.noMatches" textFill="#cc1d1d" GridPane.columnIndex="2" />
                     </children>
                     <VBox.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -41,7 +41,7 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </padding>
                 </GridPane>
-                <Pagination fx:id="pagination" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="400.0" VBox.vgrow="ALWAYS">
+                <Pagination fx:id="pagination" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="540.0" VBox.vgrow="ALWAYS">
                <VBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </VBox.margin>
@@ -60,10 +60,10 @@
             <Button fx:id="btNew" onAction="#openNewDialog" prefWidth="40.0" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="1" />
             <Button fx:id="btEdit" onAction="#openEditDialog" prefWidth="40.0" GridPane.columnIndex="0" GridPane.rowIndex="2" />
             <Button fx:id="btTickets" onAction="#openEventTab" prefWidth="40.0" GridPane.columnIndex="0" GridPane.rowIndex="3" />
-            <Button fx:id="btNext" text="%customer.next" styleClass="buyBtn" onAction="#openHallplan" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
-            <Button fx:id="btnAnonymous" text="Anonym" styleClass="buyBtn" onAction="#openHallplan" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
-            <Button fx:id="btnBackToEvent"  onAction="#backToPreviousTab" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
-            <Label fx:id="lbNoCustomerError" textFill="#cc1d1d" GridPane.columnIndex="0" GridPane.rowIndex="7"/>
+            <Button fx:id="btNext" onAction="#openHallplan" styleClass="buyBtn" text="%customer.next" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+            <Button fx:id="btnAnonymous" onAction="#openHallplan" styleClass="buyBtn" text="Anonym" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+            <Button fx:id="btnBackToEvent" onAction="#backToPreviousTab" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+            <Label fx:id="lbNoCustomerError" textFill="#cc1d1d" GridPane.columnIndex="0" GridPane.rowIndex="7" />
             <columnConstraints>
                 <ColumnConstraints />
             </columnConstraints>
@@ -74,6 +74,8 @@
                 <RowConstraints />
                 <RowConstraints />
                 <RowConstraints />
+            <RowConstraints />
+            <RowConstraints />
             </rowConstraints>
         </GridPane>
     </right>

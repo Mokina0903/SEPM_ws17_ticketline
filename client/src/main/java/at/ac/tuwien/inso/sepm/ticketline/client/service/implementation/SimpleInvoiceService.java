@@ -214,6 +214,7 @@ public class SimpleInvoiceService implements InvoiceService{
 
                FileChooser fileChooser = new FileChooser();
                fileChooser.setInitialFileName((invoiceDTO.isStorno()?"Reversal":"Invoice")+invoiceDTO.getInvoiceNumber()+".pdf");
+               fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("pdf File","*.pdf"));
                fileChooser.setTitle("Save "+(invoiceDTO.isStorno()?"Reversal":"Invoice")+"PDF");
                File file= fileChooser.showSaveDialog(window);
 

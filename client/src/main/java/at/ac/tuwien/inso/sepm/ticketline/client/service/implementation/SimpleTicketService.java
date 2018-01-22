@@ -232,6 +232,7 @@ public class SimpleTicketService implements TicketService {
 
             FileChooser fileChooser = new FileChooser();
             fileChooser.setInitialFileName("Reservation"+tickets.get(0).getReservationNumber()+".pdf");
+            fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("pdf File","*.pdf"));
             File file= fileChooser.showSaveDialog(window);
             if(file!=null) {
                 pdfDocument.save(file);

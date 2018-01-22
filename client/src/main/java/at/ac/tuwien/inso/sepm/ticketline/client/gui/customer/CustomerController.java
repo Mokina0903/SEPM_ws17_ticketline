@@ -80,7 +80,7 @@ public class CustomerController extends TabElement implements LocalizationObserv
 
     private Tab customerTab = new Tab();
     private Tab currentTab;
-    private final int CUSTOMER_PER_PAGE = 12;
+    private final int CUSTOMER_PER_PAGE = 17;
     private boolean isTicketView;
 
     private Node oldContent;
@@ -167,6 +167,7 @@ public class CustomerController extends TabElement implements LocalizationObserv
         btEdit.setGraphic(fontAwesome.create("PENCIL_SQUARE_ALT").size(FONT_SIZE));
         btTickets.setGraphic(fontAwesome.create("TICKET").size(FONT_SIZE));
         btnBackToEvent.setGraphic(fontAwesome.create("ARROW_LEFT").size(FONT_SIZE));
+        btSearch.setGraphic(fontAwesome.create("SEARCH").size(FONT_SIZE));
 
 
         lbNoCustomerError.setWrapText(true);
@@ -364,7 +365,6 @@ public class CustomerController extends TabElement implements LocalizationObserv
             tabHeaderController.setTitle(BundleManager.getBundle().getString("customer.customer"));
         }
 
-        btSearch.setText(BundleManager.getBundle().getString("menu.search"));
         tfSearch.setPromptText(BundleManager.getBundle().getString("customer.searchField"));
         lbNoMatch.setText(BundleManager.getBundle().getString("customer.noMatches"));
 
