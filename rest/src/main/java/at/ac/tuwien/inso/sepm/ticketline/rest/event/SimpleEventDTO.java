@@ -20,7 +20,7 @@ public class SimpleEventDTO implements PageableDAO{
     private List<SimpleArtistDTO> artists;
 
     @ApiModelProperty(required = true, name = "The description of the event")
-    private String descriptionSummary;
+    private String description;
 
     @ApiModelProperty(required = true, name = "The price of one ticket for the event")
     private Long price;
@@ -61,12 +61,12 @@ public class SimpleEventDTO implements PageableDAO{
         this.artists = artists;
     }
 
-    public String getDescriptionSummary() {
-        return descriptionSummary;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDescriptionSummary( String descriptionSummary ) {
-        this.descriptionSummary = descriptionSummary;
+    public void setDescription( String description ) {
+        this.description = description;
     }
 
     public Long getPrice() {
@@ -74,6 +74,11 @@ public class SimpleEventDTO implements PageableDAO{
     }
 
     public double getPriceInEuro(){return(double)price/(double)100;}
+
+    public String getPriceInEuroString(){
+
+        double priced = (double)price/100d;
+        return String.format("%.2f",priced);}
 
     public void setPrice( Long price ) {
         this.price = price;
@@ -117,7 +122,7 @@ public class SimpleEventDTO implements PageableDAO{
             "id=" + id +
             ", title='" + title + '\'' +
             ", artists=" + artists +
-            ", descriptionSummary='" + descriptionSummary + '\'' +
+            ", descriptionSummary='" + description + '\'' +
             ", price=" + price +
             ", startOfEvent=" + startOfEvent +
             ", endOfEvent=" + endOfEvent +
@@ -148,7 +153,7 @@ public class SimpleEventDTO implements PageableDAO{
         int result = getId().hashCode();
         result = 31 * result + getTitle().hashCode();
         result = 31 * result + getArtists().hashCode();
-        result = 31 * result + getDescriptionSummary().hashCode();
+        result = 31 * result + getDescription().hashCode();
         result = 31 * result + getPrice().hashCode();
         result = 31 * result + getStartOfEvent().hashCode();
         result = 31 * result + getEndOfEvent().hashCode();
@@ -165,7 +170,7 @@ public class SimpleEventDTO implements PageableDAO{
         private Long id;
         private String title;
         private List<SimpleArtistDTO> artists;
-        private String descriptionSummary;
+        private String description;
         private Long price;
         private LocalDateTime startOfEvent;
         private LocalDateTime endOfEvent;
@@ -187,8 +192,8 @@ public class SimpleEventDTO implements PageableDAO{
             return this;
         }
 
-        public SimpleEventDTOBuilder descriptionSummary(String description){
-            this.descriptionSummary = description;
+        public SimpleEventDTOBuilder description(String description){
+            this.description = description;
             return this;
         }
 
@@ -222,7 +227,7 @@ public class SimpleEventDTO implements PageableDAO{
             event.setId(id);
             event.setTitle(title);
             event.setArtists(artists);
-            event.setDescriptionSummary(descriptionSummary);
+            event.setDescription(description);
             event.setPrice(price);
             event.setStartOfEvent(startOfEvent);
             event.setEndOfEvent(endOfEvent);

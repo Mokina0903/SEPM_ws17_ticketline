@@ -17,7 +17,6 @@ public interface EventMapper {
 
     List<SimpleEventDTO> eventToSimpleEventDTO( List<Event> all);
 
-    @Mapping(source = "description", target = "descriptionSummary", qualifiedBy = EventSummaryMapper.EventSummary.class)
     SimpleEventDTO eventToSimpleEventDTO(Event one);
 
 }

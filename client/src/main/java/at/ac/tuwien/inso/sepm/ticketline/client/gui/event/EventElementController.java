@@ -10,6 +10,7 @@ import at.ac.tuwien.inso.sepm.ticketline.client.gui.news.NewsController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket.HallplanController;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.EventService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
+import at.ac.tuwien.inso.sepm.ticketline.rest.artist.SimpleArtistDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.DetailedEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
@@ -23,6 +24,11 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import org.controlsfx.glyphfont.FontAwesome;
+import org.controlsfx.glyphfont.Glyph;
+import org.controlsfx.glyphfont.GlyphFont;
+import org.controlsfx.glyphfont.GlyphFontRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
@@ -48,18 +54,18 @@ public class EventElementController implements LocalizationObserver {
     public Label lblText;
     @FXML
     public Button ticketReservationButton;
-    @FXML
-    public ImageView eventImageView;
+
     @FXML
     public Label lblPrice;
     @FXML
     public VBox vbElement;
     @FXML
     public Label lblPriceText;
-    @FXML
-    public Label lblArtistName;
+
     @FXML
     public Label lblArtist;
+    @FXML
+    public Label lblFreeTickets;
 
     private EventService eventService;
     private SimpleEventDTO simpleEventDTO;
@@ -87,19 +93,29 @@ public class EventElementController implements LocalizationObserver {
         this.simpleEventDTO = simpleEventDTO;
         this.eventService = eventService;
         this.myContainer = myContainer;
+        String artistString = "";
 
-        lblStartDate.setText(EVENT_DTF.format(simpleEventDTO.getStartOfEvent()));
-        lblEndDate.setText(EVENT_DTF.format(simpleEventDTO.getEndOfEvent()));
+        if(simpleEventDTO.getArtists()!=null && !simpleEventDTO.getArtists().isEmpty()){
+            for(SimpleArtistDTO artistDTO:simpleEventDTO.getArtists()){
+                artistString+="#"+artistDTO.getArtistFirstName()+" "+artistDTO.getArtistLastName()+" ";
+            }
+        }
+
+        lblStartDate.setText(BundleManager.getBundle().getString("event.from")+": "+EVENT_DTF.format(simpleEventDTO.getStartOfEvent())+" -->");
+        lblEndDate.setText(BundleManager.getBundle().getString("event.to")+": "+EVENT_DTF.format(simpleEventDTO.getEndOfEvent()));
         lblTitle.setText(simpleEventDTO.getTitle());
-        // lblArtistName.setText(simpleEventDTO.getArtistFirstName()+" "+simpleEventDTO.getArtistLastName());
-        lblArtist.setText(BundleManager.getBundle().getString("events.artist"));
-        lblPrice.setText(String.valueOf(simpleEventDTO.getPrice()));
+        lblArtist.setText(artistString);
+        lblPrice.setText(simpleEventDTO.getPriceInEuro()+"\u20ac");
         lblText.setMaxWidth(500);
-        lblText.setText(simpleEventDTO.getDescriptionSummary());
+        lblText.setText(simpleEventDTO.getDescription());
 
         lblPriceText.setText(BundleManager.getBundle().getString("events.price") + ": ");
 
-        eventImageView.setVisible(false);
+        Glyph glyph =GlyphFontRegistry.font("FontAwesome").create(FontAwesome.Glyph.valueOf("TICKET"));
+        glyph.setColor(Color.GRAY);
+        //glyph.setFontSize(FONT_SIZE);
+        ticketReservationButton.setGraphic(glyph);
+
     }
 
     public void ticketReservationForEvent(ActionEvent actionEvent) {
@@ -137,7 +153,8 @@ public class EventElementController implements LocalizationObserver {
 
     @Override
     public void update() {
-        lblArtist.setText(BundleManager.getBundle().getString("events.artist"));
+        lblStartDate.setText(BundleManager.getBundle().getString("event.from")+": "+EVENT_DTF.format(simpleEventDTO.getStartOfEvent())+" -->");
+        lblEndDate.setText(BundleManager.getBundle().getString("event.to")+": "+EVENT_DTF.format(simpleEventDTO.getEndOfEvent()));
         lblPriceText.setText(BundleManager.getBundle().getString("events.price") + ": ");
     }
 }
