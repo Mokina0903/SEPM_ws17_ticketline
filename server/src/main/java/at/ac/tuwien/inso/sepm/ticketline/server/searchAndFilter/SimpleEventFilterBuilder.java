@@ -28,14 +28,13 @@ public class SimpleEventFilterBuilder implements EventFilterBuilder {
             .notNullAnd(EVENT.duration::loe, filter.getDurationUpperBound())
             .notNullAnd(EVENT.duration::goe, filter.getDurationLowerBound())
 
-            .notNullAnd(EVENT.seatSelection::ne, filter.getNoSeats())
-            .notNullAnd(EVENT.seatSelection::eq, filter.getSeats())
+            .notNullAnd(EVENT.seatSelection::eq, filter.getNoSeats())
+            .notNullAnd(EVENT.seatSelection::ne, filter.getSeats())
 
             .notNullAnd(EVENT.startOfEvent::loe, filter.getUpcoming())
             .notNullAnd(EVENT.startOfEvent::goe, filter.getPast())
 
              .notEmptyAnd(EVENT.category::eq, filter.getCategory())
-
             //todo also show ausverkauft
             .build();
     }

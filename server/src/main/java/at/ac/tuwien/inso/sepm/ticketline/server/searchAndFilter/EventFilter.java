@@ -77,9 +77,11 @@ public class EventFilter {
         }
         if (parameters.containsKey("upcoming")) {
             this.upcoming = LocalDateTime.now().plusMinutes(30);
+
         }
         if (parameters.containsKey("past")) {
-            this.past = LocalDateTime.now();
+            this.past = LocalDateTime.now().plusMinutes(30);
+            System.out.println("_________________________________ " + past);
         }
         if (parameters.containsKey("category")) {
             this.category = parameters.get("category");

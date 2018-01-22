@@ -104,13 +104,13 @@ public class EventAdvancedSearchController implements LocalizationObserver {
     private Slider slDuration;
 
     @FXML
-    private RadioButton rbSeatsNo;
+    private CheckBox rbSeatsNo;
     @FXML
-    private RadioButton rbSeatsYes;
+    private CheckBox rbSeatsYes;
     @FXML
-    private RadioButton rbUpcoming;
+    private CheckBox rbUpcoming;
     @FXML
-    private RadioButton rbPast;
+    private CheckBox rbPast;
     @FXML
     private DatePicker dpDate;
     @FXML
@@ -172,6 +172,7 @@ public class EventAdvancedSearchController implements LocalizationObserver {
         rbUpcoming.setSelected(true);
         rbSeatsNo.setSelected(true);
         rbSeatsYes.setSelected(true);
+
 
         setButtonGraphic(btOk, "CHECK", Color.OLIVE);
         setButtonGraphic(btOkArtist, "CHECK", Color.OLIVE);
@@ -303,17 +304,21 @@ public class EventAdvancedSearchController implements LocalizationObserver {
             Long timeInMinutesL = timeInMinutes.longValue();
             parameters.set("duration", timeInMinutesL.toString());
         }
-        if (!rbSeatsNo.isSelected()) {
-            parameters.set("noSeats", "toFilter");
+        if (rbSeatsNo.isSelected() != rbSeatsYes.isSelected()) {
+            if (!rbSeatsNo.isSelected()) {
+                parameters.set("noSeats", "toFilter");
+            }
+            if (!rbSeatsYes.isSelected()) {
+                parameters.set("seats", "toFilter");
+            }
         }
-        if (!rbSeatsYes.isSelected()) {
-            parameters.set("seats", "toFilter");
-        }
-        if (!rbUpcoming.isSelected()) {
-            parameters.set("upcoming", "toFilter");
-        }
-        if (!rbPast.isSelected()) {
-            parameters.set("past", "toFilter");
+        if (rbPast.isSelected() != rbUpcoming.isSelected()) {
+            if (!rbUpcoming.isSelected()) {
+                parameters.set("upcoming", "toFilter");
+            }
+            if (!rbPast.isSelected()) {
+                parameters.set("past", "toFilter");
+            }
         }
         if (!dpDate.getEditor().getText().isEmpty()) {
             parameters.set("eventDate", dpDate.getValue().toString());

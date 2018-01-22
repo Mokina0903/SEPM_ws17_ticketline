@@ -33,13 +33,8 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public Page<Customer> findAll(Pageable request) {
-        List<Customer> customer = customerRepository.findAll();
-        int start = request.getOffset();
-        int end = (start + request.getPageSize()) > customer.size() ? customer.size() : (start + request.getPageSize());
-        Page<Customer> e = new PageImpl<>(customer.subList(start, end), request, customer.size());
-
-        return new PageImpl<>(customer.subList(start, end), request, customer.size());
-    }
+        return customerRepository.findAll(request);
+        }
 
     @Override
     public Customer findOneById(Long id) throws InvalidIdException, CustomerNotValidException {
@@ -99,10 +94,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public Page<Customer> findByName(String name, Pageable request) {
-        List<Customer> customer = customerRepository.findByNameStartingWithIgnoreCaseOrSurnameStartingWithIgnoreCase(name, name);
-        int start = request.getOffset();
-        int end = (start + request.getPageSize()) > customer.size() ? customer.size() : (start + request.getPageSize());
-        return new PageImpl<>(customer.subList(start, end), request, customer.size());
+       return customerRepository.findByNameStartingWithIgnoreCaseOrSurnameStartingWithIgnoreCase(name, name, request);
     }
 
 /*

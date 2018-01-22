@@ -33,7 +33,7 @@ public class CustomerEndpoint {
     @RequestMapping(value = "/{pageIndex}/{customerPerPage}", method = RequestMethod.GET)
     @ApiOperation(value = "Get list of customer entries")
     public Page<CustomerDTO> findAll(@PathVariable("pageIndex") int pageIndex, @PathVariable("customerPerPage") int customerPerPage) {
-        Pageable request = new PageRequest(pageIndex, customerPerPage, Sort.Direction.ASC, "start_of_event");
+        Pageable request = new PageRequest(pageIndex, customerPerPage, Sort.Direction.ASC, "knr");
         Page<Customer> customerPage = customerService.findAll(request);
         List<CustomerDTO> dtos = customerMapper.customerToCustomerDTO(customerPage.getContent());
         return new PageImpl<>(dtos, request, customerPage.getTotalElements());
@@ -79,19 +79,11 @@ public class CustomerEndpoint {
     @RequestMapping(value = "/findName/{pageIndex}/{customerPerPage}/{name}", method = RequestMethod.GET)
     @ApiOperation(value = "Gets all customers with the given name")
     public Page<CustomerDTO> findByName(@PathVariable("pageIndex") int pageIndex, @PathVariable("customerPerPage") int customerPerPage, @PathVariable("name") String name) {
-        Pageable request = new PageRequest(pageIndex, customerPerPage, Sort.Direction.ASC, "start_of_event");
+        Pageable request = new PageRequest(pageIndex, customerPerPage, Sort.Direction.ASC, "knr");
         Page<Customer> customerPage = customerService.findByName(name, request);
         List<CustomerDTO> dtos = customerMapper.customerToCustomerDTO(customerPage.getContent());
         return new PageImpl<>(dtos, request, customerPage.getTotalElements());
     }
-
-
-    /*@RequestMapping(value="/findSurename/{pageIndex}/{customerPerPage}/{surname}", method = RequestMethod.GET)
-    @ApiOperation(value = "Gets all customers with the given name")
-    public List<CustomerDTO> findBySurname(@PathVariable("pageIndex")int pageIndex, @PathVariable("customerPerPage")int customerPerPage, @PathVariable("surname") String surname){
-        PageRequest request = new PageRequest(pageIndex, customerPerPage, Sort.Direction.ASC, "surname");
-        return customerMapper.customerToCustomerDTO(customerService.findBySurname(surname, request));
-    }*/
 
 
 }
