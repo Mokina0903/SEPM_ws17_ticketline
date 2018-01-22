@@ -15,15 +15,15 @@ import java.util.concurrent.TimeUnit;
 
 @Profile("generateData")
 @Component
-public class NewsDataGenerator {
+public class ANewsDataGenerator {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(NewsDataGenerator.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ANewsDataGenerator.class);
     private static final int NUMBER_OF_NEWS_TO_GENERATE = 10;
 
     private final NewsRepository newsRepository;
     private final Faker faker;
 
-    public NewsDataGenerator(NewsRepository newsRepository) {
+    public ANewsDataGenerator(NewsRepository newsRepository) {
         this.newsRepository = newsRepository;
         faker = new Faker();
     }
