@@ -1,15 +1,12 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.endpoint;
 
-import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.seat.SeatDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketDTO;
-import at.ac.tuwien.inso.sepm.ticketline.server.entity.Customer;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Ticket;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.eventLocation.seat.SeatMapper;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.ticket.TicketMapper;
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.EmptyFieldException;
-import at.ac.tuwien.inso.sepm.ticketline.server.exception.InvalidIdException;
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.NotFoundException;
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.OldVersionException;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.EventService;
@@ -17,18 +14,11 @@ import at.ac.tuwien.inso.sepm.ticketline.server.service.LocationService;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.TicketService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.hibernate.LazyInitializationException;
 import org.springframework.data.domain.*;
-import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
-import java.time.LocalDate;
-
 import java.time.LocalDateTime;
-import java.time.Period;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -114,7 +104,10 @@ public class TicketEndpoint {
     @RequestMapping(value = "/isBooked/{eventId}/{seatId}", method = RequestMethod.GET)
     @ApiOperation(value = "Check if seat is booked for the event")
     public Boolean isBooked( @PathVariable Long eventId, @PathVariable Long seatId) {
-        ticketService.setTicketsFreeIf30MinsBeforEvent();
+        Event event = eventService.findOne(eventId);
+        if(Duration.between(LocalDateTime.now(), event.getStartOfEvent()).toMinutes() <=30 && Duration.between(LocalDateTime.now(), event.getStartOfEvent()).toMinutes() > 0 ){
+            ticketService.setTicketsFreeIf30MinsBeforEvent();
+        }
         return ticketService.isBooked(eventId,seatId);
     }
 
@@ -144,7 +137,7 @@ public class TicketEndpoint {
     @RequestMapping(value= "/{customerName}/{pageIndex}/{ticketsPerPage}", method = RequestMethod.GET)
     @ApiOperation(value = "Get list of ticket entries")
     public Page<TicketDTO> findAllByCustomerName(@PathVariable("customerName") String customerName, @PathVariable("pageIndex")int pageIndex, @PathVariable("ticketsPerPage")int ticketsPerPage){
-      ticketService.setTicketsFreeIf30MinsBeforEvent();
+        ticketService.setTicketsFreeIf30MinsBeforEvent();
         Pageable request = new PageRequest(pageIndex, ticketsPerPage);
         Page<Ticket> tickets = ticketService.findAllByCustomerName(customerName, request);
         List<TicketDTO> dtos = ticketMapper.ticketToTicketDTO(tickets.getContent());
@@ -154,7 +147,7 @@ public class TicketEndpoint {
     @RequestMapping(value= "/searchResNr/{reservationNumber}/{pageIndex}/{ticketsPerPage}", method = RequestMethod.GET)
     @ApiOperation(value = "Get list of ticket entries")
     public Page<TicketDTO> findAllByReservationNumber(@PathVariable("reservationNumber") Long reservationNumber, @PathVariable("pageIndex")int pageIndex, @PathVariable("ticketsPerPage")int ticketsPerPage){
-    ticketService.setTicketsFreeIf30MinsBeforEvent();
+        ticketService.setTicketsFreeIf30MinsBeforEvent();
         Pageable request = new PageRequest(pageIndex, ticketsPerPage);
         Page<Ticket> tickets = ticketService.findAllByReservationNumber(reservationNumber, request);
         List<TicketDTO> dtos = ticketMapper.ticketToTicketDTO(tickets.getContent());

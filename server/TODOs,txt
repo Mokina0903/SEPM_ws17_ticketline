@@ -7,15 +7,16 @@ TODO: Vollständigkeit der Dokumente prüfen
 
 TODO: Fehler beim Testen gefunden
  + Authentifizierungs-Controller:
-   - Bei Enter betätigung automatisches einlogen
+   - Bei Enter betätigung automatisches einlogen (Done)
 
  + News-Controller:
    - Wann wird news Liste neue geladen? gesehen/nicht gesehen (Done)
-   - Add News kein Sprachenwechsel
+   - Add News kein Sprachenwechsel (Done)
    - Add News mit Bild dauert lange (Done)
 
  + Event-Controller:
-   - Gefundene Treffer nur Punkte
+   - Gefundene Treffer nur Punkte ()
+   - Choice Box (Punkte)
 
  + Customer-Controller:
    - Fenster evt. kleiner?

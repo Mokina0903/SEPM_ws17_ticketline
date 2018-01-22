@@ -1,16 +1,14 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.service.implementation;
 
-import at.ac.tuwien.inso.sepm.ticketline.server.entity.Customer;
-import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Ticket;
-import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Seat;
-import at.ac.tuwien.inso.sepm.ticketline.server.exception.*;
+import at.ac.tuwien.inso.sepm.ticketline.server.exception.AlreadyExistsException;
+import at.ac.tuwien.inso.sepm.ticketline.server.exception.EmptyFieldException;
+import at.ac.tuwien.inso.sepm.ticketline.server.exception.NotFoundException;
+import at.ac.tuwien.inso.sepm.ticketline.server.exception.OldVersionException;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.TicketRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.TicketService;
-import org.hibernate.LazyInitializationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -103,14 +101,7 @@ public class SimpleTicketService implements TicketService {
 
     @Override
     public void setTicketsFreeIf30MinsBeforEvent() {
-       /* List<Ticket> stillReservedTickets = ticketRepository.setTicketsFreeIf30MinsBeforeEvent();
-        if(stillReservedTickets.isEmpty()){
-            return;
-        }
-
-        for (Ticket ticket : stillReservedTickets) {
-            ticketRepository.updateReservationStatusToFalse(ticket.getId());
-        }*/
+       ticketRepository.deleteAlloldReservations(30L);
     }
 
     @Override

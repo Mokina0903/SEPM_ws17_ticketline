@@ -2,18 +2,15 @@ package at.ac.tuwien.inso.sepm.ticketline.server.repository;
 
 
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Ticket;
-import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Seat;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -157,5 +154,13 @@ public interface TicketRepository extends JpaRepository<Ticket,Long>{
     @Modifying
     @Query(value="UPDATE ticket t SET t.is_Deleted = true WHERE t.id=:id", nativeQuery = true)
     void updateReservationStatusToFalse(@Param("id") Long id);
+
+    @Modifying
+    @Transactional
+    @Query(value = "DELETE Ticket  WHERE is_paid = false AND event_id in "
+        +"(Select id as event_id from event where DATEADD('DAY',-30,now()) < start_of_event AND "
+        +"start_of_event < DATEADD('MINUTE',-1 * :minute,now()))", nativeQuery = true)
+    void deleteAlloldReservations(@Param("minutes") Long minutes);
+
 
 }

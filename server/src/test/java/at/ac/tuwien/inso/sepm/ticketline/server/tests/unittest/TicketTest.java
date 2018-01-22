@@ -100,7 +100,6 @@ public class TicketTest extends BaseTestUnit {
     public void loseReservationAfterTime() {
         // TODO: David
 
-        /*
         setUpDefaultEvent(LocalDateTime.now().plusMinutes(20));
 
         List<TicketDTO> ticketDTOList = TestDTOs.setUpTicketDTO();
@@ -115,7 +114,7 @@ public class TicketTest extends BaseTestUnit {
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
 
         Assert.assertThat(ticketRepository.findAll().size(),is(1));
-        */
+
 
         // TODO: Implement here
         /*
