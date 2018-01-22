@@ -81,7 +81,7 @@ public class PaginationHelper {
     private Node createPage(Integer pageIndex) {
         ListView<VBox> lvElements;
 
-        if (searchFor.equals(EventSearchFor.ARTIST) || searchFor.equals(EventSearchFor.ARTIST_ADV))  { //todo
+        if (searchFor.equals(EventSearchFor.ARTIST) || searchFor.equals(EventSearchFor.ARTIST_ADV))  {
             lvElements = loadArtists(pageIndex);
         }
         else if (searchFor.equals(EventSearchFor.LOCATION) || searchFor.equals(EventSearchFor.LOCATION_ADV)) {
@@ -107,10 +107,10 @@ public class PaginationHelper {
                 } else if(searchFor.equals(EventSearchFor.ALL)){
                     events = eventService.findAdvanced(request,parameters);
                 } else if (searchFor.equals(EventSearchFor.EVENTS_BY_ARTIST)) {
-                 // events = eventService.findByArtist(request, artistDTO);
+                    events = eventService.findByArtist(request, artistDTO.getId());
                 }
                 else {
-               //    events = eventService.findByLocation(request, locationDTO);
+                  // events = eventService.findByLocation(request, locationDTO);
                 }
                 return events;
             }

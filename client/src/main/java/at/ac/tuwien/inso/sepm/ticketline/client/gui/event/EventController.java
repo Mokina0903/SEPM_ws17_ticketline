@@ -333,6 +333,10 @@ public class EventController extends TabElement implements LocalizationObserver 
         lbMatchInfo.setVisible(true);
     }
 
+    public void resetChoicebox() {
+        cbSearch.getSelectionModel().selectFirst();
+    }
+
     @Override
     protected void setTab(Tab tab) {
         eventTab = tab;

@@ -249,6 +249,16 @@ public class EventAdvancedSearchController implements LocalizationObserver {
     @FXML
     public void handleOkLocation(ActionEvent actionEvent) {
         //todo
+        MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
+        if (!tfLocationTitle.getText().isEmpty()) {}
+        if (!tfLocationStreet.getText().isEmpty()) {}
+        if (!tfLocationCity.getText().isEmpty()) {}
+        if (!tfLocationZip.getText().isEmpty()) {}
+        // todo country
+        paginationHelper.setSearchFor(EventSearchFor.LOCATION_ADV);
+        paginationHelper.setParameters(parameters);
+        paginationHelper.setUpPagination();
+        eventController.getEventTab().setContent(oldContent);
     }
 
     @FXML
