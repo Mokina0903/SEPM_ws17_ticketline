@@ -30,19 +30,19 @@ public class EventEndpoint {
     private final EventService eventService;
     private final EventMapper eventMapper;
 
-    public EventEndpoint( EventService eventService, EventMapper eventMapper ) {
+    public EventEndpoint(EventService eventService, EventMapper eventMapper) {
         this.eventService = eventService;
         this.eventMapper = eventMapper;
     }
 
     @RequestMapping(value = "/{pageIndex}/{eventsPerPage}", method = RequestMethod.GET)
     @ApiOperation(value = "Get list of simple upcoming event entries")
-    public Page<SimpleEventDTO> findAllUpcomingAsc(@PathVariable("pageIndex")int pageIndex, @PathVariable("eventsPerPage")int eventsPerPage) {
+    public Page<SimpleEventDTO> findAllUpcomingAsc(@PathVariable("pageIndex") int pageIndex, @PathVariable("eventsPerPage") int eventsPerPage) {
         //mapping of Event to EventDTO
         Pageable request = new PageRequest(pageIndex, eventsPerPage, Sort.Direction.ASC, "start_of_event");
         Page<Event> eventPage = eventService.findAllUpcomingAsc(request);
         List<SimpleEventDTO> dtos = new ArrayList<>();
-        for(Event event:eventPage.getContent()){
+        for (Event event : eventPage.getContent()) {
             SimpleEventDTO simpleEventDTO = eventMapper.eventToSimpleEventDTO(event);
             simpleEventDTO.setSeatCount(event.getHall().getSeats().size());
             dtos.add(simpleEventDTO);
@@ -52,14 +52,14 @@ public class EventEndpoint {
 
     @RequestMapping(value = "/findByArtistId/{pageIndex}/{eventsPerPage}/{artistId}", method = RequestMethod.GET)
     @ApiOperation(value = "Get list of simple upcoming event entries")
-    public Page<SimpleEventDTO> findAllByArtistId(@PathVariable("pageIndex")int pageIndex,
-                                                  @PathVariable("eventsPerPage")int eventsPerPage,
+    public Page<SimpleEventDTO> findAllByArtistId(@PathVariable("pageIndex") int pageIndex,
+                                                  @PathVariable("eventsPerPage") int eventsPerPage,
                                                   @PathVariable("artistId") long artistId) {
         //mapping of Event to EventDTO
-        Pageable request = new PageRequest(pageIndex, eventsPerPage,Sort.Direction.ASC, "start_of_event");
-        Page<Event> eventPage = eventService.findAllByArtistId(artistId,request);
+        Pageable request = new PageRequest(pageIndex, eventsPerPage, Sort.Direction.ASC, "start_of_event");
+        Page<Event> eventPage = eventService.findAllByArtistId(artistId, request);
         List<SimpleEventDTO> dtos = new ArrayList<>();
-        for(Event event:eventPage.getContent()){
+        for (Event event : eventPage.getContent()) {
             SimpleEventDTO simpleEventDTO = eventMapper.eventToSimpleEventDTO(event);
             simpleEventDTO.setSeatCount(event.getHall().getSeats().size());
             dtos.add(simpleEventDTO);
@@ -69,13 +69,12 @@ public class EventEndpoint {
 
     @RequestMapping(value = "/findByLocationId/{pageIndex}/{eventsPerPage}/{locationId}", method = RequestMethod.GET)
     @ApiOperation(value = "Get list of simple upcoming event entries")
-    public Page<SimpleEventDTO> findAllByLocationId(@PathVariable("pageIndex")int pageIndex,
-                                                  @PathVariable("eventsPerPage")int eventsPerPage,
-                                                  @PathVariable("locationId") long locationId) {
+    public Page<SimpleEventDTO> findAllByLocationId(@PathVariable("pageIndex") int pageIndex,
+                                                    @PathVariable("eventsPerPage") int eventsPerPage,
+                                                    @PathVariable("locationId") long locationId) {
         Pageable request = new PageRequest(pageIndex, eventsPerPage, Sort.Direction.ASC, "start_of_event");
         Page<Event> eventPage = eventService.findAllByLocationId(locationId, request);
         List<SimpleEventDTO> dtos = eventMapper.eventToSimpleEventDTO(eventPage.getContent());
-        System.out.println("EventENdp: mapping....");
         return new PageImpl<>(dtos, request, eventPage.getTotalElements());
     }
 
@@ -88,7 +87,7 @@ public class EventEndpoint {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ApiOperation(value = "Get detailed information about a specific event entry")
-    public DetailedEventDTO findOneById( @PathVariable Long id) {
+    public DetailedEventDTO findOneById(@PathVariable Long id) {
         return eventMapper.eventToDetailedEventDTO(eventService.findOne(id));
     }
 
@@ -106,12 +105,12 @@ public class EventEndpoint {
         }
 
         event = eventService.publishEvent(event);
-        return  eventMapper.eventToDetailedEventDTO(event);
+        return eventMapper.eventToDetailedEventDTO(event);
     }
 
-    @RequestMapping(value ="/getTopTen/{start}/{end}" ,method = RequestMethod.GET)
+    @RequestMapping(value = "/getTopTen/{start}/{end}", method = RequestMethod.GET)
     @ApiOperation(value = "Get the top ten events from the given month")
-    public List<SimpleEventDTO> getTop10EventsOfMonth(@PathVariable("start") Long start, @PathVariable("end")Long end){
+    public List<SimpleEventDTO> getTop10EventsOfMonth(@PathVariable("start") Long start, @PathVariable("end") Long end) {
 
         LocalDateTime startOfMonth = LocalDateTime.ofInstant(Instant.ofEpochSecond(start), ZoneId.of("Europe/Paris"));
         LocalDateTime endOfMonth = LocalDateTime.ofInstant(Instant.ofEpochSecond(end), ZoneId.of("Europe/Paris"));
@@ -119,27 +118,27 @@ public class EventEndpoint {
         return eventMapper.eventToSimpleEventDTO(eventService.getTop10EventsOfMonth(startOfMonth, endOfMonth));
     }
 
-    @RequestMapping(value ="/getTopTenFiltered/{start}/{end}/{category}" ,method = RequestMethod.GET)
+    @RequestMapping(value = "/getTopTenFiltered/{start}/{end}/{category}", method = RequestMethod.GET)
     @ApiOperation(value = "Get the top ten events from the given month filtered by the given category")
-    public List<SimpleEventDTO> getTop10EventsOfMonthFilteredByCategory(@PathVariable("start") Long start, @PathVariable("end")Long end, @PathVariable("category") String category ){
+    public List<SimpleEventDTO> getTop10EventsOfMonthFilteredByCategory(@PathVariable("start") Long start, @PathVariable("end") Long end, @PathVariable("category") String category) {
 
         LocalDateTime startOfMonth = LocalDateTime.ofInstant(Instant.ofEpochSecond(start), ZoneId.of("Europe/Paris"));
         LocalDateTime endOfMonth = LocalDateTime.ofInstant(Instant.ofEpochSecond(end), ZoneId.of("Europe/Paris"));
 
-        List<SimpleEventDTO> checklist= eventMapper.eventToSimpleEventDTO(eventService.getTop10EventsOfMonthFilteredByCategory(startOfMonth, endOfMonth, category));
+        List<SimpleEventDTO> checklist = eventMapper.eventToSimpleEventDTO(eventService.getTop10EventsOfMonthFilteredByCategory(startOfMonth, endOfMonth, category));
 
         return checklist;
     }
 
     @RequestMapping(value = "/advSearch/{pageIndex}/{eventsPerPage}", method = RequestMethod.GET)
     @ApiOperation(value = "Get list of simple event entries filtered by parameters")
-    public Page<SimpleEventDTO> findAdvanced(@PathVariable("pageIndex")int pageIndex, @PathVariable("eventsPerPage")int eventsPerPage,
-                                             @QuerydslPredicate(root = Event.class)Predicate predicate,
-                                             @RequestParam HashMap<String,String> parameters) {
+    public Page<SimpleEventDTO> findAdvanced(@PathVariable("pageIndex") int pageIndex, @PathVariable("eventsPerPage") int eventsPerPage,
+                                             @QuerydslPredicate(root = Event.class) Predicate predicate,
+                                             @RequestParam HashMap<String, String> parameters) {
         Pageable request = new PageRequest(pageIndex, eventsPerPage, Sort.Direction.ASC, "startOfEvent");
         Page<Event> eventPage = eventService.findByAdvancedSearch(parameters, request);
         List<SimpleEventDTO> dtos = new ArrayList<>();
-        for(Event event:eventPage.getContent()){
+        for (Event event : eventPage.getContent()) {
             SimpleEventDTO simpleEventDTO = eventMapper.eventToSimpleEventDTO(event);
             simpleEventDTO.setSeatCount(event.getHall().getSeats().size());
             dtos.add(simpleEventDTO);
@@ -149,13 +148,13 @@ public class EventEndpoint {
 
     @RequestMapping(value = "/search/{pageIndex}/{eventsPerPage}", method = RequestMethod.GET)
     @ApiOperation(value = "Get list of simple event entries filtered by parameters")
-    public Page<SimpleEventDTO> find(@PathVariable("pageIndex")int pageIndex, @PathVariable("eventsPerPage")int eventsPerPage,
-                                             @QuerydslPredicate(root = Event.class)Predicate predicate,
-                                             @RequestParam HashMap<String,String> parameters) {
+    public Page<SimpleEventDTO> find(@PathVariable("pageIndex") int pageIndex, @PathVariable("eventsPerPage") int eventsPerPage,
+                                     @QuerydslPredicate(root = Event.class) Predicate predicate,
+                                     @RequestParam HashMap<String, String> parameters) {
         Pageable request = new PageRequest(pageIndex, eventsPerPage, new Sort(Sort.Direction.ASC, "startOfEvent"));
         Page<Event> eventPage = eventService.find(parameters, request);
         List<SimpleEventDTO> dtos = new ArrayList<>();
-        for(Event event:eventPage.getContent()){
+        for (Event event : eventPage.getContent()) {
             SimpleEventDTO simpleEventDTO = eventMapper.eventToSimpleEventDTO(event);
             simpleEventDTO.setSeatCount(event.getHall().getSeats().size());
             dtos.add(simpleEventDTO);

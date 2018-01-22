@@ -68,7 +68,7 @@ public class EventCSVImportController implements LocalizationObserver {
     private File choosenFile = null;
 
     @FXML
-    void initialize(){
+    void initialize() {
         tabHeaderController.setIcon(FontAwesome.Glyph.FILM);
         tabHeaderController.setTitle(BundleManager.getBundle().getString("event.addEvent"));
         localizationSubject.attach(this);
@@ -77,10 +77,10 @@ public class EventCSVImportController implements LocalizationObserver {
 
     }
 
-   void initializeData(EventController c, Node oldContent){
+    void initializeData(EventController c, Node oldContent) {
         this.oldContent = oldContent;
-       this.c = c;
-   }
+        this.c = c;
+    }
 
     @Override
     public void update() {
@@ -141,7 +141,8 @@ public class EventCSVImportController implements LocalizationObserver {
                     String line = "";
                     br = new BufferedReader(new FileReader(csvFile));
                     int cnt = 1;
-                    outer: while ((line = br.readLine()) != null) {
+                    outer:
+                    while ((line = br.readLine()) != null) {
                         //0     1               2       3       4       5       6               7           8           9       10
                         //Titel	Beschreibung	Start	Ende	Price	Sektor	LocationName	HallName    Category	Artist1	Artist2	...
                         String[] column = line.split(cvsSplitBy);
@@ -180,7 +181,7 @@ public class EventCSVImportController implements LocalizationObserver {
                         String category = column[8];
 
                         try {
-                            System.out.println(EventCategory.valueOf(category));
+                            EventCategory.valueOf(category);
                         } catch (IllegalArgumentException e) {
                             TAlogOutput.setText(TAlogOutput.getText() + "Error: Category " + category + " not found" + "\n");
                             continue;
@@ -216,14 +217,14 @@ public class EventCSVImportController implements LocalizationObserver {
 
                         try {
                             detailedEventDTO = eventService.publishEvent(detailedEventDTO);
-                            TAlogOutput.setText(TAlogOutput.getText() + "OK: " + detailedEventDTO.getTitle() +"\n");
+                            TAlogOutput.setText(TAlogOutput.getText() + "OK: " + detailedEventDTO.getTitle() + "\n");
                         } catch (DataAccessException e) {
                             mainController.showGeneralError(e.toString());
                         } catch (ErrorDTO errorDTO) {
                             TAlogOutput.setText(TAlogOutput.getText() + "Error: " + title + "->" + errorDTO.getStatus() + ": " + errorDTO.getMessage() + "\n");
                         }
                     }
-                // TODO: (David) Exception handling
+                    // TODO: (David) Exception handling
                 } catch (FileNotFoundException e) {
                     mainController.showGeneralError("File not found " + choosenFile.getPath());
                 } catch (IOException e) {

@@ -42,7 +42,7 @@ public class EventFilter {
             Long lowerBound = Long.parseLong(parameters.get("timeOfStart"));
             lowerBound -= 30;
             if (lowerBound < 0) {
-                lowerBound += 24L*60L;
+                lowerBound += 24L * 60L;
             }
             this.startTimeLowerBound = lowerBound;
 
@@ -81,7 +81,6 @@ public class EventFilter {
         }
         if (parameters.containsKey("past")) {
             this.past = LocalDateTime.now().plusMinutes(30);
-            System.out.println("_________________________________ " + past);
         }
         if (parameters.containsKey("category")) {
             this.category = parameters.get("category");
