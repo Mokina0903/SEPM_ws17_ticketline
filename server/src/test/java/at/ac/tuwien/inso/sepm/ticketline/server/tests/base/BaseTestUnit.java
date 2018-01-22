@@ -204,6 +204,16 @@ public abstract class BaseTestUnit {
 
         seatRepository.save(seat);
 
+        seat = Seat.builder()
+            .id(SEAT_ID+1)
+            .hall(hall)
+            .nr(SEAT_NR+1)
+            .sector(SEAT_SECTOR)
+            .row(SEAT_ROW)
+            .build();
+
+        seatRepository.save(seat);
+
         /*
         Maybe not necessary
         // Seats

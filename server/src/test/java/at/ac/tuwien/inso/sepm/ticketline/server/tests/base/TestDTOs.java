@@ -16,7 +16,6 @@ import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Hall;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Location;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Seat;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -98,25 +97,24 @@ public abstract class TestDTOs {
             .build();
     }
 
-    public static SeatDTO setUpSeatDTO() {
-        return SeatDTO.builder()
+    public static List<SeatDTO> setUpSeatDTO() {
+        List<SeatDTO> seatDTOS = new ArrayList<>();
+
+        seatDTOS.add(SeatDTO.builder()
             .id(SEAT_ID)
-            // TODO: (David) what is with Hall here?
-            /*
-            .hall(DetailedHallDTO.builder()
-                .id(HALL_ID)
-                .description(HALL_DESCRIPTION)
-                .location(DetailedLocationDTO.builder()
-                    .id(LOCATION_ID)
-                    .description(LOCATION_DESCRIPTION)
-                    .build())
-                .seats(new ArrayList<>())
-                .build())
-             */
             .nr(SEAT_NR)
             .sector(SEAT_SECTOR)
             .row(SEAT_ROW)
-            .build();
+            .build());
+
+        seatDTOS.add(SeatDTO.builder()
+            .id(SEAT_ID+1)
+            .nr(SEAT_NR+1)
+            .sector(SEAT_SECTOR)
+            .row(SEAT_ROW)
+            .build());
+
+        return seatDTOS;
     }
 
     public static List<TicketDTO> setUpTicketDTO() {
@@ -124,7 +122,7 @@ public abstract class TestDTOs {
 
         SimpleEventDTO event = TestDTOs.setUpSimpleEventDTO();
 
-        SeatDTO seat = TestDTOs.setUpSeatDTO();
+        List<SeatDTO> seat = TestDTOs.setUpSeatDTO();
 
         List<TicketDTO> ticketDTOList = new ArrayList<>();
 
@@ -135,7 +133,7 @@ public abstract class TestDTOs {
             .price(TICKET_PRICE)
             .reservationNumber(TICKET_RESERVATIONNR)
             .customer(customer)
-            .seat(seat)
+            .seat(seat.get(0))
             .event(event)
             .build());
 

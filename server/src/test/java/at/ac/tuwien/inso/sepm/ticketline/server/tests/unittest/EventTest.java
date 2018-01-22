@@ -59,7 +59,7 @@ public class EventTest extends BaseTestUnit {
     }
 
     @Test
-    public void publishEventAsAdminHallNotFound(){
+    public void publishEventAsAdminHallNotFound() {
         DetailedEventDTO detailedEventDTO = TestDTOs.setUpDetailedEventDTO();
 
         detailedEventDTO.getHall().setDescription("Wrong Hall");
@@ -75,7 +75,7 @@ public class EventTest extends BaseTestUnit {
     }
 
     @Test
-    public void publishEventAsAdminLocationNotFound(){
+    public void publishEventAsAdminLocationNotFound() {
         DetailedEventDTO detailedEventDTO = TestDTOs.setUpDetailedEventDTO();
 
         detailedEventDTO.getHall().getLocation().setDescription("Wrong Location");
@@ -91,7 +91,7 @@ public class EventTest extends BaseTestUnit {
     }
 
     @Test
-    public void publishEventAsAdminNewArtist(){
+    public void publishEventAsAdminNewArtist() {
         DetailedEventDTO detailedEventDTO = TestDTOs.setUpDetailedEventDTO();
 
         detailedEventDTO.getArtists().get(0).setArtistFirstName(ARTIST_FIRSTNAME + " NEW");
@@ -105,11 +105,11 @@ public class EventTest extends BaseTestUnit {
             .then().extract().response();
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
 
-        Assert.assertThat(artistRepository.findAll().size(),is(2));
+        Assert.assertThat(artistRepository.findAll().size(), is(2));
     }
 
     @Test
-    public void publishEventAsAdminEventDuplicate(){
+    public void publishEventAsAdminEventDuplicate() {
         DetailedEventDTO detailedEventDTO = TestDTOs.setUpDetailedEventDTO();
 
         Response response = RestAssured

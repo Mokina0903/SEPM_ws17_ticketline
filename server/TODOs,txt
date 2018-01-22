@@ -58,7 +58,7 @@ TODO bis 22.01
  + PowerPoint
  + Jar file Server
  + QEvent
- + News hinzufügen zu User
+ + News hinzufügen zu User (Done)
  + IntelliJ indexing?
 
 
@@ -85,7 +85,7 @@ Done: MapperTests
 
 TODO: UnitTests:
   + CustomerEndpoint
-  + EventEndpoint
+  + EventEndpoint (Done)
   + InvoiceEndpoint
   + LocationEndpoint
   + NewsEndpoint

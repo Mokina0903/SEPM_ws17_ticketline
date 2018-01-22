@@ -1,7 +1,6 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.tests.unittest;
 
 
-import at.ac.tuwien.inso.sepm.ticketline.rest.news.DetailedNewsDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.user.DetailedUserDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.user.SimpleUserDTO;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.News;
@@ -464,7 +463,6 @@ public class UserTest extends BaseTestUnit {
             .when().post(USER_ENDPOINT)
             .then().extract().response();
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
-
 
 
         List<News> news = newsRepository.findNotSeenByUser(userRepository.findOneByUserName(USER_USERNAME + "123").getId());

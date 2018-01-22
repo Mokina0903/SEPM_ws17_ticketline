@@ -172,7 +172,7 @@ public class NewsTest extends BaseTestUnit {
 
         SimpleNewsDTO[] simpleNewsDTOS = response.as(SimpleNewsDTO[].class);
 
-        Assert.assertThat(simpleNewsDTOS.length,is(2));
+        Assert.assertThat(simpleNewsDTOS.length,is(3));
 
         response = RestAssured
             .given()
@@ -224,7 +224,7 @@ public class NewsTest extends BaseTestUnit {
 
         SimpleNewsDTO[] simpleNewsDTOS = response.as(SimpleNewsDTO[].class);
 
-        Assert.assertThat(simpleNewsDTOS.length,is(2));
+        Assert.assertThat(simpleNewsDTOS.length,is(4));
 
         Assert.assertThat(simpleNewsDTOS[0], is(
             SimpleNewsDTO.builder()

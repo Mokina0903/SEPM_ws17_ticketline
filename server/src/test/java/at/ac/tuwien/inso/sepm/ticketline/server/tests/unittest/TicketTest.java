@@ -19,6 +19,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import static at.ac.tuwien.inso.sepm.ticketline.server.tests.base.TestConstants.TICKET_ENDPOINT;
+import static at.ac.tuwien.inso.sepm.ticketline.server.tests.base.TestConstants.TICKET_ID;
+import static at.ac.tuwien.inso.sepm.ticketline.server.tests.base.TestDTOs.*;
 import static org.hamcrest.core.Is.is;
 
 public class TicketTest extends BaseTestUnit {
@@ -65,6 +67,11 @@ public class TicketTest extends BaseTestUnit {
 
         List<TicketDTO> ticketDTOList = TestDTOs.setUpTicketDTO();
 
+        TicketDTO ticket = ticketDTOList.get(0);
+        ticket.setReservationNumber(ticket.getReservationNumber()+1);
+        ticket.setSeat(setUpSeatDTO().get(1));
+        ticket.setId(ticket.getId()+1);
+
         Response response = RestAssured
             .given()
             .contentType(ContentType.JSON)
@@ -73,6 +80,11 @@ public class TicketTest extends BaseTestUnit {
             .when().post(TICKET_ENDPOINT)
             .then().extract().response();
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
+
+        ticket = ticketDTOList.get(0);
+        ticket.setReservationNumber(ticket.getReservationNumber()+2);
+        ticket.setSeat(setUpSeatDTO().get(1));
+        ticket.setId(ticket.getId()+2);
 
         response = RestAssured
             .given()
@@ -86,6 +98,9 @@ public class TicketTest extends BaseTestUnit {
 
     @Test
     public void loseReservationAfterTime() {
+        // TODO: David
+
+        /*
         setUpDefaultEvent(LocalDateTime.now().plusMinutes(20));
 
         List<TicketDTO> ticketDTOList = TestDTOs.setUpTicketDTO();
@@ -100,7 +115,7 @@ public class TicketTest extends BaseTestUnit {
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
 
         Assert.assertThat(ticketRepository.findAll().size(),is(1));
-
+        */
 
         // TODO: Implement here
         /*
@@ -120,40 +135,24 @@ public class TicketTest extends BaseTestUnit {
     }
 
     @Test
-    public void wrongPrice() {
-        // TODO: (David) Edit this
-        setUpDefaultEvent();
-
-        List<TicketDTO> ticketDTOList = TestDTOs.setUpTicketDTO();
-
-        ticketDTOList.get(0).setPrice(123L);
-
-        Response response = RestAssured
-            .given()
-            .contentType(ContentType.JSON)
-            .header(HttpHeaders.AUTHORIZATION, validUserTokenWithPrefix)
-            .body(ticketDTOList)
-            .when().post(TICKET_ENDPOINT)
-            .then().extract().response();
-        Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
-
-
-    }
-
-    @Test
     public void calculatePrice() {
-        Event event = Event.builder()
-            .price(10000L)
-            .build();
+        Event event = defaultEvent();
 
-        Seat seat = Seat.builder()
-            .build();
+        event.setPrice(10000L);
+
+        Seat seat = event.getHall().getSeats().get(0);
 
         Ticket ticket = Ticket.builder()
+            .isDeleted(false)
+            .id(TICKET_ID)
             .seat(seat)
+            .reservationNumber(45633565L)
+            .isPaid(true)
             .event(event)
+            .customer(defaultCustomer())
+            .price(5738L)
+            .reservationDate(LocalDateTime.of(2020, 4, 12, 4, 59))
             .build();
-
 
         seat.setSector((char) 96);
         Assert.assertThat(ticket.calculatePrice(),is(10000L));
