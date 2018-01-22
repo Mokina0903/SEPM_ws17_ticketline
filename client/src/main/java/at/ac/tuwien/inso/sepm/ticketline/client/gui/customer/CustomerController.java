@@ -365,7 +365,6 @@ public class CustomerController extends TabElement implements LocalizationObserv
         }
 
         btSearch.setText(BundleManager.getBundle().getString("menu.search"));
-        lbSearch.setText(BundleManager.getBundle().getString("menu.search"));
         tfSearch.setPromptText(BundleManager.getBundle().getString("customer.searchField"));
         lbNoMatch.setText(BundleManager.getBundle().getString("customer.noMatches"));
 

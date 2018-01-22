@@ -1,8 +1,5 @@
 package at.ac.tuwien.inso.sepm.ticketline.client.gui.customer;
 
-import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
-import at.ac.tuwien.inso.sepm.ticketline.client.exception.OldVersionException;
-import at.ac.tuwien.inso.sepm.ticketline.client.exception.SearchNoMatchException;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationObserver;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationSubject;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.MainController;
@@ -29,7 +26,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.management.RuntimeErrorException;
 import java.time.LocalDate;
 
 
@@ -404,7 +400,7 @@ public class CustomerDialogController implements LocalizationObserver {
     @Override
     public void update() {
 
-        lblVersionException.setText(BundleManager.getBundle().getString("customer.verson"));
+        lblVersionException.setText(BundleManager.getBundle().getString("customer.version"));
         lbCustomerNumberText.setText(BundleManager.getBundle().getString("customer.number"));
         lbCustomerName.setText(BundleManager.getBundle().getString("customer.lname_"));
         lbCustomerBirthdate.setText(BundleManager.getBundle().getString("customer.birthdate_"));
