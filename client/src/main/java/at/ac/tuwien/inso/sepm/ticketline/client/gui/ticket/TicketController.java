@@ -135,7 +135,7 @@ public class TicketController extends TabElement implements LocalizationObserver
 
     public void initializePagination(){
        try {
-           Pageable request = new PageRequest(0, 12);
+           Pageable request = new PageRequest(0, 17);
            ticketPage = ticketService.findAll(request);
            int amount = ticketPage.getTotalPages();
            pagination.setPageCount(amount);
@@ -271,7 +271,7 @@ public class TicketController extends TabElement implements LocalizationObserver
         if (tfSearch.getText().isEmpty() || tfSearch.getText().equals("")) {
             searchFor = TicketSearchFor.ALL;
         }
-        Pageable request = new PageRequest(pageIndex, 12);
+        Pageable request = new PageRequest(pageIndex, 17);
        try {
             switch (searchFor) {
                 case ALL:

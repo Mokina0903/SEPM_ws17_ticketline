@@ -28,7 +28,7 @@
                 <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS"
                             style="-fx-background-color: transparent;">
 
-                    <ListView fx:id="vbNewsElementsNew" maxHeight="1.7976931348623157E308"
+                    <ListView fx:id="vbNewsElementsNew" prefHeight="540" maxHeight="1.7976931348623157E308"
                               maxWidth="1.7976931348623157E308"
                               style="-fx-background-color: transparent;">
                         <padding>
@@ -41,7 +41,7 @@
                 <ScrollPane fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" VBox.vgrow="ALWAYS"
                             style="-fx-background-color: transparent;">
 
-                    <ListView fx:id="vbNewsElementsOld" maxHeight="1.7976931348623157E308"
+                    <ListView fx:id="vbNewsElementsOld" prefHeight="540" maxHeight="1.7976931348623157E308"
                               maxWidth="1.7976931348623157E308"
                               style="-fx-background-color: transparent;">
                         <padding>
