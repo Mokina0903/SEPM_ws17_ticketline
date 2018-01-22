@@ -1,9 +1,7 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.tests.integrationtest;
 
 import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketDTO;
-import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Ticket;
-import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Seat;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.CustomerRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.EventRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.TicketRepository;
@@ -12,26 +10,23 @@ import at.ac.tuwien.inso.sepm.ticketline.server.tests.base.TestDTOs;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Response;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import static org.mockito.BDDMockito.*;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.BDDMockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import static at.ac.tuwien.inso.sepm.ticketline.server.tests.base.TestConstants.*;
-import static at.ac.tuwien.inso.sepm.ticketline.server.tests.base.TestDTOs.defaultCustomer;
 import static at.ac.tuwien.inso.sepm.ticketline.server.tests.base.TestDTOs.defaultEvent;
 import static at.ac.tuwien.inso.sepm.ticketline.server.tests.base.TestDTOs.defaultTicket;
 import static org.hamcrest.core.Is.is;
@@ -330,103 +325,6 @@ public class TicketEndpointTest extends BaseIntegrationTest {
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
     }
 
-
-
-
-    @Test
-    public void loseReservationAfterTime() {
-        //setUpDefaultEvent(LocalDateTime.now().plusMinutes(20));
-
-        List<TicketDTO> ticketDTOList = TestDTOs.setUpTicketDTO();
-
-        Response response = RestAssured
-            .given()
-            .contentType(ContentType.JSON)
-            .header(HttpHeaders.AUTHORIZATION, validUserTokenWithPrefix)
-            .body(ticketDTOList)
-            .when().post(TICKET_ENDPOINT)
-            .then().extract().response();
-        Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
-
-        //Assert.assertThat(ticketRepository.findAll().size(),is(1));
-
-
-        // TODO: Implement here
-        /*
-        response = RestAssured
-            .given()
-            .contentType(ContentType.JSON)
-            .header(HttpHeaders.AUTHORIZATION, validUserTokenWithPrefix)
-            .body(ticketDTOList)
-            .when().post(TICKET_ENDPOINT)
-            .then().extract().response();
-        Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
-
-
-        List<TicketDTO> ticketDTOListNew = response.as(ArrayList.class);
-        */
-
-    }
-
-    @Test
-    public void wrongPrice() {
-        // TODO: (David) Edit this
-        //setUpDefaultEvent();
-
-        List<TicketDTO> ticketDTOList = TestDTOs.setUpTicketDTO();
-
-        ticketDTOList.get(0).setPrice(123L);
-
-        Response response = RestAssured
-            .given()
-            .contentType(ContentType.JSON)
-            .header(HttpHeaders.AUTHORIZATION, validUserTokenWithPrefix)
-            .body(ticketDTOList)
-            .when().post(TICKET_ENDPOINT)
-            .then().extract().response();
-        Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
-
-
-    }
-
-    @Test
-    public void calculatePrice() {
-        Event event = Event.builder()
-            .price(10000L)
-            .build();
-
-        Seat seat = Seat.builder()
-            .build();
-
-        Ticket ticket = Ticket.builder()
-            .seat(seat)
-            .event(event)
-            .build();
-
-
-        seat.setSector((char) 96);
-        Assert.assertThat(ticket.calculatePrice(),is(10000L));
-
-        seat.setSector('a');
-        Assert.assertThat(ticket.calculatePrice(),is(10000L));
-
-        seat.setSector('b');
-        Assert.assertThat(ticket.calculatePrice(),is(12000L));
-
-        seat.setSector('c');
-        Assert.assertThat(ticket.calculatePrice(),is(14000L));
-
-        seat.setSector('d');
-        Assert.assertThat(ticket.calculatePrice(),is(16000L));
-
-        seat.setSector('e');
-        Assert.assertThat(ticket.calculatePrice(),is(18000L));
-
-        seat.setSector('f');
-        Assert.assertThat(ticket.calculatePrice(),is(20000L));
-    }
-
-
     @Test
     public void createTicketAsUser() {
         Optional<Ticket> ticketNull = null;
@@ -451,8 +349,6 @@ public class TicketEndpointTest extends BaseIntegrationTest {
 
     @Test
     public void createTwoTicketsAsUser() {
-        //setUpDefaultEvent();
-
         List<TicketDTO> ticketDTOList = TestDTOs.setUpTicketDTO();
 
         Response response = RestAssured

@@ -37,6 +37,7 @@ public abstract class TestDTOs {
 
         SimpleEventDTO simpleEventDTO = SimpleEventDTO.builder()
             .id(EVENT_ID)
+            .description(EVENT_DESCRIPTION)
             .startOfEvent(EVENT_START)
             .endOfEvent(EVENT_START.plusHours(2))
             .artists(artists)

@@ -295,7 +295,7 @@ public abstract class BaseTestUnit {
         eventRepository.save(event);
     }
 
-    public void setUpDefaultEvent(LocalDateTime startOfEvent) {
+    public Event setUpDefaultEvent(LocalDateTime startOfEvent) {
         setupDefaultLocation();
         setUpDefaultArtist();
         setUpDefaultCustomers();
@@ -319,6 +319,6 @@ public abstract class BaseTestUnit {
             .category(EVENT_CATEGORY)
             .build();
 
-        eventRepository.save(event);
+        return eventRepository.save(event);
     }
 }
