@@ -52,7 +52,7 @@ public class EventEndpoint {
         return new PageImpl<>(dtos, request, eventPage.getTotalElements());
     }
 
-    @RequestMapping(value = "/{pageIndex}/{eventsPerPage}/{artistId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/findByArtistId/{pageIndex}/{eventsPerPage}/{artistId}", method = RequestMethod.GET)
     @ApiOperation(value = "Get list of simple upcoming event entries")
     public Page<SimpleEventDTO> findAllByArtistId(@PathVariable("pageIndex")int pageIndex,
                                                   @PathVariable("eventsPerPage")int eventsPerPage,

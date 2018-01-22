@@ -104,7 +104,7 @@ public class SimpleEventRestClient implements EventRestClient {
             LOGGER.debug("Retrieving all upcoming events by ArtistId from {}", restClient.getServiceURI(EVENT_URL));
             ResponseEntity<RestResponsePage<SimpleEventDTO>> events =
                 restClient.exchange(
-                    restClient.getServiceURI(EVENT_URL + "/" + request.getPageNumber() + "/" + request.getPageSize() + "/" + artistId),
+                    restClient.getServiceURI(EVENT_URL + "/findByArtistId/" + request.getPageNumber() + "/" + request.getPageSize() + "/" + artistId),
                     HttpMethod.GET,
                     null,
                     new ParameterizedTypeReference<RestResponsePage<SimpleEventDTO>>() {
@@ -124,7 +124,7 @@ public class SimpleEventRestClient implements EventRestClient {
             LOGGER.debug("Retrieving all upcoming events by LocationId from {}", restClient.getServiceURI(EVENT_URL));
             ResponseEntity<RestResponsePage<SimpleEventDTO>> events =
                 restClient.exchange(
-                    restClient.getServiceURI(EVENT_URL + "/findByLocationId" + request.getPageNumber() + "/" + request.getPageSize() + "/" + locationId),
+                    restClient.getServiceURI(EVENT_URL + "/findByLocationId/" + request.getPageNumber() + "/" + request.getPageSize() + "/" + locationId),
                     HttpMethod.GET,
                     null,
                     new ParameterizedTypeReference<RestResponsePage<SimpleEventDTO>>() {
