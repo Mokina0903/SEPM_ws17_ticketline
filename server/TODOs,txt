@@ -38,7 +38,7 @@ TODO: Fehler beim Testen gefunden
 
 
  + Statistik-Controller:
-   - kein Sprachenwechsel
+   - kein Sprachenwechsel (Done)
    - Statistik lädt beim ersten mal langsam (Done)
 
  + Controller-Benutzer:

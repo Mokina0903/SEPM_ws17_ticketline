@@ -317,8 +317,8 @@ public class HallplanController implements LocalizationObserver {
         try {
             occupiedTickets = ticketService.findByEventId(event.getId());
         } catch (DataAccessException e) {
-            //TODO: not able to get tickets
-            e.printStackTrace();
+            mainController.showGeneralError("Failed to initialize seats.");
+           LOGGER.debug("DataAccessException throwen within method: initializeSeats.");
 
         }
 
@@ -358,8 +358,8 @@ public class HallplanController implements LocalizationObserver {
             try {
                 reservedTickets = ticketService.ticketCountForEventForSector(event.getId(), sector);
             } catch (DataAccessException e) {
-                //TODO: Add alert
-                e.printStackTrace();
+                mainController.showGeneralError("Failed to initialize sectors.");
+                LOGGER.debug("DataAccessException throwen within method: initialize sectors.");
             }
 
             int capacity = hall.getAmountOfSeatsInSector(seat.getSector());
@@ -552,7 +552,7 @@ public class HallplanController implements LocalizationObserver {
             }
         } catch (DataAccessException e) {
             lblError.setText(BundleManager.getBundle().getString("exception.unexpected"));
-            e.printStackTrace();
+            LOGGER.debug("DataAccessException throwen within method: addSelectedSeatsFromSector.");
         }
 
     }
@@ -593,6 +593,7 @@ public class HallplanController implements LocalizationObserver {
         tabHeaderController.setTitle(BundleManager.getBundle().getString("hallplan.chooseYourTickets"));
         buyBut.setText(BundleManager.getBundle().getString("hallplan.buy"));
         reserveBut.setText(BundleManager.getBundle().getString("hallplan.reserveTickets"));
+        lblCustomerDescription.setText(BundleManager.getBundle().getString("customer.customerSelected"));
     }
 
     private void setButtonGraphic(Button button, String glyphSymbol, Color color) {
