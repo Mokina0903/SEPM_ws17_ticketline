@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="vbElement" prefHeight="70.0" prefWidth="578.0" spacing="1.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.event.EventElementController">
+<VBox fx:id="vbElement" maxWidth="1.7976931348623157E308" prefHeight="70.0" prefWidth="578.0" spacing="1.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.event.EventElementController">
     <stylesheets>
         <URL value="@/css/eventElement.css" />
     </stylesheets>
@@ -16,13 +16,18 @@
     </padding>
    <HBox prefHeight="19.0" prefWidth="200.0" spacing="10">
       <children>
-          <Label fx:id="lblTitle" styleClass="eventTitle" text="&lt;EventTitle&gt;" />
-           <Label fx:id="lblFreeTickets"  />
+         <HBox prefWidth="450.0" spacing="1.0">
+            <children>
+                <Label fx:id="lblTitle" styleClass="eventTitle" text="&lt;EventTitle&gt;" />
+                 <Label fx:id="lblFreeTickets" prefWidth="100.0" />
+            </children>
+         </HBox>
+          <Label fx:id="lblArtist" styleClass="eventText" text="&lt;Artists&gt;" wrapText="true" />
       </children>
    </HBox>
-   <HBox prefHeight="80.0" prefWidth="200.0" spacing="10">
+   <HBox maxWidth="1.7976931348623157E308" prefHeight="80.0" prefWidth="200.0" spacing="10">
       <children>
-         <VBox prefHeight="60.0" prefWidth="350.0">
+         <VBox prefHeight="60.0" prefWidth="450.0">
             <children>
                <HBox prefHeight="100.0" prefWidth="200.0" spacing="1">
                   <children>
@@ -33,15 +38,14 @@
                <HBox prefHeight="100.0" prefWidth="200.0" spacing="10">
                   <children>
                        <Label fx:id="lblPriceText" styleClass="eventPrice" text="&lt;EventPrice&gt;" />
-                       <Label fx:id="lblPrice" styleClass="eventPrice" text="&lt;EventPrice&gt;" />
-                   <Button fx:id="ticketReservationButton"  onAction="#ticketReservationForEvent"  styleClass="buyBtn" />
+                       <Label fx:id="lblPrice" maxWidth="-Infinity" prefWidth="100.0" styleClass="eventPrice" text="&lt;EventPrice&gt;" />
+                   <Button fx:id="ticketReservationButton" onAction="#ticketReservationForEvent" styleClass="buyBtn" />
                   </children>
                </HBox>
             </children>
          </VBox>
          <VBox prefHeight="80.0" spacing="5">
             <children>
-                <Label fx:id="lblArtist" styleClass="eventText" text="&lt;Artists&gt;" wrapText="true" />
                 <Label fx:id="lblText" styleClass="eventText" text="&lt;EventText&gt;" wrapText="true" />
 
             </children>

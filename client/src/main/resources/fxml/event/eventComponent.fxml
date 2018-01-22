@@ -43,7 +43,7 @@
                                 <HBox>
                                     <children>
                                         <TextField fx:id="tfSearchFor" maxWidth="1.7976931348623157E308" prefHeight="26.0" prefWidth="400.0" />
-                                        <ChoiceBox fx:id="cbSearch" maxWidth="-Infinity" minWidth="150.0" prefWidth="150.0" />
+                                        <ChoiceBox fx:id="cbSearch" maxWidth="-Infinity" minWidth="30.0" prefWidth="30.0" />
                                     </children>
                                 </HBox>
                                 <Button fx:id="btAdvSearch" maxWidth="1.7976931348623157E308" minWidth="200.0" mnemonicParsing="false" onAction="#openAdvancedSearch" text="%events.advSearch" GridPane.halignment="LEFT" GridPane.rowIndex="1" />
@@ -72,9 +72,9 @@
                                 <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                             </padding>
                         </Pagination>
-                  <GridPane hgap="5.0" prefWidth="77.0" vgap="5.0">
+                  <GridPane hgap="5.0" prefWidth="50.0" vgap="5.0">
                     <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="40.0" prefWidth="60.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="40.0" prefWidth="40.0" />
                     </columnConstraints>
                     <rowConstraints>
                       <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
