@@ -1,7 +1,10 @@
 package at.ac.tuwien.inso.sepm.ticketline.client.gui.event;
 
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
-import at.ac.tuwien.inso.sepm.ticketline.client.gui.*;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationObserver;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationSubject;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.MainController;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.TabHeaderController;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.EventService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
 import at.ac.tuwien.inso.sepm.ticketline.rest.ErrorDTO;
@@ -13,7 +16,10 @@ import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.TextArea;
 import javafx.scene.text.Font;
 import javafx.stage.FileChooser;
 import org.controlsfx.glyphfont.FontAwesome;
@@ -136,12 +142,12 @@ public class EventCSVImportController implements LocalizationObserver {
                     br = new BufferedReader(new FileReader(csvFile));
                     int cnt = 1;
                     outer: while ((line = br.readLine()) != null) {
-                        //0     1               2       3       4       5       6               7           8       9       10
-                        //Titel	Beschreibung	Start	Ende	Price	Sektor	LocationName	HallName	Artist1	Artist2	...
+                        //0     1               2       3       4       5       6               7           8           9       10
+                        //Titel	Beschreibung	Start	Ende	Price	Sektor	LocationName	HallName    Category	Artist1	Artist2	...
                         String[] column = line.split(cvsSplitBy);
 
-                        if (column.length < 8) {
-                            TAlogOutput.setText(TAlogOutput.getText() + "Error: Column not complete < 8" + "\n");
+                        if (column.length < 9) {
+                            TAlogOutput.setText(TAlogOutput.getText() + "Error: Column not complete < 9" + "\n");
                             continue;
                         }
 
@@ -171,9 +177,18 @@ public class EventCSVImportController implements LocalizationObserver {
                             .location(location)
                             .build();
 
+                        String category = column[8];
+
+                        try {
+                            System.out.println(EventCategory.valueOf(category));
+                        } catch (IllegalArgumentException e) {
+                            TAlogOutput.setText(TAlogOutput.getText() + "Error: Category " + category + " not found" + "\n");
+                            continue;
+                        }
+
                         List<SimpleArtistDTO> artists = new ArrayList<>();
 
-                        for (int i = 8; i < column.length; i++) {
+                        for (int i = 9; i < column.length; i++) {
                             String[] artistSplit = column[i].split(":");
                             String firstName = artistSplit[0];
                             String lastName = artistSplit[1];
@@ -196,6 +211,7 @@ public class EventCSVImportController implements LocalizationObserver {
                             .seatSelection(sector)
                             .hall(hall)
                             .artists(artists)
+                            .category(category)
                             .build();
 
                         try {

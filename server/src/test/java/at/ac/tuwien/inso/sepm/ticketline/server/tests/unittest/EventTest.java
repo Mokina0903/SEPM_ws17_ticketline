@@ -140,4 +140,36 @@ public class EventTest extends BaseTestUnit {
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.NOT_ACCEPTABLE.value()));
     }
 
+    @Test
+    public void publishEventAsAdminNoCategory() {
+        DetailedEventDTO detailedEventDTO = TestDTOs.setUpDetailedEventDTO();
+
+        detailedEventDTO.setEventCategory(null);
+
+        Response response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
+            .body(detailedEventDTO)
+            .when().post(EVENT_ENDPOINT)
+            .then().extract().response();
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.NOT_ACCEPTABLE.value()));
+    }
+
+    @Test
+    public void publishEventAsAdminWrongCategory() {
+        DetailedEventDTO detailedEventDTO = TestDTOs.setUpDetailedEventDTO();
+
+        detailedEventDTO.setEventCategory("New Category");
+
+        Response response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
+            .body(detailedEventDTO)
+            .when().post(EVENT_ENDPOINT)
+            .then().extract().response();
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.NOT_FOUND.value()));
+    }
+
 }

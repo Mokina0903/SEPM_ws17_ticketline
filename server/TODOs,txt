@@ -95,8 +95,8 @@ TODO: UnitTests:
 TODO: TestPlan:
   + Manuelle Tests schreiben in Exceldatei
   + Manuelle Tests durchführen
-  + Csv anpassen (Kategorie)
-      - Kategorie nicht vorhanden
+  + Csv anpassen (Kategorie) (Done)
+      - Kategorie nicht vorhanden (Done)
   + Testbericht?
 
 

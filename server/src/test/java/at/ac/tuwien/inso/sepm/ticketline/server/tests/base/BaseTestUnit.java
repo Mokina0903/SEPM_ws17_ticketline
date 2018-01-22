@@ -279,6 +279,7 @@ public abstract class BaseTestUnit {
             .title(EVENT_TITLE)
             .hall(hall)
             .seatSelection(true)
+            .category(EVENT_CATEGORY)
             .build();
 
         eventRepository.save(event);

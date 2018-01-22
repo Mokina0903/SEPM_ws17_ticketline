@@ -1,6 +1,5 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.service.implementation;
 
-import at.ac.tuwien.inso.sepm.ticketline.rest.artist.SimpleArtistDTO;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Artist;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.QEvent;
@@ -10,10 +9,10 @@ import at.ac.tuwien.inso.sepm.ticketline.server.exception.AlreadyExistsException
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.EmptyFieldException;
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.IllegalValueException;
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.NotFoundException;
-import at.ac.tuwien.inso.sepm.ticketline.server.repository.*;
+import at.ac.tuwien.inso.sepm.ticketline.server.repository.ArtistRepository;
+import at.ac.tuwien.inso.sepm.ticketline.server.repository.EventRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.Location.HallRepository;
 import at.ac.tuwien.inso.sepm.ticketline.server.repository.Location.LocationRepository;
-import at.ac.tuwien.inso.sepm.ticketline.server.searchAndFilter.ArtistFilter;
 import at.ac.tuwien.inso.sepm.ticketline.server.searchAndFilter.EventFilter;
 import at.ac.tuwien.inso.sepm.ticketline.server.searchAndFilter.SimpleArtistFilterBuilder;
 import at.ac.tuwien.inso.sepm.ticketline.server.searchAndFilter.SimpleEventFilterBuilder;
@@ -21,7 +20,6 @@ import at.ac.tuwien.inso.sepm.ticketline.server.service.EventService;
 import com.google.common.collect.Lists;
 import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.jpa.impl.JPAQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +31,6 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -195,6 +192,9 @@ public class SimpleEventService implements EventService {
 
         hall.setLocation(location);
         event.setHall(hall);
+
+        if (event.getEventCategory() == null)
+            throw new EmptyFieldException("Category");
 
 
         // Duplicates

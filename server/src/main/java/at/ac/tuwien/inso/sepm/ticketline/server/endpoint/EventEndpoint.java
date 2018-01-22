@@ -5,23 +5,15 @@ import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.event.EventMapper;
 import at.ac.tuwien.inso.sepm.ticketline.server.exception.EmptyFieldException;
+import at.ac.tuwien.inso.sepm.ticketline.server.exception.NotFoundException;
 import at.ac.tuwien.inso.sepm.ticketline.server.service.EventService;
 import com.querydsl.core.types.Predicate;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.querydsl.binding.MultiValueBinding;
+import org.springframework.data.domain.*;
 import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.data.domain.*;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -97,6 +89,8 @@ public class EventEndpoint {
             event = eventMapper.detailedEventDTOToEvent(detailedEventDTO);
         } catch (NullPointerException e) {
             throw new EmptyFieldException(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw new NotFoundException("Category: " + detailedEventDTO.getEventCategory());
         }
 
         event = eventService.publishEvent(event);
