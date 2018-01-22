@@ -20,7 +20,6 @@ import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -137,16 +136,18 @@ public class EventLocationDataGenerator {
             LOGGER.info("generating {} location entries", locationArray.length);
             for (int locationID = 0; locationID < locationArray.length; locationID++) {
                 Location location = locationArray[locationID];
-                LOGGER.debug("saving location {}", location);
+
                 locationRepository.save(location);
+                LOGGER.debug("saving location {}", location);
 
                 for (int hallID = 0; hallID < hallArray[locationID].length; hallID++) {
                     Hall hall = hallArray[locationID][hallID];
 
                     hall.setLocation(location);
 
+                    hall = hallRepository.save(hall);
                     LOGGER.debug("saving hall {}", hall);
-                    hallRepository.save(hall);
+
 
                     // Seats
                     int columns = seatsArray[hallCnt][0];
@@ -232,9 +233,9 @@ public class EventLocationDataGenerator {
                     .category(category)
                     .seatSelection(faker.bool().bool())
                     .build();
-                LOGGER.debug("saving event {}", event);
-                eventRepository.save(event);
 
+                event = eventRepository.save(event);
+                LOGGER.debug("saving event {}", event);
             }
 
         }
