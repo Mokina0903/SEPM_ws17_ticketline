@@ -15,13 +15,14 @@ TODO: Fehler beim Testen gefunden
    - Add News mit Bild dauert lange (Done)
 
  + Event-Controller:
-   - Gefundene Treffer nur Punkte ()
+   - Gefundene Treffer nur Punkte (Done)
    - Choice Box (Punkte)
 
  + Customer-Controller:
    - Fenster evt. kleiner?
-   - Sprache ändert sich nicht in der Tabelle
-   - Add Customer kein Sprachwechsel
+   - Sprache ändert sich nicht in der Tabelle (Done)
+   - Add Customer kein Sprachwechsel (Done)
+    -Add customer textfields wechseln länge bei sprachwechsel
 
  + Ticket-Controller:
    - Tabelle Tickets Customer hüpft
