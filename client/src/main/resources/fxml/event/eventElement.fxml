@@ -18,7 +18,7 @@
       <children>
          <HBox prefWidth="450.0" spacing="1.0">
             <children>
-                <Label fx:id="lblTitle" styleClass="eventTitle" text="&lt;EventTitle&gt;" />
+                <Label fx:id="lblTitle" prefWidth="200.0" styleClass="eventTitle" text="&lt;EventTitle&gt;" />
                  <Label fx:id="lblFreeTickets" prefWidth="100.0" />
             </children>
          </HBox>
