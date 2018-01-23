@@ -34,7 +34,7 @@ public class AUserDataGenerator {
 
     @PostConstruct
     private void generateUser() {
-        if (userRepository.count() > 3) {
+        if (userRepository.count() > 5) {
             LOGGER.info("user already generated");
         } else {
             LOGGER.info("generating {} user entries", NUMBER_OF_USER_TO_GENERATE);
@@ -74,7 +74,7 @@ public class AUserDataGenerator {
     }
     @PostConstruct
     private void generateAdmin() {
-        if (userRepository.count() > 3) {
+        if (userRepository.count() > 5) {
             LOGGER.info("admin already generated");
         } else {
             LOGGER.info("generating {} admin entries");
