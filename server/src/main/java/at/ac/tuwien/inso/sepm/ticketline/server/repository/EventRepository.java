@@ -37,7 +37,6 @@ public interface EventRepository extends JpaRepository<Event, Long>,
     }
 
 
-
     /**
      * Find a single event entry by id.
      *
@@ -62,23 +61,6 @@ public interface EventRepository extends JpaRepository<Event, Long>,
     @Query(value = "Select * from event where end_of_event > now()", nativeQuery = true)
     List<Event> findAllUpcoming();
 
-    /**
-     * find list of events by title
-     *
-     * @param title of the event
-     * @return list of events
-     */
-    @Query
-    List<Event> findAllByTitle(@Param("title") String title);
-
-    /**
-     * find list of future events by title
-     *
-     * @param title of the event
-     * @return list of events
-     */
-    @Query(value = "Select * from event e where e.end_of_event > now() and e.title = :title", nativeQuery = true)
-    List<Event> findAllUpcomingByTitle(@Param("title") String title);
 
     @Query(value = "SELECT * FROM event WHERE title = :title " +
         "AND description = :description AND hall_id = :hallId " +
@@ -106,15 +88,6 @@ public interface EventRepository extends JpaRepository<Event, Long>,
 
 
     /**
-     * find list of future events by title
-     *
-     * @param title of the event
-     * @return list of events
-     */
-    @Query(value = "Select * from event e where e.end_of_event > now() and e.title = :title and e.end_of_event =:date",  nativeQuery = true)
-    List<Event> findAllUpcomingByTitleAndDate(@Param("title") String title, @Param("date") LocalDate date);
-
-    /**
      * filter events by artist
      *
      * @param artistId of artist
@@ -137,11 +110,4 @@ public interface EventRepository extends JpaRepository<Event, Long>,
         "and e.end_of_event > now() /*#pageable*/"
         , nativeQuery = true)
     Page<Event> findAllByLocationId( @Param("locationId") Long locationId, Pageable request);
-
-    //todo find by type, implement type in event (enum)
-    //todo find by duration (+-30 min)
-    //todo find by content
-    //todo find by date
-    //todo find by time
-    //todo find by w/o seat reservation
 }

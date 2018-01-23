@@ -47,14 +47,6 @@ public interface EventService {
      */
     Page<Event> findAllUpcomingAsc(Pageable request);
 
-    /**
-     * find page of future events by title
-     *
-     * @param request for the page containing a page number and sort type
-     * @param title   of the event
-     * @return page of events
-     */
-    Page<Event> findAllUpcomingByTitle(Pageable request, String title);
 
     /**
      * find page of events by combined parameters

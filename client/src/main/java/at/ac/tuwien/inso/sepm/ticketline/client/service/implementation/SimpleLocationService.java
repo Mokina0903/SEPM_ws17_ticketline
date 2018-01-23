@@ -49,11 +49,25 @@ public class SimpleLocationService implements LocationService{
 
     @Override
     public Page<SimpleLocationDTO> find(Pageable request, MultiValueMap<String, String> parameters) throws DataAccessException{
+        parameters = replaceSpaces(parameters);
         return locationRestClient.find(request, parameters);
     }
 
     @Override
     public Page<SimpleLocationDTO> findAdvanced(Pageable request, MultiValueMap<String, String> parameters) throws DataAccessException {
+        parameters = replaceSpaces(parameters);
         return locationRestClient.findAdvanced(request, parameters);
+    }
+
+    private MultiValueMap<String, String> replaceSpaces(MultiValueMap<String, String> parameters) {
+        for(String key : parameters.keySet()) {
+            String replace = parameters.getFirst(key);
+            if (replace.contains(" ")) {
+                replace = replace.replaceAll(" ", "_").toLowerCase();
+                parameters.set(key, replace);
+                System.out.println("replacing space ");
+            }
+        }
+        return parameters;
     }
 }

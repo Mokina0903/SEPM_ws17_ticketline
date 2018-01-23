@@ -78,14 +78,10 @@ public class SimpleEventService implements EventService {
         return new PageImpl<>(events.subList(start, end), request, events.size());
     }
 
-    @Override
-    public Page<Event> findAllUpcomingByTitle(Pageable request, String title) {
-        //todo
-        return null;
-    }
 
     @Override
     public Page<Event> findByAdvancedSearch(HashMap<String, String> parameters, Pageable request) {
+        parameters = replaceUnderscores(parameters);
         Predicate predicate = filterBuilder.buildAnd(new EventFilter(parameters));
         return eventRepository.findAll(predicate, request);
     }
@@ -102,10 +98,23 @@ public class SimpleEventService implements EventService {
 
     @Override
     public Page<Event> find(HashMap<String, String> parameters, Pageable request) {
+        parameters = replaceUnderscores(parameters);
         Predicate predicate = filterBuilder.buildOr(new EventFilter(parameters));
         return eventRepository.findAll(predicate, request);
     }
 
+
+    private HashMap<String, String> replaceUnderscores(HashMap<String, String> parameters) {
+        for(String key : parameters.keySet()) {
+            String replace = parameters.get(key);
+            if (replace.contains("_")) {
+                replace = replace.replaceAll("_", " ").toLowerCase();
+                parameters.put(key, replace);
+                System.out.println("Replacing _");
+            }
+        }
+        return parameters;
+    }
 
     @Override
     public Event publishEvent(Event event) {

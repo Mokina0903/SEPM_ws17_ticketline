@@ -37,13 +37,27 @@ public class SimpleArtistService implements ArtistService{
 
     @Override
     public Page<Artist> find(HashMap<String, String> parameters, Pageable request) {
+        parameters = replaceUnderscores(parameters);
         Predicate predicate = filterBuilder.buildOr(new ArtistFilter(parameters));
         return artistRepository.findAll(predicate, request);
     }
 
     @Override
     public Page<Artist> findByAdvancedSearch(HashMap<String, String> parameters, Pageable request) {
+        parameters = replaceUnderscores(parameters);
         Predicate predicate = filterBuilder.buildAnd(new ArtistFilter(parameters));
         return artistRepository.findAll(predicate, request);
+    }
+
+    private HashMap<String, String> replaceUnderscores(HashMap<String, String> parameters) {
+        for(String key : parameters.keySet()) {
+            String replace = parameters.get(key);
+            if (replace.contains("_")) {
+                replace = replace.replaceAll("_", " ").toLowerCase();
+                parameters.put(key, replace);
+                System.out.println("Replacing _");
+            }
+        }
+        return parameters;
     }
 }

@@ -79,11 +79,13 @@ public class SimpleEventService implements EventService {
 
     @Override
     public Page<SimpleEventDTO> findAdvanced(Pageable request, MultiValueMap<String, String> parameters) throws DataAccessException {
+        parameters = replaceSpaces(parameters);
         return eventRestClient.findAdvanced(request, parameters);
     }
 
     @Override
     public Page<SimpleEventDTO> find(Pageable request, MultiValueMap<String, String> parameters) throws DataAccessException {
+        parameters = replaceSpaces(parameters);
         return eventRestClient.find(request, parameters);
     }
 
@@ -95,5 +97,17 @@ public class SimpleEventService implements EventService {
     @Override
     public Page<SimpleEventDTO> findByLocation(Pageable request, Long id) throws DataAccessException {
         return eventRestClient.findAllByLocationId(id, request);
+    }
+
+    private MultiValueMap<String, String> replaceSpaces(MultiValueMap<String, String> parameters) {
+        for(String key : parameters.keySet()) {
+            String replace = parameters.getFirst(key);
+            if (replace.contains(" ")) {
+                replace = replace.replaceAll(" ", "_").toLowerCase();
+                parameters.set(key, replace);
+                System.out.println("replacing space ");
+            }
+        }
+        return parameters;
     }
 }

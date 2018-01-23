@@ -25,11 +25,25 @@ public class SimpleArtistService implements ArtistService{
 
     @Override
     public Page<SimpleArtistDTO> find(Pageable request, MultiValueMap<String, String> parameters) throws DataAccessException {
+        parameters = replaceSpaces(parameters);
         return artistRestClient.find(request, parameters);
     }
 
     @Override
     public Page<SimpleArtistDTO> findAdvanced(Pageable request, MultiValueMap<String, String> parameters) throws DataAccessException {
+        parameters = replaceSpaces(parameters);
         return artistRestClient.findAdvanced(request, parameters);
+    }
+
+    private MultiValueMap<String, String> replaceSpaces(MultiValueMap<String, String> parameters) {
+        for(String key : parameters.keySet()) {
+            String replace = parameters.getFirst(key);
+            if (replace.contains(" ")) {
+                replace = replace.replaceAll(" ", "_").toLowerCase();
+                parameters.set(key, replace);
+                System.out.println("replacing space ");
+            }
+        }
+        return parameters;
     }
 }

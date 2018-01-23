@@ -44,14 +44,28 @@ public class SimpleLocationService implements LocationService{
 
     @Override
     public Page<Location> find(HashMap<String, String> parameters, Pageable request) {
+        parameters = replaceUnderscores(parameters);
         Predicate predicate = filterBuilder.buildOr(new LocationFilter(parameters));
         return locationRepository.findAll(predicate, request);
     }
 
     @Override
     public Page<Location> findAdvanced(HashMap<String, String> parameters, Pageable request) {
+        parameters = replaceUnderscores(parameters);
         Predicate predicate = filterBuilder.buildAnd(new LocationFilter(parameters));
         return locationRepository.findAll(predicate, request);
+    }
+
+    private HashMap<String, String> replaceUnderscores(HashMap<String, String> parameters) {
+        for(String key : parameters.keySet()) {
+            String replace = parameters.get(key);
+            if (replace.contains("_")) {
+                replace = replace.replaceAll("_", " ").toLowerCase();
+                parameters.put(key, replace);
+                System.out.println("Replacing _");
+            }
+        }
+        return parameters;
     }
 
     @Override
