@@ -2,7 +2,6 @@ package at.ac.tuwien.inso.sepm.ticketline.client.service.implementation;
 
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.rest.ArtistRestClient;
-import at.ac.tuwien.inso.sepm.ticketline.client.rest.EventRestClient;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.ArtistService;
 import at.ac.tuwien.inso.sepm.ticketline.rest.artist.SimpleArtistDTO;
 import org.slf4j.Logger;
@@ -25,23 +24,21 @@ public class SimpleArtistService implements ArtistService{
 
     @Override
     public Page<SimpleArtistDTO> find(Pageable request, MultiValueMap<String, String> parameters) throws DataAccessException {
-        parameters = replaceSpaces(parameters);
+        parameters = replaceSpecialCharacters(parameters);
         return artistRestClient.find(request, parameters);
     }
 
     @Override
     public Page<SimpleArtistDTO> findAdvanced(Pageable request, MultiValueMap<String, String> parameters) throws DataAccessException {
-        parameters = replaceSpaces(parameters);
+        parameters = replaceSpecialCharacters(parameters);
         return artistRestClient.findAdvanced(request, parameters);
     }
 
-    private MultiValueMap<String, String> replaceSpaces(MultiValueMap<String, String> parameters) {
+    private MultiValueMap<String, String> replaceSpecialCharacters(MultiValueMap<String, String> parameters) {
         for(String key : parameters.keySet()) {
             String replace = parameters.getFirst(key);
-            replace = replace.replaceAll("[-+.^:,#%;{}()]","_");
-            if (replace.contains(" ")) {
-                replace = replace.replaceAll(" ", "_").toLowerCase();
-            }
+            replace = replace.replaceAll("[^a-zA-Z0-9 ]" , "-");
+            replace = replace.replaceAll(" ", "_").toLowerCase();
             parameters.set(key, replace);
         }
         return parameters;

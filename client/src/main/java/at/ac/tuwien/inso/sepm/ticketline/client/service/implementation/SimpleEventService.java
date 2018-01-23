@@ -5,7 +5,6 @@ import at.ac.tuwien.inso.sepm.ticketline.client.exception.SearchNoMatchException
 import at.ac.tuwien.inso.sepm.ticketline.client.rest.EventRestClient;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.EventService;
 import at.ac.tuwien.inso.sepm.ticketline.rest.ErrorDTO;
-import at.ac.tuwien.inso.sepm.ticketline.rest.artist.SimpleArtistDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.DetailedEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
 import org.slf4j.Logger;
@@ -79,13 +78,13 @@ public class SimpleEventService implements EventService {
 
     @Override
     public Page<SimpleEventDTO> findAdvanced(Pageable request, MultiValueMap<String, String> parameters) throws DataAccessException {
-        parameters = replaceSpaces(parameters);
+        parameters = replaceSpecialCharacters(parameters);
         return eventRestClient.findAdvanced(request, parameters);
     }
 
     @Override
     public Page<SimpleEventDTO> find(Pageable request, MultiValueMap<String, String> parameters) throws DataAccessException {
-        parameters = replaceSpaces(parameters);
+        parameters = replaceSpecialCharacters(parameters);
         return eventRestClient.find(request, parameters);
     }
 
@@ -99,13 +98,11 @@ public class SimpleEventService implements EventService {
         return eventRestClient.findAllByLocationId(id, request);
     }
 
-    private MultiValueMap<String, String> replaceSpaces(MultiValueMap<String, String> parameters) {
+    private MultiValueMap<String, String> replaceSpecialCharacters(MultiValueMap<String, String> parameters) {
         for(String key : parameters.keySet()) {
             String replace = parameters.getFirst(key);
-            replace = replace.replaceAll("[-+.^:,#%;{}()]","_");
-            if (replace.contains(" ")) {
-                replace = replace.replaceAll(" ", "_").toLowerCase();
-            }
+            replace = replace.replaceAll("[^a-zA-Z0-9 ]" , "-");
+            replace = replace.replaceAll(" ", "_").toLowerCase();
             parameters.set(key, replace);
         }
         return parameters;

@@ -49,23 +49,21 @@ public class SimpleLocationService implements LocationService{
 
     @Override
     public Page<SimpleLocationDTO> find(Pageable request, MultiValueMap<String, String> parameters) throws DataAccessException{
-        parameters = replaceSpaces(parameters);
+        parameters = replaceSpecialCharacters(parameters);
         return locationRestClient.find(request, parameters);
     }
 
     @Override
     public Page<SimpleLocationDTO> findAdvanced(Pageable request, MultiValueMap<String, String> parameters) throws DataAccessException {
-        parameters = replaceSpaces(parameters);
+        parameters = replaceSpecialCharacters(parameters);
         return locationRestClient.findAdvanced(request, parameters);
     }
 
-    private MultiValueMap<String, String> replaceSpaces(MultiValueMap<String, String> parameters) {
+    private MultiValueMap<String, String> replaceSpecialCharacters(MultiValueMap<String, String> parameters) {
         for(String key : parameters.keySet()) {
             String replace = parameters.getFirst(key);
-            replace = replace.replaceAll("[-+.^:,#%;{}()]","_");
-            if (replace.contains(" ")) {
-                replace = replace.replaceAll(" ", "_").toLowerCase();
-            }
+            replace = replace.replaceAll("[^a-zA-Z0-9 ]" , "-");
+            replace = replace.replaceAll(" ", "_").toLowerCase();
             parameters.set(key, replace);
         }
         return parameters;
