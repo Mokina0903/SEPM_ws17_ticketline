@@ -20,6 +20,7 @@ public class EventFilter {
     private LocalDateTime upcoming;
     private LocalDateTime past;
     private String category;
+    Boolean timeCrossesDays;
 
 
     public EventFilter(HashMap<String, String> parameters) {
@@ -45,13 +46,15 @@ public class EventFilter {
             lowerBound -= 30;
             if (lowerBound < 0) {
                 lowerBound += 24L * 60L;
+                timeCrossesDays = true;
             }
             this.startTimeLowerBound = lowerBound;
 
             Long upperBound = Long.parseLong(parameters.get("timeOfStart"));
             upperBound += 30;
-            if (upperBound > 24L * 60L) {// ist länger als 24 sdt
+            if (upperBound >= 24L * 60L) {
                 upperBound -= 24L * 60L;
+                timeCrossesDays = true;
             }
             this.startTimeUpperBound = upperBound;
         }
@@ -209,4 +212,9 @@ public class EventFilter {
     public void setCategory(String category) {
         this.category = category;
     }
+
+    public Boolean getTimeCrossesDays() {
+        return timeCrossesDays;
+    }
+
 }

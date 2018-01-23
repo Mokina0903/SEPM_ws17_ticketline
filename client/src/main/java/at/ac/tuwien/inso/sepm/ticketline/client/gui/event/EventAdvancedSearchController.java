@@ -214,7 +214,7 @@ public class EventAdvancedSearchController implements LocalizationObserver {
                 int hours = runtime / 60;
                 int minutes = runtime % 60;
                 infoLabel.setText(String.format("%02d:%02d", hours, minutes));
-                if (infoLabel.getText().matches("24:00")) {
+                if (infoLabel.getText().matches("24:00") && infoLabel.equals(lbDurationInfo)) {
                     infoLabel.setText(infoLabel.getText() + " +");
                 }
                 if (infoLabel.getText().matches("00:00")) {

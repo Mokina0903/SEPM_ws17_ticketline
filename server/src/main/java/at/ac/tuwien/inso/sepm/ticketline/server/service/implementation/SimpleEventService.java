@@ -83,6 +83,7 @@ public class SimpleEventService implements EventService {
     public Page<Event> findByAdvancedSearch(HashMap<String, String> parameters, Pageable request) {
         parameters = replaceUnderscores(parameters);
         Predicate predicate = filterBuilder.buildAnd(new EventFilter(parameters));
+        System.out.println("PRED::::::::::::::::::::::::::. " +predicate);
         return eventRepository.findAll(predicate, request);
     }
 

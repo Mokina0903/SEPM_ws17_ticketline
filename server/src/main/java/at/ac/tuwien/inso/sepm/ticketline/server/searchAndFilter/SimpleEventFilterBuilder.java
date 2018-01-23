@@ -12,7 +12,31 @@ public class SimpleEventFilterBuilder implements EventFilterBuilder {
 
     @Override
     public Predicate buildAnd(EventFilter filter) {
+        if (filter.timeCrossesDays) {
+            return new OptionalBooleanBuilder(EVENT.isNotNull())
+                .notEmptyAnd(EVENT.title::containsIgnoreCase, filter.getTitle())
+                .notEmptyAnd(EVENT.description::containsIgnoreCase, filter.getDescription())
 
+                .notNullAnd(EVENT.price::loe, filter.getPriceTo())
+                .notNullAnd(EVENT.price::goe, filter.getPriceFrom())
+
+                .notEmptyAnd(EVENT.eventDate::eq, filter.getDate())
+
+                .notNullAnd(EVENT.startOfEventTime::loe, filter.getStartTimeUpperBound())
+                .notNullOr(EVENT.startOfEventTime::goe, filter.getStartTimeLowerBound())
+
+                .notNullAnd(EVENT.duration::loe, filter.getDurationUpperBound())
+                .notNullAnd(EVENT.duration::goe, filter.getDurationLowerBound())
+
+                .notNullAnd(EVENT.seatSelection::eq, filter.getNoSeats())
+                .notNullAnd(EVENT.seatSelection::ne, filter.getSeats())
+
+                .notNullAnd(EVENT.startOfEvent::loe, filter.getUpcoming())
+                .notNullAnd(EVENT.startOfEvent::goe, filter.getPast())
+
+                .notEmptyAnd(EVENT.category::eq, filter.getCategory())
+                .build();
+        }
         return new OptionalBooleanBuilder(EVENT.isNotNull())
             .notEmptyAnd(EVENT.title::containsIgnoreCase, filter.getTitle())
             .notEmptyAnd(EVENT.description::containsIgnoreCase, filter.getDescription())
@@ -34,8 +58,7 @@ public class SimpleEventFilterBuilder implements EventFilterBuilder {
             .notNullAnd(EVENT.startOfEvent::loe, filter.getUpcoming())
             .notNullAnd(EVENT.startOfEvent::goe, filter.getPast())
 
-             .notEmptyAnd(EVENT.category::eq, filter.getCategory())
-            //todo also show ausverkauft
+            .notEmptyAnd(EVENT.category::eq, filter.getCategory())
             .build();
     }
 
