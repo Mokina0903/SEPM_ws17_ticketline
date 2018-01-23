@@ -239,10 +239,10 @@ public class EventAdvancedSearchController implements LocalizationObserver {
     @FXML
     public void handleOkArtist(ActionEvent actionEvent) {
         MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
-        if (!tfArtistFName.getText().isEmpty()) {
+        if (!tfArtistFName.getText().isEmpty() || tfArtistFName.getText().equals(" ")) {
             parameters.set("artistFirstName", tfArtistFName.getText());
         }
-        if (!tfArtistLName.getText().isEmpty()) {
+        if (!tfArtistLName.getText().isEmpty() || tfArtistLName.getText().equals(" ")) {
             parameters.set("artistLastName", tfArtistLName.getText());
         }
         paginationHelper.setSearchFor(EventSearchFor.ARTIST_ADV);
@@ -265,8 +265,9 @@ public class EventAdvancedSearchController implements LocalizationObserver {
             parameters.set("city", tfLocationCity.getText());
         }
         if (!tfLocationZip.getText().isEmpty() || tfLocationZip.getText().equals(" ")) {
-            //todo check if numeric
-            parameters.set("zip", tfLocationZip.getText());
+            if (isNumeric(tfLocationZip.getText())) {
+                parameters.set("zip", tfLocationZip.getText());
+            }
         }
         if (!tfLocationCountry.getText().isEmpty() || tfLocationCountry.getText().equals(" ")) {
             parameters.set("country", tfLocationCountry.getText());
@@ -282,17 +283,21 @@ public class EventAdvancedSearchController implements LocalizationObserver {
 
         MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
 
-        if (!tfEventTitle.getText().isEmpty()) {
+        if (!tfEventTitle.getText().isEmpty() || tfEventTitle.getText().equals(" ")) {
             parameters.set("title", tfEventTitle.getText());
         }
-        if (!tfEventDescription.getText().isEmpty()) {
+        if (!tfEventDescription.getText().isEmpty() || tfEventDescription.getText().equals(" ")) {
             parameters.set("description", tfEventDescription.getText());
         }
-        if (!tfEventPriceFrom.getText().isEmpty()) {
-            parameters.set("priceFrom", tfEventPriceFrom.getText());
+        if (!tfEventPriceFrom.getText().isEmpty()  || tfEventPriceFrom.getText().equals(" ")) {
+            if (isNumeric(tfEventPriceFrom.getText())) {
+                parameters.set("priceFrom", tfEventPriceFrom.getText());
+            }
         }
-        if (!tfEventPriceTo.getText().isEmpty()) {
-            parameters.set("priceTo", tfEventPriceTo.getText());
+        if (!tfEventPriceTo.getText().isEmpty() || tfEventPriceTo.getText().equals(" ")) {
+            if (isNumeric(tfEventPriceTo.getText())) {
+                parameters.set("priceTo", tfEventPriceTo.getText());
+            }
         }
         if (slTime.getValue() != 0) {
             Double timeInMinutes = slTime.getValue();
@@ -365,7 +370,6 @@ public class EventAdvancedSearchController implements LocalizationObserver {
     }
 
     @FXML
-
     public void handleCancel(ActionEvent actionEvent) {
         eventController.getEventTab().setContent(oldContent);
     }
@@ -399,5 +403,10 @@ public class EventAdvancedSearchController implements LocalizationObserver {
         lbArtistLName.setText(BundleManager.getBundle().getString("artist.lname"));
 
     }
+
+    public boolean isNumeric(String s) {
+        return s != null && s.matches("\\d*");
+    }
+
 }
 

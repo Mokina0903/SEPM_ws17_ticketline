@@ -31,9 +31,11 @@ public class EventFilter {
         }
         if (parameters.containsKey("priceFrom")) {
             this.priceFrom = Long.parseLong(parameters.get("priceFrom"));
+            this.priceFrom *= 100;
         }
         if (parameters.containsKey("priceTo")) {
             this.priceTo = Long.parseLong(parameters.get("priceTo"));
+            this.priceTo *= 100;
         }
         if (parameters.containsKey("eventDate")) {
             date = parameters.get("eventDate");
