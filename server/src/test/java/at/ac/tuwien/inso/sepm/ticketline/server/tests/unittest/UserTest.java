@@ -388,7 +388,7 @@ public class UserTest extends BaseTestUnit {
             .contentType(ContentType.JSON)
             .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
             .body(DetailedUserDTO.builder()
-                .userName(ADMIN_USERNAME + 1)
+                .userName(ADMIN_USERNAME + "Testadmin")
                 .password(encoder.encode(ADMIN_PASSWORD))
                 .blocked(false)
                 .role(1)
@@ -401,9 +401,9 @@ public class UserTest extends BaseTestUnit {
             .given()
             .contentType(ContentType.JSON)
             .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
-            .when().get(USER_ENDPOINT_FIND, ADMIN_USERNAME + 1)
+            .when().get(USER_ENDPOINT_FIND, ADMIN_USERNAME + "Testadmin")
             .then().extract().response();
-        Assert.assertTrue(response.asString().contains(ADMIN_USERNAME + 1));
+        Assert.assertTrue(response.asString().contains(ADMIN_USERNAME + "Testadmin"));
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
     }
 
