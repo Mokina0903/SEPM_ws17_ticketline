@@ -103,8 +103,6 @@ public class AuthenticationController {
                     protected void failed() {
 
                         super.failed();
-                   /* JavaFXUtils.createExceptionDialog(getException(),
-                        ((Node) actionEvent.getTarget()).getScene().getWindow()).showAndWait();*/
                         try {
                             setLabels();
                         } catch (DataAccessException e) {
