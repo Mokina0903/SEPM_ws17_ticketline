@@ -12,7 +12,7 @@ public class SimpleEventFilterBuilder implements EventFilterBuilder {
 
     @Override
     public Predicate buildAnd(EventFilter filter) {
-        if (filter.timeCrossesDays) {
+        if (filter.getTimeCrossesDays()) {
             return new OptionalBooleanBuilder(EVENT.isNotNull())
                 .notEmptyAnd(EVENT.title::containsIgnoreCase, filter.getTitle())
                 .notEmptyAnd(EVENT.description::containsIgnoreCase, filter.getDescription())
@@ -37,6 +37,7 @@ public class SimpleEventFilterBuilder implements EventFilterBuilder {
                 .notEmptyAnd(EVENT.category::eq, filter.getCategory())
                 .build();
         }
+        System.out.println("FILTER WiTHOUT time overflow................");
         return new OptionalBooleanBuilder(EVENT.isNotNull())
             .notEmptyAnd(EVENT.title::containsIgnoreCase, filter.getTitle())
             .notEmptyAnd(EVENT.description::containsIgnoreCase, filter.getDescription())

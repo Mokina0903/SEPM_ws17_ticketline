@@ -149,6 +149,8 @@ public class Event implements Predicatable{
     }
 
     public long getDuration() {
+
+        System.out.println("Duration in ENITIY_ get******************* " + duration);
         return duration;
     }
 
