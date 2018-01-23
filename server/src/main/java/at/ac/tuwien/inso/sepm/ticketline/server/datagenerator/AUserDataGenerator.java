@@ -12,10 +12,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 @Profile("generateData")
 @Component
@@ -43,25 +39,37 @@ public class AUserDataGenerator {
         } else {
             LOGGER.info("generating {} user entries", NUMBER_OF_USER_TO_GENERATE);
 
-            User user = User.builder()
-                .userName("user")
-                .password(encoder.encode("password"))
-                .notSeen(newsRepository.findAllByOrderByPublishedAtDesc())
-                .role(2)
-                .blocked(false)
-                .build();
-            LOGGER.debug("saving user {}", user);
-            userRepository.save(user);
+            userRepository.save(
+                User.builder()
+                    .userName("user")
+                    .password(encoder.encode("password"))
+                    .notSeen(newsRepository.findAllByOrderByPublishedAtDesc())
+                    .role(2)
+                    .blocked(false)
+                    .build()
+            );
 
-            User florian = User.builder()
-                .userName("Florian")
-                .password(encoder.encode("Florian"))
-                .notSeen(newsRepository.findAllByOrderByPublishedAtDesc())
-                .role(2)
-                .blocked(false)
-                .build();
-            LOGGER.debug("saving user {}", florian);
-            userRepository.save(florian);
+            userRepository.save(
+                User.builder()
+                    .userName("Florian")
+                    .password(encoder.encode("Florian"))
+                    .notSeen(newsRepository.findAllByOrderByPublishedAtDesc())
+                    .role(2)
+                    .blocked(false)
+                    .build()
+            );
+
+            userRepository.save(
+                User.builder()
+                    .userName("Monika")
+                    .password(encoder.encode("Monika"))
+                    .notSeen(newsRepository.findAllByOrderByPublishedAtDesc())
+                    .role(2)
+                    .blocked(false)
+                    .build()
+            );
+
+
         }
     }
     @PostConstruct
@@ -71,25 +79,46 @@ public class AUserDataGenerator {
         } else {
             LOGGER.info("generating {} admin entries");
 
-            User user = User.builder()
-                .userName("admin")
-                .password(encoder.encode("password"))
-                .role(1)
-                .blocked(false)
-                .notSeen(newsRepository.findAllByOrderByPublishedAtDesc())
-                .build();
-            LOGGER.debug("saving user {}", user);
-            userRepository.save(user);
+            userRepository.save(
+                User.builder()
+                    .userName("admin")
+                    .password(encoder.encode("password"))
+                    .notSeen(newsRepository.findAllByOrderByPublishedAtDesc())
+                    .role(1)
+                    .blocked(false)
+                    .build()
+            );
 
-            User david = User.builder()
-                .userName("David")
-                .password(encoder.encode("David"))
-                .role(1)
-                .notSeen(newsRepository.findAllByOrderByPublishedAtDesc())
-                .blocked(false)
-                .build();
-            LOGGER.debug("saving admin {}", david);
-            userRepository.save(david);
+            userRepository.save(
+                User.builder()
+                    .userName("Stefan")
+                    .password(encoder.encode("Stefan"))
+                    .notSeen(newsRepository.findAllByOrderByPublishedAtDesc())
+                    .role(1)
+                    .blocked(false)
+                    .build()
+            );
+
+            userRepository.save(
+                User.builder()
+                    .userName("David")
+                    .password(encoder.encode("David"))
+                    .notSeen(newsRepository.findAllByOrderByPublishedAtDesc())
+                    .role(1)
+                    .blocked(false)
+                    .build()
+            );
+
+            userRepository.save(
+                User.builder()
+                    .userName("Verena")
+                    .password(encoder.encode("Verena"))
+                    .notSeen(newsRepository.findAllByOrderByPublishedAtDesc())
+                    .role(1)
+                    .blocked(false)
+                    .build()
+            );
+
 
         }
     }
