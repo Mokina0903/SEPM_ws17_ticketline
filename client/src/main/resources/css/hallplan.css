@@ -51,7 +51,7 @@
 .cutlineLbl{
 -fx-min-width: 50px;
 -fx-min-heit: 50px;
--fx-max-width: 50px;
+-fx-max-width: 98px;
 -fx-max-heit: 50px;
 -fx-text-fill: black;
 }

@@ -287,7 +287,7 @@ public class HallplanController implements LocalizationObserver {
         } else {
             initializeSectors();
         }
-        setButtonGraphic(backbut, "ARROW_LEFT", Color.DARKGRAY);
+        setButtonGraphic(backbut, "ARROW_LEFT", Color.BLACK);
 
 
         lbEventNameHeader.setText(event.getTitle());

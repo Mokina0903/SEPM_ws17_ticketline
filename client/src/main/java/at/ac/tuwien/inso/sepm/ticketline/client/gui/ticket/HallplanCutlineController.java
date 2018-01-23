@@ -1,15 +1,19 @@
 package at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket;
 
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationObserver;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationSubject;
+import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class HallplanCutlineController {
+public class HallplanCutlineController implements LocalizationObserver {
     private static final Logger LOGGER = LoggerFactory.getLogger(at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket.TicketController.class);
 
     @FXML
@@ -32,18 +36,29 @@ public class HallplanCutlineController {
     public HBox sectorBLegend;
     @FXML
     public HBox sectorALegend;
+    @FXML
+    public Label lblOccupied;
+    @FXML
+    public Label lblFree;
+    @FXML
+    public Label lblScene;
 
-    void initializeData(double sectorPriceA){
+    @Autowired
+    private LocalizationSubject localizationSubject;
 
-        lbPriceA.setText(String.format("%10.2f",sectorPriceA));
-        lbPriceB.setText(String.format("%10.2f",sectorPriceA*1.2));
-        lbPriceC.setText(String.format("%10.2f",sectorPriceA*1.4));
-        lbPriceD.setText(String.format("%10.2f",sectorPriceA*1.6));
-        lbPriceE.setText(String.format("%10.2f",sectorPriceA*1.8));
+    void initializeData(double sectorPriceA) {
+
+        localizationSubject.attach(this);
+
+        lbPriceA.setText(String.format("%10.2f", sectorPriceA));
+        lbPriceB.setText(String.format("%10.2f", sectorPriceA * 1.2));
+        lbPriceC.setText(String.format("%10.2f", sectorPriceA * 1.4));
+        lbPriceD.setText(String.format("%10.2f", sectorPriceA * 1.6));
+        lbPriceE.setText(String.format("%10.2f", sectorPriceA * 1.8));
         setAllLabelsNotManagedAndNotVisible();
     }
 
-    private void setAllLabelsNotManagedAndNotVisible(){
+    private void setAllLabelsNotManagedAndNotVisible() {
 
         sectorALegend.setVisible(false);
         sectorALegend.setManaged(false);
@@ -58,7 +73,7 @@ public class HallplanCutlineController {
 
     }
 
-    public void setSectorLegendOfSectorVisableAndManagable( char sector) {
+    public void setSectorLegendOfSectorVisableAndManagable(char sector) {
 
         switch (sector) {
             case 'a':
@@ -85,4 +100,10 @@ public class HallplanCutlineController {
     }
 
 
+    @Override
+    public void update() {
+        lblFree.setText(BundleManager.getBundle().getString("hallplan.free"));
+        lblOccupied.setText(BundleManager.getBundle().getString("hallplan.occupied"));
+        lblScene.setText(BundleManager.getBundle().getString("hallplan.scene"));
+    }
 }
