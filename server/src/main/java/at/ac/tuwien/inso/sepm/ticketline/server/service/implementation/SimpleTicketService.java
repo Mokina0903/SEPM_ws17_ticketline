@@ -71,22 +71,25 @@ public class SimpleTicketService implements TicketService {
 
         long reservationNR = (LocalDate.now().getYear() % 100) * 100000000 ;
 
-        for(Ticket ticket : tickets) {
-            if (isBooked(ticket.getEvent().getId(), ticket.getSeat().getId())) {
-                throw new AlreadyExistsException("Ticket already sold.");
-            }
+        synchronized (this) {
+            for(Ticket ticket : tickets) {
+                if (isBooked(ticket.getEvent().getId(), ticket.getSeat().getId())) {
+                    throw new AlreadyExistsException("Ticket already sold.");
+                }
 
                 ticket.setDeleted(false);
                 ticket.setReservationNumber(reservationNR);
                 ticket.setReservationDate(LocalDateTime.now());
 
+            }
+            tickets = ticketRepository.save(tickets);
+
+            reservationNR+=+ tickets.get(0).getId();
+            for(Ticket ticket: tickets){
+                ticket.setReservationNumber(reservationNR);
+            }
+            return ticketRepository.save(tickets);
         }
-        tickets = ticketRepository.save(tickets);
-        reservationNR+=+ tickets.get(0).getId();
-        for(Ticket ticket: tickets){
-            ticket.setReservationNumber(reservationNR);
-        }
-        return ticketRepository.save(tickets);
     }
 
     @Override
