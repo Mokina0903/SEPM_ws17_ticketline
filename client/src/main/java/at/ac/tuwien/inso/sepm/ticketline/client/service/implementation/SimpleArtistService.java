@@ -38,11 +38,11 @@ public class SimpleArtistService implements ArtistService{
     private MultiValueMap<String, String> replaceSpaces(MultiValueMap<String, String> parameters) {
         for(String key : parameters.keySet()) {
             String replace = parameters.getFirst(key);
+            replace = replace.replaceAll("[-+.^:,#%;{}()]","_");
             if (replace.contains(" ")) {
                 replace = replace.replaceAll(" ", "_").toLowerCase();
-                parameters.set(key, replace);
-                System.out.println("replacing space ");
             }
+            parameters.set(key, replace);
         }
         return parameters;
     }
