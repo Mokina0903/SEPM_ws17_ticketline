@@ -5,6 +5,7 @@ import com.querydsl.core.types.Predicate;
 import org.springframework.stereotype.Component;
 
 
+
 @Component
 public class SimpleEventFilterBuilder implements EventFilterBuilder {
 
