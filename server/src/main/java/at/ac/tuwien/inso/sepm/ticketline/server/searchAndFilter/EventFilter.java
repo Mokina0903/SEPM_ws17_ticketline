@@ -64,7 +64,6 @@ public class EventFilter {
             if (lowerBound < 0) {
                 lowerBound = 1L;
             }
-            System.out.println("DURTIOL LOW:::::::::: " + lowerBound);
             this.durationLowerBound = lowerBound;
 
             long upperBound = Long.parseLong(parameters.get("duration"));
@@ -72,7 +71,6 @@ public class EventFilter {
             if (upperBound >= 24 * 60) {
                 upperBound = 24L * 60L;
             }
-            System.out.println("DURTIOL UP:::::::::: " + upperBound);
 
             this.durationUpperBound = upperBound;
 
