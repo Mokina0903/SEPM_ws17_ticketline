@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -108,8 +109,14 @@ public class SimpleTicketService implements TicketService {
     @Override
     public void reservationPdf( List<TicketDTO> tickets, Window window) {
 
-        URL formTemplate = getClass().getResource("/invoice_template/Reservation_Template.pdf") ;
-        try (PDDocument pdfDocument = PDDocument.load(new File(formTemplate.getPath()))) {
+        File f;
+        try {
+            f = new File(getClass().getResource("/invoice_template/Reservation_Template_new.pdf").toURI());
+        } catch(URISyntaxException e) {
+            f = new File(getClass().getResource("/invoice_template/Reservation_Template_new.pdf").getPath());
+        }
+
+        try (PDDocument pdfDocument = PDDocument.load(f)) {
 
             PDAcroForm acroForm = pdfDocument.getDocumentCatalog().getAcroForm();
 
