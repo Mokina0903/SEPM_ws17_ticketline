@@ -66,7 +66,7 @@ public class SimpleTicketRestClient implements TicketRestClient {
                     null,
                     new ParameterizedTypeReference<List<TicketDTO>>() {}
                 );
-            LOGGER.debug("Result status was {} with content {}", tickets.getStatusCode() /* to minimize traffic, can be removed every time, tickets.getBody()*/);
+            LOGGER.debug("Result status was {} with content {}", tickets.getStatusCode());
             return tickets.getBody();
         } catch (HttpStatusCodeException e) {
             throw new DataAccessException("Failed retrieve tickets with status code " + e.getStatusCode().toString());

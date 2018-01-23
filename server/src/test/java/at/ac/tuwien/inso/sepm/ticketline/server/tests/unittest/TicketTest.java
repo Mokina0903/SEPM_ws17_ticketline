@@ -30,21 +30,6 @@ import static org.hamcrest.core.Is.is;
 
 public class TicketTest extends BaseTestUnit {
 
-    // TODO: Remove reservation 30 min before
-    // TODO: Reversal of Reservation
-    // TODO: Sell book ticket
-    // TODO: Reversal of Sold Ticket
-
-    // TODO: Test privileges
-    // TODO: post /tickets create ticket entry
-    // TODO: get /tickets/customer/{customerId} Get information about ticket entries by customer
-    // TODO: get /tickets/event/{eventId} Get information about ticket entries by event
-    // TODO: get /tickets/event/{eventId}/{sector} Get number of ticket entries by event and sector
-    // TODO: get /tickets/isBooked/{eventId}/{seatId} Check if seat is booked for the event
-    // TODO: get /tickets/isFree/{eventId}/{sector} Search for free seats for event in sector
-    // TODO: get /tickets/{pageIndex}/{ticketsPerPage} Get list of ticket entries
-    // TODO: get /tickets/{ticketId} Get information about a specific ticket entry
-
     @Autowired
     private EventMapper eventMapper;
 
@@ -106,7 +91,6 @@ public class TicketTest extends BaseTestUnit {
 
     @Test
     public void loseReservationAfterTime() {
-        // TODO: David
 
         Event event = setUpDefaultEvent(LocalDateTime.now().plusMinutes(10));
 
@@ -145,21 +129,6 @@ public class TicketTest extends BaseTestUnit {
         ticketRepository.deleteAlloldReservations(30L);
 
         Assert.assertThat(tickets,is(ticketRepository.findAll().size()));
-
-        // TODO: Implement here
-        /*
-        response = RestAssured
-            .given()
-            .contentType(ContentType.JSON)
-            .header(HttpHeaders.AUTHORIZATION, validUserTokenWithPrefix)
-            .body(ticketDTOList)
-            .when().post(TICKET_ENDPOINT)
-            .then().extract().response();
-        Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
-
-
-        List<TicketDTO> ticketDTOListNew = response.as(ArrayList.class);
-        */
 
     }
 

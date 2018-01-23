@@ -33,8 +33,6 @@ public class TicketlineClientApplication extends SpringFxApplication {
         ));
         stage.getIcons().add(new Image(TicketlineClientApplication.class.getResourceAsStream("/image/ticketlineIcon.png")));
         stage.centerOnScreen();
- /*       stage.setWidth(1200);
-        stage.setHeight(800);*/
         stage.setMinWidth(1200);
         stage.setMinHeight(700);
         stage.show();
@@ -53,7 +51,6 @@ public class TicketlineClientApplication extends SpringFxApplication {
     }
 
     public static void main(String[] args) {
-        // FIXME: fix pre-loader in java9
         Application.launch(TicketlineClientApplication.class, args);
     }
 

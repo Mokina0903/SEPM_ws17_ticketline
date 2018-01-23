@@ -32,22 +32,6 @@ import static org.mockito.Matchers.any;
 
 public class TicketEndpointTest extends BaseIntegrationTest {
 
-    // TODO: (David) Change to IntegrationTest
-    // TODO: Remove reservation 30 min before
-    // TODO: Reversal of Reservation
-    // TODO: Sell book ticket
-    // TODO: Reversal of Sold Ticket
-
-    // TODO: Test privileges
-    // TODO: post /tickets create ticket entry
-    // Done: get /tickets/customer/{customerId} Get information about ticket entries by customer
-    // Done: get /tickets/event/{eventId} Get information about ticket entries by event
-    // Done: get /tickets/event/{eventId}/{sector} Get number of ticket entries by event and sector
-    // Done: get /tickets/isBooked/{eventId}/{seatId} Check if seat is booked for the event
-    // Done: get /tickets/isFree/{eventId}/{sector} Search for free seats for event in sector
-    // Done: get /tickets/{pageIndex}/{ticketsPerPage} Get list of ticket entries
-    // Done: get /tickets/{ticketId} Get information about a specific ticket entry
-
     @MockBean
     private EventRepository eventRepository;
 

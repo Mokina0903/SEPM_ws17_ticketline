@@ -32,14 +32,10 @@ public class LocationController extends TabElement implements LocalizationObserv
     @FXML
     private TabHeaderController tabHeaderController;
 
-    private List<SimpleLocationDTO> locations;
-
     private final MainController mainController;
     private final SpringFxmlLoader springFxmlLoader;
     private final LocationService locationService;
 
-    private final int LOCATIONS_PER_PAGE = 7;
-    private LocationSearchFor searchFor;
 
     private Tab locationTab;
 
@@ -61,37 +57,6 @@ public class LocationController extends TabElement implements LocalizationObserv
 
     }
 
-    public void preparePagination() {
-        //todo implement Pagination, change list to page
-    }
-
-
-    public void preparePagination(List<SimpleLocationDTO> locations) {
-
-        LOGGER.info("search matches");
-        pagination.setCurrentPageIndex(0);
-        pagination.setPageFactory(new Callback<Integer, Node>() {
-
-            @Override
-            public Node call(Integer pageIndex) {
-                return createPage(pageIndex);
-            }
-        });
-    }
-
-    private List<SimpleEventDTO> loadPage(int pageIndex) {
-        return null;
-    }
-
-    private Node createPage(int pageIndex) {
-
-        return null;
-    }
-
-    private void noMatchFound() {
-        LOGGER.info("no search match");
-
-    }
 
     @Override
     public void update() {
@@ -104,9 +69,4 @@ public class LocationController extends TabElement implements LocalizationObserv
         locationTab = tab;
     }
 
-    public void loadLocations(){
-
-/*        searchFor = LocationSearchFor.EVENT_ADV;
-        preparePagination();*/
-    }
 }

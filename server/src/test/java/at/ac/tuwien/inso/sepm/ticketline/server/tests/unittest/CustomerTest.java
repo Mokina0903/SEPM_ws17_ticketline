@@ -53,16 +53,6 @@ public class CustomerTest extends BaseTestUnit {
             .then().extract().response();
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
 
-        //todo customerEndpoint returns Page instead of list, but dont know how to change code to page
-      /*  Assert.assertThat(Arrays.asList(response.as(CustomerDTO[].class)), is(Collections.singletonList(
-            CustomerDTO.builder()
-                .id(CUSTOMER_ID)
-                .knr(CUSTOMER_NUMBER)
-                .name(CUSTOMER_NAME)
-                .surname(CUSTOMER_SURNAME)
-                .mail(CUSTOMER_MAIL)
-                .birthDate(CUSTOMER_BIRTHDATE)
-                .build())));*/
     }
 
     @Test
@@ -97,15 +87,6 @@ public class CustomerTest extends BaseTestUnit {
             .then().extract().response();
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
 
-      /*  Assert.assertThat(Arrays.asList(response.as(CustomerDTO[].class)), is(Collections.singletonList(
-            CustomerDTO.builder()
-                .id(CUSTOMER_ID)
-                .knr(CUSTOMER_NUMBER)
-                .name(CUSTOMER_NAME)
-                .surname(CUSTOMER_SURNAME)
-                .mail(CUSTOMER_MAIL)
-                .birthDate(CUSTOMER_BIRTHDATE)
-                .build())));*/
     }
 
     @Test
@@ -118,14 +99,6 @@ public class CustomerTest extends BaseTestUnit {
             .then().extract().response();
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
 
-/*        Assert.assertTrue(Arrays.asList(response.as(CustomerDTO[].class)).contains(CustomerDTO.builder()
-                .id(CUSTOMER_ID)
-                .knr(CUSTOMER_NUMBER)
-                .name(CUSTOMER_NAME)
-                .surname(CUSTOMER_SURNAME)
-                .mail(CUSTOMER_MAIL)
-                .birthDate(CUSTOMER_BIRTHDATE)
-                .build()));*/
     }
 
     @Test
@@ -138,18 +111,8 @@ public class CustomerTest extends BaseTestUnit {
             .then().extract().response();
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
 
-       /* Assert.assertTrue(Arrays.asList(response.as(CustomerDTO[].class)).contains(
-            CustomerDTO.builder()
-                .id(CUSTOMER_ID)
-                .knr(CUSTOMER_NUMBER)
-                .name(CUSTOMER_NAME)
-                .surname(CUSTOMER_SURNAME)
-                .mail(CUSTOMER_MAIL)
-                .birthDate(CUSTOMER_BIRTHDATE)
-                .build()));*/
     }
 
-    //todo Validation Tests fail
 
     @Test(expected = CustomerNotValidException.class)
     public void createCustomerWithInvalidName() throws CustomerNotValidException {

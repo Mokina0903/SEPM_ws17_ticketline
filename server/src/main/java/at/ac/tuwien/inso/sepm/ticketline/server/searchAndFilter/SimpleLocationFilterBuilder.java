@@ -9,8 +9,6 @@ public class SimpleLocationFilterBuilder implements LocationFilterBuilder{
 
     private final QLocation LOCATION = QLocation.location;
 
-    //todo buildOr, buildAnd for general search vs filter search
-
     @Override
     public Predicate buildAnd(LocationFilter filter) {
 

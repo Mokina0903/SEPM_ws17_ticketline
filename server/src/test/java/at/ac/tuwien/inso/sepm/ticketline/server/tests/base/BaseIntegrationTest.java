@@ -43,7 +43,6 @@ public abstract class BaseIntegrationTest {
     @Autowired
     protected PasswordEncoder encoder;
 
-    /* @MockBean */
     @Autowired
     protected UserRepository userRepository;
 

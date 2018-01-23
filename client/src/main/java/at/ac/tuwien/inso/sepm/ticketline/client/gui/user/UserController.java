@@ -99,7 +99,6 @@ public class UserController extends TabElement implements LocalizationObserver{
 
         usernameCol.setCellValueFactory(new PropertyValueFactory<>("username"));
         blockedCol.setCellValueFactory(new PropertyValueFactory<>("blocked"));
-        // TODO: (David) Translate int to String
         roleCol.setCellValueFactory(new PropertyValueFactory<>("role"));
         lblinvalidAction.setVisible(false);
         disableUI();

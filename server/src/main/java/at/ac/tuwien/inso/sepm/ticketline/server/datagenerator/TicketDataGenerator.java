@@ -68,7 +68,6 @@ public class TicketDataGenerator {
                 LocalDateTime reservationDate = LocalDateTime.now();
                 int ticketCNT = 1;
                 while (0 < numbTickets && customers.size() > 0) {
-                    // TODO: (David) reservationNR is ok?
                     long reservationNR = (LocalDate.now().getYear()%100)*100000000 + event.getId()  *10000000  + ticketCNT++;
 
                     Customer customer = customers.remove(faker.number().numberBetween(0, customers.size()-1));

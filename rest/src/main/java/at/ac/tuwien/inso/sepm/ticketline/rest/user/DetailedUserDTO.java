@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 
-//todo is this needed?
 @ApiModel(value = "DetailedUserDTO", description = "A detailed DTO for user entries via rest")
 public class DetailedUserDTO {
 

@@ -253,7 +253,6 @@ public class EventAdvancedSearchController implements LocalizationObserver {
 
     @FXML
     public void handleOkLocation(ActionEvent actionEvent) {
-        //todo
         MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
         if (!tfLocationTitle.getText().isEmpty() || tfLocationTitle.getText().equals(" ")) {
             parameters.set("descriptionEvent", tfLocationTitle.getText());

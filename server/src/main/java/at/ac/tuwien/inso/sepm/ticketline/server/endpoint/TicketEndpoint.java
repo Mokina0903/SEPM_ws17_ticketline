@@ -122,7 +122,6 @@ public class TicketEndpoint {
         }
         return seatMapper.seatToSeatDTO(locationService.findFreeSeatsForEventInSector(eventId,sector));
     }
-    //todo: getFreeSeatsInSector(Event,Char), getTotalCountOfSeatsInSector(Hall,Char)
 
     @RequestMapping(value= "/{pageIndex}/{ticketsPerPage}", method = RequestMethod.GET)
     @ApiOperation(value = "Get list of ticket entries")

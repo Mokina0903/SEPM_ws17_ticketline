@@ -139,7 +139,6 @@ public class EventElementController implements LocalizationObserver {
             e.printStackTrace();
         }
         if(event  == null){
-            //TODO: add alert/warning
             return;
         }
         mainController.setEvent(event);

@@ -1,11 +1,5 @@
 package at.ac.tuwien.inso.sepm.ticketline.client.rest.implementation;
-
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,9 +12,6 @@ public class RestResponsePage<T> extends PageImpl<T> {
     private int numberOfElements;
     private long totalElements;
     private boolean previousPage;
-    private boolean firstPage;
-    private boolean nextPage;
-    private boolean lastPage;
     private List<T> content;
 
     public RestResponsePage() {
@@ -69,41 +60,6 @@ public class RestResponsePage<T> extends PageImpl<T> {
         return totalElements;
     }
 
-    public void setTotalElements(long totalElements) {
-        this.totalElements = totalElements;
-    }
-
-    public boolean isPreviousPage() {
-        return previousPage;
-    }
-
-    public void setPreviousPage(boolean previousPage) {
-        this.previousPage = previousPage;
-    }
-
-    public boolean isFirstPage() {
-        return firstPage;
-    }
-
-    public void setFirstPage(boolean firstPage) {
-        this.firstPage = firstPage;
-    }
-
-    public boolean isNextPage() {
-        return nextPage;
-    }
-
-    public void setNextPage(boolean nextPage) {
-        this.nextPage = nextPage;
-    }
-
-    public boolean isLastPage() {
-        return lastPage;
-    }
-
-    public void setLastPage(boolean lastPage) {
-        this.lastPage = lastPage;
-    }
 
     @Override
     public List<T> getContent() {
@@ -114,13 +70,5 @@ public class RestResponsePage<T> extends PageImpl<T> {
         this.content = content;
     }
 
-    public Page<T> pageImpl() {
-        return new PageImpl<>(getContent(), new PageRequest(getNumber(),
-            getSize()), getTotalElements());
-    }
 
-/*    public Page<T> pageImpl() {
-        return new PageImpl<>(getContent(), new PageRequest(getNumber(),
-            getSize(), getSort()), getTotalElements());
-    }*/
 }

@@ -79,10 +79,7 @@ public class DetailedHallDTO {
         if (!getId().equals(that.getId())) return false;
         if (!getDescription().equals(that.getDescription())) return false;
         if (!getLocation().getId().equals(that.getLocation().getId())) return false;
-        // TODO: Implement before MapperTest
-        //if (!getLocation().equals(that.getLocation())) return false;
-        //return getSeats() != null ? getSeats().equals(that.getSeats()) : that.getSeats() == null;
-        return true;
+       return true;
     }
 
     @Override

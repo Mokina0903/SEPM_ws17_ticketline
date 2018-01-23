@@ -79,7 +79,7 @@ public class Event implements Predicatable{
     @JoinTable(
         name = "artistsOfEvent",
         joinColumns = @JoinColumn(name = "event_id"),
-        inverseJoinColumns = @JoinColumn(name = "artist_id")) //toDo: make unique
+        inverseJoinColumns = @JoinColumn(name = "artist_id"))
     private List<Artist> artists = new ArrayList<>();
 
     public Long getId() {

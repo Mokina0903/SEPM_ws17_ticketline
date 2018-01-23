@@ -20,11 +20,21 @@ public interface HallRepository extends JpaRepository<Hall,Long>{
      */
     Optional<Hall> findOneById( Long id);
 
-    // TODO: Javadoc
+    /**
+     * Find all halls by location id.
+     *
+     * @param id the is of the hall entry
+     * @return list of Halls
+     */
     @Query(value = "Select * from hall where location_id = :id", nativeQuery = true)
     List<Hall> findAllByLocationId(@Param("id") Long id);
 
-    // TODO: Javadoc
+    /**
+     * Find a single hall entry by id.
+     *
+     * @param location_id  of the location entry
+     * @return hall entry
+     */
     @Query(value = "Select * from hall where location_id = :id and description = :description", nativeQuery = true)
     Hall findOneByDescriptionAndLocation( @Param("id") Long location_id,@Param("description") String description);
 

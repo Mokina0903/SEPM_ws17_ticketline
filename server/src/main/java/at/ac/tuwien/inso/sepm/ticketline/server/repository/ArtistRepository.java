@@ -27,7 +27,6 @@ public interface ArtistRepository extends JpaRepository<Artist, Long> ,
     }
 
 
-    // TODO: Javadoc
     @Query(value = "Select * from artist where artist_First_Name = :firstName and artist_Last_Name = :lastName", nativeQuery = true)
     Artist findByArtistFirstNameAndArtistLastName(@Param("firstName") String firstName, @Param("lastName") String lastName);
 

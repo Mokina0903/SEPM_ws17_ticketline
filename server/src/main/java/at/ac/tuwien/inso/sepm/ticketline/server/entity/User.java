@@ -35,14 +35,8 @@ public class User {
     @JoinTable(
         name = "notSeen",
         joinColumns = @JoinColumn(name = "users_id"),
-        inverseJoinColumns = @JoinColumn(name = "news_id")) //toDo: make unique
+        inverseJoinColumns = @JoinColumn(name = "news_id"))
     private List<News> notSeen = new ArrayList<>();
-
-    /*private String firstName;
-    private String lastName;
-    private LocalDate birthdate;
-    private String emailAdress;*/
-
 
 
     public Long getId() {

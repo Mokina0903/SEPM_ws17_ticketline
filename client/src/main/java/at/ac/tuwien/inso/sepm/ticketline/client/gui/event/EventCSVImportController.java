@@ -225,7 +225,6 @@ public class EventCSVImportController implements LocalizationObserver {
                             TAlogOutput.setText(TAlogOutput.getText() + "Error: " + title + "->" + errorDTO.getStatus() + ": " + errorDTO.getMessage() + "\n");
                         }
                     }
-                    // TODO: (David) Exception handling
                 } catch (FileNotFoundException e) {
                     mainController.showGeneralError("File not found " + choosenFile.getPath());
                 } catch (IOException e) {

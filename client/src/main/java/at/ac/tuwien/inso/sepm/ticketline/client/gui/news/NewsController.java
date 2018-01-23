@@ -77,10 +77,6 @@ public class NewsController extends TabElement implements LocalizationObserver{
         return newsTab;
     }
 
-/*    public void setNewsTab(Tab newsTab) {
-        this.newsTab = newsTab;
-    }*/
-
     public NewsController(MainController mainController, SpringFxmlLoader springFxmlLoader, NewsService newsService, UserService userService) {
         this.mainController = mainController;
         this.springFxmlLoader = springFxmlLoader;

@@ -265,8 +265,6 @@ public class CustomerDialogController implements LocalizationObserver {
     @FXML
     public void handleOk(ActionEvent actionEvent) {
 
-        //todo implement task like in user
-
         LOGGER.info("Creating or saving customer.");
         lblVersionException.setVisible(false);
 

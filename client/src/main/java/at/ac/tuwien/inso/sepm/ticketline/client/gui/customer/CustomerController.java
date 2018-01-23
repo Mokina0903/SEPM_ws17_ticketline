@@ -98,8 +98,6 @@ public class CustomerController extends TabElement implements LocalizationObserv
 
     @Autowired
     private LocalizationSubject localizationSubject;
-/*    @Autowired
-    private CustomerService customerService;*/
 
     public Tab getCustomerTab() {
         return customerTab;

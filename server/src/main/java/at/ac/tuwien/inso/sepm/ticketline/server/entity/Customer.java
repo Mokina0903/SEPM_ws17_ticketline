@@ -30,10 +30,6 @@ public class Customer {
     private Long knr;
 
     @Column( name = "email")
-  /*  @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\."
-        +"[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@"
-        +"(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?",
-        message="{invalid.email}")*/
     @Size(max = 100)
     private String email;
 

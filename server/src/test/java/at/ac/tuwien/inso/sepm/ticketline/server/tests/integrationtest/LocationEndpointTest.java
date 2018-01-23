@@ -109,19 +109,6 @@ public class LocationEndpointTest extends BaseIntegrationTest {
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED.value()));
     }
 
-    @Test
-    public void searchAllLocationsAsUser() {
-        // TODO: Returns Page
-        /*
-        Response response = RestAssured
-            .given()
-            .contentType(ContentType.JSON)
-            .header(HttpHeaders.AUTHORIZATION, validUserTokenWithPrefix)
-            .when().get(EVENTLOCATION_ENDPOINT_SEARCH, 1, 1)
-            .then().extract().response();
-        Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
-        */
-    }
 
     @Test
     public void findLocationbyIdAsAnonymous() {
