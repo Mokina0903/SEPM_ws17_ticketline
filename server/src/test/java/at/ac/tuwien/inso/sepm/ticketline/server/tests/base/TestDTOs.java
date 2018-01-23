@@ -8,6 +8,7 @@ import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.hall.DetailedHallDTO
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.location.DetailedLocationDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.seat.SeatDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.ticket.TicketDTO;
+import at.ac.tuwien.inso.sepm.ticketline.rest.user.DetailedUserDTO;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Artist;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Customer;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.Event;
@@ -117,6 +118,17 @@ public abstract class TestDTOs {
 
         return seatDTOS;
     }
+
+
+    public static DetailedUserDTO setUpDetailedUserDTO() {
+        return DetailedUserDTO.builder()
+            .userName(ADMIN_USERNAME)
+            .password(ADMIN_PASSWORD)
+            .blocked(false)
+            .role(1)
+            .build();
+    }
+
 
     public static List<TicketDTO> setUpTicketDTO() {
         CustomerDTO customer = TestDTOs.setUpCustomerDTO();

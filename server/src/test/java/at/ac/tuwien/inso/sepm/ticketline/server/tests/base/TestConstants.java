@@ -8,9 +8,6 @@ import java.time.LocalDateTime;
 public abstract class TestConstants {
     public static final String SERVER_HOST = "http://localhost";
 
-
-
-
     // ---------------------- USER ----------------------
     public static final String USER_ENDPOINT = "/user";
     public static final String USER_ENDPOINT_BLOCK = "/user/block";
@@ -113,4 +110,14 @@ public abstract class TestConstants {
     public static final Long TICKET_RESERVATIONNR = 10001L;
     public static final Long TICKET_ID = 1L;
     public static final long TICKET_PRICE = 100;
+
+    // -------------------- INVOiCE ---------------------
+    public static final String INVOICE_ENDPOINT_CREATE = "/invoice/create";
+    public static final String INVOICE_ENDPOINT_UPDATE = "/invoice/update";
+    public static final String INVOICE_ENDPOINT_NEWPDF = "/invoice/newPdf";
+    public static final String INVOICE_ENDPOINT_NR = "/invoice/rNr/{reservationNumber}";
+    public static final String INVOICE_ENDPOINT_INNR = "/invoice/{invoiceId}";
+    public static final String INVOICE_ENDPOINT_LIST = "/invoice/{pageIndex}/{invoicesPerPage}";
+
+
 }
