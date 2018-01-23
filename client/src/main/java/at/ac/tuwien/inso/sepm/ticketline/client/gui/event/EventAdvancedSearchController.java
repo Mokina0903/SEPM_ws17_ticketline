@@ -265,7 +265,7 @@ public class EventAdvancedSearchController implements LocalizationObserver {
             parameters.set("city", tfLocationCity.getText());
         }
         if (!tfLocationZip.getText().isEmpty() || tfLocationZip.getText().equals(" ")) {
-            if (isNumeric(tfLocationZip.getText())) {
+            if (isPositivInteger(tfLocationZip.getText())) {
                 parameters.set("zip", tfLocationZip.getText());
             }
         }
@@ -279,7 +279,7 @@ public class EventAdvancedSearchController implements LocalizationObserver {
     }
 
     @FXML
-    public void handleOk(ActionEvent actionEvent) {
+    public void handleOkEvents(ActionEvent actionEvent) {
 
         MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
 
@@ -290,12 +290,12 @@ public class EventAdvancedSearchController implements LocalizationObserver {
             parameters.set("description", tfEventDescription.getText());
         }
         if (!tfEventPriceFrom.getText().isEmpty()  || tfEventPriceFrom.getText().equals(" ")) {
-            if (isNumeric(tfEventPriceFrom.getText())) {
+            if (isPositivInteger(tfEventPriceFrom.getText())) {
                 parameters.set("priceFrom", tfEventPriceFrom.getText());
             }
         }
         if (!tfEventPriceTo.getText().isEmpty() || tfEventPriceTo.getText().equals(" ")) {
-            if (isNumeric(tfEventPriceTo.getText())) {
+            if (isPositivInteger(tfEventPriceTo.getText())) {
                 parameters.set("priceTo", tfEventPriceTo.getText());
             }
         }
@@ -332,7 +332,7 @@ public class EventAdvancedSearchController implements LocalizationObserver {
             parameters.set("category", cbCategory.getSelectionModel().getSelectedItem().toString());
         }
 
-        paginationHelper.setSearchFor(EventSearchFor.ALL);
+        paginationHelper.setSearchFor(EventSearchFor.EVENT_ADV);
         paginationHelper.setParameters(parameters);
         paginationHelper.setUpPagination();
         eventController.getEventTab().setContent(oldContent);
@@ -404,7 +404,7 @@ public class EventAdvancedSearchController implements LocalizationObserver {
 
     }
 
-    public boolean isNumeric(String s) {
+    public boolean isPositivInteger(String s) {
         return s != null && s.matches("\\d*");
     }
 

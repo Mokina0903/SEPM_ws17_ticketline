@@ -106,7 +106,7 @@ public class LocationController extends TabElement implements LocalizationObserv
 
     public void loadLocations(){
 
-/*        searchFor = LocationSearchFor.ALL;
+/*        searchFor = LocationSearchFor.EVENT_ADV;
         preparePagination();*/
     }
 }

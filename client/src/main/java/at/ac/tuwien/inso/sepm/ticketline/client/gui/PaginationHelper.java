@@ -9,7 +9,6 @@ import at.ac.tuwien.inso.sepm.ticketline.client.gui.location.LocationElementCont
 import at.ac.tuwien.inso.sepm.ticketline.client.service.ArtistService;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.EventService;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.LocationService;
-import at.ac.tuwien.inso.sepm.ticketline.client.service.implementation.SimpleArtistService;
 import at.ac.tuwien.inso.sepm.ticketline.rest.artist.SimpleArtistDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.event.SimpleEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.eventLocation.location.SimpleLocationDTO;
@@ -103,7 +102,7 @@ public class PaginationHelper {
                 Pageable request = new PageRequest(pageIndex, ENTRIES_PER_PAGE);
                 if(searchFor.equals(EventSearchFor.EVENT)) {
                     events = eventService.find(request, parameters);
-                } else if(searchFor.equals(EventSearchFor.ALL)){
+                } else if(searchFor.equals(EventSearchFor.EVENT_ADV)){
                     events = eventService.findAdvanced(request,parameters);
                 } else if (searchFor.equals(EventSearchFor.EVENTS_BY_ARTIST)) {
                     events = eventService.findByArtist(request, artistDTO.getId());
