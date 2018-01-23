@@ -111,9 +111,9 @@ public class SimpleTicketService implements TicketService {
 
         File f;
         try {
-            f = new File(getClass().getResource("/invoice_template/Reservation_Template_new.pdf").toURI());
+            f = new File(getClass().getResource("/invoice_template/Reservation_Template.pdf").toURI());
         } catch(URISyntaxException e) {
-            f = new File(getClass().getResource("/invoice_template/Reservation_Template_new.pdf").getPath());
+            f = new File(getClass().getResource("/invoice_template/Reservation_Template.pdf").getPath());
         }
 
         try (PDDocument pdfDocument = PDDocument.load(f)) {
