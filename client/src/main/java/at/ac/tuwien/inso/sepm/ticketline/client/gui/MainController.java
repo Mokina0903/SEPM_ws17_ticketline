@@ -3,10 +3,8 @@ package at.ac.tuwien.inso.sepm.ticketline.client.gui;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.customer.CustomerController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.event.EventController;
-import at.ac.tuwien.inso.sepm.ticketline.client.gui.location.LocationController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.news.NewsController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.statistics.Top10Controller;
-import at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket.HallplanController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket.TicketController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.user.UserController;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.AuthenticationInformationService;
@@ -244,39 +242,36 @@ public class MainController implements LocalizationObserver {
 
     private void setListenerForTabs() {
         tpContent.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue.equals(ticketTab)) {
-                if (ticketController == null) {
-                    ticketController = (TicketController) setTabContent(ticketController, "ticket/ticketComponent.fxml", ticketTab);
-                    ticketController.initializePagination();
-                }
-            } else if (newValue.equals(customerTab)) {
-                if (customerController == null) {
-                    customerController = (CustomerController) setTabContent(customerController, "customer/customerComponent.fxml", customerTab);
-                    customerController.loadCustomer();
-                    customerController.initialzeData(customerTab);
-                    // customerController.preparePagination();
-                }
-            } else if (newValue.equals(userTab)){
-                if (userController == null) {
-                    userController = (UserController) setTabContent(userController, "user/userComponent.fxml", userTab);
-                    userController.loadUsers();
-                }
-            } else if (newValue.equals(eventTab)) {
-               // if (eventController == null) {
+            if (newValue != null) {
+                if (newValue.equals(ticketTab)) {
+                    if (ticketController == null) {
+                        ticketController = (TicketController) setTabContent(ticketController, "ticket/ticketComponent.fxml", ticketTab);
+                        ticketController.initializePagination();
+                    }
+                } else if (newValue.equals(customerTab)) {
+                    if (customerController == null) {
+                        customerController = (CustomerController) setTabContent(customerController, "customer/customerComponent.fxml", customerTab);
+                        customerController.loadCustomer();
+                        customerController.initialzeData(customerTab);
+                    }
+                } else if (newValue.equals(userTab)) {
+                    if (userController == null) {
+                        userController = (UserController) setTabContent(userController, "user/userComponent.fxml", userTab);
+                        userController.loadUsers();
+                    }
+                } else if (newValue.equals(eventTab)) {
                     eventController = (EventController) setTabContent(eventController, "event/eventComponent.fxml", eventTab);
                     eventController.loadEvents();
-                if(! (customerController == null)){
-                    customerController.setNormalTabView();
+                    if (!(customerController == null)) {
+                        customerController.setNormalTabView();
+                    }
+                } else if (newValue.equals(topTenTab)) {
+                    top10Controller = (Top10Controller) setTabContent(top10Controller, "statistics/top10Statistics.fxml", topTenTab);
+                    top10Controller.initializeData();
+                    if (!(customerController == null)) {
+                        customerController.setNormalTabView();
+                    }
                 }
-
-                    // eventController.preparePagination();
-            } else if (newValue.equals(topTenTab)) {
-                top10Controller = (Top10Controller) setTabContent(top10Controller, "statistics/top10Statistics.fxml", topTenTab);
-                top10Controller.initializeData();
-                if(! (customerController == null)){
-                    customerController.setNormalTabView();
-                }
-
             }
         });
     }
@@ -290,7 +285,7 @@ public class MainController implements LocalizationObserver {
         return controller;
     }
 
-    public void openEventTab(){
+    public void openEventTab() {
         tpContent.getSelectionModel().select(eventTab);
     }
 
@@ -316,7 +311,8 @@ public class MainController implements LocalizationObserver {
         new Thread(workerTask).start();
 
     }
-    public void showGeneralFeedback(String text){
+
+    public void showGeneralFeedback(String text) {
 
 
         generalErrors.setText(text);
@@ -349,28 +345,9 @@ public class MainController implements LocalizationObserver {
         return this.detailedUserDTO;
     }
 
-/* //to update only active frame labels for localization
-    public MenueCategory getActiveMenueCategory() {
-        Tab tab = tpContent.getSelectionModel().getSelectedItem();
-
-        if (tab.equals(newsTab)) {
-            return MenueCategory.NEWS;
-        }
-        else if (tab.equals(userTab)) {
-            return MenueCategory.USER;
-        }
-        else if (tab.equals(customerTab)) {
-            return MenueCategory.CUSTOMER;
-        }
-        else if (tab.equals(eventTab)) {
-            return MenueCategory.EVENT;
-        }
-        else return MenueCategory.TICKET;
-    }*/
 
     @Override
     public void update() {
-        //reset labels for localization here
     }
 
 }
