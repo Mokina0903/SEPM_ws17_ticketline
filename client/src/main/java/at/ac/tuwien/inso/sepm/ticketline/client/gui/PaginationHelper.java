@@ -50,7 +50,7 @@ public class PaginationHelper {
 
     private EventSearchFor searchFor;
 
-    private final int ENTRIES_PER_PAGE = 7;
+    private final int ENTRIES_PER_PAGE = 6;
 
     private MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
 

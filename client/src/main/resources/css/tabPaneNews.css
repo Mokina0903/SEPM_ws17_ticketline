@@ -2,9 +2,15 @@
     -fx-opacity: 0;
 }
 
+.tab-pane:top *.tab-header-area {
+    -fx-background-insets: 0, 0 0 1 0;
+    -fx-padding: 0 0 0 10; /* overridden as 5 2 0 0 */
+}
+
 .tab-pane
 {
-    -fx-tab-min-width:90px;
+    -fx-tab-min-width:180px;
+    -fx-tab-max-width:180px;
 }
 
 .tab{
