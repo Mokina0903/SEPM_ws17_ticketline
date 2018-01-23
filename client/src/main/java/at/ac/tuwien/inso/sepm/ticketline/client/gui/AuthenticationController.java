@@ -95,6 +95,9 @@ public class AuthenticationController {
                         lblLoginFailed.setVisible(false);
                         lblNumberFreeAttempts.setText("");
 
+                        txtPassword.setText("");
+                        txtUsername.setText("");
+
                         mainController.loadDetailedUserDTO(getValue().getUsername());
                         mainController.loadGuiComponentsOfUser();
                     }
