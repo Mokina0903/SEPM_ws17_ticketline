@@ -152,6 +152,7 @@ public class UserEndpoint {
     @ApiOperation(value = "Unblock a specific user entry")
     public void unblockUser(@RequestBody String username) {
         User user = userService.findByUsername(username);
+        user.resetAttempts();
         userService.unblockUser(user);
     }
 

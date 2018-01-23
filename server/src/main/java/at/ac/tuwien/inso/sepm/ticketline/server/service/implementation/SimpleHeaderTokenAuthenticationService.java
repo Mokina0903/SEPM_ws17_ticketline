@@ -77,8 +77,9 @@ public class SimpleHeaderTokenAuthenticationService implements HeaderTokenAuthen
         if (user != null) {
             if (user.getAttempts() <= 0)
                 user.setBlocked(true);
-
-            user.setAttempts(user.getAttempts()-1);
+            if(user.getAttempts() != 0) {
+                user.setAttempts(user.getAttempts() - 1);
+            }
 
 
             userService.save(user);
