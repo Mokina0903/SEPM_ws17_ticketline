@@ -134,13 +134,20 @@ NewsAddFormularController implements LocalizationObserver {
         if(!newsService.validateTextField(TitleTF)){
             LOGGER.warn("Invalid title was typed in!");
             lblInvalidTitle.setVisible(true);
+            TitleTF.getStyleClass().add("error");
             return;
+        } else{
+            TitleTF.getStyleClass().remove("error");
         }
+
 
         if(!newsService.validateTextArea(textArea)){
             LOGGER.warn("Invalid text was typed in!");
             lblInvalidText.setVisible(true);
+            textArea.getStyleClass().add("error");
             return;
+        } else {
+            textArea.getStyleClass().remove("error");
         }
 
 

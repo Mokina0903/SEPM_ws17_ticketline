@@ -48,7 +48,7 @@ TODO: Fehler beim Testen gefunden
 
 
  + Hallplan-Controller:
-  - Hallplan kein Sprachwechsel möglich
+  - Hallplan kein Sprachwechsel möglich (Done)
 
 
 -------------------------------------- David --------------------------------------
@@ -123,19 +123,3 @@ TODO: Infrastruktur für Präsendation installieren
 TODO: Jar-File erstellen
 
 
-
-------------------------Verena---------------------------------
-TODO:
-- Sectoren ausgegraut, und kleiner
-- Legende bearbeiten
-- manuelle tests schreiben (tickets, statistik saalplan)
-- pflichtfelder bei news noch anzeigen, und wenn falsch rot umrahmen
-- fenster größe setzten
-- ticketcontroller - tasks einbauen
-- generelles layout nach dem big merge
-
-FRAGEN:
-
-- events anzahl von tickets anzeigen -?
-- genereall green errors
--
