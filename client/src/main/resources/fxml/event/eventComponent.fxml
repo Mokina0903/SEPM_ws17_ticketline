@@ -84,7 +84,7 @@
                      <children>
                         <HBox alignment="TOP_CENTER">
                            <children>
-                                     <Button fx:id="btnAddEvent" minWidth="40.0" onAction="#openCSVImportWindow" prefWidth="40.0" />
+                                     <Button fx:id="btnAddEvent" minWidth="40.0" styleClass="buyBtn" onAction="#openCSVImportWindow" prefWidth="40.0" />
                            </children>
                         </HBox>
                      </children>

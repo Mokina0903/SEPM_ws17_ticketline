@@ -116,6 +116,7 @@ public class EventCSVImportController implements LocalizationObserver {
 
     private void setChoosenFile(File file) {
         this.choosenFile = file;
+        if(choosenFile != null)
         lblChoosenFile.setText(file.getPath());
     }
 
