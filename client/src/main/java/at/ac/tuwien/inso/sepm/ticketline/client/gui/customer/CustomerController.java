@@ -321,6 +321,7 @@ public class CustomerController extends TabElement implements LocalizationObserv
 
     @FXML
     public void openNewDialog(ActionEvent actionEvent) {
+        lbNoCustomerError.setVisible(false);
         LOGGER.info("opening the create customer dialog.");
 
         SpringFxmlLoader.Wrapper<CustomerDialogController> wrapper =
@@ -335,10 +336,14 @@ public class CustomerController extends TabElement implements LocalizationObserv
     @FXML
     public void openEditDialog(ActionEvent actionEvent) {
         LOGGER.info("opening the edit customer dialog.");
-
+        lbNoCustomerError.setVisible(false);
         CustomerDTO customer = currentTableview.getSelectionModel().getSelectedItem();
-
-        if (customer != null) {
+        if(customer.getKnr() == 0){
+            LOGGER.info("Customer can't be edited");
+            lbNoCustomerError.setVisible(true);
+            lbNoCustomerError.setText(BundleManager.getBundle().getString("customer.chooseCustomer") + "!");
+        }
+        else if (customer != null) {
             SpringFxmlLoader.Wrapper<CustomerDialogController> wrapper =
                 springFxmlLoader.loadAndWrap("/fxml/customer/customerEdit.fxml");
             wrapper.getController().initializeData(customer, customerOverviewRoot);
