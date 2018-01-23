@@ -1,7 +1,7 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.mapper;
 
-import at.ac.tuwien.inso.sepm.ticketline.rest.user.SimpleUserDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.user.DetailedUserDTO;
+import at.ac.tuwien.inso.sepm.ticketline.rest.user.SimpleUserDTO;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.User;
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.mapper.user.UserMapper;
 import org.junit.Test;
@@ -31,9 +31,6 @@ public class UserMapperTest {
     private static final String USER_PASSWORD = "User password.";
     private static final Integer USER_ROLE = 1;
     private static final boolean BLOCKED = false;
-
-
-    //no summary of user needed
 
     @Test
     public void shouldMapUserToSimpleUserDTOShorteningTextToSummary() {

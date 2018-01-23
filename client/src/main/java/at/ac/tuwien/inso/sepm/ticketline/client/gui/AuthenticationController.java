@@ -13,6 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
+import javafx.scene.paint.Color;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -56,6 +57,7 @@ public class AuthenticationController {
     @FXML
     public void initialize() {
 
+        lblNumberFreeAttempts.setTextFill(Color.WHITE);
         lblLoginAttempts.setVisible(false);
         lblLoginAttempts.setText(BundleManager.getBundle().getString("authenticate.attempts"));
         lblLoginFailed.setVisible(false);
@@ -65,9 +67,6 @@ public class AuthenticationController {
         lblContactAdmin.setVisible(false);
         lblContactAdmin.setText(BundleManager.getBundle().getString("authenticate.contactAdmin"));
     }
-
-
-    //todo login after log out not possible -> task failed() instead of succeeded()
 
 
     @FXML
@@ -96,15 +95,17 @@ public class AuthenticationController {
                         lblLoginFailed.setVisible(false);
                         lblNumberFreeAttempts.setText("");
 
+                        txtPassword.setText("");
+                        txtUsername.setText("");
+
                         mainController.loadDetailedUserDTO(getValue().getUsername());
+                        mainController.loadGuiComponentsOfUser();
                     }
 
                     @Override
                     protected void failed() {
 
                         super.failed();
-                   /* JavaFXUtils.createExceptionDialog(getException(),
-                        ((Node) actionEvent.getTarget()).getScene().getWindow()).showAndWait();*/
                         try {
                             setLabels();
                         } catch (DataAccessException e) {

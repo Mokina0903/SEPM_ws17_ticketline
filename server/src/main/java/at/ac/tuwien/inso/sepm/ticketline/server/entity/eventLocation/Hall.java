@@ -5,7 +5,7 @@ import javax.validation.constraints.Size;
 import java.util.List;
 
 @Entity
-@Table(name = "hall")
+@Table(name = "hall", uniqueConstraints={@UniqueConstraint(columnNames = {"description" , "location_id"})})
 public class Hall {
 
     @Id
@@ -57,6 +57,13 @@ public class Hall {
 
     public static HallBuilder builder(){return new HallBuilder();}
 
+    public Hall() {
+    }
+
+    public Hall(String description, Location location) {
+        this.description = description;
+        this.location = location;
+    }
 
     @Override
     public boolean equals( Object o ) {

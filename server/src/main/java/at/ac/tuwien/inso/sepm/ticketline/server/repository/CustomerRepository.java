@@ -28,12 +28,6 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
      */
     Optional<Customer> findOneById(Long id);
 
-    /**
-     *
-     * @param request defienes how to read paged from the database
-     * @return a list of customer, though the size of the list is dependent of the pageable object
-     */
-    Page<Customer> findAll(Pageable request);
 
     /**
      *
@@ -45,20 +39,11 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     /**
      *
      * @param name substring of firstname of the wanted costumers
-     * @param surname substring of surname of the wanted costumers
-     * @param request  defienes how to read paged from the database
+     * @param surname  substring of surname of the wanted costumers
      * @return a list of customer,  though the size of the list is dependent of the pageable object
      */
     Page<Customer> findByNameStartingWithIgnoreCaseOrSurnameStartingWithIgnoreCase(String name, String surname, Pageable request);
 
-
-    /**
-     *
-     * @param surname surname of the wanted costumers
-     * @param request  defienes how to read paged from the database
-     * @return a list of customer,  though the size of the list is dependent of the pageable object
-     */
-    Page<Customer> readBySurnameStartingWithIgnoreCase(String surname, Pageable request);
 
     /**
      *
@@ -67,10 +52,11 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
      * @param email to be updated
      * @param birthDate to be upated
      * @param knr of the customer, wohms data needs to be edited
+     * @param version ot the customer
      */
     @Modifying
     @Transactional
-    @Query(value = "update Customer u set u.name = ?1, u.surname = ?2, u.email = ?3, u.birthdate = ?4 where u.knr = ?5", nativeQuery = true)
-    void setCustomerInfoByKnr(String name, String surname, String email, Timestamp birthDate, Long knr);
+    @Query(value = "update Customer u set u.name = ?1, u.surname = ?2, u.email = ?3, u.birthdate = ?4, u.version = ?6 where u.knr = ?5", nativeQuery = true)
+    void setCustomerInfoByKnr(String name, String surname, String email, Timestamp birthDate, Long knr, Integer version);
 
 }

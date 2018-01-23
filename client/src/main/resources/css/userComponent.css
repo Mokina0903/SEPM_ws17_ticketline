@@ -1,0 +1,22 @@
+.table-row-cell:empty {
+    -fx-background-color: #f4f4f4;
+}
+
+.table-row-cell:empty .table-cell {
+    -fx-border-width: 0px;
+}
+
+.table-view .column-header,
+.table-view .column-header .filler,
+.table-view .column-header-background .filler {
+    -fx-background-color:rgba(220, 229, 244, .7);
+    -fx-border-color: transparent;
+
+}
+
+.table-view .column-header, .table-view .filler {
+    -fx-size: 35;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: #3c3f41;
+    -fx-border-insets: 0 10 1 0;
+}

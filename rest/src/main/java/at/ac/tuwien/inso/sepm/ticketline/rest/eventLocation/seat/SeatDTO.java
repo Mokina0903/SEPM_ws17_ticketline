@@ -74,6 +74,10 @@ public class SeatDTO {
         return result;
     }
 
+    public static SeatDTOBuilder builder() {
+        return new SeatDTOBuilder();
+    }
+
     public static final class SeatDTOBuilder{
         private Long id;
         private int nr;

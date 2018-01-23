@@ -1,23 +1,21 @@
 package at.ac.tuwien.inso.sepm.ticketline.client.gui.customer;
 
-import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationObserver;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.LocalizationSubject;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.MainController;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.TabHeaderController;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.CustomerService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
 import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
-import at.ac.tuwien.inso.sepm.ticketline.rest.news.DetailedNewsDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.paint.Color;
 import org.controlsfx.glyphfont.FontAwesome;
 import org.controlsfx.glyphfont.Glyph;
@@ -35,6 +33,13 @@ import java.time.LocalDate;
 public class CustomerDialogController implements LocalizationObserver {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CustomerDialogController.class);
+
+    @FXML
+    public Label lblVersionException;
+
+    @FXML
+    private TabHeaderController tabHeaderController;
+
 
     @FXML
     public TextField tfLname;
@@ -79,6 +84,7 @@ public class CustomerDialogController implements LocalizationObserver {
     private final SpringFxmlLoader springFxmlLoader;
     private final CustomerController customerController;
     private final CustomerService customerService;
+    private Integer version = 1;
 
     private boolean isUpdate;
 
@@ -88,6 +94,12 @@ public class CustomerDialogController implements LocalizationObserver {
 
     public void setUpdate(boolean update) {
         isUpdate = update;
+        if(isUpdate){
+            tabHeaderController.setTitle(BundleManager.getBundle().getString("customer.editCustomer"));
+        } else {
+            tabHeaderController.setTitle(BundleManager.getBundle().getString("customer.addCustomer"));
+        }
+
     }
 
     private GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
@@ -96,6 +108,8 @@ public class CustomerDialogController implements LocalizationObserver {
 
     private CustomerDTO customer;
     private Node oldContent;
+    private Node invalidFieldSymbol;
+
 
     public CustomerDialogController(MainController mainController, SpringFxmlLoader springFxmlLoader, CustomerController customerController, CustomerService customerService) {
         this.mainController = mainController;
@@ -107,6 +121,10 @@ public class CustomerDialogController implements LocalizationObserver {
 
     @FXML
     void initialize() {
+        dpBirthdate.setValue(LocalDate.of(LocalDate.now().getYear()-14,LocalDate.now().getMonth(),LocalDate.now().getDayOfMonth()));
+        tabHeaderController.setIcon(FontAwesome.Glyph.USERS);
+        tabHeaderController.setTitle(BundleManager.getBundle().getString("customer.customer"));
+
         localizationSubject.attach(this);
         lbInvalidName.setVisible(false);
         lbInvalidBirthdate.setVisible(false);
@@ -119,9 +137,85 @@ public class CustomerDialogController implements LocalizationObserver {
         setButtonGraphic(btOk, "CHECK", Color.OLIVE);
         setButtonGraphic(btCancel, "TIMES", Color.CRIMSON);
 
+        tabHeaderController.setIcon(FontAwesome.Glyph.USERS);
+        tabHeaderController.setTitle(BundleManager.getBundle().getString("customer.addCustomer"));
+
+        Glyph glyph = fontAwesome.create(FontAwesome.Glyph.TIMES);
+        glyph.setColor(Color.CRIMSON);
+        invalidFieldSymbol = glyph;
+
 
         isUpdate = false;
+
+        setUpValidation(tfFirstName);
+        setUpValidation(tfLname);
+        setUpValidation(tfEmail);
+        setUpValidation(dpBirthdate.getEditor());
     }
+
+    private void setUpValidation(final TextField tf) {
+        tf.textProperty().addListener(new ChangeListener<String>() {
+
+            @Override
+            public void changed(ObservableValue<? extends String> observable,
+                                String oldValue, String newValue) {
+              validate(tf);
+            }
+
+        });
+    }
+
+    private boolean validate(TextField validationField) {
+
+        ObservableList<String> styleClass = validationField.getStyleClass();
+
+        if (tfFirstName.equals(validationField)) {
+            if (!customerService.checkIfCustomerNameValid(tfFirstName.getText())) {
+                if (!styleClass.contains("error")) {
+                    styleClass.add("error");
+                    return false;
+                }
+            } else {
+                styleClass.remove("error");
+                return true;
+            }
+        }
+        if (validationField.equals(tfLname)) {
+            if (!customerService.checkIfCustomerNameValid(tfLname.getText())) {
+                if (!styleClass.contains("error")) {
+                    styleClass.add("error");
+                    return false;
+                }
+            } else {
+                styleClass.remove("error");
+                return true;
+            }
+        }
+        if (validationField.equals(tfEmail))
+            if (!customerService.checkIfCustomerEmailValid(tfEmail.getText())) {
+                if (!styleClass.contains("error")) {
+                    styleClass.add("error");
+                    return false;
+                }
+            } else {
+                styleClass.remove("error");
+                return true;
+            }
+        if (validationField.equals(dpBirthdate.getEditor())) {
+            if (dpBirthdate.getEditor().getText().trim().isEmpty()
+                || !customerService.checkIfCustomerBirthdateValid(dpBirthdate.getValue())) {
+                if (!styleClass.contains("error")) {
+                    styleClass.add("error");
+                    return false;
+                }
+            } else {
+                styleClass.remove("error");
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     private void setButtonGraphic(Button button, String glyphSymbol, Color color) {
         Glyph glyph = fontAwesome.create(FontAwesome.Glyph.valueOf(glyphSymbol));
@@ -135,6 +229,7 @@ public class CustomerDialogController implements LocalizationObserver {
         this.oldContent = oldContent;
 
         if (customer != null) {
+            version = customer.getVersion();
             if (customer.getKnr() != null) {
                 lbCustomerNumber.setVisible(true);
                 lbCustomerNumberText.setVisible(true);
@@ -159,19 +254,19 @@ public class CustomerDialogController implements LocalizationObserver {
 
     @FXML
     public void handleCancel(ActionEvent actionEvent) {
-        mainController.setGeneralErrorUnvisable();
         LOGGER.info("Canceled action.");
 
         if (isUpdate) {
             setUpdate(false);
         }
-        customerController.getCustomerTab().setContent(oldContent);
+        customerController.getCurrentTab().setContent(oldContent);
     }
 
     @FXML
     public void handleOk(ActionEvent actionEvent) {
+
         LOGGER.info("Creating or saving customer.");
-        mainController.setGeneralErrorUnvisable();
+        lblVersionException.setVisible(false);
 
         String mail = tfEmail.getText();
         String surname = tfLname.getText();
@@ -180,12 +275,31 @@ public class CustomerDialogController implements LocalizationObserver {
 
         Long knr = lbCustomerNumber.getText().isEmpty()? 0: Long.valueOf(lbCustomerNumber.getText());
 
+        boolean validInput = true;
+
+        if (!validate(tfFirstName)) {
+            validInput = false;
+        }
+        if(!validate(tfLname)) {
+            validInput = false;
+        }
+        if (!validate(tfEmail)) {
+            validInput = false;
+        }
+        if (!validate(dpBirthdate.getEditor())) {
+            validInput = false;
+        }
+
+        if (!validInput) {
+            return;
+        }
 
         CustomerDTO.CustomerDTOBuilder builder = new CustomerDTO.CustomerDTOBuilder();
         builder.birthDate(birthDate);
         builder.name(firstname);
         builder.surname(surname);
         builder.mail(mail);
+        builder.version(version);
         if(knr != null){
             builder.knr(knr);
         }
@@ -193,44 +307,114 @@ public class CustomerDialogController implements LocalizationObserver {
 
         if (!customerService.checkIfCustomerValid(customer)){
             LOGGER.error("Cutomer to be saved was invalid!");
-            lbInvalidCustomer.setVisible(true);
+            //        lbInvalidCustomer.setVisible(true);
             return;
         }
         lbInvalidCustomer.setVisible(false);
 
+        Task<Void> workerTask = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                if (!isUpdate) {
+                    LOGGER.info("customer will be created");
 
-        try {
-            if (!isUpdate) {
-                LOGGER.info("customer will be created");
+                    customerService.saveCustomer(customer);
+                } else {
+                    LOGGER.info("customer will be edited");
 
-                customerService.saveCustomer(customer);
-            } else {
-                LOGGER.info("customer will be edited");
-
-                customerService.updateCustomer(customer);
-                isUpdate = false;
+                    customerService.updateCustomer(customer);
+                }
+                return null;
             }
 
-        } catch (DataAccessException e) {
-            LOGGER.warn("Customer could not have been saved because of technical issues");
-            mainController.showGeneralError("Not able to save Customer!");
-           // e.printStackTrace();
-        }
-        customerController.getCustomerTab().setContent(oldContent);
+            @Override
+            protected void succeeded() {
+                super.succeeded();
+                isUpdate = false;
+                customerController.getCurrentTab().setContent(oldContent);
+            }
+
+            @Override
+            protected void failed() {
+
+
+                if (getException().getMessage().equals("424")) {
+                    LOGGER.info("Customer has been changed since you started editing.");
+                    lblVersionException.setVisible(true);
+                    lblVersionException.setText(BundleManager.getBundle().getString("customer.version"));
+                    getCustomer();
+                } else {
+                    LOGGER.warn("Customer could not have been saved because of technical issues");
+                    mainController.showGeneralError("Not able to save Customer!");
+                }
+            }
+
+        };
+
+        workerTask.runningProperty().addListener((observable, oldValue, running) ->
+            mainController.setProgressbarProgress(
+                running ? ProgressBar.INDETERMINATE_PROGRESS : 0)
+        );
+
+        new Thread(workerTask).start();
+
+    }
+
+    public void getCustomer() {
+        Task<Void> workerTask = new Task<Void>() {
+            CustomerDTO customerHelp;
+            @Override
+            protected Void call() throws Exception {
+                customerHelp = customerService.findByNumber(customer.getKnr());
+
+                return null;
+            }
+
+            @Override
+            protected void succeeded() {
+
+                super.succeeded();
+                customerController.loadCustomer();
+                version = customerHelp.getVersion();
+                customer.setVersion(customerHelp.getVersion());
+            }
+
+            @Override
+            protected void failed() {
+                super.failed();
+                //if(getException() == new DataAccessException())
+                mainController.showGeneralError("Failure at loadCustomer: " + getException().getMessage());
+            }
+        };
+
+        workerTask.runningProperty().addListener((observable, oldValue, running) ->
+            mainController.setProgressbarProgress(
+                running ? ProgressBar.INDETERMINATE_PROGRESS : 0)
+        );
+
+        new Thread(workerTask).start();
     }
 
     @Override
     public void update() {
 
+        lblVersionException.setText(BundleManager.getBundle().getString("customer.version"));
         lbCustomerNumberText.setText(BundleManager.getBundle().getString("customer.number"));
-        lbCustomerName.setText(BundleManager.getBundle().getString("customer.lname"));
-        lbCustomerBirthdate.setText(BundleManager.getBundle().getString("customer.birthdate"));
-        lbFirstName.setText(BundleManager.getBundle().getString("customer.fname"));
+        lbCustomerName.setText(BundleManager.getBundle().getString("customer.lname_"));
+        lbCustomerBirthdate.setText(BundleManager.getBundle().getString("customer.birthdate_"));
+        lbFirstName.setText(BundleManager.getBundle().getString("customer.fname_"));
 
         lbInvalidName.setText(BundleManager.getBundle().getString("customer.invalidName"));
         lbInvalidBirthdate.setText(BundleManager.getBundle().getString("customer.invalidBirthdate"));
         lbInvalidEmail.setText(BundleManager.getBundle().getString("customer.invalidEmail"));
         lbInvalidCustomer.setText(BundleManager.getBundle().getString("customer.invalidCustomer"));
+
+        if(isUpdate){
+            tabHeaderController.setTitle(BundleManager.getBundle().getString("customer.editCustomer"));
+        } else {
+            tabHeaderController.setTitle(BundleManager.getBundle().getString("customer.addCustomer"));
+        }
+
     }
 /*
     private void addListeners() {

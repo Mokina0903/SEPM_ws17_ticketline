@@ -105,3 +105,16 @@
     -fx-background-insets: 0;
     -fx-padding: 0.0em 0.0em 0.0em 0.0em;
 }
+
+.buyBtn{
+ -fx-background-color:
+        rgba(0,0,0,0.08),
+        linear-gradient(#5a61af, #51536d),
+        linear-gradient(#e4fbff 0%,#cee6fb 10%, #a5d3fb 50%, #88c6fb 51%, #d5faff 100%);
+}
+
+.error {
+    -fx-effect: dropshadow(three-pass-box, darkred, 7, 0, 0, 0);
+}
+
+.choice-box .menu-item > .label { -fx-text-fill: white; }

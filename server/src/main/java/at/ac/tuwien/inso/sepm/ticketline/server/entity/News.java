@@ -23,8 +23,9 @@ public class News {
     @Column(nullable = false, length = 10_000)
     private String text;
 
-    @Column(length = 10_000)
-    private String picPath;
+    @Lob
+    @Column
+    private byte[] picData;
 
     public Long getId() {
         return id;
@@ -56,14 +57,6 @@ public class News {
 
     public void setText(String text) {
         this.text = text;
-    }
-
-    public String getPicPath() {
-        return picPath;
-    }
-
-    public void setPicPath(String picPath) {
-        this.picPath = picPath;
     }
 
     public static NewsBuilder builder() {
@@ -103,12 +96,20 @@ public class News {
         return result;
     }
 
+    public byte[] getPicData() {
+        return picData;
+    }
+
+    public void setPicData(byte[] picData) {
+        this.picData = picData;
+    }
+
     public static final class NewsBuilder {
         private Long id;
         private LocalDateTime publishedAt;
         private String title;
         private String text;
-        private String path;
+        private byte[] data;
 
         private NewsBuilder() {
         }
@@ -134,8 +135,8 @@ public class News {
         }
 
 
-        public NewsBuilder picPath(String path) {
-            this.path = path;
+        public NewsBuilder picData(byte[] data) {
+            this.data = data;
             return this;
         }
 
@@ -146,7 +147,7 @@ public class News {
             news.setPublishedAt(publishedAt);
             news.setTitle(title);
             news.setText(text);
-            news.setPicPath(path);
+            news.setPicData(data);
             return news;
         }
     }

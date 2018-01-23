@@ -1,0 +1,130 @@
+.seatLbl {
+-fx-text-alignment: center;
+-fx-font-size: 16px;
+-fx-text-fill: white;
+
+}
+
+.seatVbox{
+-fx-alignment: center;
+-fx-background-color: #3c3f41;
+-fx-min-width: 50px;
+-fx-min-heit: 50px;
+-fx-max-width: 50px;
+-fx-max-heit: 50px;
+-fx-spacing: 10px;
+}
+
+.scene{
+-fx-fill: slategrey;
+-fx-effect: dropshadow(three-pass-box, derive(slategrey, -20%), 10, 0, 4, 4);
+}
+
+.sceneCutline{
+-fx-min-width: 50px;
+-fx-min-heit: 50px;
+-fx-max-width: 50px;
+-fx-max-heit: 50px;
+-fx-background-color: slategrey;
+-fx-effect: dropshadow(three-pass-box, derive(slategrey, -20%), 10, 0, 4, 4);
+}
+
+.cutlineFree{
+-fx-alignment: center;
+-fx-background-color: #3c3f41;
+-fx-min-width: 50px;
+-fx-min-heit: 50px;
+-fx-max-width: 50px;
+-fx-max-heit: 50px;
+-fx-spacing:12px;
+
+-fx-effect: dropshadow(three-pass-box, derive(GREENYELLOW, -20%), 10, 0, 4, 4);
+}
+
+.freiLbl{
+-fx-min-width: 55px;
+-fx-min-heit: 50px;
+-fx-max-width: 55px;
+-fx-max-heit: 50px;
+}
+
+.cutlineLbl{
+-fx-min-width: 50px;
+-fx-min-heit: 50px;
+-fx-max-width: 98px;
+-fx-max-heit: 50px;
+-fx-text-fill: black;
+}
+
+.cutlinePricelbl{
+-fx-width: 30px;
+
+}
+.sectorHbox{
+-fx-alignment: center;
+-fx-background-color: #3c3f41;
+-fx-spacing: 10px;
+}
+
+.sectorA{
+ -fx-effect: dropshadow(three-pass-box, derive(cadetblue, -20%), 10, 0, 4, 4);
+}
+.sectorB{
+ -fx-effect: dropshadow(three-pass-box, derive(	CRIMSON, -20%), 10, 0, 4, 4);
+}
+.sectorC{
+ -fx-effect: dropshadow(three-pass-box, derive(	FUCHSIA, -20%), 10, 0, 4, 4);
+}
+.sectorD{
+ -fx-effect: dropshadow(three-pass-box, derive(GREENYELLOW, -20%), 10, 0, 4, 4);
+}
+.sectorE{
+ -fx-effect: dropshadow(three-pass-box, derive(YELLOW, -20%), 10, 0, 4, 4);
+}
+
+.sectorA.selected{
+-fx-background-color: derive(cadetblue, -20%);
+}
+
+.sectorB.selected{
+-fx-background-color: derive(CRIMSON, -20%);
+}
+
+.sectorC.selected{
+-fx-background-color: derive(FUCHSIA, -20%);
+}
+
+.sectorD.selected{
+-fx-background-color: derive(GREENYELLOW, -20%);
+}
+
+.sectorE.selected{
+-fx-background-color: derive(YELLOW, -20%);
+}
+
+.sectorA.occupied,  .sectorB.occupied, .sectorC.occupied, .sectorD.occupied,  .sectorE.occupied{
+ -fx-background-color: DARKGREY;
+ }
+.seatVbox:hover, .sectorA.selected:hover, .sectorB.selected:hover, .sectorC.selected:hover, .sectorD.selected:hover, .sectorE.selected:hover{
+-fx-background-color: #dcdcdc;
+}
+
+.sectorA.ticketsAdded{
+-fx-background-color: derive(cadetblue, -20%);
+}
+
+.sectorB.ticketsAdded{
+-fx-background-color: derive(CRIMSON, -20%);
+}
+
+.sectorC.ticketsAdded{
+-fx-background-color: derive(FUCHSIA, -20%);
+}
+
+.sectorD.ticketsAdded{
+-fx-background-color: derive(GREENYELLOW, -20%);
+}
+
+.sectorE.ticketsAdded{
+-fx-background-color: derive(YELLOW, -20%);
+}

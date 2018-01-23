@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox fx:id="VBroot" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.news.NewsAddFormularController">
+<VBox fx:id="VBroot" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.news.NewsAddFormularController">
     <BorderPane>
         <stylesheets>
             <URL value="@/css/newsElement.css" />
@@ -25,8 +25,8 @@
                 <BorderPane.margin>
                     <Insets bottom="10" left="20" right="20" top="10" />
                 </BorderPane.margin>
-
-                <HBox spacing="8" GridPane.columnIndex="0" GridPane.rowIndex="0">
+                <fx:include fx:id="tabHeader" source="/fxml/tabHeader.fxml" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                <HBox spacing="8" GridPane.columnIndex="0" GridPane.rowIndex="1">
                     <Label fx:id="lblTitle" text="%news.title" />
                     <TextField fx:id="TitleTF" />
                     <Label fx:id="lblInvalidTitle" text="%news.title.tooLong" textFill="crimson" />
@@ -36,54 +36,42 @@
                 </columnConstraints>
                 <rowConstraints>
                     <RowConstraints />
+               <RowConstraints />
                 </rowConstraints>
             </GridPane>
         </top>
         <center>
-            <GridPane hgap="5" vgap="25">
+            <VBox spacing="15">
                 <BorderPane.margin>
                     <Insets bottom="10" left="20" right="20" top="10" />
                 </BorderPane.margin>
-                <HBox spacing="8" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                    <Label text="Text: " />
-                    <TextArea fx:id="TextArea" />
+                <HBox spacing="8">
+                    <Label text="Text*: " />
+                    <TextArea fx:id="textArea" />
                     <Label fx:id="lblInvalidText" text="%news.text.tooLong" textFill="crimson" />
                 </HBox>
-                <VBox GridPane.columnIndex="1" GridPane.rowIndex="0">
+                <VBox spacing="10">
                     <HBox spacing="8">
-                        <Label fx:id="lblAddImage" text="%news.addimage" />
-                        <Button fx:id="addImgBtn" minWidth="30" onAction="#addImage" text="+" />
+                        <Label fx:id="lblAddImage" prefWidth="120.0" text="%news.addimage" />
+                        <Button fx:id="addImgBtn" minWidth="30" onAction="#addImage" />
+                        <ImageView fx:id="newsImage" fitHeight="300" fitWidth="300" />
                     </HBox>
 
-                    <ImageView fx:id="newsImage" />
                 </VBox>
-
-                <columnConstraints>
-                    <ColumnConstraints hgrow="ALWAYS" />
-               <ColumnConstraints />
-                </columnConstraints>
-                <rowConstraints>
-                    <RowConstraints />
-                </rowConstraints>
-            </GridPane>
+            </VBox>
         </center>
         <bottom>
-            <GridPane hgap="5" vgap="25">
+            <HBox alignment="CENTER_LEFT" spacing="8">
                 <BorderPane.margin>
-                    <Insets bottom="10" left="20" right="20" top="10" />
+                    <Insets bottom="10" left="20" />
                 </BorderPane.margin>
-                <HBox alignment="CENTER_RIGHT" spacing="8" GridPane.columnIndex="0" GridPane.rowIndex="0">
-                    <Button fx:id="backWithoutSaveBtn" maxWidth="-Infinity" onAction="#goBackWithoutSave" prefWidth="40.0" />
-                    <Button fx:id="saveBtn" maxWidth="-Infinity" onAction="#saveNewNews" prefWidth="40.0" />
-                </HBox>
-                <columnConstraints>
-                    <ColumnConstraints hgrow="ALWAYS" />
-                </columnConstraints>
-                <rowConstraints>
-                    <RowConstraints />
-                </rowConstraints>
-            </GridPane>
+                <Button fx:id="backWithoutSaveBtn" maxWidth="-Infinity" onAction="#goBackWithoutSave" prefWidth="40.0" />
+                <Button fx:id="saveBtn" maxWidth="-Infinity" onAction="#saveNewNews" prefWidth="40.0" />
+            </HBox>
+
         </bottom>
     </BorderPane>
-
+    <padding>
+        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+    </padding>
 </VBox>

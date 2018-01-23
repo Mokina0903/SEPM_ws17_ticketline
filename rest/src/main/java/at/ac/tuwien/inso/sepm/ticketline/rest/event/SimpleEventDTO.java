@@ -1,27 +1,26 @@
 package at.ac.tuwien.inso.sepm.ticketline.rest.event;
 
+import at.ac.tuwien.inso.sepm.ticketline.rest.PageableDAO;
+import at.ac.tuwien.inso.sepm.ticketline.rest.artist.SimpleArtistDTO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @ApiModel(value = "SimpleEventDTO", description = "A simple DTO for event entries via rest")
-public class SimpleEventDTO {
+public class SimpleEventDTO implements PageableDAO{
     @ApiModelProperty(readOnly = true, name = "The automatically generated database id")
     private Long id;
-
-    @ApiModelProperty(required = true, name = "The first name of the artist")
-    private String artistFirstName;
-
-    @ApiModelProperty(required = true, name = "The last name of the artist")
-    private String artistLastName;
-
 
     @ApiModelProperty(required = true, name = "The title of the event")
     private String title;
 
+    @ApiModelProperty(required = true, name = "List of artists")
+    private List<SimpleArtistDTO> artists;
+
     @ApiModelProperty(required = true, name = "The description of the event")
-    private String descriptionSummary;
+    private String description;
 
     @ApiModelProperty(required = true, name = "The price of one ticket for the event")
     private Long price;
@@ -32,28 +31,28 @@ public class SimpleEventDTO {
     @ApiModelProperty(required = true, name = "The end Time and Date of the event")
     private LocalDateTime endOfEvent;
 
+    @ApiModelProperty(required =true, name = "Info about seat selection or sectors")
+    private Boolean seatSelection;
+
+    @ApiModelProperty(required = true, name = "The Event category")
+    private String eventCategory;
+
+    private long seatCount;
+
+    public long getSeatCount() {
+        return seatCount;
+    }
+
+    public void setSeatCount( long seatCount ) {
+        this.seatCount = seatCount;
+    }
+
     public Long getId() {
         return id;
     }
 
     public void setId( Long id ) {
         this.id = id;
-    }
-
-    public String getArtistFirstName() {
-        return artistFirstName;
-    }
-
-    public void setArtistFirstName( String artistFirstName ) {
-        this.artistFirstName = artistFirstName;
-    }
-
-    public String getArtistLastName() {
-        return artistLastName;
-    }
-
-    public void setArtistLastName( String artistLastName ) {
-        this.artistLastName = artistLastName;
     }
 
     public String getTitle() {
@@ -64,17 +63,32 @@ public class SimpleEventDTO {
         this.title = title;
     }
 
-    public String getDescriptionSummary() {
-        return descriptionSummary;
+    public List<SimpleArtistDTO> getArtists() {
+        return artists;
     }
 
-    public void setDescriptionSummary( String descriptionSummary ) {
-        this.descriptionSummary = descriptionSummary;
+    public void setArtists(List<SimpleArtistDTO> artists) {
+        this.artists = artists;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription( String description ) {
+        this.description = description;
     }
 
     public Long getPrice() {
         return price;
     }
+
+    public double getPriceInEuro(){return(double)price/(double)100;}
+
+    public String getPriceInEuroString(){
+
+        double priced = (double)price/100d;
+        return String.format("%.2f",priced);}
 
     public void setPrice( Long price ) {
         this.price = price;
@@ -96,6 +110,37 @@ public class SimpleEventDTO {
         this.endOfEvent = endOfEvent;
     }
 
+    public Boolean getSeatSelection() {
+        return seatSelection;
+    }
+
+    public void setSeatSelection( Boolean seatSelection ) {
+        this.seatSelection = seatSelection;
+    }
+
+    public String getEventCategory() {
+        return eventCategory;
+    }
+
+    public void setEventCategory(String eventCategory) {
+        this.eventCategory = eventCategory;
+    }
+
+    @Override
+    public String toString() {
+        return "SimpleEventDTO{" +
+            "id=" + id +
+            ", title='" + title + '\'' +
+            ", artists=" + artists +
+            ", descriptionSummary='" + description + '\'' +
+            ", price=" + price +
+            ", startOfEvent=" + startOfEvent +
+            ", endOfEvent=" + endOfEvent +
+            ", seatSelection=" + seatSelection +
+            ", eventCategory=" + eventCategory +
+            '}';
+    }
+
     @Override
     public boolean equals( Object o ) {
         if (this == o) return true;
@@ -104,64 +149,47 @@ public class SimpleEventDTO {
         SimpleEventDTO that = (SimpleEventDTO) o;
 
         if (!getId().equals(that.getId())) return false;
-        if (!getArtistFirstName().equals(that.getArtistFirstName())) return false;
-        if (!getArtistLastName().equals(that.getArtistLastName())) return false;
         if (!getTitle().equals(that.getTitle())) return false;
-        if (!getDescriptionSummary().equals(that.getDescriptionSummary())) return false;
+        if (!getArtists().equals(that.getArtists())) return false;
         if (!getPrice().equals(that.getPrice())) return false;
         if (!getStartOfEvent().equals(that.getStartOfEvent())) return false;
-        return getEndOfEvent().equals(that.getEndOfEvent());
+        if (!getEndOfEvent().equals(that.getEndOfEvent())) return false;
+        if (!getEventCategory().equals(that.getEventCategory())) return false;
+        return getSeatSelection().equals(that.getSeatSelection());
     }
 
     @Override
     public int hashCode() {
         int result = getId().hashCode();
-        result = 31 * result + getArtistFirstName().hashCode();
-        result = 31 * result + getArtistLastName().hashCode();
         result = 31 * result + getTitle().hashCode();
-        result = 31 * result + getDescriptionSummary().hashCode();
+        result = 31 * result + getArtists().hashCode();
+        result = 31 * result + getDescription().hashCode();
         result = 31 * result + getPrice().hashCode();
         result = 31 * result + getStartOfEvent().hashCode();
         result = 31 * result + getEndOfEvent().hashCode();
+        result = 31 * result + getSeatSelection().hashCode();
+        result = 31 * result + getEventCategory().hashCode();
         return result;
     }
 
-    @Override
-    public String toString() {
-        return "SimpleEventDTO{" +
-            "id=" + id +
-            ", artistFirstName='" + artistFirstName + '\'' +
-            ", artistLastName='" + artistLastName + '\'' +
-            ", title='" + title + '\'' +
-            ", descriptionSummary='" + descriptionSummary + '\'' +
-            ", price=" + price +
-            ", startOfEvent=" + startOfEvent +
-            ", endOfEvent=" + endOfEvent +
-            '}';
+    public static SimpleEventDTOBuilder builder() {
+        return new SimpleEventDTOBuilder();
     }
 
     public static final class SimpleEventDTOBuilder{
         private Long id;
-        private String artistFirstName;
-        private String artistLastName;
         private String title;
-        private String descriptionSummary;
+        private List<SimpleArtistDTO> artists;
+        private String description;
         private Long price;
         private LocalDateTime startOfEvent;
         private LocalDateTime endOfEvent;
+        private Boolean seatSelection;
+        private String eventCategory;
+        private long seatCount;
 
         public SimpleEventDTOBuilder id(Long id){
             this.id = id;
-            return this;
-        }
-
-        public SimpleEventDTOBuilder artistFirstname(String artistFirstName){
-            this.artistFirstName = artistFirstName;
-            return this;
-        }
-
-        public SimpleEventDTOBuilder artistLastName(String artistLastName){
-            this.artistLastName = artistLastName;
             return this;
         }
 
@@ -170,8 +198,13 @@ public class SimpleEventDTO {
             return this;
         }
 
-        public SimpleEventDTOBuilder descriptionSummary(String description){
-            this.descriptionSummary = description;
+        public SimpleEventDTOBuilder artists(List<SimpleArtistDTO> artists) {
+            this.artists = artists;
+            return this;
+        }
+
+        public SimpleEventDTOBuilder description(String description){
+            this.description = description;
             return this;
         }
 
@@ -190,17 +223,31 @@ public class SimpleEventDTO {
             return this;
         }
 
+        public SimpleEventDTOBuilder seatSelection(Boolean seatSelection){
+            this.seatSelection = seatSelection;
+            return this;
+        }
+
+        public SimpleEventDTOBuilder category(String eventCategory){
+            this.eventCategory = eventCategory;
+            return this;
+        }
+        public SimpleEventDTOBuilder seatCount(long seatCount){
+            this.seatCount = seatCount;
+            return this;
+        }
+
         public SimpleEventDTO build(){
             SimpleEventDTO event = new SimpleEventDTO();
             event.setId(id);
             event.setTitle(title);
-            event.setArtistFirstName(artistFirstName);
-            event.setArtistLastName(artistLastName);
-            event.setDescriptionSummary(descriptionSummary);
+            event.setArtists(artists);
+            event.setDescription(description);
             event.setPrice(price);
             event.setStartOfEvent(startOfEvent);
             event.setEndOfEvent(endOfEvent);
-
+            event.setEventCategory(eventCategory);
+            event.setSeatCount(seatCount);
             return event;
         }
     }

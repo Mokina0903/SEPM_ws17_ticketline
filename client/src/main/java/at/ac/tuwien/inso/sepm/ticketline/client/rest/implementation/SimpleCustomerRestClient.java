@@ -1,12 +1,15 @@
 package at.ac.tuwien.inso.sepm.ticketline.client.rest.implementation;
 
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
+import at.ac.tuwien.inso.sepm.ticketline.client.exception.OldVersionException;
 import at.ac.tuwien.inso.sepm.ticketline.client.exception.SearchNoMatchException;
 import at.ac.tuwien.inso.sepm.ticketline.client.rest.CustomerRestClient;
 import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -30,15 +33,15 @@ public class SimpleCustomerRestClient implements CustomerRestClient{
     }
 
     @Override
-    public List<CustomerDTO> findAll(int pageIndex, int costumerPerPage) throws DataAccessException {
+    public Page<CustomerDTO> findAll(Pageable request) throws DataAccessException {
         try {
-            LOGGER.debug("Retrieving all costumers from {}", restClient.getServiceURI(CUSTOMER_URL+"/"+pageIndex+"/"+costumerPerPage ));
-            ResponseEntity<List<CustomerDTO>> customer =
+            LOGGER.debug("Retrieving all costumers from {}", restClient.getServiceURI(CUSTOMER_URL+"/"+request.getPageNumber()+"/"+request.getPageSize() ));
+            ResponseEntity<RestResponsePage<CustomerDTO>> customer =
                 restClient.exchange(
-                    restClient.getServiceURI(CUSTOMER_URL+"/"+pageIndex+"/"+costumerPerPage ),
+                    restClient.getServiceURI(CUSTOMER_URL+"/"+request.getPageNumber()+"/"+request.getPageSize()),
                     HttpMethod.GET,
                     null,
-                    new ParameterizedTypeReference<List<CustomerDTO>>() {
+                    new ParameterizedTypeReference<RestResponsePage<CustomerDTO>>() {
                     });
             LOGGER.debug("Result status was {} with content {}", customer.getStatusCode(), customer.getBody());
             return customer.getBody();
@@ -51,15 +54,15 @@ public class SimpleCustomerRestClient implements CustomerRestClient{
 
 
     @Override
-    public List<CustomerDTO> findByName(String name, int pageIndex, int costumerPerPage) throws DataAccessException {
+    public Page<CustomerDTO> findByName(String name, Pageable request) throws DataAccessException {
         try {
-            LOGGER.debug("Retrieving found by name custumers from {}", restClient.getServiceURI(CUSTOMER_URL+"/findName/"+pageIndex+"/"+costumerPerPage));
-            ResponseEntity<List<CustomerDTO>> customer =
+            LOGGER.debug("Retrieving found by name custumers from {}", restClient.getServiceURI(CUSTOMER_URL+"/findName/"+request.getPageNumber()+"/"+request.getPageSize()));
+            ResponseEntity<RestResponsePage<CustomerDTO>> customer =
                 restClient.exchange(
-                    restClient.getServiceURI(CUSTOMER_URL+"/findName/"+pageIndex+"/"+costumerPerPage+"/"+name),
+                    restClient.getServiceURI(CUSTOMER_URL+"/findName/"+request.getPageNumber()+"/"+request.getPageSize()+"/"+name),
                     HttpMethod.GET,
                     null,
-                    new ParameterizedTypeReference<List<CustomerDTO>>() {
+                    new ParameterizedTypeReference<RestResponsePage<CustomerDTO>>() {
                     });
             LOGGER.debug("Result status was {} with content {}", customer.getStatusCode(), customer.getBody());
             return customer.getBody();
@@ -99,10 +102,10 @@ public class SimpleCustomerRestClient implements CustomerRestClient{
             LOGGER.debug("Save customer");
             HttpEntity<CustomerDTO> entity = new HttpEntity<>(customerDTO);
             restClient.exchange(
-                    restClient.getServiceURI(CUSTOMER_URL+"/create"),
-                    HttpMethod.POST,
-                    entity,
-                    Void.class);
+                restClient.getServiceURI(CUSTOMER_URL+"/create"),
+                HttpMethod.POST,
+                entity,
+                Void.class);
         } catch (HttpStatusCodeException e) {
             throw new DataAccessException("Failed retrieve customer with status code " + e.getStatusCode().toString());
         } catch (RestClientException e) {
@@ -111,7 +114,7 @@ public class SimpleCustomerRestClient implements CustomerRestClient{
     }
 
     @Override
-    public void updateCustomer(CustomerDTO customer) throws DataAccessException {
+    public void updateCustomer(CustomerDTO customer) throws DataAccessException, OldVersionException {
         try {
             LOGGER.debug("Update customer");
             HttpEntity<CustomerDTO> entity = new HttpEntity<>(customer);
@@ -121,8 +124,13 @@ public class SimpleCustomerRestClient implements CustomerRestClient{
                 entity,
                 Void.class);
         } catch (HttpStatusCodeException e) {
-            throw new DataAccessException("Failed retrieve customer with status code " + e.getStatusCode().toString());
-        } catch (RestClientException e) {
+            if (e.getStatusCode().value() == 424) {
+                throw new OldVersionException(e.getStatusCode().toString());
+            }
+            else {
+                throw new DataAccessException("Failed retrieve customer with status code " + e.getStatusCode().toString());
+            }
+            } catch (RestClientException e) {
             throw new DataAccessException(e.getMessage(), e);
         }
     }

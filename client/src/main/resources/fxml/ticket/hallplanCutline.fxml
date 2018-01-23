@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket.HallplanCutlineController" spacing="20">
+
+    <HBox spacing="10">
+        <HBox fx:id="sectorALegend" spacing="5">
+            <VBox styleClass="sectorA, ticketsAdded, seatVbox" maxWidth="50">
+                <Label styleClass="seatLbl" text="1"/>
+            </VBox>
+            <Label styleClass="cutlineLbl" text="Sector A"/>
+            <Label styleClass="cutlinePricelbl" fx:id="lbPriceA"/>
+        </HBox>
+
+        <HBox fx:id="sectorBLegend" spacing="7">
+            <VBox styleClass="sectorB, ticketsAdded, seatVbox">
+                <Label styleClass="seatLbl" text="1"/>
+            </VBox>
+            <Label styleClass="cutlineLbl" text="Sector B"/>
+            <Label styleClass="cutlinePricelbl" fx:id="lbPriceB"/>
+        </HBox>
+
+        <HBox fx:id="sectorCLegend" spacing="7">
+            <VBox styleClass="sectorC, ticketsAdded, seatVbox">
+                <Label styleClass="seatLbl" text="1"/>
+            </VBox>
+            <Label styleClass="cutlineLbl" text="Sector C"/>
+            <Label styleClass="cutlinePricelbl" text="20.0" fx:id="lbPriceC"/>
+        </HBox>
+
+        <HBox fx:id="sectorDLegend" spacing="7">
+            <VBox styleClass="sectorD, ticketsAdded, seatVbox">
+                <Label styleClass="seatLbl" text="1"/>
+            </VBox>
+            <Label styleClass="cutlineLbl" text="Sector D"/>
+            <Label styleClass="cutlinePricelbl" fx:id="lbPriceD"/>
+        </HBox>
+        <HBox fx:id="sectorELegend" spacing="7">
+            <VBox styleClass="sectorE, ticketsAdded, seatVbox">
+                <Label styleClass="seatLbl" text="1"/>
+            </VBox>
+            <Label styleClass="cutlineLbl" text="Sector E"/>
+            <Label styleClass="cutlinePricelbl" fx:id="lbPriceE"/>
+        </HBox>
+    </HBox>
+
+    <HBox spacing="32">
+        <VBox styleClass="occupied, seatVbox, sectorA">
+            <Label styleClass="seatLbl" text="1"/>
+        </VBox>
+        <Label styleClass="cutlineLbl" fx:id="lblOccupied" text="%hallplan.occupied"/>
+
+        <VBox styleClass="cutlineFree">
+            <Label styleClass="seatLbl" text="1"/>
+        </VBox>
+        <Label styleClass="freiLbl" fx:id="lblFree" text="%hallplan.free"/>
+
+        <VBox styleClass="sceneCutline"/>
+        <Label styleClass="cutlineLbl" fx:id="lblScene" text="%hallplan.scene"/>
+
+    </HBox>
+
+</VBox>

@@ -22,6 +22,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 
 import org.controlsfx.glyphfont.FontAwesome;
+import org.controlsfx.glyphfont.GlyphFont;
+import org.controlsfx.glyphfont.GlyphFontRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,14 +44,23 @@ public class NewsController extends TabElement implements LocalizationObserver{
     public Button addNewNews;
     @FXML
     public VBox vBContainer;
+    @FXML
+    public Tab newNewsTab;
+    @FXML
+    public Tab oldNewsTab;
+    @FXML
+    public ListView vbNewsElementsNew;
 
     @FXML
-    private ListView<VBox> vbNewsElements;
+    private ListView<VBox> vbNewsElementsOld;
 
     @FXML
     private TabHeaderController tabHeaderController;
 
     private Tab newsTab;
+
+    private GlyphFont fontAwesome = GlyphFontRegistry.font("FontAwesome");
+    private final int FONT_SIZE = 16;
 
     @Autowired
     private LocalizationSubject localizationSubject;
@@ -66,10 +77,6 @@ public class NewsController extends TabElement implements LocalizationObserver{
         return newsTab;
     }
 
-/*    public void setNewsTab(Tab newsTab) {
-        this.newsTab = newsTab;
-    }*/
-
     public NewsController(MainController mainController, SpringFxmlLoader springFxmlLoader, NewsService newsService, UserService userService) {
         this.mainController = mainController;
         this.springFxmlLoader = springFxmlLoader;
@@ -81,13 +88,18 @@ public class NewsController extends TabElement implements LocalizationObserver{
     private void initialize() {
         tabHeaderController.setIcon(FontAwesome.Glyph.NEWSPAPER_ALT);
         tabHeaderController.setTitle(BundleManager.getBundle().getString("news.news"));
+
+        newNewsTab.setClosable(false);
+        oldNewsTab.setClosable(false);
         localizationSubject.attach(this);
-        vbNewsElements.getSelectionModel()
+
+        addNewNews.setGraphic(fontAwesome.create("PLUS").size(FONT_SIZE));
+        vbNewsElementsNew.getSelectionModel()
             .selectedIndexProperty()
             .addListener((observable, oldvalue, newValue) -> {
 
                 Platform.runLater(() -> {
-                    vbNewsElements.getSelectionModel().clearSelection();
+                    vbNewsElementsNew.getSelectionModel().clearSelection();
                 });
 
             });
@@ -96,55 +108,11 @@ public class NewsController extends TabElement implements LocalizationObserver{
 
     public void loadNews() {
        LOGGER.info("Loading News");
-        ObservableList<VBox> vbNewsBoxChildren = vbNewsElements.getItems();
-        vbNewsBoxChildren.clear();
+        ObservableList<VBox> vbNewsBoxChildrenNew = vbNewsElementsNew.getItems();
+        ObservableList<VBox> vbNewsBoxChildrenOld = vbNewsElementsOld.getItems();
+        vbNewsBoxChildrenNew.clear();
+        vbNewsBoxChildrenOld.clear();
 
-        /*
-        try {
-            TimeUnit.SECONDS.sleep(1);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        Long userID = mainController.getUser().getId();
-
-        try {
-            this.oldNews = newsService.findOldNewsByUser(userID);
-            this.newNews = newsService.findNotSeenByUser(userID);
-
-        } catch (DataAccessException e) {
-
-            JavaFXUtils.createExceptionDialog(e,
-                vbNewsElements.getScene().getWindow()).showAndWait();
-            //e.printStackTrace();
-        }
-
-
-        if (NewsController.this.newNews != null && !NewsController.this.newNews.isEmpty() ) {
-            for (SimpleNewsDTO newsDTO : NewsController.this.newNews) {
-
-                SpringFxmlLoader.Wrapper<NewsElementController> wrapper =
-                    springFxmlLoader.loadAndWrap("/fxml/news/newsElement.fxml");
-                wrapper.getController().initializeData(newsDTO, newsService, mainController, NewsController.this, userService);
-                Label title = wrapper.getController().getLblTitle();
-                title.setText("(NEW)" + title.getText());
-                wrapper.getLoadedObject().setStyle("-fx-background-color:rgba(220, 229, 244, .7)");
-
-                vbNewsBoxChildren.add(wrapper.getController().vbNewsElement);
-            }
-
-        }
-        if (NewsController.this.oldNews != null && !NewsController.this.oldNews.isEmpty() ) {
-            for (SimpleNewsDTO oldNewsDTO : NewsController.this.oldNews) {
-
-                SpringFxmlLoader.Wrapper<NewsElementController> wrapper =
-                    springFxmlLoader.loadAndWrap("/fxml/news/newsElement.fxml");
-                wrapper.getController().initializeData(oldNewsDTO, newsService, mainController, NewsController.this, userService);
-
-                vbNewsBoxChildren.add(wrapper.getController().vbNewsElement);
-            }
-
-        }
-*/
 
 
         Task<List<SimpleNewsDTO>> taskNewNews = new Task<>() {
@@ -178,7 +146,7 @@ public class NewsController extends TabElement implements LocalizationObserver{
                         //title.setText("("+BundleManager.getBundle().getString("news.new")+")" + title.getText());
                         wrapper.getLoadedObject().setStyle("-fx-background-color:rgba(220, 229, 244, .7)");
 
-                        vbNewsBoxChildren.add(wrapper.getController().vbNewsElement);
+                        vbNewsBoxChildrenNew.add(wrapper.getController().vbNewsElement);
                     }
 
                 }
@@ -189,7 +157,7 @@ public class NewsController extends TabElement implements LocalizationObserver{
                             springFxmlLoader.loadAndWrap("/fxml/news/newsElement.fxml");
                         wrapper.getController().initializeData(oldNewsDTO, newsService, mainController, NewsController.this, userService);
 
-                        vbNewsBoxChildren.add(wrapper.getController().vbNewsElement);
+                        vbNewsBoxChildrenOld.add(wrapper.getController().vbNewsElement);
                     }
 
                 }
@@ -202,7 +170,7 @@ public class NewsController extends TabElement implements LocalizationObserver{
                 if(getValue()==null || getValue().isEmpty()) {
                     super.failed();
                     JavaFXUtils.createExceptionDialog(getException(),
-                        vbNewsElements.getScene().getWindow()).showAndWait();
+                        vbNewsElementsNew.getScene().getWindow()).showAndWait();
                 }
             }
         };
@@ -232,6 +200,8 @@ public class NewsController extends TabElement implements LocalizationObserver{
     public void update() {
 
         tabHeaderController.setTitle(BundleManager.getBundle().getString("news.news"));
+        newNewsTab.setText(BundleManager.getBundle().getString("news.newnews"));
+        oldNewsTab.setText(BundleManager.getBundle().getString("news.oldnews"));
        // loadNews();
     }
 

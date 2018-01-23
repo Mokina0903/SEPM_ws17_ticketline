@@ -1,27 +1,36 @@
 package at.ac.tuwien.inso.sepm.ticketline.server.entity;
 
 import at.ac.tuwien.inso.sepm.ticketline.server.entity.eventLocation.Hall;
+import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "event")
-public class Event {
+public class Event implements Predicatable{
+
+    public enum EventCategory
+    {
+        Musical,
+        Rock,
+        Pop,
+        Kabarett,
+        Jazz,
+        Kino
+    };
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq_event_id")
     @SequenceGenerator(name = "seq_event_id", sequenceName = "seq_event_id")
     private Long id;
-
-    @Column(nullable = false)
-    @Size(max = 15)
-    private String artistFirstName;
-
-    @Column(nullable = false)
-    @Size(max = 20)
-    private String artistLastName;
 
     @Column(nullable = false)
     @Size(max = 100)
@@ -40,9 +49,38 @@ public class Event {
     @Column(nullable = false)
     private LocalDateTime endOfEvent;
 
+    private String eventDate;
+
+    private Long startOfEventTime;
+
+    private Long duration;
+
+    @Column(nullable = false)
+    private Boolean seatSelection;
+
+    @Column(nullable =  false)
+    @Enumerated(EnumType.STRING)
+    private EventCategory eventCategory;
+
+    private String category;
+
+    public Boolean getSeatSelection() {
+        return seatSelection;
+    }
+
+    public void setSeatSelection( Boolean seatSelection ) {
+        this.seatSelection = seatSelection;
+    }
+
     @ManyToOne
     private Hall hall;
 
+    @ManyToMany()
+    @JoinTable(
+        name = "artistsOfEvent",
+        joinColumns = @JoinColumn(name = "event_id"),
+        inverseJoinColumns = @JoinColumn(name = "artist_id"))
+    private List<Artist> artists = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -50,22 +88,6 @@ public class Event {
 
     public void setId( Long id ) {
         this.id = id;
-    }
-
-    public String getArtistFirstName() {
-        return artistFirstName;
-    }
-
-    public void setArtistFirstName( String artistFirstName ) {
-        this.artistFirstName = artistFirstName;
-    }
-
-    public String getArtistLastName() {
-        return artistLastName;
-    }
-
-    public void setArtistLastName( String artistLastName ) {
-        this.artistLastName = artistLastName;
     }
 
     public String getTitle() {
@@ -104,8 +126,39 @@ public class Event {
         return endOfEvent;
     }
 
-    public void setEndOfEvent( LocalDateTime endOfEvent ) {
+    public Long getStartOfEventTime() {
+        return startOfEventTime;
+    }
+
+    public String getEventDate() {
+        return eventDate;
+    }
+
+    public void setEventDate() {
+        LocalDate date = startOfEvent.toLocalDate();
+        this.eventDate = date.toString();
+    }
+
+    public void setStartOfEventTime() {
+
+        this.startOfEventTime =  Duration.between(LocalTime.MIN, startOfEvent.toLocalTime()).toMinutes();
+    }
+
+    public void setEndOfEvent(LocalDateTime endOfEvent ) {
         this.endOfEvent = endOfEvent;
+    }
+
+    public long getDuration() {
+
+        System.out.println("Duration in ENITIY_ get******************* " + duration);
+        return duration;
+    }
+
+    public void setDuration() {
+        this.duration = Duration.between(startOfEvent.toLocalTime(), endOfEvent.toLocalTime()).toMinutes();
+        if (duration < 0) {
+            this.duration = 24L*60L;
+        }
     }
 
     public Hall getHall() {
@@ -116,7 +169,46 @@ public class Event {
         this.hall = hall;
     }
 
+    public List<Artist> getArtists() {
+        return artists;
+    }
+
+    public void setArtists(List<Artist> artists) {
+        this.artists = artists;
+    }
+
+    public EventCategory getEventCategory() {
+        return eventCategory;
+    }
+
+    public void setEventCategory(EventCategory eventCategory) {
+        this.eventCategory = eventCategory;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory() {
+        this.category = eventCategory.toString();
+    }
+
     public static EventBuilder builder(){return new EventBuilder();}
+
+    @Override
+    public String toString() {
+        return "Event{" +
+            "id=" + id +
+            ", title='" + title + '\'' +
+            ", description='" + description + '\'' +
+            ", price=" + price +
+            ", startOfEvent=" + startOfEvent +
+            ", endOfEvent=" + endOfEvent +
+            ", seatSelection=" + seatSelection +
+            ", hall=" + hall +
+            ", eventCategory=" + eventCategory +
+            '}';
+    }
 
     @Override
     public boolean equals( Object o ) {
@@ -127,67 +219,45 @@ public class Event {
 
         if (getPrice() != event.getPrice()) return false;
         if (!getId().equals(event.getId())) return false;
-        if (!getArtistFirstName().equals(event.getArtistFirstName())) return false;
-        if (!getArtistLastName().equals(event.getArtistLastName())) return false;
         if (!getTitle().equals(event.getTitle())) return false;
         if (!getDescription().equals(event.getDescription())) return false;
         if (!getStartOfEvent().equals(event.getStartOfEvent())) return false;
         if (!getEndOfEvent().equals(event.getEndOfEvent())) return false;
-        return getHall().equals(event.getHall());
+        if (!getSeatSelection().equals(event.getSeatSelection())) return false;
+        if (!getHall().equals(event.getHall())) return false;
+        if (!getEventCategory().equals(event.getEventCategory())) return false;
+        return getArtists().equals(event.getArtists());
     }
 
     @Override
     public int hashCode() {
         int result = getId().hashCode();
-        result = 31 * result + getArtistFirstName().hashCode();
-        result = 31 * result + getArtistLastName().hashCode();
         result = 31 * result + getTitle().hashCode();
         result = 31 * result + getDescription().hashCode();
         result = 31 * result + (int) (getPrice() ^ (getPrice() >>> 32));
         result = 31 * result + getStartOfEvent().hashCode();
         result = 31 * result + getEndOfEvent().hashCode();
+        result = 31 * result + getSeatSelection().hashCode();
         result = 31 * result + getHall().hashCode();
+        result = 31 * result + getArtists().hashCode();
+        result = 31 * result + getEventCategory().hashCode();
         return result;
-    }
-
-    @Override
-    public String toString() {
-        return "Event{" +
-            "id=" + id +
-            ", artistFirstName='" + artistFirstName + '\'' +
-            ", artistLastName='" + artistLastName + '\'' +
-            ", title='" + title + '\'' +
-            ", description='" + description + '\'' +
-            ", price=" + price +
-            ", startOfEvent=" + startOfEvent +
-            ", endOfEvent=" + endOfEvent +
-            ", hall=" + hall +
-            '}';
     }
 
     public static final class EventBuilder{
         private Long id;
-        private String artistFirstName;
-        private String artistLastName;
         private String title;
         private String description;
         private Long price;
+        private Boolean seatSelection;
         private LocalDateTime startOfEvent;
         private LocalDateTime endOfEvent;
         private Hall hall;
+        private List<Artist> artists;
+        private EventCategory eventCategory;
 
         public EventBuilder id(Long id){
             this.id = id;
-            return this;
-        }
-
-        public EventBuilder artistFirstname(String artistFirstName){
-            this.artistFirstName = artistFirstName;
-            return this;
-        }
-
-        public EventBuilder artistLastName(String artistLastName){
-            this.artistLastName = artistLastName;
             return this;
         }
 
@@ -216,8 +286,23 @@ public class Event {
             return this;
         }
 
+        public EventBuilder seatSelection(Boolean seatSelection){
+            this.seatSelection = seatSelection;
+            return this;
+        }
+
         public EventBuilder hall(Hall hall){
             this.hall = hall;
+            return this;
+        }
+
+        public EventBuilder artists(List<Artist> artists) {
+            this.artists = artists;
+            return this;
+        }
+
+        public EventBuilder category(EventCategory eventCategory){
+            this.eventCategory = eventCategory;
             return this;
         }
 
@@ -225,14 +310,18 @@ public class Event {
             Event event = new Event();
             event.setId(id);
             event.setTitle(title);
-            event.setArtistFirstName(artistFirstName);
-            event.setArtistLastName(artistLastName);
             event.setDescription(description);
             event.setPrice(price);
             event.setStartOfEvent(startOfEvent);
             event.setEndOfEvent(endOfEvent);
             event.setHall(hall);
-
+            event.setArtists(artists);
+            event.setSeatSelection(seatSelection);
+            event.setEventCategory(eventCategory);
+            event.setEventDate();
+            event.setStartOfEventTime();
+            event.setDuration();
+            event.setCategory();
             return event;
         }
     }

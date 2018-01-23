@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -21,8 +22,8 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class CustomerDataGenerator {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(NewsDataGenerator.class);
-    private static final int NUMBER_OF_CUSTOMER_TO_GENERATE = 50;
+    private static final Logger LOGGER = LoggerFactory.getLogger(CustomerDataGenerator.class);
+    private static final int NUMBER_OF_CUSTOMER_TO_GENERATE = 1000;
 
     private final CustomerRepository customerRepository;
     private final Faker faker;
@@ -38,7 +39,16 @@ public class CustomerDataGenerator {
             LOGGER.info("customer already generated");
         } else {
             LOGGER.info("generating {} news entries", NUMBER_OF_CUSTOMER_TO_GENERATE);
-            for (int i = 0; i < NUMBER_OF_CUSTOMER_TO_GENERATE; i++) {
+            Customer anonym = Customer.builder()
+                .id((long)0)
+                .name("Anonymous")
+                .surname("Name")
+                .knr((long) 0)
+                .mail("anonymous@anonym.an")
+                .birthDate(LocalDate.of(1000, 1, 1))
+                .build();
+            customerRepository.save(anonym);
+            for (int i = 1; i < NUMBER_OF_CUSTOMER_TO_GENERATE; i++) {
                 Customer customer = Customer.builder()
                     .knr((long)i)
                     .surname(faker.name().lastName())

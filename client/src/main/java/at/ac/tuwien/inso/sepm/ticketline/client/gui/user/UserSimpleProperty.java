@@ -15,13 +15,28 @@ public class UserSimpleProperty {
     private final SimpleStringProperty username;
     private final SimpleBooleanProperty blocked;
     private final SimpleIntegerProperty role;
+    private SimpleIntegerProperty version;
 
 
-    public UserSimpleProperty(long userId,String username, boolean blocked, int role) {
+
+    public UserSimpleProperty(long userId,String username, boolean blocked, int role,int version) {
         this.userId = new SimpleLongProperty(userId);
         this.username = new SimpleStringProperty(username);
         this.blocked = new SimpleBooleanProperty(blocked);
         this.role = new SimpleIntegerProperty(role);
+        this.version = new SimpleIntegerProperty(version);
+    }
+
+    public int getVersion() {
+        return version.get();
+    }
+
+    public SimpleIntegerProperty versionProperty() {
+        return version;
+    }
+
+    public void setVersion(int version) {
+        this.version = new SimpleIntegerProperty(version);
     }
 
     public String getUsername() {
@@ -80,7 +95,8 @@ public class UserSimpleProperty {
                 simpleUserDTO.getId(),
                 simpleUserDTO.getUserName(),
                 simpleUserDTO.isBlocked(),
-                simpleUserDTO.getRole()
+                simpleUserDTO.getRole(),
+                simpleUserDTO.getVersion()
                 ));
         }
         return rlist;

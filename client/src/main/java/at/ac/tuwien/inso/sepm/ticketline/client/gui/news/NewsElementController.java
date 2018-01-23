@@ -25,6 +25,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.io.ByteArrayInputStream;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.Iterator;
@@ -80,32 +81,27 @@ public class NewsElementController {
         this.userService=userService;
         backButton.setVisible(false);
         newsImageView.setVisible(false);
+        newsImageView.setManaged(false);
     }
 
     public void backToSimpleNewsView(ActionEvent actionEvent) {
         LOGGER.info("Closing the detailed view of the news element.");
-        mainController.setGeneralErrorUnvisable();
         lblText.setText(simpleNewsDTO.getSummary());
-        newsImageView.setImage(null);
+        newsImageView.setManaged(false);
+        newsImageView.setVisible(false);
         backButton.setVisible(false);
         backButton.setDisable(true);
 
-        try {
-            userService.removeFromUserNotSeen(mainController.getUser().getId(),simpleNewsDTO.getId());
-        } catch (DataAccessException e) {
-            LOGGER.debug("Not possible to load the simple news!");
-            mainController.showGeneralError("Can not close the detailed view of this news.");
-            //e.printStackTrace();
-        }
-        vbNewsElement.setStyle("-fx-background-color:rgba(245, 245, 245,0)");
+        newsController.loadNews();
+
     }
 
     public void detailedNews(MouseEvent mouseEvent) {
         LOGGER.info("Loading the detail view of this news element");
-        mainController.setGeneralErrorUnvisable();
         Task<DetailedNewsDTO> task = new Task<>() {
             @Override
             protected DetailedNewsDTO call() throws DataAccessException {
+                userService.removeFromUserNotSeen(mainController.getUser().getId(),simpleNewsDTO.getId());
 
                 return newsService.findById(simpleNewsDTO.getId());
             }
@@ -115,15 +111,15 @@ public class NewsElementController {
                 super.succeeded();
                 DetailedNewsDTO detailedNewsDTO= getValue();
                 lblText.setText(detailedNewsDTO.getText());
-                if(detailedNewsDTO.getPicPath() != null && !detailedNewsDTO.getPicPath().isEmpty()){
-                    Image img = new Image(detailedNewsDTO.getPicPath(),540 , 380, false, false);
+                if(detailedNewsDTO.getPicData() != null){
+                    Image img = new Image(new ByteArrayInputStream(detailedNewsDTO.getPicData()));
                     newsImageView.setImage(img);
                     newsImageView.setVisible(true);
+                    newsImageView.setManaged(true);
                 }
-
                 backButton.setVisible(true);
                 backButton.setDisable(false);
-
+                vbNewsElement.setStyle("-fx-background-color:rgba(245, 245, 245,0)");
             }
 
             @Override

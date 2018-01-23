@@ -26,7 +26,7 @@
         <Label fx:id="lblTitle" GridPane.rowIndex="1" GridPane.columnIndex="0" styleClass="newsTitle" text="&lt;NewsTitle&gt;"/>
         <Label fx:id="lblText" GridPane.rowIndex="2" GridPane.columnIndex="0" styleClass="newsText" wrapText="true" text="&lt;NewsText&gt;"/>
         <Button fx:id="backButton" GridPane.rowIndex="3" GridPane.columnIndex="0" onAction="#backToSimpleNewsView" text="%detailedNews.backButton"/>
-        <ImageView fx:id="newsImageView" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+        <ImageView fx:id="newsImageView" GridPane.rowIndex="2" GridPane.columnIndex="1" fitHeight="200" fitWidth="300" />
         <columnConstraints>
             <ColumnConstraints hgrow="ALWAYS"/>
             <ColumnConstraints hgrow="ALWAYS"/>

@@ -42,7 +42,7 @@ public class SimpleUserService implements UserService {
 
     @Override
     public User findOneByName( String name ) {
-        return userRepository.findOneByUserName(name);
+        return userRepository.findOneByUserNameIgnoreCase(name);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class SimpleUserService implements UserService {
         if (role < 1 || role > 2)
             throw new IllegalValueException("role (1 Admin / 2 User) = " + role);
 
-        if (userRepository.findOneByUserName(user.getUserName()) != null)
+        if (userRepository.findOneByUserNameIgnoreCase(user.getUserName()) != null)
             throw new AlreadyExistsException(user.getUserName());
 
         User newUser = User.builder()
@@ -107,7 +107,6 @@ public class SimpleUserService implements UserService {
     @Override
     public User resetPassword(User user) {
         user.setPassword((new BCryptPasswordEncoder(10)).encode(user.getPassword()));
-        userRepository.save(user);
-        return null;
+        return userRepository.save(user);
     }
 }

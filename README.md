@@ -33,6 +33,7 @@
 To generate some testData add the generateData profile when running the server
 ```
 ./mvnw -pl=server -am spring-boot:run -Drun.profiles=generateData
+
 ```
 
 #### Client

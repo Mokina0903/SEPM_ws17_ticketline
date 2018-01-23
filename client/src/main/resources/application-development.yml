@@ -4,7 +4,7 @@ logging:
 
 rest-client:
   remote:
-    protocol: http
-    host: localhost
-    port: 8080
-    path: /
+      protocol: http
+      host: localhost
+      port: 8080
+      path: /

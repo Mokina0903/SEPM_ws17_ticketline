@@ -10,16 +10,11 @@ import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.JavaFXUtils;
 import at.ac.tuwien.inso.sepm.ticketline.rest.news.DetailedNewsDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
-import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
@@ -34,17 +29,20 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.channels.SelectionKey;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 
 @Component
-public class NewsAddFormularController implements LocalizationObserver {
+public class
+NewsAddFormularController implements LocalizationObserver {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NewsController.class);
+
+    @FXML
+    private TabHeaderController tabHeaderController;
+
     @FXML
     public TextField TitleTF;
 
@@ -55,7 +53,7 @@ public class NewsAddFormularController implements LocalizationObserver {
     @FXML
     public ImageView newsImage;
     @FXML
-    public javafx.scene.control.TextArea TextArea;
+    public TextArea textArea;
     @FXML
     public VBox VBroot;
     @FXML
@@ -76,11 +74,11 @@ public class NewsAddFormularController implements LocalizationObserver {
 
     private NewsService newsService;
 
+
     private Node oldContent;
 
-    private String picPath;
+    private File picPath;
     private NewsController c;
-    private TabHeaderController tabHeaderController;
 
     @Autowired
     private MainController mainController;
@@ -94,11 +92,17 @@ public class NewsAddFormularController implements LocalizationObserver {
 
     @FXML
     void initialize(){
+        tabHeaderController.setIcon(FontAwesome.Glyph.NEWSPAPER_ALT);
+        tabHeaderController.setTitle(BundleManager.getBundle().getString("news.news"));
+
         localizationSubject.attach(this);
 
         lblInvalidTitle.setVisible(false);
         lblInvalidText.setVisible(false);
+        tabHeaderController.setIcon(FontAwesome.Glyph.NEWSPAPER_ALT);
+        tabHeaderController.setTitle(BundleManager.getBundle().getString("news.addNews"));
 
+        setButtonGraphic(addImgBtn, "PLUS", Color.BLACK);
         setButtonGraphic(saveBtn, "CHECK", Color.OLIVE);
         setButtonGraphic(backWithoutSaveBtn, "TIMES", Color.CRIMSON);
     }
@@ -122,7 +126,6 @@ public class NewsAddFormularController implements LocalizationObserver {
     public void saveNewNews(ActionEvent actionEvent) {
         LOGGER.info("Saving new news.");
 
-        mainController.setGeneralErrorUnvisable();
         lblInvalidTitle.setVisible(false);
         lblInvalidText.setVisible(false);
 
@@ -131,36 +134,80 @@ public class NewsAddFormularController implements LocalizationObserver {
         if(!newsService.validateTextField(TitleTF)){
             LOGGER.warn("Invalid title was typed in!");
             lblInvalidTitle.setVisible(true);
+            TitleTF.getStyleClass().add("error");
             return;
+        } else{
+            TitleTF.getStyleClass().remove("error");
         }
 
-        if(!newsService.validateTextArea(TextArea)){
+
+        if(!newsService.validateTextArea(textArea)){
             LOGGER.warn("Invalid text was typed in!");
             lblInvalidText.setVisible(true);
+            textArea.getStyleClass().add("error");
             return;
+        } else {
+            textArea.getStyleClass().remove("error");
         }
 
 
         builder.title(TitleTF.getText());
         if(picPath!= null){
-            builder.picture(picPath);
+
+            try {
+                builder.picture(Files.readAllBytes(picPath.toPath()));
+            } catch (IOException e) {
+                LOGGER.warn("Could not save news. Data AccessException");
+                mainController.showGeneralError("Not able to save the News because of technical issues.");
+            }
         }
 
-        builder.text(TextArea.getText());
+        builder.text(textArea.getText());
         newNews = builder.build();
-        try {
-            newNews = newsService.publishNews(newNews);
-            c.loadNews();
-            c.getNewsTab().setContent(oldContent);
-        } catch (DataAccessException e) {
-            LOGGER.warn("Could not save news. Data AccessException");
-            mainController.showGeneralError("Not able to save the News because of technical issues.");
-        }
+
+        Task<Void> workerTask = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                addImgBtn.setDisable(true);
+                backWithoutSaveBtn.setDisable(true);
+                saveBtn.setDisable(true);
+
+                newNews = newsService.publishNews(newNews);
+
+                return null;
+            }
+            @Override
+            protected void succeeded() {
+                super.succeeded();
+                addImgBtn.setDisable(false);
+                backWithoutSaveBtn.setDisable(false);
+                saveBtn.setDisable(false);
+                mainController.showGeneralFeedback(BundleManager.getBundle().getString("news.feedbackPublish"));
+                c.loadNews();
+                c.getNewsTab().setContent(oldContent);
+            }
+            @Override
+            protected void failed() {
+
+                addImgBtn.setDisable(false);
+                backWithoutSaveBtn.setDisable(false);
+                saveBtn.setDisable(false);
+                LOGGER.warn("Could not save news. Data AccessException");
+                mainController.showGeneralError("Not able to save the News because of technical issues.");
+
+            }
+        };
+        workerTask.runningProperty().addListener((observable, oldValue, running) ->
+            mainController.setProgressbarProgress(
+                running ? ProgressBar.INDETERMINATE_PROGRESS : 0)
+        );
+        new Thread(workerTask).start();
+
+
     }
 
     public void addImage(ActionEvent actionEvent) {
         LOGGER.info("Adding Image to new news.");
-        mainController.setGeneralErrorUnvisable();
 
         String home = System.getProperty("user.home");
         FileChooser fc = new FileChooser();
@@ -183,24 +230,8 @@ public class NewsAddFormularController implements LocalizationObserver {
 
         Image img = new Image(file.toURI().toString(),540 , 380, false, false);
         newsImage.setImage(img);
-        new File(home +"/NewsPictures").mkdir();
-        File destination = new File(home+"/NewsPictures/"+ file.getName());
-        picPath = destination.toURI().toString();
-        try {
 
-            Files.copy(file.toPath(),destination.toPath());
-
-        } catch (FileAlreadyExistsException e) {
-            LOGGER.warn("File already exists");
-
-           // e.printStackTrace();
-        } catch (IOException e) {
-            LOGGER.warn("Loading image failed.");
-           // e.printStackTrace();
-            mainController.showGeneralError("Loading image failed because of technical issues.");
-        }
-
-
+        picPath = file;
     }
 
     @FXML
@@ -215,5 +246,6 @@ public class NewsAddFormularController implements LocalizationObserver {
         lblTitle.setText(BundleManager.getBundle().getString("news.title"));
         lblInvalidText.setText(BundleManager.getBundle().getString("news.text.tooLong"));
         lblInvalidTitle.setText(BundleManager.getBundle().getString("news.title.tooLong"));
+        tabHeaderController.setTitle(BundleManager.getBundle().getString("news.addNews"));
     }
 }

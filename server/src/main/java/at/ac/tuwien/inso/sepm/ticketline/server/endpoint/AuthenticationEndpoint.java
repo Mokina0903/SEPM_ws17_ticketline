@@ -55,10 +55,4 @@ public class AuthenticationEndpoint {
         return authenticationService.authenticationTokenInfo(authorizationHeader.substring(AuthenticationConstants.TOKEN_PREFIX.length()).trim());
     }
 
-    @RequestMapping(value = "/logout", method = RequestMethod.PUT)
-    @ApiOperation(value = "Delete current users authentication token")
-    public void AuthenticationLogout(@ApiIgnore @RequestHeader(value = HttpHeaders.AUTHORIZATION) String authorizationHeader) {
-
-    }
-
 }

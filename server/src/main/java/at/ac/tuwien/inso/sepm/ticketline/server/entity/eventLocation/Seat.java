@@ -7,8 +7,8 @@ import javax.persistence.*;
 public class Seat {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq_hall_id")
-    @SequenceGenerator(name = "seq_hall_id", sequenceName = "seq_hall_id")
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq_seat_id")
+    @SequenceGenerator(name = "seq_seat_id", sequenceName = "seq_seat_id")
     private Long id;
 
     private int nr;

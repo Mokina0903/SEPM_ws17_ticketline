@@ -57,6 +57,16 @@ public class DetailedHallDTO {
         this.seats = seats;
     }
 
+    public int getAmountOfSeatsInSector(char sector){
+        int count = 0;
+        if(seats==null || seats.isEmpty()){return 0;}
+        for(SeatDTO seat:seats){
+            if(seat.getSector()==sector){
+                count++;
+            }
+        }
+        return count;
+    }
 
 
     @Override
@@ -68,8 +78,8 @@ public class DetailedHallDTO {
 
         if (!getId().equals(that.getId())) return false;
         if (!getDescription().equals(that.getDescription())) return false;
-        if (!getLocation().equals(that.getLocation())) return false;
-        return getSeats() != null ? getSeats().equals(that.getSeats()) : that.getSeats() == null;
+        if (!getLocation().getId().equals(that.getLocation().getId())) return false;
+       return true;
     }
 
     @Override
@@ -77,6 +87,7 @@ public class DetailedHallDTO {
         int result = getId().hashCode();
         result = 31 * result + getDescription().hashCode();
         result = 31 * result + (getSeats() != null ? getSeats().hashCode() : 0);
+        result = 31 * result + getLocation().getId().hashCode();
         return result;
     }
 

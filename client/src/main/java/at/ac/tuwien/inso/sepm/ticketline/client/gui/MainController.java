@@ -4,15 +4,19 @@ import at.ac.tuwien.inso.sepm.ticketline.client.exception.DataAccessException;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.customer.CustomerController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.event.EventController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.news.NewsController;
+import at.ac.tuwien.inso.sepm.ticketline.client.gui.statistics.Top10Controller;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.ticket.TicketController;
 import at.ac.tuwien.inso.sepm.ticketline.client.gui.user.UserController;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.AuthenticationInformationService;
 import at.ac.tuwien.inso.sepm.ticketline.client.service.UserService;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.BundleManager;
 import at.ac.tuwien.inso.sepm.ticketline.client.util.JavaFXUtils;
+import at.ac.tuwien.inso.sepm.ticketline.rest.customer.CustomerDTO;
+import at.ac.tuwien.inso.sepm.ticketline.rest.event.DetailedEventDTO;
 import at.ac.tuwien.inso.sepm.ticketline.rest.user.DetailedUserDTO;
 import at.ac.tuwien.inso.springfx.SpringFxmlLoader;
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -30,11 +34,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.TimeUnit;
+
 @Component
-public class MainController implements LocalizationObserver{
+public class MainController implements LocalizationObserver {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MainController.class);
-
 
     private static final int TAB_ICON_FONT_SIZE = 20;
     @FXML
@@ -64,21 +69,56 @@ public class MainController implements LocalizationObserver{
     private CustomerController customerController;
     private UserController userController;
     private EventController eventController;
+    private Top10Controller top10Controller;
     private TicketController ticketController;
 
     private UserService userService;
     private DetailedUserDTO detailedUserDTO;
+    private CustomerDTO cutsomer;
+    private DetailedEventDTO event;
 
-    private Tab newsTab;
-    private Tab eventTab;
-    private Tab ticketTab;
-    private Tab userTab;
-    private Tab customerTab;
+    private Tab newsTab = new Tab();
+    private Tab eventTab = new Tab();
+    private Tab topTenTab = new Tab();
+    private Tab ticketTab = new Tab();
+    private Tab userTab = new Tab();
+    private Tab customerTab = new Tab();
+
+    public Tab getEventTab() {
+        return eventTab;
+    }
+
+    public void setEventTab(Tab eventTab) {
+        this.eventTab = eventTab;
+    }
+
+    public CustomerDTO getCutsomer() {
+        return cutsomer;
+    }
+
+    public void setCutsomer(CustomerDTO cutsomer) {
+        this.cutsomer = cutsomer;
+    }
+
+    public DetailedEventDTO getEvent() {
+        return event;
+    }
+
+    public CustomerController getCustomerController() {
+        return customerController;
+    }
+
+    public void setEvent(DetailedEventDTO event) {
+        this.event = event;
+    }
 
     public Tab getNewsTab() {
         return newsTab;
     }
 
+    public Tab getTopTenTab() {
+        return topTenTab;
+    }
 
     public MainController(
         SpringFxmlLoader springFxmlLoader,
@@ -99,13 +139,7 @@ public class MainController implements LocalizationObserver{
         pbLoadingProgress.setProgress(0);
         login = springFxmlLoader.load("/fxml/authenticationComponent.fxml");
         spMainContent.getChildren().add(login);
-
-       /* newsController = (NewsController) initTabPane(newsController, "news/newsComponent.fxml", newsTab, "NEWSPAPER_ALT");
-        eventController = (EventController) initTabPane(eventController, "event/eventComponent.fxml", eventTab, "FILM");
-        ticketController = (TicketController) initTabPane(ticketController, "ticket/ticketComponent.fxml", ticketTab, "TICKET");
-        customerController = (CustomerController) initTabPane(customerController, "customer/customerComponent.fxml", customerTab, "USERS");
-        userController = (UserController) initTabPane(userController, "user/userComponent.fxml", userTab, "USER");
-   */ }
+    }
 
     @FXML
     private void initMenue() {
@@ -114,6 +148,7 @@ public class MainController implements LocalizationObserver{
         spMenue.getChildren().add(menuePane);
         generalErrors.setVisible(false);
     }
+
 
     @FXML
     private void exitApplication(ActionEvent actionEvent) {
@@ -134,21 +169,8 @@ public class MainController implements LocalizationObserver{
         dialog.showAndWait();
     }
 
-    private TabElement initTabPane(TabElement controller, String fxmlPath, Tab tab, String glyphSymbol) {
-        SpringFxmlLoader.Wrapper<TabElement> wrapper =
-            springFxmlLoader.loadAndWrap("/fxml/"+ fxmlPath);
-        controller = wrapper.getController();
-        tab = new Tab(null, wrapper.getLoadedObject());
-        controller.setTab(tab);
-        Glyph glyph = fontAwesome.create(FontAwesome.Glyph.valueOf(glyphSymbol));
-        glyph.setFontSize(TAB_ICON_FONT_SIZE);
-        glyph.setColor(Color.WHITE);
-        tab.setGraphic(glyph);
-        tpContent.getTabs().add(tab);
-        return controller;
-    }
 
-    private void setAuthenticated(boolean authenticated) {
+    protected void setAuthenticated(boolean authenticated) {
         if (authenticated) {
             if (spMainContent.getChildren().contains(login)) {
                 spMainContent.getChildren().remove(login);
@@ -162,25 +184,15 @@ public class MainController implements LocalizationObserver{
         }
     }
 
+
     public void setProgressbarProgress(double progress) {
         pbLoadingProgress.setProgress(progress);
     }
 
+
     public void loadDetailedUserDTO(String name) {
         try {
             this.detailedUserDTO = userService.findByName(name);
-
-            loadTabController();
-
-            if(detailedUserDTO.getRole() == 2){
-                newsController.addNewNews.setDisable(true);
-                newsController.addNewNews.setVisible(false);
-            } else {
-                newsController.addNewNews.setDisable(false);
-                newsController.addNewNews.setVisible(true);
-            }
-
-            customerController.preparePagination();
 
         } catch (DataAccessException e) {
             JavaFXUtils.createExceptionDialog(e, spMainContent.getScene().getWindow()).showAndWait();
@@ -188,28 +200,144 @@ public class MainController implements LocalizationObserver{
         }
     }
 
-    private void loadTabController() {
-        tpContent.getTabs().clear();
-        newsController = (NewsController) initTabPane(newsController, "news/newsComponent.fxml", newsTab, "NEWSPAPER_ALT");
-        eventController = (EventController) initTabPane(eventController, "event/eventComponent.fxml", eventTab, "FILM");
-        ticketController = (TicketController) initTabPane(ticketController, "ticket/ticketComponent.fxml", ticketTab, "TICKET");
-        customerController = (CustomerController) initTabPane(customerController, "customer/customerComponent.fxml", customerTab, "USERS");
-        if (detailedUserDTO.getRole() == 1) {
-            userController = (UserController) initTabPane(userController, "user/userComponent.fxml", userTab, "USER");
-            userController.loadUsers();
-        }
-        newsController.loadNews();
-        eventController.loadEvents();
+    public void loadGuiComponentsOfUser() {
         initMenue();
+        initTabs();
+        initNews();
+        setListenerForTabs();
     }
 
-    public void showGeneralError(String text){
+    private void initTabs() {
+        tpContent.getTabs().clear();
+        initTab(newsTab, "NEWSPAPER_ALT");
+        initTab(eventTab, "FILM");
+        initTab(topTenTab, "BAR_CHART");
+        initTab(ticketTab, "TICKET");
+        initTab(customerTab, "USERS");
+        if (detailedUserDTO.getRole() == 1) {
+            initTab(userTab, "USER");
+        }
+    }
+
+    private void initTab(Tab tab, String glyphSymbol) {
+        Glyph glyph = fontAwesome.create(FontAwesome.Glyph.valueOf(glyphSymbol));
+        glyph.setFontSize(TAB_ICON_FONT_SIZE);
+        glyph.setColor(Color.WHITE);
+        tab.setGraphic(glyph);
+        tpContent.getTabs().add(tab);
+    }
+
+    private void initNews() {
+        newsController = (NewsController) setTabContent(newsController, "news/newsComponent.fxml", newsTab);
+        newsController.loadNews();
+
+        if (detailedUserDTO.getRole() == 2) {
+            newsController.addNewNews.setDisable(true);
+            newsController.addNewNews.setVisible(false);
+        } else {
+            newsController.addNewNews.setDisable(false);
+            newsController.addNewNews.setVisible(true);
+        }
+    }
+
+    private void setListenerForTabs() {
+        tpContent.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                if (newValue.equals(ticketTab)) {
+                    if (ticketController == null) {
+                        ticketController = (TicketController) setTabContent(ticketController, "ticket/ticketComponent.fxml", ticketTab);
+                        ticketController.initializePagination();
+                    }
+                } else if (newValue.equals(customerTab)) {
+                    if (customerController == null) {
+                        customerController = (CustomerController) setTabContent(customerController, "customer/customerComponent.fxml", customerTab);
+                        customerController.loadCustomer();
+                        customerController.initialzeData(customerTab);
+                    }
+                } else if (newValue.equals(userTab)) {
+                    if (userController == null) {
+                        userController = (UserController) setTabContent(userController, "user/userComponent.fxml", userTab);
+                        userController.loadUsers();
+                    }
+                } else if (newValue.equals(eventTab)) {
+                    eventController = (EventController) setTabContent(eventController, "event/eventComponent.fxml", eventTab);
+                    eventController.loadEvents();
+                    if (!(customerController == null)) {
+                        customerController.setNormalTabView();
+                    }
+                } else if (newValue.equals(topTenTab)) {
+                    top10Controller = (Top10Controller) setTabContent(top10Controller, "statistics/top10Statistics.fxml", topTenTab);
+                    top10Controller.initializeData();
+                    if (!(customerController == null)) {
+                        customerController.setNormalTabView();
+                    }
+                }
+            }
+        });
+    }
+
+    private TabElement setTabContent(TabElement controller, String fxmlPath, Tab tab) {
+        SpringFxmlLoader.Wrapper<TabElement> wrapper =
+            springFxmlLoader.loadAndWrap("/fxml/" + fxmlPath);
+        controller = wrapper.getController();
+        controller.setTab(tab);
+        tab.setContent(wrapper.getLoadedObject());
+        return controller;
+    }
+
+    public void openEventTab() {
+        tpContent.getSelectionModel().select(eventTab);
+    }
+
+    public void showGeneralError(String text) {
         generalErrors.setText(text);
+        generalErrors.setStyle("-fx-text-fill:white");
         generalErrors.setVisible(true);
         LOGGER.info(text);
+        Task<Void> workerTask = new Task<Void>() {
+
+            @Override
+            protected Void call() throws Exception {
+
+
+                TimeUnit.SECONDS.sleep(5);
+                MainController.this.setGeneralErrorUnvisable();
+
+                return null;
+            }
+
+        };
+
+        new Thread(workerTask).start();
+
     }
 
-    public void setGeneralErrorUnvisable(){
+    public void showGeneralFeedback(String text) {
+
+
+        generalErrors.setText(text);
+        generalErrors.setStyle("-fx-text-fill:chartreuse");
+        generalErrors.setVisible(true);
+        LOGGER.info(text);
+
+        Task<Void> workerTask = new Task<Void>() {
+
+            @Override
+            protected Void call() throws Exception {
+
+                TimeUnit.SECONDS.sleep(5);
+
+                MainController.this.setGeneralErrorUnvisable();
+                return null;
+            }
+
+        };
+
+        new Thread(workerTask).start();
+
+    }
+
+    private void setGeneralErrorUnvisable() {
         generalErrors.setVisible(false);
     }
 
@@ -217,28 +345,9 @@ public class MainController implements LocalizationObserver{
         return this.detailedUserDTO;
     }
 
-/* //to update only active frame labels for localization
-    public MenueCategory getActiveMenueCategory() {
-        Tab tab = tpContent.getSelectionModel().getSelectedItem();
-
-        if (tab.equals(newsTab)) {
-            return MenueCategory.NEWS;
-        }
-        else if (tab.equals(userTab)) {
-            return MenueCategory.USER;
-        }
-        else if (tab.equals(customerTab)) {
-            return MenueCategory.CUSTOMER;
-        }
-        else if (tab.equals(eventTab)) {
-            return MenueCategory.EVENT;
-        }
-        else return MenueCategory.TICKET;
-    }*/
 
     @Override
     public void update() {
-        //reset labels for localization here
     }
 
 }

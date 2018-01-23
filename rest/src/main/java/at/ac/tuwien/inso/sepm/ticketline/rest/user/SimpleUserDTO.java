@@ -26,6 +26,9 @@ public class SimpleUserDTO {
     @ApiModelProperty(required = true, readOnly = true, name = "The blocked status of the user")
     private boolean blocked;
 
+    @ApiModelProperty(required = true, readOnly = true, name = "The current version of the DTO")
+    private Integer version;
+
     public Long getId() {
         return id;
     }
@@ -74,6 +77,14 @@ public class SimpleUserDTO {
         this.blocked = blocked;
     }
 
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
     @Override
     public String toString() {
         return "SimpleUserDTO{" +
@@ -97,6 +108,7 @@ public class SimpleUserDTO {
         private Integer attempts;
         private Integer role;
         private boolean blocked;
+        private Integer version;
 
         private UserDTOBuilder() {
         }
@@ -131,6 +143,11 @@ public class SimpleUserDTO {
             return this;
         }
 
+        public UserDTOBuilder version(Integer version) {
+            this.version = version;
+            return this;
+        }
+
         public SimpleUserDTO build() {
             SimpleUserDTO userDTO = new SimpleUserDTO();
             userDTO.setId(id);
@@ -139,6 +156,7 @@ public class SimpleUserDTO {
             userDTO.setAttempts(attempts);
             userDTO.setRole(role);
             userDTO.setBlocked(blocked);
+            userDTO.setVersion(version);
             return userDTO;
         }
     }
