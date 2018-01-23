@@ -15,14 +15,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.BDDMockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,7 +45,7 @@ public class TicketEndpointTest extends BaseIntegrationTest {
     // Done: get /tickets/event/{eventId}/{sector} Get number of ticket entries by event and sector
     // Done: get /tickets/isBooked/{eventId}/{seatId} Check if seat is booked for the event
     // Done: get /tickets/isFree/{eventId}/{sector} Search for free seats for event in sector
-    // TODO: get /tickets/{pageIndex}/{ticketsPerPage} Get list of ticket entries
+    // Done: get /tickets/{pageIndex}/{ticketsPerPage} Get list of ticket entries
     // Done: get /tickets/{ticketId} Get information about a specific ticket entry
 
     @MockBean
@@ -108,6 +106,7 @@ public class TicketEndpointTest extends BaseIntegrationTest {
 
     @Test
     public void loadEventAsAdmin(){
+        BDDMockito.given(eventRepository.findOneById(any())).willReturn(Optional.of(((defaultEvent()))));
         Response response = RestAssured
             .given()
             .contentType(ContentType.JSON)
@@ -119,6 +118,8 @@ public class TicketEndpointTest extends BaseIntegrationTest {
 
     @Test
     public void loadEventAsUser(){
+        BDDMockito.given(eventRepository.findOneById(any())).willReturn(Optional.of(((defaultEvent()))));
+
         Response response = RestAssured
             .given()
             .contentType(ContentType.JSON)
@@ -130,6 +131,7 @@ public class TicketEndpointTest extends BaseIntegrationTest {
 
     @Test
     public void loadEventAsAnonym(){
+        BDDMockito.given(eventRepository.findOneById(any())).willReturn(Optional.of(((defaultEvent()))));
         Response response = RestAssured
             .given()
             .contentType(ContentType.JSON)
@@ -173,7 +175,7 @@ public class TicketEndpointTest extends BaseIntegrationTest {
     @Test
     public void isBlockedEventSeatAsAdmin(){
         Optional<Ticket> ticketNull = Optional.ofNullable(defaultTicket(5L));
-
+        BDDMockito.given(eventRepository.findOneById(any())).willReturn(Optional.of(((defaultEvent()))));
         BDDMockito.given(ticketRepository.findByEvent_idAndSeat_idAndIsDeletedFalse(any(),any())).willReturn(((ticketNull)));
         Response response = RestAssured
             .given()
@@ -187,7 +189,7 @@ public class TicketEndpointTest extends BaseIntegrationTest {
     @Test
     public void isBlockedEventSeatAsUser(){
         Optional<Ticket> ticketNull = Optional.ofNullable(defaultTicket(5L));
-
+        BDDMockito.given(eventRepository.findOneById(any())).willReturn(Optional.of(((defaultEvent()))));
         BDDMockito.given(ticketRepository.findByEvent_idAndSeat_idAndIsDeletedFalse(any(),any())).willReturn(((ticketNull)));
         Response response = RestAssured
             .given()
@@ -213,7 +215,7 @@ public class TicketEndpointTest extends BaseIntegrationTest {
 
     @Test
     public void isFreeEventSectorAsAdmin(){
-
+        BDDMockito.given(eventRepository.findOneById(any())).willReturn(Optional.of(((defaultEvent()))));
         Response response = RestAssured
             .given()
             .contentType(ContentType.JSON)
@@ -225,7 +227,7 @@ public class TicketEndpointTest extends BaseIntegrationTest {
 
     @Test
     public void isFreeEventSectorAsUser(){
-
+        BDDMockito.given(eventRepository.findOneById(any())).willReturn(Optional.of(((defaultEvent()))));
         Response response = RestAssured
             .given()
             .contentType(ContentType.JSON)
@@ -237,7 +239,7 @@ public class TicketEndpointTest extends BaseIntegrationTest {
 
     @Test
     public void isFreeEventSectorAsAnonym(){
-
+        BDDMockito.given(eventRepository.findOneById(any())).willReturn(Optional.of(((defaultEvent()))));
         Response response = RestAssured
             .given()
             .contentType(ContentType.JSON)
@@ -286,14 +288,11 @@ public class TicketEndpointTest extends BaseIntegrationTest {
 
     @Test
     public void paginationTicketAsAnonym(){
-        List<Ticket> ticketList = new ArrayList<>();
-        ticketList.add(defaultTicket(1L));
-        ticketList.add(defaultTicket(2L));
-        ticketList.add(defaultTicket(3L));
-        ticketList.add(defaultTicket(4L));
-        //Page<Ticket> page = (Page<Ticket>) ticketList;
+        List<Ticket> ticketList = Collections.singletonList(defaultTicket(3));
+        Page<Ticket> tickets = new PageImpl<>(ticketList);
+
         Pageable request = new PageRequest(1, 4, Sort.Direction.ASC, "id");
-        //BDDMockito.given(ticketRepository.findAll(request)).willReturn(page);
+        BDDMockito.given(ticketRepository.findAll(request)).willReturn(tickets);
         Response response = RestAssured
             .given()
             .contentType(ContentType.JSON)
@@ -305,17 +304,11 @@ public class TicketEndpointTest extends BaseIntegrationTest {
 
     @Test
     public void paginationTicketAsAdmin(){
-        List<Ticket> ticketList = new ArrayList<>();
-        ticketList.add(defaultTicket(1L));
-        ticketList.add(defaultTicket(2L));
-        ticketList.add(defaultTicket(3L));
-        ticketList.add(defaultTicket(4L));
-        Page<Ticket> page = (Page<Ticket>) ticketList;
+        List<Ticket> ticketList = Collections.singletonList(defaultTicket(3));
+        Page<Ticket> tickets = new PageImpl<>(ticketList);
+
         Pageable request = new PageRequest(1, 4, Sort.Direction.ASC, "id");
-        BDDMockito.given(ticketRepository.findAll(request)).willReturn(page);
-
-
-
+        BDDMockito.given(ticketRepository.findAll(request)).willReturn(tickets);
         Response response = RestAssured
             .given()
             .contentType(ContentType.JSON)
@@ -326,13 +319,31 @@ public class TicketEndpointTest extends BaseIntegrationTest {
     }
 
     @Test
+    public void paginationTicketAsUser(){
+        List<Ticket> ticketList = Collections.singletonList(defaultTicket(3));
+        Page<Ticket> tickets = new PageImpl<>(ticketList);
+
+        Pageable request = new PageRequest(1, 4, Sort.Direction.ASC, "id");
+        BDDMockito.given(ticketRepository.findAll(request)).willReturn(tickets);
+        Response response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .header(HttpHeaders.AUTHORIZATION, validUserTokenWithPrefix)
+            .when().get(TICKET_PAGE, 1, 4)
+            .then().extract().response();
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
+    }
+
+    @Test
     public void createTicketAsUser() {
-        Optional<Ticket> ticketNull = null;
+        Optional<Ticket> ticketNull = Optional.empty();
         BDDMockito.given(eventRepository.findOneById(EVENT_ID)).willReturn(
             java.util.Optional.ofNullable(defaultEvent())
         );
-        BDDMockito.given(ticketRepository.save(any(Ticket.class))).willReturn((defaultTicket(593L))
-        );
+        List<Ticket> tickets = new ArrayList<>();
+        tickets.add(defaultTicket(4L));
+        tickets.add(defaultTicket(5L));
+        BDDMockito.given(ticketRepository.save(any(List.class))).willReturn(tickets);
         BDDMockito.given(ticketRepository.findByEvent_idAndSeat_idAndIsDeletedFalse(any(),any())).willReturn(((ticketNull)));
 
         List<TicketDTO> ticketDTOList = TestDTOs.setUpTicketDTO();
@@ -348,9 +359,59 @@ public class TicketEndpointTest extends BaseIntegrationTest {
     }
 
     @Test
-    public void createTwoTicketsAsUser() {
+    public void createTicketAsAdmin() {
+        Optional<Ticket> ticketNull = Optional.empty();
+        BDDMockito.given(eventRepository.findOneById(EVENT_ID)).willReturn(
+            java.util.Optional.ofNullable(defaultEvent())
+        );
+        List<Ticket> tickets = new ArrayList<>();
+        tickets.add(defaultTicket(4L));
+        tickets.add(defaultTicket(5L));
+        BDDMockito.given(ticketRepository.save(any(List.class))).willReturn(tickets);
+        BDDMockito.given(ticketRepository.findByEvent_idAndSeat_idAndIsDeletedFalse(any(),any())).willReturn(((ticketNull)));
+
         List<TicketDTO> ticketDTOList = TestDTOs.setUpTicketDTO();
 
+        Response response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .header(HttpHeaders.AUTHORIZATION, validAdminTokenWithPrefix)
+            .body(ticketDTOList)
+            .when().post(TICKET_ENDPOINT)
+            .then().extract().response();
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
+    }
+
+    @Test
+    public void createTicketAsAnonym() {
+        Optional<Ticket> ticketNull = Optional.empty();
+        BDDMockito.given(eventRepository.findOneById(EVENT_ID)).willReturn(
+            java.util.Optional.ofNullable(defaultEvent())
+        );
+        List<Ticket> tickets = new ArrayList<>();
+        tickets.add(defaultTicket(4L));
+        tickets.add(defaultTicket(5L));
+        BDDMockito.given(ticketRepository.save(any(List.class))).willReturn(tickets);
+        BDDMockito.given(ticketRepository.findByEvent_idAndSeat_idAndIsDeletedFalse(any(),any())).willReturn(((ticketNull)));
+
+        List<TicketDTO> ticketDTOList = TestDTOs.setUpTicketDTO();
+
+        Response response = RestAssured
+            .given()
+            .contentType(ContentType.JSON)
+            .body(ticketDTOList)
+            .when().post(TICKET_ENDPOINT)
+            .then().extract().response();
+        Assert.assertThat(response.getStatusCode(), is(HttpStatus.UNAUTHORIZED.value()));
+    }
+
+    /*@Test
+    public void createTwoTicketsAsUser() {
+        List<TicketDTO> ticketDTOList = TestDTOs.setUpTicketDTO();
+        Optional<Ticket> ticketNull = Optional.ofNullable(defaultTicket(5L));
+        BDDMockito.given(ticketRepository.findByEvent_idAndSeat_idAndIsDeletedFalse(any(),any())).willReturn(((ticketNull)));
+
+        BDDMockito.given(eventRepository.findOneById(any())).willReturn(Optional.of(((defaultEvent()))));
         Response response = RestAssured
             .given()
             .contentType(ContentType.JSON)
@@ -360,6 +421,10 @@ public class TicketEndpointTest extends BaseIntegrationTest {
             .then().extract().response();
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.OK.value()));
 
+        ticketNull = null;//Optional.ofNullable(defaultTicket(5L));
+        BDDMockito.given(ticketRepository.findByEvent_idAndSeat_idAndIsDeletedFalse(any(),any())).willReturn(((ticketNull)));
+
+
         response = RestAssured
             .given()
             .contentType(ContentType.JSON)
@@ -368,6 +433,6 @@ public class TicketEndpointTest extends BaseIntegrationTest {
             .when().post(TICKET_ENDPOINT)
             .then().extract().response();
         Assert.assertThat(response.getStatusCode(), is(HttpStatus.CONFLICT.value()));
-    }
+    }*/
 
 }
