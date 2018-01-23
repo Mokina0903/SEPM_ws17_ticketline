@@ -74,7 +74,7 @@ public class EventFilter {
             }
             System.out.println("DURTIOL UP:::::::::: " + upperBound);
 
-            this.durationLowerBound = upperBound;
+            this.durationUpperBound = upperBound;
 
         }
         if (parameters.containsKey("seats")) {
